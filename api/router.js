@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const db  = require('./dbConnection');
+const db = require('./dbConnection');
 const { signupValidation, loginValidation } = require('./validation');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 router.post('/register', signupValidation, (req, res, next) => {
     db.query(
-        `SELECT * FROM users WHERE LOWER(email) = LOWER(${db.escape(
-            req.body.email
-        )});`,
+        `SELECT *
+         FROM users
+         WHERE LOWER(email) = LOWER(${db.escape(req.body.email)} OR LOWER(username) = LOWER(${db.escape(req.body.username)}));`,
         (err, result) => {
             if (result.length) {
                 return res.status(409).send({
@@ -25,9 +25,11 @@ router.post('/register', signupValidation, (req, res, next) => {
                     } else {
 // has hashed pw => add to database
                         db.query(
-                            `INSERT INTO users (name, email, password) VALUES ('${req.body.name}', ${db.escape(
-                                req.body.email
-                            )}, ${db.escape(hash)})`,
+                            `INSERT INTO users (name, username, email, password)
+                             VALUES ('${req.body.name}', 
+                                     ${db.escape(req.body.username)}, 
+                                     ${db.escape(req.body.email)}, 
+                                     ${db.escape(hash)})`,
                             (err, result) => {
                                 if (err) {
                                     throw err;
@@ -36,7 +38,7 @@ router.post('/register', signupValidation, (req, res, next) => {
                                     });
                                 }
                                 return res.status(201).send({
-                                    msg: 'The user has been registerd with us!'
+                                    msg: 'The user has been registered with us!'
                                 });
                             }
                         );
@@ -48,7 +50,9 @@ router.post('/register', signupValidation, (req, res, next) => {
 });
 router.post('/login', loginValidation, (req, res, next) => {
     db.query(
-        `SELECT * FROM users WHERE email = ${db.escape(req.body.email)};`,
+        `SELECT *
+         FROM users
+         WHERE username = ${db.escape(req.body.username)};`,
         (err, result) => {
 // user does not exists
             if (err) {
@@ -59,7 +63,7 @@ router.post('/login', loginValidation, (req, res, next) => {
             }
             if (!result.length) {
                 return res.status(401).send({
-                    msg: 'Email or password is incorrect!'
+                    msg: 'Username or password is incorrect!'
                 });
             }
 // check password
@@ -71,13 +75,15 @@ router.post('/login', loginValidation, (req, res, next) => {
                     if (bErr) {
                         throw bErr;
                         return res.status(401).send({
-                            msg: 'Email or password is incorrect!'
+                            msg: 'Username or password is incorrect!'
                         });
                     }
                     if (bResult) {
-                        const token = jwt.sign({id:result[0].id},'the-super-strong-secrect',{ expiresIn: '1h' });
+                        const token = jwt.sign({ id: result[0].id }, 'the-super-strong-secrect', { expiresIn: '1h' });
                         db.query(
-                            `UPDATE users SET last_login = now() WHERE id = '${result[0].id}'`
+                            `UPDATE users
+                             SET last_login = now()
+                             WHERE id = '${result[0].id}'`
                         );
                         return res.status(200).send({
                             msg: 'Logged in!',
@@ -94,11 +100,11 @@ router.post('/login', loginValidation, (req, res, next) => {
     );
 });
 router.post('/get-user', signupValidation, (req, res, next) => {
-    if(
+    if (
         !req.headers.authorization ||
         !req.headers.authorization.startsWith('Bearer') ||
         !req.headers.authorization.split(' ')[1]
-    ){
+    ) {
         return res.status(422).json({
             message: "Please provide the token",
         });
