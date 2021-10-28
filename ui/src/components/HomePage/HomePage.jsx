@@ -18,19 +18,11 @@ class HomePage extends React.Component {
     }
 
     render() {
-        const { currentUser, users } = this.state;
+        const { currentUser } = this.state;
         return (
             <div>
                 <h1>Hi {currentUser.user.name}!</h1>
                 <p>You're logged in with React & JWT!!</p>
-                {/*<h3>Users from secure api end point:</h3>*/}
-                {/*{users &&*/}
-                {/*<ul>*/}
-                {/*    {users.map(user =>*/}
-                {/*        <li key={user.id}>{user.firstName} {user.lastName}</li>*/}
-                {/*    )}*/}
-                {/*</ul>*/}
-                {/*}*/}
             </div>
         );
     }

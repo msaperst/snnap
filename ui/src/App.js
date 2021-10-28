@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 
 import { history } from './helpers/history';
 import { authenticationService } from './services/authentication.service';
 import { PrivateRoute } from './helpers/PrivateRoute';
 import HomePage from './components/HomePage/HomePage';
 import LoginPage from './components/LoginPage/LoginPage';
+import Container from "react-bootstrap/Container";
+import { Col, Nav, Row } from "react-bootstrap";
 
 class App extends React.Component {
     constructor(props) {
@@ -31,22 +33,24 @@ class App extends React.Component {
             <Router history={history}>
                 <div>
                     {currentUser &&
-                    <nav className="navbar navbar-expand navbar-dark bg-dark">
-                        <div className="navbar-nav">
-                            <Link to="/" className="nav-item nav-link">Home</Link>
-                            <a onClick={this.logout} className="nav-item nav-link">Logout</a>
-                        </div>
-                    </nav>
+                    <Nav className='bg-dark'>
+                        <Nav.Item>
+                            <Nav.Link href="/" disabled>Home</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link onClick={this.logout}>Logout</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
                     }
                     <div className="jumbotron">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-6 offset-md-3">
+                        <Container>
+                            <Row>
+                                <Col md={{ span: 6, offset: 3 }}>
                                         <PrivateRoute exact path="/" component={HomePage} />
                                         <Route path="/login" component={LoginPage} />
-                                </div>
-                            </div>
-                        </div>
+                                </Col>
+                            </Row>
+                        </Container>
                     </div>
                 </div>
             </Router>
