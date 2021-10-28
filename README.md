@@ -1,5 +1,11 @@
 # Seconds
 
+## Basic System Install
+A few tools are needed to be installed for basic development:
+* Docker
+* NodeJS
+* NPM
+
 ## Setup the Database
 Needs a mysql DB
 For now using a docker mysql manually
@@ -13,13 +19,15 @@ docker exec -i mysql1 mysql -uroot -proot_password < api/db-setup.sql
 ## Run the Server
 ```shell
 cd api
+npm install
 npm run start:server
 ```
 
 ## Run the UI
 ```shell
 cd ui
+npm install
 npm run start
 ```
 
-### Testing
+## Testing
