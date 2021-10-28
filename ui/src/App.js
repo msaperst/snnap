@@ -4,8 +4,9 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { history } from './helpers/history';
 import { authenticationService } from './services/authentication.service';
 import { PrivateRoute } from './helpers/PrivateRoute';
-import HomePage from './components/HomePage/HomePage';
-import LoginPage from './components/LoginPage/LoginPage';
+import HomePage from './pages/Home/HomePage';
+import LoginPage from './pages/Login/LoginPage';
+import RegisterPage from './pages/Register/RegisterPage';
 import Container from "react-bootstrap/Container";
 import { Col, Nav, Row } from "react-bootstrap";
 
@@ -48,6 +49,7 @@ class App extends React.Component {
                                 <Col md={{ span: 6, offset: 3 }}>
                                         <PrivateRoute exact path="/" component={HomePage} />
                                         <Route path="/login" component={LoginPage} />
+                                        <Route path="/register" component={RegisterPage} />
                                 </Col>
                             </Row>
                         </Container>

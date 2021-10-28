@@ -2,14 +2,13 @@ const express = require('express');
 const router = express.Router();
 const db = require('./dbConnection');
 const { signupValidation, loginValidation } = require('./validation');
-const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-router.post('/register', signupValidation, (req, res, next) => {
+router.post('/register', signupValidation, (req, res) => {
     db.query(
         `SELECT *
          FROM users
-         WHERE LOWER(email) = LOWER(${db.escape(req.body.email)} OR LOWER(username) = LOWER(${db.escape(req.body.username)}));`,
+         WHERE LOWER(email) = LOWER(${db.escape(req.body.email)}) OR LOWER(username) = LOWER(${db.escape(req.body.username)});`,
         (err, result) => {
             if (result.length) {
                 return res.status(409).send({
@@ -30,9 +29,8 @@ router.post('/register', signupValidation, (req, res, next) => {
                                      ${db.escape(req.body.username)}, 
                                      ${db.escape(req.body.email)}, 
                                      ${db.escape(hash)})`,
-                            (err, result) => {
+                            (err) => {
                                 if (err) {
-                                    throw err;
                                     return res.status(400).send({
                                         msg: err
                                     });
@@ -48,7 +46,7 @@ router.post('/register', signupValidation, (req, res, next) => {
         }
     );
 });
-router.post('/login', loginValidation, (req, res, next) => {
+router.post('/login', loginValidation, (req, res) => {
     db.query(
         `SELECT *
          FROM users
@@ -56,7 +54,6 @@ router.post('/login', loginValidation, (req, res, next) => {
         (err, result) => {
 // user does not exists
             if (err) {
-                throw err;
                 return res.status(400).send({
                     msg: err
                 });
@@ -73,7 +70,6 @@ router.post('/login', loginValidation, (req, res, next) => {
                 (bErr, bResult) => {
 // wrong password
                     if (bErr) {
-                        throw bErr;
                         return res.status(401).send({
                             msg: 'Username or password is incorrect!'
                         });
@@ -99,7 +95,7 @@ router.post('/login', loginValidation, (req, res, next) => {
         }
     );
 });
-router.post('/get-user', signupValidation, (req, res, next) => {
+router.post('/get-user', signupValidation, (req, res) => {
     if (
         !req.headers.authorization ||
         !req.headers.authorization.startsWith('Bearer') ||
@@ -111,7 +107,7 @@ router.post('/get-user', signupValidation, (req, res, next) => {
     }
     const theToken = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(theToken, 'the-super-strong-secrect');
-    db.query('SELECT * FROM users where id=?', decoded.id, function (error, results, fields) {
+    db.query('SELECT * FROM users where id=?', decoded.id, function (error, results) {
         if (error) throw error;
         return res.send({ error: false, data: results[0], message: 'Fetch Successfully.' });
     });

@@ -5,11 +5,28 @@ import { handleResponse } from '../helpers/handle-response';
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 
 export const authenticationService = {
+    register,
     login,
     logout,
     currentUser: currentUserSubject.asObservable(),
-    get currentUserValue () { return currentUserSubject.value }
+    get currentUserValue() {
+        return currentUserSubject.value
+    }
 };
+
+function register(name, username, email, password) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, username, email, password })
+    };
+
+    return fetch(`/api/register`, requestOptions).then(handleResponse).then(
+        () => {
+            return login(username, password);
+        }
+    );
+}
 
 function login(username, password) {
     const requestOptions = {
