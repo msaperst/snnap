@@ -85,7 +85,9 @@ router.post('/login', loginValidation, (req, res) => {
             return res.status(200).send({
               msg: 'Logged in!',
               token,
-              user: result[0]
+              name: result[0].name,
+              username: result[0].username,
+              email: result[0].email
             });
           }
           return res.status(401).send({

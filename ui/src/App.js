@@ -25,6 +25,7 @@ class App extends React.Component {
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   logout() {
     authenticationService.logout();
     history.push('/login');

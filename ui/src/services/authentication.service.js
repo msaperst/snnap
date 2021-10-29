@@ -1,5 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 
+// eslint-disable-next-line import/no-cycle
 import { handleResponse } from '../helpers/handle-response';
 
 const currentUserSubject = new BehaviorSubject(
