@@ -10,6 +10,7 @@ const currentUserSubject = new BehaviorSubject(
 export const authenticationService = {
   register,
   login,
+  updateProfile,
   logout,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue() {
@@ -45,6 +46,16 @@ function login(username, password) {
 
       return user;
     });
+}
+
+function updateProfile(name, username, email) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, username, email }),
+  };
+
+  return fetch(`/api/updateProfile`, requestOptions).then(handleResponse);
 }
 
 function logout() {

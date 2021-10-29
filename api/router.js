@@ -84,7 +84,6 @@ router.post('/login', loginValidation, (req, res) => {
                WHERE id = '${result[0].id}'`
           );
           return res.status(200).send({
-            msg: 'Logged in!',
             token,
             name: result[0].name,
             username: result[0].username,
