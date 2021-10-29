@@ -16,7 +16,7 @@ class HomePage extends React.Component {
     return (
       <div>
         <h1>Hi {currentUser.name}!</h1>
-        <p>You're logged in with React & JWT!!</p>
+        <p>You are logged in!</p>
       </div>
     );
   }

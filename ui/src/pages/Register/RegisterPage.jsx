@@ -11,7 +11,8 @@ class LoginPage extends React.Component {
 
     // redirect to Home if already logged in
     if (authenticationService.currentUserValue) {
-      this.props.history.push('/');
+      const { history } = this.props;
+      history.push('/');
     }
   }
 
@@ -43,10 +44,11 @@ class LoginPage extends React.Component {
               .register(name, username, email, password)
               .then(
                 () => {
-                  const { from } = this.props.location.state || {
+                  const { location, history } = this.props;
+                  const { from } = location.state || {
                     from: { pathname: '/' },
                   };
-                  this.props.history.push(from);
+                  history.push(from);
                 },
                 (error) => {
                   setSubmitting(false);
