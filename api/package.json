@@ -1,7 +1,20 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Seconds back-end server",
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 95,
+        "lines": 95
+      }
+    },
+    "coverageReporters": [
+      "lcov",
+      "text",
+      "cobertura"
+    ]
+  },
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
@@ -33,5 +46,11 @@
     "jest-junit": "^13.0.0",
     "nodemon": "^2.0.14",
     "prettier": "^2.4.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   }
 }
