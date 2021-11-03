@@ -19,10 +19,17 @@ router.post('/register', signupValidation, async (req, res) => {
       msg: 'Thank you for registering with us!',
     });
   } catch (error) {
-    // TODO - switch based on response message
-    return res.status(401).send({
-      msg: error.message,
-    });
+    switch (error.message) {
+      case 'This email is already in our system. Try resetting your password.':
+      case 'Sorry, that username is already in use.':
+        return res.status(409).send({
+          msg: error.message,
+        });
+      default:
+        return res.status(400).send({
+          msg: error.message,
+        });
+    }
   }
 });
 
@@ -36,10 +43,16 @@ router.post('/login', loginValidation, async (req, res) => {
       email: await user.getEmail(),
     });
   } catch (error) {
-    // TODO - switch based on response message
-    return res.status(401).send({
-      msg: error.message,
-    });
+    switch (error.message) {
+      case 'Username or password is incorrect!':
+        return res.status(401).send({
+          msg: error.message,
+        });
+      default:
+        return res.status(400).send({
+          msg: error.message,
+        });
+    }
   }
 });
 

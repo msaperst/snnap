@@ -6,6 +6,42 @@ const Mysql = require('../../services/Mysql');
 const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-jwt-token';
 
 const User = class {
+  static register(username, password, name, email) {
+    const newUser = new User();
+    newUser.instancePromise = (async () => {
+      let exists = await Mysql.query(
+        `SELECT *
+         FROM users
+         WHERE LOWER(email) = LOWER(${db.escape(email)});`
+      );
+      if (exists.length) {
+        throw new Error(
+          'This email is already in our system. Try resetting your password.'
+        );
+      }
+      exists = await Mysql.query(
+        `SELECT *
+         FROM users
+         WHERE LOWER(username) = LOWER(${db.escape(username)});`
+      );
+      if (exists.length) {
+        throw new Error('Sorry, that username is already in use.');
+      }
+      const hash = await bcrypt.hash(password, 10);
+      await Mysql.query(
+        `INSERT INTO users (name, username, email, password)
+         VALUES ('${name}',
+                 ${db.escape(username)},
+                 ${db.escape(email)},
+                 ${db.escape(hash)})`
+      );
+      newUser.username = username;
+      newUser.name = name;
+      newUser.email = email;
+    })();
+    return newUser;
+  }
+
   static login(username, password) {
     const newUser = new User();
     newUser.instancePromise = (async () => {
@@ -39,42 +75,6 @@ const User = class {
       } else {
         throw new Error('Username or password is incorrect!');
       }
-    })();
-    return newUser;
-  }
-
-  static register(username, password, name, email) {
-    const newUser = new User();
-    newUser.instancePromise = (async () => {
-      let exists = await Mysql.query(
-        `SELECT *
-         FROM users
-         WHERE LOWER(email) = LOWER(${db.escape(email)});`
-      );
-      if (exists.length) {
-        throw new Error(
-          'This email is already in our system. Try resetting your password.'
-        );
-      }
-      exists = await Mysql.query(
-        `SELECT *
-         FROM users
-         WHERE LOWER(username) = LOWER(${db.escape(username)});`
-      );
-      if (exists.length) {
-        throw new Error('Sorry, that username is already in use.');
-      }
-      const hash = await bcrypt.hash(password, 10);
-      await Mysql.query(
-        `INSERT INTO users (name, username, email, password)
-         VALUES ('${name}',
-                 ${db.escape(username)},
-                 ${db.escape(email)},
-                 ${db.escape(hash)})`
-      );
-      newUser.username = username;
-      newUser.name = name;
-      newUser.email = email;
     })();
     return newUser;
   }
