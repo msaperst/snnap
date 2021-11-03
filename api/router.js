@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('./dbConnection');
 const { signupValidation, loginValidation } = require('./validation');
+const User = require('./components/user/User');
 
 router.post('/register', signupValidation, (req, res) => {
   db.query(
@@ -28,10 +29,10 @@ router.post('/register', signupValidation, (req, res) => {
         // has hashed pw => add to database
         db.query(
           `INSERT INTO users (name, username, email, password)
-               VALUES ('${req.body.name}',
-                       ${db.escape(req.body.username)},
-                       ${db.escape(req.body.email)},
-                       ${db.escape(hash)})`,
+           VALUES ('${req.body.name}',
+                   ${db.escape(req.body.username)},
+                   ${db.escape(req.body.email)},
+                   ${db.escape(hash)})`,
           (err) => {
             if (err) {
               return res.status(400).send({
@@ -47,55 +48,20 @@ router.post('/register', signupValidation, (req, res) => {
     }
   );
 });
-router.post('/login', loginValidation, (req, res) => {
-  db.query(
-    `SELECT *
-     FROM users
-     WHERE username = ${db.escape(req.body.username)};`,
-    (err, result) => {
-      // user does not exists
-      if (err) {
-        return res.status(400).send({
-          msg: err,
-        });
-      }
-      if (!result.length) {
-        return res.status(401).send({
-          msg: 'Username or password is incorrect!',
-        });
-      }
-      // check password
-      bcrypt.compare(req.body.password, result[0].password, (bErr, bResult) => {
-        // wrong password
-        if (bErr) {
-          return res.status(401).send({
-            msg: 'Username or password is incorrect!',
-          });
-        }
-        if (bResult) {
-          const token = jwt.sign(
-            { id: result[0].id },
-            'the-super-strong-secrect',
-            { expiresIn: '1h' }
-          );
-          db.query(
-            `UPDATE users
-               SET last_login = now()
-               WHERE id = '${result[0].id}'`
-          );
-          return res.status(200).send({
-            token,
-            name: result[0].name,
-            username: result[0].username,
-            email: result[0].email,
-          });
-        }
-        return res.status(401).send({
-          msg: 'Username or password is incorrect!',
-        });
-      });
-    }
-  );
+router.post('/login', loginValidation, async (req, res) => {
+  const user = new User(req.body.username, req.body.password);
+  try {
+    return res.status(200).send({
+      token: await user.getToken(),
+      name: await user.getName(),
+      username: await user.getUsername(),
+      email: await user.getEmail(),
+    });
+  } catch (error) {
+    return res.status(401).send({
+      msg: error.message,
+    });
+  }
 });
 router.post('/get-user', signupValidation, (req, res) => {
   if (
