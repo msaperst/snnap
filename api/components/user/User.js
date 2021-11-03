@@ -79,6 +79,22 @@ const User = class {
     return newUser;
   }
 
+  static auth(token) {
+    const newUser = new User();
+    newUser.token = token;
+    newUser.instancePromise = (async () => {
+      const decoded = jwt.verify(newUser.token, JWT_SECRET);
+      const user = await Mysql.query(
+        'SELECT * FROM users where id=?',
+        decoded.id
+      );
+      newUser.name = user[0].name;
+      newUser.username = user[0].username;
+      newUser.email = user[0].email;
+    })();
+    return newUser;
+  }
+
   async getToken() {
     await this.instancePromise;
     return this.token;
@@ -97,6 +113,17 @@ const User = class {
   async getEmail() {
     await this.instancePromise;
     return this.email;
+  }
+
+  static getToken(authorization) {
+    if (
+      !authorization ||
+      !authorization.startsWith('Bearer') ||
+      !authorization.split(' ')[1]
+    ) {
+      throw new Error('Please provide the access token');
+    }
+    return authorization.split(' ')[1];
   }
 };
 

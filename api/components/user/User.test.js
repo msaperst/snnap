@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs');
+const { JsonWebTokenError } = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const User = require('./User');
 
 jest.mock('../../services/Mysql');
@@ -77,6 +79,57 @@ describe('User', () => {
 
     const user = User.register('Bob', 'password', 'Robert', 'bobert@gmail.com');
     await expect(user.getToken()).resolves.toEqual(undefined);
+    await expect(user.getName()).resolves.toEqual('Robert');
+    await expect(user.getUsername()).resolves.toEqual('Bob');
+    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
+  });
+
+  it('fails if no token is set', () => {
+    expect(() => {
+      User.getToken(null);
+    }).toThrow('Please provide the access token');
+  });
+
+  it('fails if token does not start with bearer', () => {
+    expect(() => {
+      User.getToken('123');
+    }).toThrow('Please provide the access token');
+  });
+
+  it('fails if token does not have a space', () => {
+    expect(() => {
+      User.getToken('Bearer123');
+    }).toThrow('Please provide the access token');
+  });
+
+  it('sends back the token', () => {
+    expect(User.getToken('Bearer 123')).toEqual('123');
+  });
+
+  it('throws an error on a bad token', async () => {
+    await expect(User.auth('sometoken').getName()).rejects.toEqual(
+      new JsonWebTokenError('jwt malformed')
+    );
+  });
+
+  it('throws an error on a badly signed token', async () => {
+    await expect(
+      User.auth(jwt.sign({ id: 123 }, 'some-secret')).getName()
+    ).rejects.toEqual(new JsonWebTokenError('invalid signature'));
+  });
+
+  it('sets the user values on valid credentials via token', async () => {
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    Mysql.query.mockResolvedValue([
+      {
+        username: 'Bob',
+        name: 'Robert',
+        email: 'bobert@gmail.com',
+      },
+    ]);
+
+    const user = User.auth(token);
+    await expect(user.getToken()).resolves.toEqual(token);
     await expect(user.getName()).resolves.toEqual('Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');

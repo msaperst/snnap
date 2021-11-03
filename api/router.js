@@ -1,8 +1,6 @@
 const express = require('express');
 
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const db = require('./dbConnection');
 const { signupValidation, loginValidation } = require('./validation');
 const User = require('./components/user/User');
 
@@ -56,25 +54,19 @@ router.post('/login', loginValidation, async (req, res) => {
   }
 });
 
-router.post('/get-user', signupValidation, (req, res) => {
-  if (
-    !req.headers.authorization ||
-    !req.headers.authorization.startsWith('Bearer') ||
-    !req.headers.authorization.split(' ')[1]
-  ) {
+router.post('/get-user', signupValidation, async (req, res) => {
+  let token;
+  try {
+    token = User.getToken(req.headers.authorization);
+  } catch (error) {
     return res.status(422).json({
-      message: 'Please provide the token',
+      message: error.message,
     });
   }
-  const theToken = req.headers.authorization.split(' ')[1];
-  const decoded = jwt.verify(theToken, 'the-super-strong-secrect');
-  db.query('SELECT * FROM users where id=?', decoded.id, (error, results) => {
-    if (error) throw error;
-    return res.send({
-      error: false,
-      data: results[0],
-      message: 'Fetch Successfully.',
-    });
+  const user = User.auth(token);
+  return res.send({
+    error: false,
+    username: await user.getUsername(),
   });
 });
 
