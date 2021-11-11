@@ -13,6 +13,9 @@
       "lcov",
       "text",
       "cobertura"
+    ],
+    "collectCoverageFrom": [
+      "components/**/*.{js,jsx,ts,tsx}"
     ]
   },
   "main": "index.js",
