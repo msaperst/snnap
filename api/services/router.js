@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const { signupValidation, loginValidation } = require('./validation');
-const User = require('./components/user/User');
+const User = require('../components/user/User');
 
 router.post('/register', signupValidation, async (req, res) => {
   const user = User.register(
