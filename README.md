@@ -6,21 +6,30 @@ A few tools are needed to be installed for basic development:
 * NodeJS
 * NPM
 
+## Deploy using Docker Compose
+_Still in progress_
+In main directory run:
+```shell
+docker-compose up --build
+docker exec -i seconds_mysql ./setup-database.sh
+```
+
 ## Setup the Database
 Needs a mysql DB
 For now using a docker mysql manually
 
 ```shell
-docker pull mysql/mysql-server:latest
-docker run --name=mysql1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root_password -d mysql/mysql-server:latest
-docker exec -i mysql1 mysql -uroot -proot_password < api/db-setup.sql
+cd sql
+docker image build . -t seconds_mysql
+docker container run --name=seconds_mysql -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_USER=seconds -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=seconds seconds_mysql:latest
+docker exec -i seconds_mysql ./setup-database.sh
 ```
 
 ## Run the Server
 ```shell
 cd api
 npm install
-npm run start:server
+npm run start
 ```
 
 ## Run the UI

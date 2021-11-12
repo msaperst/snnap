@@ -1,0 +1,40 @@
+version: '3'
+services:
+  mysql:
+    build:
+      context: sql
+      dockerfile: Dockerfile
+#    command: "bash -c './setup-database.sh'"
+    container_name: seconds_mysql
+    restart: always
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      TZ: "America/New_York"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+  api:
+    build:
+      context: api
+      dockerfile: Dockerfile
+    container_name: seconds_api
+    restart: always
+    depends_on:
+    - mysql
+    ports:
+    - ${API_PORT}:${API_PORT}
+    expose:
+    - ${API_PORT}
+    links:
+    - mysql
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+volumes:
+  mysql:
