@@ -11,12 +11,6 @@
     "start:ui": "cd ui; npm run start",
     "test": "jest selenium/*.js"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
