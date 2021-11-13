@@ -4,7 +4,7 @@ services:
     build:
       context: sql
       dockerfile: Dockerfile
-#    command: "bash -c './setup-database.sh'"
+    #    command: "bash -c './setup-database.sh'"
     container_name: seconds_mysql
     restart: always
     volumes:
@@ -23,19 +23,35 @@ services:
     container_name: seconds_api
     restart: always
     depends_on:
-    - mysql
+      - mysql
     ports:
-    - ${API_PORT}:${API_PORT}
+      - ${API_PORT}:${API_PORT}
     expose:
-    - ${API_PORT}
+      - ${API_PORT}
     links:
-    - mysql
+      - mysql
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
+      API_PORT: ${API_PORT}
+  ui:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+    container_name: seconds_ui
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - ${UI_PORT}:80
+    expose:
+      - ${UI_PORT}
+    links:
+      - api
+    environment:
       API_PORT: ${API_PORT}
 volumes:
   mysql:
