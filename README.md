@@ -6,24 +6,32 @@ A few tools are needed to be installed for basic development:
 * NodeJS
 * NPM
 
-## Setup the Database
-Needs a mysql DB
-For now using a docker mysql manually
-
+## Deploying Application
+### Using Docker Compose
+You probably want this for testing and prod deployments, not for development use
+In main directory run:
 ```shell
-docker pull mysql/mysql-server:latest
-docker run --name=mysql1 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root_password -d mysql/mysql-server:latest
-docker exec -i mysql1 mysql -uroot -proot_password < api/db-setup.sql
+docker-compose up --build
+docker exec -i seconds_mysql ./setup-database.sh
+```
+### Individual Components
+You probably want this for development or testing use, not prod deployments 
+#### Database
+```shell
+cd sql
+docker image build . -t seconds_mysql
+docker container run --name=seconds_mysql -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_USER=seconds -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=seconds seconds_mysql:latest
+docker exec -i seconds_mysql ./setup-database.sh
 ```
 
-## Run the Server
+#### API Server
 ```shell
 cd api
 npm install
-npm run start:server
+npm run start
 ```
 
-## Run the UI
+#### React UI
 ```shell
 cd ui
 npm install
@@ -31,3 +39,7 @@ npm run start
 ```
 
 ## Testing
+
+## Things to fix
+- Auto populate db using ./setup-database.sh script
+- Retrieve backend port using env for nginx instead of hardcoding

@@ -1,12 +1,4 @@
-CREATE DATABASE seconds;
-USE seconds;
-
-CREATE USER 'seconds'@'%' IDENTIFIED BY 'seconds_password';
-GRANT ALL PRIVILEGES ON *.* TO 'seconds'@'%';
-ALTER USER 'seconds'@'%' IDENTIFIED WITH mysql_native_password BY 'seconds_password';
-FLUSH PRIVILEGES;
-
-CREATE TABLE users
+CREATE TABLE IF NOT EXISTS users
 (
     id         int(11)                                       NOT NULL AUTO_INCREMENT,
     name       varchar(50) COLLATE utf8mb4_unicode_ci        NOT NULL,

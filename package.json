@@ -1,0 +1,45 @@
+{
+  "name": "seconds",
+  "version": "0.0.1",
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "output": "junit.xml"
+  },
+  "private": true,
+  "scripts": {
+    "start:api": "cd api; npm run start",
+    "start:ui": "cd ui; npm run start",
+    "test": "jest selenium/*.js"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
+    "chromedriver": "^96.0.0",
+    "enzyme": "^3.11.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jest": "^25.2.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "geckodriver": "^2.0.4",
+    "jest": "^27.3.1",
+    "jest-junit": "^13.0.0",
+    "prettier": "^2.4.1",
+    "selenium-webdriver": "^3.6.0"
+  }
+}

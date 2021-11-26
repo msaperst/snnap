@@ -52,6 +52,7 @@ class LoginPage extends React.Component {
               <div className="form-group">
                 <label htmlFor="username">Username</label>
                 <Field
+                  id="username"
                   name="username"
                   type="text"
                   className={`form-control${
@@ -59,6 +60,7 @@ class LoginPage extends React.Component {
                   }`}
                 />
                 <ErrorMessage
+                  id="username-error"
                   name="username"
                   component="div"
                   className="invalid-feedback"
@@ -67,6 +69,7 @@ class LoginPage extends React.Component {
               <div className="form-group">
                 <label htmlFor="password">Password</label>
                 <Field
+                  id="password"
                   name="password"
                   type="password"
                   className={`form-control${
@@ -74,6 +77,7 @@ class LoginPage extends React.Component {
                   }`}
                 />
                 <ErrorMessage
+                  id="password-error"
                   name="password"
                   component="div"
                   className="invalid-feedback"
@@ -83,6 +87,7 @@ class LoginPage extends React.Component {
                 <Col>
                   <div className="form-group">
                     <Button
+                      id="loginButton"
                       type="submit"
                       variant="primary"
                       disabled={isSubmitting}
