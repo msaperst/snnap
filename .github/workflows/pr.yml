@@ -26,4 +26,4 @@ jobs:
         run: npm ci
 
       - name: Functional Test 🔒
-        run: APP=http://localhost/ npm run test
+        run: APP=http://localhost npm run test
