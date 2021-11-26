@@ -39,3 +39,7 @@ npm run start
 ```
 
 ## Testing
+
+## Things to fix
+- Auto populate db using ./setup-database.sh script
+- Retrieve backend port using env for nginx instead of hardcoding
