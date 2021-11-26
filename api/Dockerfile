@@ -6,7 +6,8 @@ WORKDIR /usr/src/app
 
 # Install dependencies
 COPY package.json ./
-RUN npm install
+COPY package-lock.json ./
+RUN npm ci
 
 # Bundle app source
 COPY server.js ./
