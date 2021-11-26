@@ -8,7 +8,6 @@ A few tools are needed to be installed for basic development:
 
 ## Deploying Application
 ### Using Docker Compose
-_Still in progress_
 You probably want this for testing and prod deployments, not for development use
 In main directory run:
 ```shell
