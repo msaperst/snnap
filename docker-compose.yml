@@ -9,6 +9,10 @@ services:
     restart: always
     volumes:
       - mysql:/var/lib/mysql
+    ports:
+      - ${DB_PORT}:3306
+    expose:
+      - ${DB_PORT}
     environment:
       TZ: "America/New_York"
       MYSQL_ALLOW_EMPTY_PASSWORD: "no"

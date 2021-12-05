@@ -40,6 +40,32 @@ npm run start
 
 ## Testing
 
+### Unit
+
+### Integration
+
+### Functional
+```shell
+npm install
+npm run test
+```
+This defaults to run tests on the port 3000 (hosted by default from React).
+If you are running the application from docker-compose, or deployed elsewhere, you'll
+want to change the location that tests run, by providing the `APP` url.
+```shell
+APP=http://localhost run test
+```
+
+### DevOps Strategy
+Using github actions to manage all automated testing. Currently, each module (api, ui) has
+a github action that runs on each push. This runs UTs, ITs, along with some linting and 
+security scanning of dependencies.
+When a PR is opened, the functional tests are executed.
+These are all set as checks before the code can be merged into `main`
+
 ## Things to fix
 - Auto populate db using ./setup-database.sh script
 - Retrieve backend port using env for nginx instead of hardcoding
+
+ADD IN REGISTER TESTS
+REFACTOR FOR UI UT TESTING

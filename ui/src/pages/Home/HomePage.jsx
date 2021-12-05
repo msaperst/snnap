@@ -15,7 +15,7 @@ class HomePage extends React.Component {
     const { currentUser } = this.state;
     return (
       <div>
-        <h1>Hi {currentUser.name}!</h1>
+        <h1 id="welcome">Hi {currentUser.name}!</h1>
         <p>You are logged in!</p>
       </div>
     );
