@@ -10,16 +10,16 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     ports:
-      - ${DB_PORT}:${DB_PORT}
+      - ${MYSQL_PORT}:${MYSQL_PORT}
     expose:
-      - ${DB_PORT}
+      - ${MYSQL_PORT}
     environment:
       TZ: "America/New_York"
       MYSQL_ALLOW_EMPTY_PASSWORD: "no"
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
   api:
     build:
       context: api
@@ -31,11 +31,11 @@ services:
     links:
       - mysql
     environment:
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       API_PORT: ${API_PORT}
   ui:
     build:

@@ -2,10 +2,10 @@ const mysql = require('mysql');
 const util = require('util');
 
 const config = {
-  host: process.env.DB_HOST || '127.0.0.1',
-  user: process.env.DB_USER || 'seconds',
-  password: process.env.DB_PASS || 'seconds_password',
-  database: process.env.DB_NAME || 'seconds',
+  host: process.env.MYSQL_HOST || '127.0.0.1',
+  user: process.env.MYSQL_USER || 'seconds',
+  password: process.env.MYSQL_PASSWORD || 'seconds_password',
+  database: process.env.MYSQL_DATABASE || 'seconds',
 };
 
 const Mysql = class {
