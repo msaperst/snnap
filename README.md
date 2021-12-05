@@ -53,7 +53,7 @@ This defaults to run tests on the port 3000 (hosted by default from React).
 If you are running the application from docker-compose, or deployed elsewhere, you'll
 want to change the location that tests run, by providing the `APP` url.
 ```shell
-APP=http://localhost run test
+APP=http://localhost npm run test
 ```
 
 ### DevOps Strategy
