@@ -46,5 +46,5 @@ jobs:
       - name: Functional Test 🔒
         run: |
           export $(grep -v '^#' .env | xargs)
-          docker exec -it seconds_mysql ./setup-database.sh
+          docker exec seconds_mysql ./setup-database.sh
           APP=http://localhost npm run test
