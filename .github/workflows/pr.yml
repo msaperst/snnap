@@ -42,4 +42,6 @@ jobs:
         run: npm ci
 
       - name: Functional Test 🔒
-        run: export $(grep -v '^#' .env | xargs); APP=http://localhost npm run test
+        run: |
+          export $(grep -v '^#' .env | xargs)
+          APP=http://localhost npm run test
