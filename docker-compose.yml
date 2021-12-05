@@ -10,7 +10,7 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     ports:
-      - ${DB_PORT}:3306
+      - ${DB_PORT}:${DB_PORT}
     expose:
       - ${DB_PORT}
     environment:
