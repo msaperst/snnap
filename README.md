@@ -18,14 +18,16 @@ docker exec -i seconds_mysql ./setup-database.sh
 You probably want this for development or testing use, not prod deployments 
 #### Database
 ```shell
+export $(grep -v '^#' .env | xargs)
 cd sql
 docker image build . -t seconds_mysql
-docker container run --name=seconds_mysql -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_USER=seconds -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=seconds seconds_mysql:latest
+docker container run --name=seconds_mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DATABASE} seconds_mysql:latest
 docker exec -i seconds_mysql ./setup-database.sh
 ```
 
 #### API Server
 ```shell
+export $(grep -v '^#' .env | xargs)
 cd api
 npm install
 npm run start
@@ -33,6 +35,7 @@ npm run start
 
 #### React UI
 ```shell
+export $(grep -v '^#' .env | xargs)
 cd ui
 npm install
 npm run start

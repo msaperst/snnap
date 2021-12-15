@@ -72,6 +72,7 @@ const User = class {
         newUser.name = user[0].name;
         newUser.username = user[0].username;
         newUser.email = user[0].email;
+        newUser.lastLogin = user[0].lastLogin;
       } else {
         throw new Error('Username or password is incorrect!');
       }
@@ -84,13 +85,13 @@ const User = class {
     newUser.token = token;
     newUser.instancePromise = (async () => {
       const decoded = jwt.verify(newUser.token, JWT_SECRET);
-      const user = await Mysql.query(
-        'SELECT * FROM users where id=?',
-        decoded.id
-      );
+      const user = await Mysql.query(`SELECT *
+                                      FROM users
+                                      where id = ${decoded.id}`);
       newUser.name = user[0].name;
       newUser.username = user[0].username;
       newUser.email = user[0].email;
+      newUser.lastLogin = user[0].last_login;
     })();
     return newUser;
   }
@@ -113,6 +114,11 @@ const User = class {
   async getEmail() {
     await this.instancePromise;
     return this.email;
+  }
+
+  async getLastLogin() {
+    await this.instancePromise;
+    return this.lastLogin;
   }
 
   static getToken(authorization) {

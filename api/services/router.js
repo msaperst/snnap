@@ -54,7 +54,7 @@ router.post('/login', loginValidation, async (req, res) => {
   }
 });
 
-router.post('/get-user', signupValidation, async (req, res) => {
+router.get('/get-user', signupValidation, async (req, res) => {
   let token;
   try {
     token = User.getToken(req.headers.authorization);
@@ -64,10 +64,18 @@ router.post('/get-user', signupValidation, async (req, res) => {
     });
   }
   const user = User.auth(token);
-  return res.send({
-    error: false,
-    username: await user.getUsername(),
-  });
+  try {
+    return res.send({
+      name: await user.getName(),
+      username: await user.getUsername(),
+      email: await user.getEmail(),
+      lastLogin: await user.getLastLogin(),
+    });
+  } catch (error) {
+    return res.status(401).send({
+      msg: error.message,
+    });
+  }
 });
 
 module.exports = router;
