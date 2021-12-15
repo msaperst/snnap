@@ -12,7 +12,7 @@ done
 #create our database if it doesn't already exist
 mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -e "CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\`;" > /dev/null 2>&1
 #fix our user permissions
-mysql -u $MYSQL_USER -p$MYSQL_PASSWORD -e "ALTER USER '${MYSQL_USER}'@'%'  IDENTIFIED WITH mysql_native_password BY '${MYSQL_PASSWORD}';" > dev/null 2>&1
+mysql -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '${MYSQL_USER}'@'%' IDENTIFIED WITH mysql_native_password BY '${MYSQL_PASSWORD}';" > dev/null 2>&1
 
 #setup our schema
 for file in init/*.sql; do
