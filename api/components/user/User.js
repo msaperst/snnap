@@ -69,10 +69,15 @@ const User = class {
            SET last_login = now()
            WHERE id = '${newUser.id}'`
         );
+        const user = await Mysql.query(
+          `SELECT *
+           FROM users
+           WHERE id = '${newUser.id}'`
+        );
         newUser.name = user[0].name;
         newUser.username = user[0].username;
         newUser.email = user[0].email;
-        newUser.lastLogin = user[0].lastLogin;
+        newUser.lastLogin = user[0].last_login;
       } else {
         throw new Error('Username or password is incorrect!');
       }

@@ -24,7 +24,7 @@ class HomePage extends React.Component {
       <div>
         <h1 id="welcome">Hi {currentUser.name}!</h1>
         <p>You are logged in!</p>
-        <p>You last logged in {currentUser.lastLogin}</p>
+        <p id="last-login">You last logged in at {currentUser.lastLogin}</p>
       </div>
     );
   }
