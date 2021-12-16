@@ -15,12 +15,12 @@ class Base {
     return process.env.APP || 'http://localhost:3000';
   }
 
-  async getDriver() {
+  async getDriver(url = '') {
     const driver = await new Builder()
       .forBrowser('chrome')
       .setChromeOptions(new Options().headless())
       .build();
-    await driver.get(Base.getApp());
+    await driver.get(Base.getApp() + url);
     return driver;
   }
 
