@@ -49,6 +49,7 @@ npm run start
 
 ### Functional
 ```shell
+export $(grep -v '^#' .env | xargs)
 npm install
 npm run test
 ```
