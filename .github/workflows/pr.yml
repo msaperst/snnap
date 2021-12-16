@@ -23,8 +23,8 @@ jobs:
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=xFRcwhHSF4aHxpGv7n5DuzSz" >> .env
           echo "MYSQL_PORT=3306" >> .env
-          echo "MYSQL_DATABASE=seconds" >> .env
-          echo "MYSQL_USER=seconds" >> .env
+          echo "MYSQL_DATABASE=snnap" >> .env
+          echo "MYSQL_USER=snnap" >> .env
           echo "MYSQL_PASSWORD=vGvmKAcPLeQpQ7gEKckN89dB" >> .env
           echo "" >> .env
           echo "# api information" >> .env
@@ -46,5 +46,5 @@ jobs:
       - name: Functional Test 🔒
         run: |
           export $(grep -v '^#' .env | xargs)
-          docker exec seconds_mysql ./setup-database.sh
+          docker exec snnap_mysql ./setup-database.sh
           APP=http://localhost npm run test

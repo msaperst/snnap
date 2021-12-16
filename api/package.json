@@ -1,7 +1,7 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "Seconds back-end server",
+  "description": "Snnap back-end server",
   "jest": {
     "coverageThreshold": {
       "global": {
