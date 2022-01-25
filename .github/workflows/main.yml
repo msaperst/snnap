@@ -16,6 +16,22 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
+      - name: Setup env file ⚙
+        run: |
+          echo "# tool hosting information" > .env
+          echo "HTTP_PORT=70" >> .env
+          echo "HTTPS_PORT=7443" >> .env
+          echo "" >> .env
+          echo "# database information" >> .env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+          echo "MYSQL_PORT=3306" >> .env
+          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          echo "" >> .env
+          echo "# api information" >> .env
+          echo "API_PORT=3001" >> .env
+
       - name: Build Dockerfile 🐋
         run: docker-compose -f docker-compose.yml build
 
