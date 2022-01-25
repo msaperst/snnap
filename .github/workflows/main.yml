@@ -20,6 +20,7 @@ jobs:
         run: |
           mkdir ~/.ssh/
           echo "${{ secrets.PRODUCTION_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
       - name: Setup env file ⚙
         run: |
