@@ -16,6 +16,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PRODUCTION_KEY }}
+
       - name: Setup env file ⚙
         run: |
           echo "# tool hosting information" > .env
@@ -37,13 +42,13 @@ jobs:
 
       - name: Copy to Production
         run: |
-          docker save snnap_ui | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          docker save snnap_api | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          docker save snnap_mysql | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }}:${{ secrets.PRODUCTION_PATH }}
+          docker save snnap_ui | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_api | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_mysql | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }}:${{ secrets.PRODUCTION_PATH }}
 
       - name: Launch Snnap
         run: |
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'"
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'"
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'"
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'"
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
