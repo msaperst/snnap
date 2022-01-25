@@ -37,13 +37,13 @@ jobs:
 
       - name: Copy to Production
         run: |
-          docker save snnap_ui | gzip | ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          docker save snnap_api | gzip | ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          docker save snnap_mysql | gzip | ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          scp docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }}:${{ secrets.PRODUCTION_PATH }}
+          docker save snnap_ui | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_api | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_mysql | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }}:${{ secrets.PRODUCTION_PATH }}
 
       - name: Launch Snnap
         run: |
-          ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'"
-          ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'"
-          ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'"
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'"
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
