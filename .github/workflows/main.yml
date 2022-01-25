@@ -20,6 +20,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.PRODUCTION_KEY }}
+          known_hosts: ''
 
       - name: Setup env file ⚙
         run: |
