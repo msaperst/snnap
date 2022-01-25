@@ -15,8 +15,19 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
-#
-#      - name: Setup Node ☕
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: 12.x
+
+      - name: Build Dockerfile 🐋
+        run: docker-compose -f docker-compose.yml build
+
+      - name: Copy to Production
+        run: |
+          docker save snnap_ui | gzip | ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_api | gzip | ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_mysql | gzip | ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          scp docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }}:${{ secrets.PRODUCTION_PATH }}
+
+      - name: Launch Snnap
+        run: |
+          ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'"
+          ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'"
+          ssh ${{ secrets.PRODUCTION_USERNAME }}:${{ secrets.PRODUCTION_PASSWORD }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
