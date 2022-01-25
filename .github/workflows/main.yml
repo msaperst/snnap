@@ -18,6 +18,7 @@ jobs:
 
       - name: Setup SSH Key
         run: |
+          mkdir ~/.ssh/
           echo "${{ secrets.PRODUCTION_KEY }}" > ~/.ssh/id_rsa
 
       - name: Setup env file ⚙
