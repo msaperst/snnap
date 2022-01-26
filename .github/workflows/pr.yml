@@ -22,7 +22,7 @@ jobs:
           echo "" >> .env
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=xFRcwhHSF4aHxpGv7n5DuzSz" >> .env
-          echo "MYSQL_PORT=3306" >> .env
+          echo "MYSQL_PORT=3206" >> .env
           echo "MYSQL_DATABASE=snnap" >> .env
           echo "MYSQL_USER=snnap" >> .env
           echo "MYSQL_PASSWORD=vGvmKAcPLeQpQ7gEKckN89dB" >> .env
