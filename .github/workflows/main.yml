@@ -26,7 +26,6 @@ jobs:
         run: |
           echo "# tool hosting information" > .env
           echo "HTTP_PORT=70" >> .env
-          echo "HTTPS_PORT=7443" >> .env
           echo "" >> .env
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
@@ -51,6 +50,8 @@ jobs:
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      context:/d" docker-compose.yml'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      dockerfile:/d" docker-compose.yml'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "s/container_name/image/g" docker-compose.yml'
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/\${MYSQL_PORT}$/d" docker-compose.yml'
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^    expose:/d" docker-compose.yml'
 
       - name: Launch Snnap
         run: |

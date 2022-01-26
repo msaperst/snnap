@@ -18,7 +18,6 @@ jobs:
         run: |
           echo "# tool hosting information" > .env
           echo "HTTP_PORT=70" >> .env
-          echo "HTTPS_PORT=7443" >> .env
           echo "" >> .env
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=xFRcwhHSF4aHxpGv7n5DuzSz" >> .env
