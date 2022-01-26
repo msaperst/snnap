@@ -10,7 +10,7 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     ports:
-      - ${MYSQL_PORT}:${MYSQL_PORT}
+      - ${MYSQL_PORT}:3306
     expose:
       - ${MYSQL_PORT}
     environment:
@@ -46,7 +46,7 @@ services:
     depends_on:
       - api
     ports:
-      - "80:80"
+      - ${HTTP_PORT}:80
     links:
       - api
     environment:
