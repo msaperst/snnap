@@ -37,8 +37,8 @@ describe('log in page', () => {
     await driver.findElement(By.id('username')).sendKeys(user.username);
     await driver.findElement(By.id('password')).sendKeys('password');
     driver.findElement(By.id('loginButton')).click();
-    const header = driver.wait(until.elementLocated(By.id('welcome')));
-    expect(await header.getText()).toEqual('Hi Test User!');
+    const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
+    expect(await dropDownMenu.getText()).toEqual(user.username);
   });
 
   it('does not allow you to login with an invalid user', async () => {
@@ -64,4 +64,6 @@ describe('log in page', () => {
   });
 
   //TODO - able to navigate to forgot password
+
+  //TODO - able to logout
 });

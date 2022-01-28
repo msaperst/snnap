@@ -45,8 +45,8 @@ describe('register page', () => {
     await driver.findElement(By.id('email')).sendKeys('registerUser@example.org');
     await driver.findElement(By.id('password')).sendKeys('password');
     driver.findElement(By.id('registerButton')).click();
-    const header = driver.wait(until.elementLocated(By.id('welcome')));
-    expect(await header.getText()).toEqual('Hi Test User!');
+    const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
+    expect(await dropDownMenu.getText()).toEqual('registerUser');
   });
 
   it('does not allow you to register without a valid email', async () => {
