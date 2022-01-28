@@ -15,7 +15,7 @@ class Search extends React.Component {
     return (
       <div>
         <Row>
-          <Col md={6}>
+          <Col sm={12} md={6}>
             <h1 id="tagline">Photography help in a snap</h1>
             <h4 id="subTagline">The extra n is for easy</h4>
             <p>
@@ -24,7 +24,7 @@ class Search extends React.Component {
               iaculis quam lectus, ac lobortis tortor porta eget.
             </p>
           </Col>
-          <Col md={6}>
+          <Col md={6} className="d-md-block d-sm-none">
             <img src={searchGuy} alt="Search" className="searchGuy" />
           </Col>
         </Row>
