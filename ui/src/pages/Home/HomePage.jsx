@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Search from '../../components/Search/Search';
 import { authenticationService } from '../../services/authentication.service';
 import { userService } from '../../services/user.service';
 
@@ -19,14 +20,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { currentUser } = this.state;
-    return (
-      <div>
-        <h1 id="welcome">Hi {currentUser.name}!</h1>
-        <p>You are logged in!</p>
-        <p id="last-login">You last logged in at {currentUser.lastLogin}</p>
-      </div>
-    );
+    return <Search />;
   }
 }
 

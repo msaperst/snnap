@@ -21,7 +21,7 @@ You probably want this for development or testing use, not prod deployments
 export $(grep -v '^#' .env | xargs)
 cd sql
 docker image build . -t snnap_mysql
-docker container run --name=snnap_mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DATABASE} snnap_mysql:latest
+docker container run --name=snnap_mysql -p ${MYSQL_PORT}:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DATABASE} snnap_mysql:latest
 docker exec -i snnap_mysql ./setup-database.sh
 ```
 

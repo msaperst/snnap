@@ -1,0 +1,21 @@
+.searchGuy {
+    position: absolute;
+    z-index: 9;
+    bottom: -100px;
+    right: 0;
+}
+
+#searchForJobButton {
+    z-index: 10;
+}
+
+.btn-primary {
+    background: #6A3CA5;
+    border-color: #6A3CA5;
+    cursor: pointer;
+}
+
+/*.btn-primary:hover {*/
+/*    background-color: #6A3CA5;*/
+/*    border-color: #6A3CA5;*/
+/*}*/
