@@ -9,7 +9,7 @@ import { PrivateRoute } from './helpers/PrivateRoute';
 import HomePage from './pages/Home/HomePage';
 import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
-import NavBar from './components/NavBar/NavBar';
+import Menu from './components/Menu/Menu';
 import ProfilePage from './pages/Profile/ProfilePage';
 
 class App extends React.Component {
@@ -37,20 +37,16 @@ class App extends React.Component {
     const { currentUser } = this.state;
     return (
       <Router history={history}>
-        <div>
-          {currentUser && <NavBar logout={() => this.logout()} />}
-          <div className="jumbotron">
-            <Container>
-              <Row>
-                <Col md={{ span: 6, offset: 3 }}>
-                  <PrivateRoute exact path="/" component={HomePage} />
-                  <PrivateRoute exact path="/profile" component={ProfilePage} />
-                  <Route path="/login" component={LoginPage} />
-                  <Route path="/register" component={RegisterPage} />
-                </Col>
-              </Row>
-            </Container>
-          </div>
+        <div className="vertical-center">
+          <Container>
+            <Row>
+              <Col>{currentUser && <Menu logout={() => this.logout()} />}</Col>
+            </Row>
+            <PrivateRoute exact path="/" component={HomePage} />
+            <PrivateRoute exact path="/profile" component={ProfilePage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/register" component={RegisterPage} />
+          </Container>
         </div>
       </Router>
     );

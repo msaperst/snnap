@@ -26,14 +26,10 @@ describe('home page', () => {
   });
 
   it('shows the username', async () => {
-    const header = driver.wait(until.elementLocated(By.id('welcome')));
-    expect(await header.getText()).toEqual(`Hi ${await user.getName()}!`);
+    const header = driver.wait(until.elementLocated(By.id('tagline')));
+    expect(await header.getText()).toEqual('Photography help in a snap');
   });
 
-  it('shows the last login time', async () => {
-    const login = driver.wait(until.elementLocated(By.id('last-login')));
-    expect(await login.getText()).toMatch(/You last logged in at \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.000Z/);
-
-  });
+  //TODO - fill me out as we get more functionality
 
 });
