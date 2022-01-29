@@ -3,7 +3,6 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Alert, Button, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { authenticationService } from '../../services/authentication.service';
 
 class LoginPage extends React.Component {
@@ -107,10 +106,24 @@ class LoginPage extends React.Component {
                     </div>
                   </Col>
                   <Col>
-                    <Link to="/passwordReset">Forgot Password</Link>
+                    <Button
+                      id="forgotPasswordButton"
+                      type="button"
+                      variant="primary"
+                      href="/passwordReset"
+                    >
+                      Forgot Password
+                    </Button>
                   </Col>
                   <Col>
-                    <Link to="/register">Register</Link>
+                    <Button
+                      id="forgotPasswordButton"
+                      type="button"
+                      variant="primary"
+                      href="/register"
+                    >
+                      Register
+                    </Button>
                   </Col>
                 </Row>
                 {status && (
