@@ -6,7 +6,17 @@ const Mysql = require('../../services/Mysql');
 const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-jwt-token';
 
 const User = class {
-  static register(username, password, name, email) {
+  static register(
+    firstName,
+    lastName,
+    username,
+    email,
+    number,
+    password,
+    city,
+    state,
+    zip
+  ) {
     const newUser = new User();
     newUser.instancePromise = (async () => {
       let exists = await Mysql.query(
@@ -29,14 +39,18 @@ const User = class {
       }
       const hash = await bcrypt.hash(password, 10);
       await Mysql.query(
-        `INSERT INTO users (name, username, email, password)
-         VALUES ('${name}',
+        `INSERT INTO users (first_name, last_name, username, email, number, password, city, state, zip)
+         VALUES (${db.escape(firstName)}, ${db.escape(lastName)},
                  ${db.escape(username)},
                  ${db.escape(email)},
-                 ${db.escape(hash)})`
+                 ${db.escape(number)},
+                 ${db.escape(hash)},
+                 ${db.escape(city)},
+                 ${db.escape(state)},
+                 ${db.escape(zip)})`
       );
       newUser.username = username;
-      newUser.name = name;
+      newUser.name = `${firstName} ${lastName}`;
       newUser.email = email;
     })();
     return newUser;
@@ -74,7 +88,7 @@ const User = class {
            FROM users
            WHERE id = '${newUser.id}'`
         );
-        newUser.name = user[0].name;
+        newUser.name = `${user[0].first_name} ${user[0].last_name}`;
         newUser.username = user[0].username;
         newUser.email = user[0].email;
         newUser.lastLogin = user[0].last_login;
@@ -93,7 +107,7 @@ const User = class {
       const user = await Mysql.query(`SELECT *
                                       FROM users
                                       where id = ${decoded.id}`);
-      newUser.name = user[0].name;
+      newUser.name = `${user[0].first_name} ${user[0].last_name}`;
       newUser.username = user[0].username;
       newUser.email = user[0].email;
       newUser.lastLogin = user[0].last_login;
