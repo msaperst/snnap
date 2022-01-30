@@ -82,6 +82,7 @@ class RegisterPage extends React.Component {
         <Form.Group className="mb-3">
           <Form.Check
             required
+            id="agreeToTerms"
             label="Agree to terms and conditions"
             feedback="You must agree before submitting."
             feedbackType="invalid"
