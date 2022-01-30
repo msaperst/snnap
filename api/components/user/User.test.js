@@ -40,18 +40,22 @@ describe('User', () => {
     const hash = await bcrypt.hash('password', 10);
     Mysql.query.mockResolvedValue([
       {
+        first_name: 'Bob',
+        last_name: 'Robert',
         username: 'Bob',
         password: hash,
         name: 'Robert',
         email: 'bobert@gmail.com',
+        last_login: 123,
       },
     ]);
 
     const user = User.login('Bob', 'password');
     await expect(user.getToken()).resolves.not.toBeNull();
-    await expect(user.getName()).resolves.toEqual('Robert');
+    await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
+    await expect(user.getLastLogin()).resolves.toEqual(123);
   });
 
   it('throws an error when the email is already in the system via register', async () => {
@@ -77,11 +81,22 @@ describe('User', () => {
   it('sets the user values on valid credentials via register', async () => {
     Mysql.query.mockResolvedValue([]);
 
-    const user = User.register('Bob', 'password', 'Robert', 'bobert@gmail.com');
+    const user = User.register(
+      'Bob',
+      'Robert',
+      'Robert',
+      `bobert@example.org`,
+      'Number',
+      'password',
+      'City',
+      'State',
+      'Zip'
+    );
     await expect(user.getToken()).resolves.toEqual(undefined);
-    await expect(user.getName()).resolves.toEqual('Robert');
-    await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
+    await expect(user.getName()).resolves.toEqual('Bob Robert');
+    await expect(user.getUsername()).resolves.toEqual('Robert');
+    await expect(user.getEmail()).resolves.toEqual('bobert@example.org');
+    await expect(user.getLastLogin()).resolves.toBeUndefined();
   });
 
   it('fails if no token is set', () => {
@@ -122,16 +137,20 @@ describe('User', () => {
     const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     Mysql.query.mockResolvedValue([
       {
+        first_name: 'Bob',
+        last_name: 'Robert',
         username: 'Bob',
         name: 'Robert',
         email: 'bobert@gmail.com',
+        last_login: '123',
       },
     ]);
 
     const user = User.auth(token);
     await expect(user.getToken()).resolves.toEqual(token);
-    await expect(user.getName()).resolves.toEqual('Robert');
+    await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
+    await expect(user.getLastLogin()).resolves.toEqual('123');
   });
 });
