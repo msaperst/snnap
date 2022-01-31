@@ -29,7 +29,7 @@ class Base {
   }
 
   addUser(username) {
-    return User.register(username, 'password', 'Test User', `${username}@example.org`);
+    return User.register('Test', 'User', username, `${username}@example.org`, 'Number', 'password', 'City', 'State', 'Zip');
   }
 
   async loginUser(driver, username) {

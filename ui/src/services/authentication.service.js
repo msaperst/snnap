@@ -18,11 +18,31 @@ export const authenticationService = {
   },
 };
 
-function register(name, username, email, password) {
+function register(
+  firstName,
+  lastName,
+  username,
+  email,
+  number,
+  password,
+  city,
+  state,
+  zip
+) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, username, email, password }),
+    body: JSON.stringify({
+      firstName,
+      lastName,
+      username,
+      email,
+      number,
+      password,
+      city,
+      state,
+      zip,
+    }),
   };
 
   return fetch(`/api/register`, requestOptions)

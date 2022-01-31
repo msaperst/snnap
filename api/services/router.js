@@ -6,10 +6,15 @@ const User = require('../components/user/User');
 
 router.post('/register', signupValidation, async (req, res) => {
   const user = User.register(
+    req.body.firstName,
+    req.body.lastName,
     req.body.username,
+    req.body.email,
+    req.body.number,
     req.body.password,
-    req.body.name,
-    req.body.email
+    req.body.city,
+    req.body.state,
+    req.body.zip
   );
   try {
     await user.getToken();

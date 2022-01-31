@@ -26,40 +26,46 @@ describe('log in page', () => {
   });
 
   it('shows error when you login with blank credentials', async () => {
-    expect((await driver.findElements(By.id('username-error'))).length).toEqual(0);
-    expect((await driver.findElements(By.id('password-error'))).length).toEqual(0);
+    const feedback = (await driver.findElements(By.className('invalid-feedback')));
+    expect(feedback.length).toEqual(2);
+    expect(await feedback[0].getText()).toEqual('');
+    expect(await feedback[1].getText()).toEqual('');
+    expect(await feedback[0].isDisplayed()).toBeFalsy();
+    expect(await feedback[1].isDisplayed()).toBeFalsy();
     driver.findElement(By.id('loginButton')).click();
-    expect(await driver.findElement(By.id('username-error')).getText()).toEqual('Username is required');
-    expect(await driver.findElement(By.id('password-error')).getText()).toEqual('Password is required');
+    expect(await feedback[0].getText()).toEqual('Please provide a valid username.');
+    expect(await feedback[1].getText()).toEqual('Please provide a valid password.');
+    expect(await feedback[0].isDisplayed()).toBeTruthy();
+    expect(await feedback[1].isDisplayed()).toBeTruthy();
   });
 
   it('allows you to login with a valid user', async () => {
-    await driver.findElement(By.id('username')).sendKeys(user.username);
-    await driver.findElement(By.id('password')).sendKeys('password');
+    await driver.findElement(By.id('validationUsername')).sendKeys(user.username);
+    await driver.findElement(By.id('validationPassword')).sendKeys('password');
     driver.findElement(By.id('loginButton')).click();
     const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
     expect(await dropDownMenu.getText()).toEqual(user.username);
   });
 
   it('does not allow you to login with an invalid user', async () => {
-    await driver.findElement(By.id('username')).sendKeys('some bad user');
-    await driver.findElement(By.id('password')).sendKeys('password');
+    await driver.findElement(By.id('validationUsername')).sendKeys('some bad user');
+    await driver.findElement(By.id('validationPassword')).sendKeys('password');
     driver.findElement(By.id('loginButton')).click();
     const header = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await header.getText()).toEqual('Username or password is incorrect!');
   });
 
   it('does not allow you to login with an invalid password', async () => {
-    await driver.findElement(By.id('username')).sendKeys(user.username);
-    await driver.findElement(By.id('password')).sendKeys('passwor');
+    await driver.findElement(By.id('validationUsername')).sendKeys(user.username);
+    await driver.findElement(By.id('validationPassword')).sendKeys('passwor');
     driver.findElement(By.id('loginButton')).click();
     const header = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await header.getText()).toEqual('Username or password is incorrect!');
   });
 
   it('allows you to navigate to the register page', async () => {
-    driver.findElement(By.linkText('Register')).click();
-    driver.wait(until.elementLocated(By.id('name')));
+    driver.findElement(By.id('registerButton')).click();
+    driver.wait(until.elementLocated(By.id('validationFirstname')));
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Register');
   });
 

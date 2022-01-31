@@ -14,9 +14,9 @@
       "cobertura"
     ],
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!**/index.jsx",
-      "!src/__tests__/**/*.{js,jsx,ts,tsx}"
+      "src/components/**/*.{js,jsx,ts,tsx}",
+      "!src/components/Menu/*",
+      "!**/index.jsx"
     ]
   },
   "jest-junit": {
@@ -80,6 +80,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "jest-html-reporter": "^3.4.2",
     "jest-junit": "^13.0.0",
     "prettier": "^2.4.1"
   }

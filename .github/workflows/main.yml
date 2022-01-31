@@ -57,4 +57,5 @@ jobs:
         run: |
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'docker exec snnap_mysql ./setup-database.sh'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
