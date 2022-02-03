@@ -14,19 +14,19 @@ describe('search', () => {
     wrapper = Enzyme.shallow(<Search />);
   });
 
-  it('displays the main tagline', async () => {
+  it('displays the main tagline', () => {
     expect(wrapper.find('#tagline').text()).toEqual(
       'Photography help in a snap'
     );
   });
 
-  it('displays the next tagline', async () => {
+  it('displays the next tagline', () => {
     expect(wrapper.find('#subTagline').text()).toEqual(
       'The extra n is for easy'
     );
   });
 
-  it('displays search bar', async () => {
+  it('displays search bar', () => {
     const search = render(<Search />);
     expect(search.queryByLabelText(/Search For Job/)).toBeTruthy();
   });
