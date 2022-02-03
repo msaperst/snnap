@@ -54,7 +54,7 @@ class LoginPage extends React.Component {
       <Form noValidate validated={validated} onSubmit={this.handleSubmit}>
         <h2>Login</h2>
         <Row className="mb-3">
-          <SnnapFormInput size={6} name="Username" type="text" />
+          <SnnapFormInput size={6} name="Username" />
           <SnnapFormInput size={6} name="Password" type="password" />
         </Row>
         <Row className="mb-3">
