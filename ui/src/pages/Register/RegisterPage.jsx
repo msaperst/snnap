@@ -65,9 +65,9 @@ class RegisterPage extends React.Component {
       <Form noValidate validated={validated} onSubmit={this.handleSubmit}>
         <h2>Register</h2>
         <Row className="mb-3">
-          <SnnapFormInput size={4} name="First name" type="text" />
-          <SnnapFormInput size={4} name="Last name" type="text" />
-          <SnnapFormInput size={4} name="Username" type="text" before="@" />
+          <SnnapFormInput size={4} name="First name" />
+          <SnnapFormInput size={4} name="Last name" />
+          <SnnapFormInput size={4} name="Username" before="@" />
         </Row>
         <Row className="mb-3">
           <SnnapFormInput size={4} name="Email" type="email" />
@@ -75,9 +75,9 @@ class RegisterPage extends React.Component {
           <SnnapFormInput size={4} name="Password" type="password" />
         </Row>
         <Row className="mb-3">
-          <SnnapFormInput size={6} name="City" type="text" />
-          <SnnapFormInput size={3} name="State" type="text" />
-          <SnnapFormInput size={3} name="Zip" type="text" />
+          <SnnapFormInput size={6} name="City" />
+          <SnnapFormInput size={3} name="State" />
+          <SnnapFormInput size={3} name="Zip" />
         </Row>
         <Form.Group className="mb-3">
           <Form.Check
