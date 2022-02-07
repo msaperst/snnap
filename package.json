@@ -37,7 +37,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "geckodriver": "^2.0.4",
-    "jest": "^27.4.7",
+    "jest": "^27.5.0",
     "jest-html-reporter": "^3.4.2",
     "jest-junit": "^13.0.0",
     "prettier": "^2.5.1",
