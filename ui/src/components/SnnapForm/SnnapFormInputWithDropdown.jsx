@@ -15,7 +15,7 @@ function changeThis(dropDown, option) {
 
 function SnnapFormInputWithDropdown(props) {
   const { size, name, onChange, options } = props;
-  if (!name || !options || options.size === 0) {
+  if (!name || !options || options.length === 0) {
     return null;
   }
   const safeName = name.replace(/[\W]+/g, '');
@@ -39,7 +39,7 @@ function SnnapFormInputWithDropdown(props) {
   );
 
   return (
-    <Form.Group as={Col} md={size} controlId={`validation${safeName}`}>
+    <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
       <InputGroup hasValidation>
         {formControl}
         {formError}

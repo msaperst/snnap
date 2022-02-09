@@ -30,7 +30,7 @@ function SnnapFormPrice(props) {
   );
 
   return (
-    <Form.Group as={Col} md={size} controlId={`validation${safeName}`}>
+    <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
       <InputGroup hasValidation>
         <InputGroup.Text id={`inputGroup${safeName}`}>$</InputGroup.Text>
         {formControl}

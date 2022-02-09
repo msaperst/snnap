@@ -32,8 +32,8 @@ function SnnapFormInput(props) {
   );
 
   return (
-    <Form.Group as={Col} md={size} controlId={`validation${safeName}`}>
-      <FloatingLabel controlId={`floating${safeName}`} label={name}>
+    <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
+      <FloatingLabel controlId={`form${safeName}`} label={name}>
         {formControl}
         {formError}
       </FloatingLabel>
