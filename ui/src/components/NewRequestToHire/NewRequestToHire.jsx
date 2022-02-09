@@ -5,6 +5,7 @@ import { jobService } from '../../services/job.service';
 import SnnapFormPrice from '../SnnapForm/SnnapFormPrice';
 import SnnapFormInputWithDropdown from '../SnnapForm/SnnapFormInputWithDropdown';
 import SnnapFormMultiSelect from '../SnnapForm/SnnapFormMultiSelect';
+import SnnapFormLocationInput from '../SnnapForm/SnnapFormLocationInput';
 
 function NewRequestToHire() {
   const [show, setShow] = useState(false);
@@ -17,6 +18,7 @@ function NewRequestToHire() {
   const handleShow = () => setShow(true);
 
   const handleSubmit = () => {
+    console.log(formData);
     const form = document.querySelector('form');
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
@@ -26,9 +28,9 @@ function NewRequestToHire() {
           formData['Job Details'],
           formData.Pay,
           formData.Duration,
-          formData.Location,
-          formData['Equipment Needed'],
-          formData['Skills Needed']
+          formData.Location
+          // formData['Equipment Needed'],
+          // formData['Skills Needed']
         )
         .then(
           () => {
@@ -70,7 +72,7 @@ function NewRequestToHire() {
               <SnnapFormInput name="Job Type" onChange={updateForm} />
             </Row>
             <Row className="mb-3">
-              <SnnapFormInput
+              <SnnapFormLocationInput
                 name="Location"
                 type="text"
                 onChange={updateForm}
