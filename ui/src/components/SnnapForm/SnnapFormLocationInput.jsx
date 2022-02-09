@@ -33,22 +33,29 @@ function SnnapFormLocationInput(props) {
     return null;
   }
   const safeName = name.replace(/[\W]+/g, '');
-
+  let change = null;
+  if (onChange) {
+    change = (e) => onChange(name, e);
+  }
   const key = 'fa2749a615994e459a223b8cb3832599';
 
   return (
     <GeoapifyContext apiKey={key}>
-      <Form.Group as={Col} md={size} controlId={`validation${safeName}`}>
-        <FloatingLabel controlId={`floating${safeName}`} label={name}>
+      <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
+        <FloatingLabel controlId={`form${safeName}`} label={name}>
           <GeoapifyGeocoderAutocomplete
             placeholder={name}
             skipIcons
-            placeSelect={(v) => onChange(name, v)}
+            placeSelect={change}
           />
         </FloatingLabel>
       </Form.Group>
     </GeoapifyContext>
   );
 }
+
+SnnapFormLocationInput.defaultProps = {
+  size: 12,
+};
 
 export default SnnapFormLocationInput;

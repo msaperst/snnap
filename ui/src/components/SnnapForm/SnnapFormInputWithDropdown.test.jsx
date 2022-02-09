@@ -1,13 +1,7 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { shallow } from 'enzyme';
+import Enzyme from 'enzyme';
 import React from 'react';
-import {
-  fireEvent,
-  screen,
-  render,
-  waitFor,
-  getByText,
-} from '@testing-library/react';
+import { fireEvent, getByText, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormInputWithDropdown from './SnnapFormInputWithDropdown';
 
@@ -152,7 +146,6 @@ describe('snnap form input', () => {
     }
   });
 
-  // TODO verify it actually updates the dropdown value
   it('changes value on select', async () => {
     const { container } = render(
       <SnnapFormInputWithDropdown
