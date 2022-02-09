@@ -14,7 +14,7 @@ function SnnapFormMultiSelect(props) {
   const safeName = name.replace(/[\W]+/g, '');
   let change = null;
   if (onChange) {
-    change = (e) => onChange(name, e.target);
+    change = (e) => onChange(name, e);
   }
   const opts = options.map((option) => ({ value: option, label: option }));
   const select = (

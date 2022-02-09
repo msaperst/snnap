@@ -18,19 +18,20 @@ function NewRequestToHire() {
   const handleShow = () => setShow(true);
 
   const handleSubmit = () => {
-    console.log(formData);
     const form = document.querySelector('form');
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
       jobService
         .newRequestToHire(
           formData['Job Type'],
+          formData.Location,
           formData['Job Details'],
           formData.Pay,
           formData.Duration,
-          formData.Location
-          // formData['Equipment Needed'],
-          // formData['Skills Needed']
+          formData.Date,
+          formData.Time,
+          formData['Equipment Needed'],
+          formData['Skills Needed']
         )
         .then(
           () => {
