@@ -14,7 +14,7 @@ function changeThis(dropDown, option) {
 }
 
 function SnnapFormInputWithDropdown(props) {
-  const { size, name, onChange, options } = props;
+  const { size, type, name, onChange, options } = props;
   if (!name || !options || options.length === 0) {
     return null;
   }
@@ -26,7 +26,7 @@ function SnnapFormInputWithDropdown(props) {
   const formControl = (
     <Form.Control
       required
-      type="text"
+      type={type}
       placeholder={name}
       aria-describedby={`inputGroup${safeName}`}
       onChange={change}
@@ -65,6 +65,7 @@ function SnnapFormInputWithDropdown(props) {
 
 SnnapFormInputWithDropdown.defaultProps = {
   size: 12,
+  type: 'text',
 };
 
 export default SnnapFormInputWithDropdown;

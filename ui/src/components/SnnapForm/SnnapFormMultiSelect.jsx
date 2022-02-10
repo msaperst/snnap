@@ -8,7 +8,7 @@ const animatedComponents = makeAnimated();
 
 function SnnapFormMultiSelect(props) {
   const { size, name, onChange, options } = props;
-  if (!name || !options || options.size === 0) {
+  if (!name || !options || options.length === 0) {
     return null;
   }
   const safeName = name.replace(/[\W]+/g, '');

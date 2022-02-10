@@ -6,6 +6,7 @@ import SnnapFormPrice from '../SnnapForm/SnnapFormPrice';
 import SnnapFormInputWithDropdown from '../SnnapForm/SnnapFormInputWithDropdown';
 import SnnapFormMultiSelect from '../SnnapForm/SnnapFormMultiSelect';
 import SnnapFormLocationInput from '../SnnapForm/SnnapFormLocationInput';
+import SnnapFormSelect from '../SnnapForm/SnnapFormSelect';
 
 function NewRequestToHire() {
   const [show, setShow] = useState(false);
@@ -58,7 +59,12 @@ function NewRequestToHire() {
         New Request To Hire
       </Button>
 
-      <Modal size="lg" show={show} onHide={handleClose}>
+      <Modal
+        size="lg"
+        show={show}
+        onHide={handleClose}
+        data-testid="newRequestToHireModal"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Create a new request to hire</Modal.Title>
         </Modal.Header>
@@ -70,7 +76,16 @@ function NewRequestToHire() {
             onSubmit={handleSubmit}
           >
             <Row className="mb-3">
-              <SnnapFormInput name="Job Type" onChange={updateForm} />
+              <SnnapFormSelect
+                name="Job Type"
+                onChange={updateForm}
+                options={[
+                  'Wedding',
+                  "B'nai Mitzvah",
+                  'Commercial Event',
+                  'Other',
+                ]}
+              />
             </Row>
             <Row className="mb-3">
               <SnnapFormLocationInput
@@ -90,6 +105,7 @@ function NewRequestToHire() {
               <SnnapFormPrice size={6} name="Pay" onChange={updateForm} />
               <SnnapFormInputWithDropdown
                 size={6}
+                type="number"
                 name="Duration"
                 options={['Minutes', 'Hours', 'Days']}
                 onChange={updateForm}
