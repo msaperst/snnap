@@ -4,7 +4,6 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormMultiSelect from './SnnapFormMultiSelect';
-import SnnapFormInputWithDropdown from './SnnapFormInputWithDropdown';
 
 Enzyme.configure({ adapter: new Adapter() });
 

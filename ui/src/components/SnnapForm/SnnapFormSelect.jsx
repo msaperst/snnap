@@ -14,9 +14,11 @@ function SnnapFormSelect(props) {
   }
   const formControl = (
     <Form.Select required aria-label={name} onChange={change}>
-      <option>Select an option</option>
+      <option key="">Select an option</option>
       {options.map((option) => (
-        <option value={option}>{option}</option>
+        <option key={option} value={option}>
+          {option}
+        </option>
       ))}
     </Form.Select>
   );
