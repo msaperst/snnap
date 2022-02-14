@@ -16,6 +16,7 @@
     "collectCoverageFrom": [
       "src/components/**/*.{js,jsx,ts,tsx}",
       "!src/components/Menu/*",
+      "!src/components/NewRequestToHire/*",
       "!**/index.jsx"
     ]
   },
