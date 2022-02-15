@@ -16,7 +16,10 @@ function SnnapFormMultiSelect(props) {
   if (onChange) {
     change = (e) => onChange(name, e);
   }
-  const opts = options.map((option) => ({ value: option, label: option }));
+  const opts = options.map((option) => ({
+    value: option.id,
+    label: option.name,
+  }));
   const select = (
     <Select
       options={opts}

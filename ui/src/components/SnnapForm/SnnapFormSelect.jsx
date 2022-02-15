@@ -16,8 +16,8 @@ function SnnapFormSelect(props) {
     <Form.Select required aria-label={name} onChange={change}>
       <option key="">Select an option</option>
       {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
+        <option key={option.id} value={option.id}>
+          {option.type}
         </option>
       ))}
     </Form.Select>

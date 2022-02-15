@@ -8,6 +8,7 @@ const {
   newRequestToHireValidation,
 } = require('./validation');
 const User = require('../components/user/User');
+const Mysql = require('./Mysql');
 
 router.post('/register', signupValidation, async (req, res) => {
   const errors = validationResult(req);
@@ -72,30 +73,6 @@ router.post('/login', loginValidation, async (req, res) => {
   }
 });
 
-router.get('/get-user', async (req, res) => {
-  let token;
-  try {
-    token = User.getToken(req.headers.authorization);
-  } catch (error) {
-    return res.status(422).json({
-      message: error.message,
-    });
-  }
-  const user = User.auth(token);
-  try {
-    return res.send({
-      name: await user.getName(),
-      username: await user.getUsername(),
-      email: await user.getEmail(),
-      lastLogin: await user.getLastLogin(),
-    });
-  } catch (error) {
-    return res.status(401).send({
-      msg: error.message,
-    });
-  }
-});
-
 router.post(
   '/newRequestToHire',
   newRequestToHireValidation,
@@ -121,5 +98,83 @@ router.post(
     }
   }
 );
+
+// information about our user
+router.get('/get-user', async (req, res) => {
+  let token;
+  try {
+    token = User.getToken(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const user = User.auth(token);
+  try {
+    return res.send({
+      name: await user.getName(),
+      username: await user.getUsername(),
+      email: await user.getEmail(),
+      lastLogin: await user.getLastLogin(),
+    });
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
+// information about our system
+router.get('/job-types', async (req, res) => {
+  try {
+    User.getToken(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const jobTypes = await Mysql.query(`SELECT * FROM job_types;`);
+  try {
+    return res.send(jobTypes);
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+router.get('/equipment', async (req, res) => {
+  try {
+    User.getToken(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const equipment = await Mysql.query(`SELECT * FROM equipment;`);
+  try {
+    return res.send(equipment);
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+router.get('/skills', async (req, res) => {
+  try {
+    User.getToken(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const skills = await Mysql.query(`SELECT * FROM skills;`);
+  try {
+    return res.send(skills);
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
 
 module.exports = router;

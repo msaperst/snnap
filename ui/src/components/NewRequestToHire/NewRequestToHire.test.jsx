@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   fireEvent,
-  getByLabelText,
   getByPlaceholderText,
   getByText,
   render,
@@ -48,22 +47,22 @@ describe('snnap form input', () => {
     // fireEvent.
   });
 
-  it('updates values when data is entered', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request To Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
-    const pay = getByPlaceholderText(modal, 'Pay');
-    fireEvent.keyDown(pay, { keycode: 49 });
-    // const event = new KeyboardEvent('keydown', { key: '1' });
-    // pay.dispatchEvent(event);
-    // textarea.simulate('keydown', { which: 'a' });
-    // expect(pay.value).toEqual('a');
-  });
+  // it('updates values when data is entered', async () => {
+  //   const { container } = render(<NewRequestToHire />);
+  //   await waitFor(() => container.firstChild);
+  //   const button = getByText(container, 'New Request To Hire');
+  //   fireEvent.click(button);
+  //
+  //   const modal = await waitFor(() =>
+  //     screen.getByTestId('newRequestToHireModal')
+  //   );
+  //   const pay = getByPlaceholderText(modal, 'Pay');
+  //   fireEvent.keyDown(pay, { keycode: 49 });
+  //   // const event = new KeyboardEvent('keydown', { key: '1' });
+  //   // pay.dispatchEvent(event);
+  //   // textarea.simulate('keydown', { which: 'a' });
+  //   // expect(pay.value).toEqual('a');
+  // });
 
   // TODO - test that state changes are made when updating values
   // TODO - test that we can submit

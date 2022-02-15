@@ -24,12 +24,7 @@ exports.loginValidation = [
 ];
 
 exports.newRequestToHireValidation = [
-  check('type', 'Please select a valid job type').isIn([
-    'Wedding',
-    "B'nai Mitzvah",
-    'Commercial Event',
-    'Other',
-  ]),
+  check('type', 'Please select a valid job type').isNumeric(),
   check('location', 'Please include a job location').not().isEmpty(),
   check('details', 'Please include some job details').not().isEmpty(),
   check('pay', 'Please include the job pay').isNumeric(),
