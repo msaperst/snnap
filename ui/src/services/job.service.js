@@ -6,6 +6,7 @@ export const jobService = {
   getEquipment,
   getSkills,
   newRequestToHire,
+  getHireRequests,
 };
 
 function getJobTypes() {
@@ -52,5 +53,10 @@ function newRequestToHire(
     }),
   };
 
-  return fetch(`/api/newRequestToHire`, requestOptions).then(handleResponse);
+  return fetch(`/api/new-request-to-hire`, requestOptions).then(handleResponse);
+}
+
+function getHireRequests() {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/hire-requests`, requestOptions).then(handleResponse);
 }

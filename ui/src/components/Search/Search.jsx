@@ -29,7 +29,7 @@ class Search extends React.Component {
   render() {
     const { jobTypes } = this.state;
     return (
-      <div>
+      <div id="search">
         <Row>
           <Col sm={12} md={6}>
             <h1 id="tagline">Photography help in a snap</h1>
@@ -65,11 +65,13 @@ class Search extends React.Component {
         <Row>
           <Col>
             {jobTypes.map((type) => (
-              <span key={type.id}>
-                <Button variant="primary" onClick={() => this.filter(type.id)}>
-                  {type.type}
-                </Button>{' '}
-              </span>
+              <Button
+                key={type.id}
+                variant="primary"
+                onClick={() => this.filter(type.id)}
+              >
+                {type.type}
+              </Button>
             ))}
           </Col>
         </Row>

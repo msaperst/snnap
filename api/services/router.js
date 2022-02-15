@@ -75,7 +75,7 @@ router.post('/login', loginValidation, async (req, res) => {
 });
 
 router.post(
-  '/newRequestToHire',
+  '/new-request-to-hire',
   newRequestToHireValidation,
   async (req, res) => {
     const errors = validationResult(req);
@@ -193,6 +193,27 @@ router.get('/skills', async (req, res) => {
                                     FROM skills;`);
   try {
     return res.send(skills);
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
+router.get('/hire-requests', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const hireRequests = await Mysql.query(
+    `SELECT hire_requests.id, location, details, pay, duration, units, date_time, equipment, skills, job_types.type 
+        FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id;`
+  );
+  try {
+    return res.send(hireRequests);
   } catch (error) {
     return res.status(422).send({
       msg: error.message,
