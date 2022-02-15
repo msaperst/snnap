@@ -11,20 +11,24 @@ function newRequestToHire(
   details,
   pay,
   duration,
+  units,
   date,
   time,
   equipment,
   skills
 ) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
   const requestOptions = {
     method: 'POST',
-    headers: authHeader(),
+    headers,
     body: JSON.stringify({
       type,
       location,
       details,
       pay,
       duration,
+      units,
       date,
       time,
       equipment,

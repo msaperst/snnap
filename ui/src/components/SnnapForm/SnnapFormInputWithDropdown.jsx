@@ -8,9 +8,12 @@ import {
 import React from 'react';
 import './SnnapForm.css';
 
-function changeThis(dropDown, option) {
+function changeThis(dropDown, option, change) {
   const button = document.querySelector(`#${dropDown}`);
   button.innerHTML = option.option;
+  if (change != null) {
+    change('Units', option.option);
+  }
 }
 
 function SnnapFormInputWithDropdown(props) {
@@ -52,7 +55,9 @@ function SnnapFormInputWithDropdown(props) {
           {options.map((option) => (
             <Dropdown.Item
               key={option}
-              onClick={() => changeThis(`dropDown${safeName}`, { option })}
+              onClick={() =>
+                changeThis(`dropDown${safeName}`, { option }, onChange)
+              }
             >
               {option}
             </Dropdown.Item>

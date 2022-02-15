@@ -1,10 +1,19 @@
 const express = require('express');
 
 const router = express.Router();
-const { signupValidation, loginValidation } = require('./validation');
+const { validationResult } = require('express-validator');
+const {
+  signupValidation,
+  loginValidation,
+  newRequestToHireValidation,
+} = require('./validation');
 const User = require('../components/user/User');
 
 router.post('/register', signupValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
   const user = User.register(
     req.body.firstName,
     req.body.lastName,
@@ -37,6 +46,10 @@ router.post('/register', signupValidation, async (req, res) => {
 });
 
 router.post('/login', loginValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
   const user = User.login(req.body.username, req.body.password);
   try {
     return res.status(200).send({
@@ -59,7 +72,7 @@ router.post('/login', loginValidation, async (req, res) => {
   }
 });
 
-router.get('/get-user', signupValidation, async (req, res) => {
+router.get('/get-user', async (req, res) => {
   let token;
   try {
     token = User.getToken(req.headers.authorization);
@@ -82,5 +95,31 @@ router.get('/get-user', signupValidation, async (req, res) => {
     });
   }
 });
+
+router.post(
+  '/newRequestToHire',
+  newRequestToHireValidation,
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).send(errors.errors[0]);
+    }
+    try {
+      User.getToken(req.headers.authorization);
+    } catch (error) {
+      return res.status(422).json({
+        message: error.message,
+      });
+    }
+    try {
+      // TODO - do something
+      return res.send(req.body);
+    } catch (error) {
+      return res.status(401).send({
+        msg: error.message,
+      });
+    }
+  }
+);
 
 module.exports = router;

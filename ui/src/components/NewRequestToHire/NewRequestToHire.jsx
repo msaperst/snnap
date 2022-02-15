@@ -18,8 +18,9 @@ function NewRequestToHire() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleSubmit = () => {
-    const form = document.querySelector('form');
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = document.querySelector('#newRequestToHireForm');
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
       jobService
@@ -29,6 +30,7 @@ function NewRequestToHire() {
           formData['Job Details'],
           formData.Pay,
           formData.Duration,
+          formData.Units,
           formData.Date,
           formData.Time,
           formData['Equipment Needed'],
@@ -36,11 +38,13 @@ function NewRequestToHire() {
         )
         .then(
           () => {
+            setIsSubmitting(false);
+            setStatus(null);
             handleClose();
           },
           (error) => {
             setIsSubmitting(false);
-            setStatus(error.toString());
+            setStatus(error);
           }
         );
     }
@@ -62,7 +66,9 @@ function NewRequestToHire() {
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div // adding in this div due to issue https://github.com/react-bootstrap/react-bootstrap/issues/3105
         onKeyDown={(e) => e.stopPropagation()}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         onFocus={(e) => e.stopPropagation()}
         onMouseOver={(e) => e.stopPropagation()}
       >

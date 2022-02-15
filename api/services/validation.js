@@ -22,3 +22,24 @@ exports.loginValidation = [
     min: 6,
   }),
 ];
+
+exports.newRequestToHireValidation = [
+  check('type', 'Please select a valid job type').isIn([
+    'Wedding',
+    "B'nai Mitzvah",
+    'Commercial Event',
+    'Other',
+  ]),
+  check('location', 'Please include a job location').not().isEmpty(),
+  check('details', 'Please include some job details').not().isEmpty(),
+  check('pay', 'Please include the job pay').isNumeric(),
+  check('duration', 'Please include the job duration').isNumeric(),
+  check('units', 'Please include the job duration units').isIn([
+    'Minutes',
+    'Hours',
+    'Days',
+  ]),
+  check('date', 'Please include the job date').isDate(),
+  check('date', 'Please include a job date after today').isAfter(),
+  check('time', 'Please include the job time').not().isEmpty(),
+];
