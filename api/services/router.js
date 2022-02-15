@@ -9,6 +9,7 @@ const {
 } = require('./validation');
 const User = require('../components/user/User');
 const Mysql = require('./Mysql');
+const RequestToHire = require('../components/requestToHire/RequestToHire');
 
 router.post('/register', signupValidation, async (req, res) => {
   const errors = validationResult(req);
@@ -84,15 +85,34 @@ router.post(
     try {
       User.getToken(req.headers.authorization);
     } catch (error) {
-      return res.status(422).json({
+      return res.status(401).json({
         message: error.message,
       });
     }
     try {
-      // TODO - do something
+      let equipment = [];
+      if (req.body.equipment) {
+        equipment = req.body.equipment.map((option) => option.value);
+      }
+      let skills = [];
+      if (req.body.skills) {
+        skills = req.body.skills.map((option) => option.value);
+      }
+      RequestToHire.create(
+        req.body.type,
+        req.body.location.properties.formatted,
+        req.body.details,
+        req.body.pay,
+        req.body.duration,
+        req.body.units,
+        req.body.date,
+        req.body.time,
+        equipment.toString(),
+        skills.toString()
+      );
       return res.send(req.body);
     } catch (error) {
-      return res.status(401).send({
+      return res.status(422).send({
         msg: error.message,
       });
     }
@@ -133,7 +153,8 @@ router.get('/job-types', async (req, res) => {
       message: error.message,
     });
   }
-  const jobTypes = await Mysql.query(`SELECT * FROM job_types;`);
+  const jobTypes = await Mysql.query(`SELECT *
+                                      FROM job_types;`);
   try {
     return res.send(jobTypes);
   } catch (error) {
@@ -150,7 +171,8 @@ router.get('/equipment', async (req, res) => {
       message: error.message,
     });
   }
-  const equipment = await Mysql.query(`SELECT * FROM equipment;`);
+  const equipment = await Mysql.query(`SELECT *
+                                       FROM equipment;`);
   try {
     return res.send(equipment);
   } catch (error) {
@@ -167,7 +189,8 @@ router.get('/skills', async (req, res) => {
       message: error.message,
     });
   }
-  const skills = await Mysql.query(`SELECT * FROM skills;`);
+  const skills = await Mysql.query(`SELECT *
+                                    FROM skills;`);
   try {
     return res.send(skills);
   } catch (error) {

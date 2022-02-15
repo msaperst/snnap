@@ -21,13 +21,24 @@ const RequestToHire = class {
          VALUES (${db.escape(type)}, ${db.escape(location)}, 
                  ${db.escape(details)}, ${db.escape(pay)}, 
                  ${db.escape(duration)}, ${db.escape(units)},
-                 ${db.escape(date)}${db.escape(time)}, 
-                 ${db.escape(equipment)}, ${db.escape(skills)})`
+                 ${db.escape(`${date} ${time}:00`)}, ${db.escape(
+          equipment
+        )}, ${db.escape(skills)})`
       );
       newRequestToHire.type = type;
       newRequestToHire.location = location;
     })();
     return newRequestToHire;
+  }
+
+  async getType() {
+    await this.instancePromise;
+    return this.type;
+  }
+
+  async getLocation() {
+    await this.instancePromise;
+    return this.location;
   }
 };
 

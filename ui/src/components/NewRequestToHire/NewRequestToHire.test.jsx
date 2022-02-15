@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   fireEvent,
-  getByPlaceholderText,
   getByText,
   render,
   screen,
