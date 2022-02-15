@@ -24,15 +24,17 @@ class NewRequestToHire extends React.Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateForm = this.updateForm.bind(this);
+  }
 
+  componentDidMount() {
     jobService.getJobTypes().then((jobTypes) => {
-      this.state.jobTypes = jobTypes;
+      this.setState({ jobTypes });
     });
     jobService.getEquipment().then((equipment) => {
-      this.state.equipment = equipment;
+      this.setState({ equipment });
     });
     jobService.getSkills().then((skills) => {
-      this.state.skills = skills;
+      this.setState({ skills });
     });
   }
 
@@ -86,7 +88,10 @@ class NewRequestToHire extends React.Component {
     } = this.state;
     return (
       <>
-        <Button variant="primary" onClick={() => this.setState({ show: true })}>
+        <Button
+          variant="primary"
+          onClick={() => this.setState({ validated: false, show: true })}
+        >
           New Request To Hire
         </Button>
 

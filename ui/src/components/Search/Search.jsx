@@ -70,7 +70,7 @@ class Search extends React.Component {
                 variant="primary"
                 onClick={() => this.filter(type.id)}
               >
-                {type.type}
+                {type.plural}
               </Button>
             ))}
           </Col>
