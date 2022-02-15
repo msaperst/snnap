@@ -89,6 +89,7 @@ class NewRequestToHire extends React.Component {
     return (
       <>
         <Button
+          id="openNewRequestToHireButton"
           variant="primary"
           onClick={() => this.setState({ validated: false, show: true })}
         >

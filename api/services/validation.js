@@ -24,17 +24,17 @@ exports.loginValidation = [
 ];
 
 exports.newRequestToHireValidation = [
-  check('type', 'Please select a valid job type').isNumeric(),
-  check('location', 'Please include a job location').not().isEmpty(),
-  check('details', 'Please include some job details').not().isEmpty(),
-  check('pay', 'Please include the job pay').isNumeric(),
-  check('duration', 'Please include the job duration').isNumeric(),
-  check('units', 'Please include the job duration units').isIn([
+  check('type', 'Please provide a valid job type.').isNumeric(),
+  check('location', 'Please provide a valid location.').not().isEmpty(),
+  check('details', 'Please provide a valid job details.').not().isEmpty(),
+  check('pay', 'Please provide a valid pay.').isNumeric(),
+  check('duration', 'Please provide a valid duration.').isNumeric(),
+  check('units', 'Please provide a valid duration unit.').isIn([
     'Minutes',
     'Hours',
     'Days',
   ]),
-  check('date', 'Please include the job date').isDate(),
-  check('date', 'Please include a job date after today').isAfter(),
-  check('time', 'Please include the job time').not().isEmpty(),
+  check('date', 'Please provide a valid date.').isDate(),
+  check('date', 'Please provide a date after today.').isAfter(),
+  check('time', 'Please provide a valid time.').not().isEmpty(),
 ];
