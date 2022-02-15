@@ -112,6 +112,12 @@ const User = class {
     return newUser;
   }
 
+  static async isAuth(authorizationHeader) {
+    const token = User.getToken(authorizationHeader);
+    const user = User.auth(token);
+    return user.getToken();
+  }
+
   async getToken() {
     await this.instancePromise;
     return this.token;

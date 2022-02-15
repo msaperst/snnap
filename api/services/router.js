@@ -83,7 +83,7 @@ router.post(
       return res.status(422).send(errors.errors[0]);
     }
     try {
-      User.getToken(req.headers.authorization);
+      await User.isAuth(req.headers.authorization);
     } catch (error) {
       return res.status(401).json({
         message: error.message,
@@ -123,7 +123,7 @@ router.post(
 router.get('/get-user', async (req, res) => {
   let token;
   try {
-    token = User.getToken(req.headers.authorization);
+    token = await User.isAuth(req.headers.authorization);
   } catch (error) {
     return res.status(401).json({
       message: error.message,
@@ -147,7 +147,7 @@ router.get('/get-user', async (req, res) => {
 // information about our system
 router.get('/job-types', async (req, res) => {
   try {
-    User.getToken(req.headers.authorization);
+    await User.isAuth(req.headers.authorization);
   } catch (error) {
     return res.status(401).json({
       message: error.message,
@@ -165,7 +165,7 @@ router.get('/job-types', async (req, res) => {
 });
 router.get('/equipment', async (req, res) => {
   try {
-    User.getToken(req.headers.authorization);
+    await User.isAuth(req.headers.authorization);
   } catch (error) {
     return res.status(401).json({
       message: error.message,
@@ -183,7 +183,7 @@ router.get('/equipment', async (req, res) => {
 });
 router.get('/skills', async (req, res) => {
   try {
-    User.getToken(req.headers.authorization);
+    await User.isAuth(req.headers.authorization);
   } catch (error) {
     return res.status(401).json({
       message: error.message,
