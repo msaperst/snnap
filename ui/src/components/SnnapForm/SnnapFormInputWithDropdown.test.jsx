@@ -159,4 +159,24 @@ describe('snnap form input', () => {
     fireEvent.click(button);
     expect(child.firstChild.children[2]).toHaveTextContent('Option 1');
   });
+
+  it('fires the on change on select', async () => {
+    let x = 0;
+    const updateX = (key, value) => {
+      x = value;
+    };
+    const { container } = render(
+      <SnnapFormInputWithDropdown
+        name="123"
+        options={['Option 1', 'Option 2']}
+        onChange={updateX}
+      />
+    );
+    await waitFor(() => container.firstChild);
+    expect(child.firstChild.children[2]).toHaveTextContent('123');
+    const button = getByText(container, 'Option 1');
+    fireEvent.click(button);
+    expect(child.firstChild.children[2]).toHaveTextContent('Option 1');
+    expect(x).toEqual('Option 1');
+  });
 });
