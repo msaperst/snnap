@@ -212,7 +212,7 @@ router.get('/hire-requests', async (req, res) => {
     });
   }
   const hireRequests = await Mysql.query(
-    `SELECT hire_requests.id, location, details, pay, duration, units, date_time, equipment, skills, job_types.type 
+    `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type
         FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id;`
   );
   try {

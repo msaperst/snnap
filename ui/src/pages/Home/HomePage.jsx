@@ -12,8 +12,12 @@ class HomePage extends React.Component {
 
     this.state = {
       currentUser: authenticationService.currentUserValue,
-      hireRequests: [],
+      allHireRequests: [],
+      filteredHireRequests: [],
+      filteredOn: null,
     };
+
+    this.filterType = this.filterType.bind(this);
   }
 
   componentDidMount() {
@@ -23,17 +27,39 @@ class HomePage extends React.Component {
       this.setState({ currentUser });
     });
     jobService.getHireRequests().then((hireRequests) => {
-      this.setState({ hireRequests });
+      this.setState({
+        allHireRequests: hireRequests,
+        filteredHireRequests: hireRequests,
+      });
     });
   }
 
+  filterType(type) {
+    const { allHireRequests, filteredOn } = this.state;
+    let filteredHireRequests = [];
+    if (filteredOn === type) {
+      // undo our filtering
+      this.setState({ filteredOn: null });
+      filteredHireRequests = allHireRequests;
+    } else {
+      // do our filtering
+      this.setState({ filteredOn: type });
+      allHireRequests.forEach((hireRequest) => {
+        if (hireRequest.typeId === type) {
+          filteredHireRequests.push(hireRequest);
+        }
+      });
+    }
+    this.setState({ filteredHireRequests });
+  }
+
   render() {
-    const { hireRequests } = this.state;
+    const { filteredHireRequests, filteredOn } = this.state;
     return (
       <>
-        <Search />
+        <Search filter={this.filterType} filteredOn={filteredOn} />
 
-        {hireRequests.map((hireRequest) => (
+        {filteredHireRequests.map((hireRequest) => (
           <RequestToHire key={hireRequest.id} hireRequest={hireRequest} />
         ))}
       </>
