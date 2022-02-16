@@ -4,16 +4,32 @@ import { FaSearch } from 'react-icons/fa';
 import React from 'react';
 import searchGuy from './SearchGuy.png';
 import './Search.css';
+import { jobService } from '../../services/job.service';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      jobTypes: [],
+    };
+  }
+
+  componentDidMount() {
+    jobService.getJobTypes().then((jobTypes) => {
+      this.setState({ jobTypes });
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  filter(typeId) {
+    // TODO - filter some stuff
+    console.log(typeId);
   }
 
   render() {
+    const { jobTypes } = this.state;
     return (
-      <div>
+      <div id="search">
         <Row>
           <Col sm={12} md={6}>
             <h1 id="tagline">Photography help in a snap</h1>
@@ -48,10 +64,15 @@ class Search extends React.Component {
         </Row>
         <Row>
           <Col>
-            <Button variant="primary">Weddings</Button>{' '}
-            <Button variant="primary">B&apos;Nai Mitzvahs</Button>{' '}
-            <Button variant="primary">Commercial Events</Button>{' '}
-            <Button variant="primary">Misc</Button>
+            {jobTypes.map((type) => (
+              <Button
+                key={type.id}
+                variant="primary"
+                onClick={() => this.filter(type.id)}
+              >
+                {type.plural}
+              </Button>
+            ))}
           </Col>
         </Row>
       </div>

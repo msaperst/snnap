@@ -6,6 +6,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { authenticationService } from '../../services/authentication.service';
 import './Menu.css';
 import snnapLogo from './SNNAP.png';
+import NewRequestToHire from '../NewRequestToHire/NewRequestToHire';
 
 class Menu extends React.Component {
   constructor(props) {
@@ -36,7 +37,9 @@ class Menu extends React.Component {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="ml-auto">
-              <Nav.Link href="#1">Item 1</Nav.Link>
+              <Nav.Link>
+                <NewRequestToHire />
+              </Nav.Link>
               <Nav.Link href="#2">Item 2</Nav.Link>
               <NavDropdown title={currentUser.username} id="nav-dropdown">
                 <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>

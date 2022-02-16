@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../../components/SnnapForm/SnnapFormInput';
 
@@ -18,28 +18,30 @@ class RegisterPage extends React.Component {
       validated: false,
       isSubmitting: false,
       status: null,
+      formData: {},
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateForm = this.updateForm.bind(this);
   }
 
   handleSubmit(event) {
+    const { formData } = this.state;
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       this.setState({ isSubmitting: true });
-      const data = event.target;
       authenticationService
         .register(
-          data[0].value,
-          data[1].value,
-          data[2].value,
-          data[3].value,
-          data[4].value,
-          data[5].value,
-          data[6].value,
-          data[7].value,
-          data[8].value
+          formData['First name'],
+          formData['Last name'],
+          formData.Username,
+          formData.Email,
+          formData['Phone number'],
+          formData.Password,
+          formData.City,
+          formData.State,
+          formData.Zip
         )
         .then(
           () => {
@@ -58,6 +60,12 @@ class RegisterPage extends React.Component {
     this.setState({ validated: true });
   }
 
+  updateForm(key, value) {
+    const { formData } = this.state;
+    formData[key] = value;
+    this.setState({ formData });
+  }
+
   render() {
     const { isSubmitting, status } = this.state;
     const { validated } = this.state;
@@ -65,19 +73,47 @@ class RegisterPage extends React.Component {
       <Form noValidate validated={validated} onSubmit={this.handleSubmit}>
         <h2>Register</h2>
         <Row className="mb-3">
-          <SnnapFormInput size={4} name="First name" />
-          <SnnapFormInput size={4} name="Last name" />
-          <SnnapFormInput size={4} name="Username" before="@" />
+          <SnnapFormInput
+            size={4}
+            name="First name"
+            onChange={this.updateForm}
+          />
+          <SnnapFormInput
+            size={4}
+            name="Last name"
+            onChange={this.updateForm}
+          />
+          <SnnapFormInput
+            size={4}
+            name="Username"
+            before="@"
+            onChange={this.updateForm}
+          />
         </Row>
         <Row className="mb-3">
-          <SnnapFormInput size={4} name="Email" type="email" />
-          <SnnapFormInput size={4} name="Phone number" type="tel" />
-          <SnnapFormInput size={4} name="Password" type="password" />
+          <SnnapFormInput
+            size={4}
+            name="Email"
+            type="email"
+            onChange={this.updateForm}
+          />
+          <SnnapFormInput
+            size={4}
+            name="Phone number"
+            type="tel"
+            onChange={this.updateForm}
+          />
+          <SnnapFormInput
+            size={4}
+            name="Password"
+            type="password"
+            onChange={this.updateForm}
+          />
         </Row>
         <Row className="mb-3">
-          <SnnapFormInput size={6} name="City" />
-          <SnnapFormInput size={3} name="State" />
-          <SnnapFormInput size={3} name="Zip" />
+          <SnnapFormInput size={6} name="City" onChange={this.updateForm} />
+          <SnnapFormInput size={3} name="State" onChange={this.updateForm} />
+          <SnnapFormInput size={3} name="Zip" onChange={this.updateForm} />
         </Row>
         <Form.Group className="mb-3">
           <Form.Check
@@ -96,18 +132,25 @@ class RegisterPage extends React.Component {
               variant="primary"
               disabled={isSubmitting}
             >
-              Register
               {isSubmitting && (
-                <img
-                  alt="loading"
-                  src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                <Spinner
+                  as="span"
+                  animation="grow"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
                 />
               )}
+              Register
             </Button>
           </Form.Group>
           <Col>
             {status && (
-              <Alert variant="danger" dismissible>
+              <Alert
+                variant="danger"
+                dismissible
+                onClose={() => this.setState({ status: null })}
+              >
                 {status}
               </Alert>
             )}

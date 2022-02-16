@@ -1,17 +1,13 @@
-import { Col, FloatingLabel, Form } from 'react-bootstrap';
+import { Col, Form, InputGroup } from 'react-bootstrap';
 import React from 'react';
 import './SnnapForm.css';
 
-function SnnapFormInput(props) {
-  const { size, name, type, onChange } = props;
+function SnnapFormPrice(props) {
+  const { size, name, onChange } = props;
   if (!name) {
     return null;
   }
   const safeName = name.replace(/[\W]+/g, '');
-  let as;
-  if (type === 'textarea') {
-    as = type;
-  }
   let change = null;
   if (onChange) {
     change = (e) => onChange(name, e.target.value);
@@ -19,9 +15,11 @@ function SnnapFormInput(props) {
   const formControl = (
     <Form.Control
       required
-      type={type}
-      as={as}
+      type="number"
+      step={0.01}
+      min={0}
       placeholder={name}
+      aria-describedby={`inputGroup${safeName}`}
       onChange={change}
     />
   );
@@ -33,17 +31,17 @@ function SnnapFormInput(props) {
 
   return (
     <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
-      <FloatingLabel controlId={`form${safeName}`} label={name}>
+      <InputGroup hasValidation>
+        <InputGroup.Text id={`inputGroup${safeName}`}>$</InputGroup.Text>
         {formControl}
         {formError}
-      </FloatingLabel>
+      </InputGroup>
     </Form.Group>
   );
 }
 
-SnnapFormInput.defaultProps = {
+SnnapFormPrice.defaultProps = {
   size: 12,
-  type: 'text',
 };
 
-export default SnnapFormInput;
+export default SnnapFormPrice;

@@ -41,12 +41,9 @@ const User = class {
       await Mysql.query(
         `INSERT INTO users (first_name, last_name, username, email, number, password, city, state, zip)
          VALUES (${db.escape(firstName)}, ${db.escape(lastName)},
-                 ${db.escape(username)},
-                 ${db.escape(email)},
-                 ${db.escape(number)},
-                 ${db.escape(hash)},
-                 ${db.escape(city)},
-                 ${db.escape(state)},
+                 ${db.escape(username)}, ${db.escape(email)},
+                 ${db.escape(number)}, ${db.escape(hash)},
+                 ${db.escape(city)}, ${db.escape(state)},
                  ${db.escape(zip)})`
       );
       newUser.username = username;
@@ -113,6 +110,12 @@ const User = class {
       newUser.lastLogin = user[0].last_login;
     })();
     return newUser;
+  }
+
+  static async isAuth(authorizationHeader) {
+    const token = User.getToken(authorizationHeader);
+    const user = User.auth(token);
+    return user.getToken();
   }
 
   async getToken() {

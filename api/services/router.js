@@ -1,10 +1,21 @@
 const express = require('express');
 
 const router = express.Router();
-const { signupValidation, loginValidation } = require('./validation');
+const { validationResult } = require('express-validator');
+const {
+  signupValidation,
+  loginValidation,
+  newRequestToHireValidation,
+} = require('./validation');
 const User = require('../components/user/User');
+const Mysql = require('./Mysql');
+const RequestToHire = require('../components/requestToHire/RequestToHire');
 
 router.post('/register', signupValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
   const user = User.register(
     req.body.firstName,
     req.body.lastName,
@@ -37,6 +48,10 @@ router.post('/register', signupValidation, async (req, res) => {
 });
 
 router.post('/login', loginValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
   const user = User.login(req.body.username, req.body.password);
   try {
     return res.status(200).send({
@@ -59,12 +74,58 @@ router.post('/login', loginValidation, async (req, res) => {
   }
 });
 
-router.get('/get-user', signupValidation, async (req, res) => {
+router.post(
+  '/new-request-to-hire',
+  newRequestToHireValidation,
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).send(errors.errors[0]);
+    }
+    try {
+      await User.isAuth(req.headers.authorization);
+    } catch (error) {
+      return res.status(401).json({
+        message: error.message,
+      });
+    }
+    try {
+      let equipment = [];
+      if (req.body.equipment) {
+        equipment = req.body.equipment.map((option) => option.value);
+      }
+      let skills = [];
+      if (req.body.skills) {
+        skills = req.body.skills.map((option) => option.value);
+      }
+      RequestToHire.create(
+        req.body.type,
+        req.body.location.properties.formatted,
+        req.body.details,
+        req.body.pay,
+        req.body.duration,
+        req.body.units,
+        req.body.date,
+        req.body.time,
+        equipment.toString(),
+        skills.toString()
+      );
+      return res.send(req.body);
+    } catch (error) {
+      return res.status(422).send({
+        msg: error.message,
+      });
+    }
+  }
+);
+
+// information about our user
+router.get('/get-user', async (req, res) => {
   let token;
   try {
-    token = User.getToken(req.headers.authorization);
+    token = await User.isAuth(req.headers.authorization);
   } catch (error) {
-    return res.status(422).json({
+    return res.status(401).json({
       message: error.message,
     });
   }
@@ -77,7 +138,84 @@ router.get('/get-user', signupValidation, async (req, res) => {
       lastLogin: await user.getLastLogin(),
     });
   } catch (error) {
-    return res.status(401).send({
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
+// information about our system
+router.get('/job-types', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const jobTypes = await Mysql.query(`SELECT *
+                                      FROM job_types;`);
+  try {
+    return res.send(jobTypes);
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+router.get('/equipment', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const equipment = await Mysql.query(`SELECT *
+                                       FROM equipment;`);
+  try {
+    return res.send(equipment);
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+router.get('/skills', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const skills = await Mysql.query(`SELECT *
+                                    FROM skills;`);
+  try {
+    return res.send(skills);
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
+router.get('/hire-requests', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  const hireRequests = await Mysql.query(
+    `SELECT hire_requests.id, location, details, pay, duration, units, date_time, equipment, skills, job_types.type 
+        FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id;`
+  );
+  try {
+    return res.send(hireRequests);
+  } catch (error) {
+    return res.status(422).send({
       msg: error.message,
     });
   }
