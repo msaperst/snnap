@@ -153,4 +153,26 @@ describe('User', () => {
     await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
     await expect(user.getLastLogin()).resolves.toEqual('123');
   });
+
+  it('recognizes an invalid token and rejects with an error', async () => {
+    const token = jwt.sign({ id: 123 }, 'some-secret');
+    await expect(User.isAuth(`Bearer ${token}`)).rejects.toEqual(
+      new JsonWebTokenError('invalid signature')
+    );
+  });
+
+  it('recognizes an valid token and rejects with an error', async () => {
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    Mysql.query.mockResolvedValue([
+      {
+        first_name: 'Bob',
+        last_name: 'Robert',
+        username: 'Bob',
+        name: 'Robert',
+        email: 'bobert@gmail.com',
+        last_login: '123',
+      },
+    ]);
+    expect(await User.isAuth(`Bearer ${token}`)).toEqual(token);
+  });
 });
