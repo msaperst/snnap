@@ -19,13 +19,3 @@
     cursor: pointer;
     margin-right: 10px;
 }
-
-/*.btn-primary:hover {*/
-/*    background-color: #6A3CA5;*/
-/*    border-color: #6A3CA5;*/
-/*}*/
-
-/*TODO - remove when moved outerproduct*/
-.card {
-    color: black;
-}

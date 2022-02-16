@@ -82,14 +82,16 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(422).send(errors.errors[0]);
     }
+    let token;
     try {
-      await User.isAuth(req.headers.authorization);
+      token = await User.isAuth(req.headers.authorization);
     } catch (error) {
       return res.status(401).json({
         message: error.message,
       });
     }
     try {
+      const user = User.auth(token);
       let equipment = [];
       if (req.body.equipment) {
         equipment = req.body.equipment.map((option) => option.value);
@@ -99,6 +101,7 @@ router.post(
         skills = req.body.skills.map((option) => option.value);
       }
       RequestToHire.create(
+        await user.getId(),
         req.body.type,
         req.body.location.properties.formatted,
         req.body.details,

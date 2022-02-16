@@ -13,6 +13,7 @@ describe('User', () => {
     Mysql.query.mockResolvedValue([]);
 
     const requestToHire = RequestToHire.create(
+      1,
       5,
       'Fairfax, VA, United States of America',
       'Deetz',

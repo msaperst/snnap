@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Card } from 'react-bootstrap';
 import Search from '../../components/Search/Search';
 import { authenticationService } from '../../services/authentication.service';
 import { userService } from '../../services/user.service';
 import { jobService } from '../../services/job.service';
+import RequestToHire from '../../components/RequestToHire/RequestToHire';
 
 class HomePage extends React.Component {
   constructor(props) {
@@ -34,11 +34,7 @@ class HomePage extends React.Component {
         <Search />
 
         {hireRequests.map((hireRequest) => (
-          <Card key={hireRequest.id}>
-            <Card.Body>{hireRequest.type}</Card.Body>
-            <Card.Body>{hireRequest.location}</Card.Body>
-            <Card.Body>{hireRequest.details}</Card.Body>
-          </Card>
+          <RequestToHire key={hireRequest.id} hireRequest={hireRequest} />
         ))}
       </>
     );

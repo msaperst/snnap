@@ -15,3 +15,5 @@ CREATE TABLE IF NOT EXISTS hire_requests
   AUTO_INCREMENT = 4
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
+
+ALTER TABLE hire_requests ADD COLUMN user int(11) NOT NULL;
