@@ -23,7 +23,7 @@ describe('register page', () => {
   });
 
   it('shows the register header', async () => {
-    driver.wait(until.elementLocated(By.id('validationFirstname')));
+    driver.wait(until.elementLocated(By.id('formFirstname')));
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Register');
   });
 
@@ -57,7 +57,7 @@ describe('register page', () => {
   });
 
   it('does not allow you to register without a valid email', async () => {
-    await driver.findElement(By.id('validationEmail')).sendKeys('example');
+    await driver.findElement(By.id('formEmail')).sendKeys('example');
     driver.findElement(By.id('registerButton')).click();
     const feedback = (await driver.findElements(By.className('invalid-feedback')));
     expect(await feedback[3].getText()).toEqual('Please provide a valid email.');
@@ -79,15 +79,15 @@ describe('register page', () => {
   });
 
   async function register(firstName, lastName, username, email, phoneNumber, password, city, state, zip, agree) {
-    await driver.findElement(By.id('validationFirstname')).sendKeys(firstName);
-    await driver.findElement(By.id('validationLastname')).sendKeys(lastName);
-    await driver.findElement(By.id('validationUsername')).sendKeys(username);
-    await driver.findElement(By.id('validationEmail')).sendKeys(email);
-    await driver.findElement(By.id('validationPhonenumber')).sendKeys(phoneNumber);
-    await driver.findElement(By.id('validationPassword')).sendKeys(password);
-    await driver.findElement(By.id('validationCity')).sendKeys(city);
-    await driver.findElement(By.id('validationState')).sendKeys(state);
-    await driver.findElement(By.id('validationZip')).sendKeys(zip);
+    await driver.findElement(By.id('formFirstname')).sendKeys(firstName);
+    await driver.findElement(By.id('formLastname')).sendKeys(lastName);
+    await driver.findElement(By.id('formUsername')).sendKeys(username);
+    await driver.findElement(By.id('formEmail')).sendKeys(email);
+    await driver.findElement(By.id('formPhonenumber')).sendKeys(phoneNumber);
+    await driver.findElement(By.id('formPassword')).sendKeys(password);
+    await driver.findElement(By.id('formCity')).sendKeys(city);
+    await driver.findElement(By.id('formState')).sendKeys(state);
+    await driver.findElement(By.id('formZip')).sendKeys(zip);
     if (agree) {
       await driver.findElement(By.id('agreeToTerms')).click();
     }

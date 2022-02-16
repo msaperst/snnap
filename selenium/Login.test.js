@@ -40,24 +40,24 @@ describe('log in page', () => {
   });
 
   it('allows you to login with a valid user', async () => {
-    await driver.findElement(By.id('validationUsername')).sendKeys(user.username);
-    await driver.findElement(By.id('validationPassword')).sendKeys('password');
+    await driver.findElement(By.id('formUsername')).sendKeys(user.username);
+    await driver.findElement(By.id('formPassword')).sendKeys('password');
     driver.findElement(By.id('loginButton')).click();
     const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
     expect(await dropDownMenu.getText()).toEqual(user.username);
   });
 
   it('does not allow you to login with an invalid user', async () => {
-    await driver.findElement(By.id('validationUsername')).sendKeys('some bad user');
-    await driver.findElement(By.id('validationPassword')).sendKeys('password');
+    await driver.findElement(By.id('formUsername')).sendKeys('some bad user');
+    await driver.findElement(By.id('formPassword')).sendKeys('password');
     driver.findElement(By.id('loginButton')).click();
     const header = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await header.getText()).toEqual('Username or password is incorrect!');
   });
 
   it('does not allow you to login with an invalid password', async () => {
-    await driver.findElement(By.id('validationUsername')).sendKeys(user.username);
-    await driver.findElement(By.id('validationPassword')).sendKeys('passwor');
+    await driver.findElement(By.id('formUsername')).sendKeys(user.username);
+    await driver.findElement(By.id('formPassword')).sendKeys('passwor');
     driver.findElement(By.id('loginButton')).click();
     const header = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await header.getText()).toEqual('Username or password is incorrect!');
@@ -65,7 +65,7 @@ describe('log in page', () => {
 
   it('allows you to navigate to the register page', async () => {
     driver.findElement(By.id('registerButton')).click();
-    driver.wait(until.elementLocated(By.id('validationFirstname')));
+    driver.wait(until.elementLocated(By.id('formFirstname')));
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Register');
   });
 
