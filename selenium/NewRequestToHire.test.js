@@ -27,13 +27,15 @@ describe('new request to hire', () => {
   }, 15000);
 
   it('has a button to open the modal', async () => {
+    driver.navigate().refresh();
+    const button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
     expect(await button.getText()).toEqual('New Request To Hire');
-    //TODO - check that modal not visible
+    expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
 
   it('opens the modal', async () => {
     expect(await modal.findElement(By.css('.modal-header')).getText()).toEqual('Create a new request to hire');
-    //TODO - check that modal is visible
+    expect(await driver.findElement(By.css('.modal-header')).isDisplayed()).toBeTruthy();
   });
 
 
@@ -100,7 +102,13 @@ describe('new request to hire', () => {
     }
     const alerts = await modal.findElements(By.className('alert-danger'));
     expect(alerts).toHaveLength(0);
-    //TODO - ensure modal is not visible
+    driver.wait(function() {
+      return driver.findElements(By.css('.modal-header')).then(function(elements) {
+        return elements.length === 0;
+      });
+    });
+    expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
+    // TODO - ensure new hire event displays on page
   });
 
   async function enterData(location, details, pay, duration, date, time) {
