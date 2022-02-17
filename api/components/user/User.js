@@ -46,6 +46,7 @@ const User = class {
                  ${db.escape(city)}, ${db.escape(state)},
                  ${db.escape(zip)})`
       );
+      newUser.id = (await Mysql.query('SELECT LAST_INSERT_ID() as id'))[0].id;
       newUser.username = username;
       newUser.name = `${firstName} ${lastName}`;
       newUser.email = email;

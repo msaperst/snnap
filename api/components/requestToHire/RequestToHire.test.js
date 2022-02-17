@@ -10,7 +10,7 @@ describe('User', () => {
   });
 
   it('sets the request to hire values on creation', async () => {
-    Mysql.query.mockResolvedValue([]);
+    Mysql.query.mockResolvedValue(15);
 
     const requestToHire = RequestToHire.create(
       1,
@@ -25,6 +25,7 @@ describe('User', () => {
       '',
       ''
     );
+    await expect(requestToHire.getId()).resolves.toEqual(15);
     await expect(requestToHire.getType()).resolves.toEqual(5);
     await expect(requestToHire.getLocation()).resolves.toEqual(
       'Fairfax, VA, United States of America'

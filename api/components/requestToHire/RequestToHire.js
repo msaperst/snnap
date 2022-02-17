@@ -25,10 +25,18 @@ const RequestToHire = class {
                  ${db.escape(units)}, ${db.escape(`${date} ${time}:00`)}, 
                  ${db.escape(equipment)}, ${db.escape(skills)})`
       );
+      newRequestToHire.id = (
+        await Mysql.query('SELECT LAST_INSERT_ID() as id')
+      )[0].id;
       newRequestToHire.type = type;
       newRequestToHire.location = location;
     })();
     return newRequestToHire;
+  }
+
+  async getId() {
+    await this.instancePromise;
+    return this.id;
   }
 
   async getType() {
