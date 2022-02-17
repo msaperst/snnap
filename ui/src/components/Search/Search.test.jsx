@@ -12,6 +12,8 @@ Enzyme.configure({ adapter: new Adapter() });
 
 describe('search', () => {
   let wrapper;
+  let wrapper2;
+  let x = 0;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -21,6 +23,7 @@ describe('search', () => {
       { id: 7, type: 'Misc', plural: 'Misc' },
     ]);
     wrapper = Enzyme.shallow(<Search />);
+    wrapper2 = Enzyme.shallow(<Search filter={updateX} filteredOn={5} />);
   });
 
   it('displays the main tagline', () => {
@@ -58,7 +61,23 @@ describe('search', () => {
   });
 
   it('does something when a filter button is clicked', () => {
-    wrapper.find('Button').at(1).simulate('click');
-    // TODO - verify something happened
+    wrapper2.find('Button').at(1).simulate('click');
+    expect(x).toEqual(5);
   });
+
+  it('shows not filtering by default', () => {
+    const buttons = wrapper.find('Button');
+    expect(buttons.at(1).prop('variant')).toEqual('primary');
+    expect(buttons.at(2).prop('variant')).toEqual('primary');
+  });
+
+  it('shows filtering when clicked', () => {
+    const buttons = wrapper2.find('Button');
+    expect(buttons.at(1).prop('variant')).toEqual('secondary');
+    expect(buttons.at(2).prop('variant')).toEqual('primary');
+  });
+
+  const updateX = (value) => {
+    x = value;
+  };
 });
