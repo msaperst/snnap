@@ -28,12 +28,16 @@ describe('home page', () => {
     expect(await driver.getCurrentUrl()).toEqual(Base.getApp() + '/');
   });
 
-  it('shows the username', async () => {
+  it('shows the tagline', async () => {
     const header = driver.wait(until.elementLocated(By.id('tagline')));
     expect(await header.getText()).toEqual('Photography help in a snap');
   });
 
-  it('displays all entries unfiltered', () => {});
+  it('displays all entries unfiltered', async () => {
+    const found = driver.wait(until.elementLocated(By.tagName('h4')));
+    expect(await found.getText()).toMatch(/Found \d+ results/);
+  });
+
   it('displays only filtered entries', () => {});
   it('displays no employers when unchecked', () => {});
   it('displays employers when rechecked', () => {});

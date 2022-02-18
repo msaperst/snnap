@@ -12,7 +12,7 @@ describe('new request to hire', () => {
     // load the default page
     driver = await Base.getDriver();
     // login as a user
-    user = await Base.loginUser(driver, 'homeUser');
+    user = await Base.loginUser(driver, 'newRequestToHireUser');
     await driver.get(Base.getApp());
     button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
     await button.click();
