@@ -20,14 +20,9 @@ class Search extends React.Component {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  filter(typeId) {
-    // TODO - filter some stuff
-    console.log(typeId);
-  }
-
   render() {
     const { jobTypes } = this.state;
+    const { filter, filteredOn } = this.props;
     return (
       <div id="search">
         <Row>
@@ -66,9 +61,10 @@ class Search extends React.Component {
           <Col>
             {jobTypes.map((type) => (
               <Button
+                className="btn-filter"
                 key={type.id}
-                variant="primary"
-                onClick={() => this.filter(type.id)}
+                variant={type.id === filteredOn ? 'secondary' : 'primary'}
+                onClick={() => filter(type.id)}
               >
                 {type.plural}
               </Button>

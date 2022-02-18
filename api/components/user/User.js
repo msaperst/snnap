@@ -46,6 +46,7 @@ const User = class {
                  ${db.escape(city)}, ${db.escape(state)},
                  ${db.escape(zip)})`
       );
+      newUser.id = (await Mysql.query('SELECT LAST_INSERT_ID() as id'))[0].id;
       newUser.username = username;
       newUser.name = `${firstName} ${lastName}`;
       newUser.email = email;
@@ -85,6 +86,7 @@ const User = class {
            FROM users
            WHERE id = '${newUser.id}'`
         );
+        newUser.id = user[0].id;
         newUser.name = `${user[0].first_name} ${user[0].last_name}`;
         newUser.username = user[0].username;
         newUser.email = user[0].email;
@@ -104,6 +106,7 @@ const User = class {
       const user = await Mysql.query(`SELECT *
                                       FROM users
                                       where id = ${decoded.id}`);
+      newUser.id = user[0].id;
       newUser.name = `${user[0].first_name} ${user[0].last_name}`;
       newUser.username = user[0].username;
       newUser.email = user[0].email;
@@ -121,6 +124,11 @@ const User = class {
   async getToken() {
     await this.instancePromise;
     return this.token;
+  }
+
+  async getId() {
+    await this.instancePromise;
+    return this.id;
   }
 
   async getName() {

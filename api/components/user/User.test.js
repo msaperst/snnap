@@ -40,6 +40,7 @@ describe('User', () => {
     const hash = await bcrypt.hash('password', 10);
     Mysql.query.mockResolvedValue([
       {
+        id: '1',
         first_name: 'Bob',
         last_name: 'Robert',
         username: 'Bob',
@@ -52,6 +53,7 @@ describe('User', () => {
 
     const user = User.login('Bob', 'password');
     await expect(user.getToken()).resolves.not.toBeNull();
+    await expect(user.getId()).resolves.toEqual('1');
     await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
@@ -79,7 +81,10 @@ describe('User', () => {
   });
 
   it('sets the user values on valid credentials via register', async () => {
-    Mysql.query.mockResolvedValue([]);
+    Mysql.query
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValue([{ id: 15 }]);
 
     const user = User.register(
       'Bob',
@@ -93,6 +98,7 @@ describe('User', () => {
       'Zip'
     );
     await expect(user.getToken()).resolves.toEqual(undefined);
+    await expect(user.getId()).resolves.toEqual(15);
     await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Robert');
     await expect(user.getEmail()).resolves.toEqual('bobert@example.org');
@@ -137,6 +143,7 @@ describe('User', () => {
     const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     Mysql.query.mockResolvedValue([
       {
+        id: 1,
         first_name: 'Bob',
         last_name: 'Robert',
         username: 'Bob',
@@ -148,6 +155,7 @@ describe('User', () => {
 
     const user = User.auth(token);
     await expect(user.getToken()).resolves.toEqual(token);
+    await expect(user.getId()).resolves.toEqual(1);
     await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');

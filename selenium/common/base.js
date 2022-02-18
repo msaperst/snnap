@@ -2,6 +2,7 @@ const { Builder } = require('selenium-webdriver');
 const { Options } = require('selenium-webdriver/chrome');
 const User = require('../../api/components/user/User');
 const Mysql = require("../../api/services/Mysql");
+const RequestToHire = require("../../api/components/requestToHire/RequestToHire");
 
 class Base {
 
@@ -53,6 +54,15 @@ class Base {
        FROM users
        WHERE username = '${username}';`
     );
+  }
+
+  async addRequestToHire() {
+    return RequestToHire.create(1, 5, 'Chantilly, VA, United States of America', 'Some details', 200, 4, 'Hours', '2032-03-12', '14:00', '', '');
+  }
+
+  async removeRequestToHire(id) {
+    console.log(id);
+    await Mysql.query(`DELETE FROM hire_requests WHERE id = ${id}`);
   }
 }
 

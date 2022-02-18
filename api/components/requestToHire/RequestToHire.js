@@ -3,6 +3,7 @@ const Mysql = require('../../services/Mysql');
 
 const RequestToHire = class {
   static create(
+    user,
     type,
     location,
     details,
@@ -17,18 +18,25 @@ const RequestToHire = class {
     const newRequestToHire = new RequestToHire();
     newRequestToHire.instancePromise = (async () => {
       await Mysql.query(
-        `INSERT INTO hire_requests (type, location, details, pay, duration, units, date_time, equipment, skills)
-         VALUES (${db.escape(type)}, ${db.escape(location)}, 
-                 ${db.escape(details)}, ${db.escape(pay)}, 
-                 ${db.escape(duration)}, ${db.escape(units)},
-                 ${db.escape(`${date} ${time}:00`)}, ${db.escape(
-          equipment
-        )}, ${db.escape(skills)})`
+        `INSERT INTO hire_requests (user, type, location, details, pay, duration, units, date_time, equipment, skills)
+         VALUES (${db.escape(user)}, ${db.escape(type)}, 
+                 ${db.escape(location)}, ${db.escape(details)}, 
+                 ${db.escape(pay)}, ${db.escape(duration)}, 
+                 ${db.escape(units)}, ${db.escape(`${date} ${time}:00`)}, 
+                 ${db.escape(equipment)}, ${db.escape(skills)})`
       );
+      newRequestToHire.id = (
+        await Mysql.query('SELECT LAST_INSERT_ID() as id')
+      )[0].id;
       newRequestToHire.type = type;
       newRequestToHire.location = location;
     })();
     return newRequestToHire;
+  }
+
+  async getId() {
+    await this.instancePromise;
+    return this.id;
   }
 
   async getType() {
