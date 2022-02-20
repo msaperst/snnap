@@ -13,20 +13,6 @@ import Menu from './components/Menu/Menu';
 import ProfilePage from './pages/Profile/ProfilePage';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentUser: null,
-    };
-  }
-
-  componentDidMount() {
-    authenticationService.currentUser.subscribe((x) =>
-      this.setState({ currentUser: x })
-    );
-  }
-
   // eslint-disable-next-line class-methods-use-this
   logout() {
     authenticationService.logout();
@@ -34,13 +20,14 @@ class App extends React.Component {
   }
 
   render() {
-    const { currentUser } = this.state;
     return (
       <Router history={history}>
         <div className="vertical-center">
           <Container>
             <Row>
-              <Col>{currentUser && <Menu logout={() => this.logout()} />}</Col>
+              <Col>
+                <Menu logout={() => this.logout()} />
+              </Col>
             </Row>
             <PrivateRoute exact path="/" component={HomePage} />
             <PrivateRoute exact path="/profile" component={ProfilePage} />

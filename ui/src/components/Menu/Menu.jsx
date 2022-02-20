@@ -18,12 +18,31 @@ class Menu extends React.Component {
   }
 
   render() {
+    let collapse = null;
+    let menu = null;
+
     const { currentUser } = this.state;
-    if (!currentUser) {
-      return null;
+    const { logout } = this.props;
+
+    if (currentUser) {
+      collapse = <Navbar.Toggle aria-controls="responsive-navbar-nav" />;
+      menu = (
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="ml-auto">
+            <Nav.Link>
+              <NewRequestToHire />
+            </Nav.Link>
+            <Nav.Link href="#2">Item 2</Nav.Link>
+            <NavDropdown title={currentUser.username} id="nav-dropdown">
+              <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+      );
     }
 
-    const { logout } = this.props;
     return (
       <Navbar bg="dark" variant="dark">
         <Container>
@@ -34,20 +53,8 @@ class Menu extends React.Component {
               className="d-inline-block align-top"
             />
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="ml-auto">
-              <Nav.Link>
-                <NewRequestToHire />
-              </Nav.Link>
-              <Nav.Link href="#2">Item 2</Nav.Link>
-              <NavDropdown title={currentUser.username} id="nav-dropdown">
-                <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
+          {collapse}
+          {menu}
         </Container>
       </Navbar>
     );
