@@ -5,10 +5,10 @@ updates:
     schedule:
       interval: 'daily'
   - package-ecosystem: 'npm'
-    directory: '/ui'
+    directory: '/ui/'
     schedule:
       interval: 'daily'
   - package-ecosystem: 'npm'
-    directory: '/api'
+    directory: '/api/'
     schedule:
       interval: 'daily'
