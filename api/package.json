@@ -61,7 +61,7 @@
     "jest-html-reporter": "^3.4.2",
     "jest-junit": "^13.0.0",
     "nodemon": "^2.0.14",
-    "prettier": "^2.4.1"
+    "prettier": "^2.5.1"
   },
   "eslintConfig": {
     "extends": [
