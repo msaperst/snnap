@@ -61,7 +61,6 @@ class Base {
   }
 
   async removeRequestToHire(id) {
-    console.log(id);
     await Mysql.query(`DELETE FROM hire_requests WHERE id = ${id}`);
   }
 }
