@@ -39,14 +39,9 @@ describe('snnap menu', () => {
   });
 
   it('renders menu when data', () => {
-    jest
-      .spyOn(
-        authenticationService.authenticationService,
-        'currentUserValue',
-        'get'
-      )
-      .mockReturnValue({ username: 'msaperst' });
-    const { container } = render(<Menu />);
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass(
       'navbar navbar-expand navbar-dark bg-dark'
@@ -57,14 +52,9 @@ describe('snnap menu', () => {
   });
 
   it('renders main logo when menu', () => {
-    jest
-      .spyOn(
-        authenticationService.authenticationService,
-        'currentUserValue',
-        'get'
-      )
-      .mockReturnValue({ username: 'msaperst' });
-    const { container } = render(<Menu />);
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
     expect(container.firstChild.firstChild.firstChild).toHaveClass(
       'navbar-brand'
     );
@@ -80,14 +70,9 @@ describe('snnap menu', () => {
   });
 
   it('renders togglable menu when data', () => {
-    jest
-      .spyOn(
-        authenticationService.authenticationService,
-        'currentUserValue',
-        'get'
-      )
-      .mockReturnValue({ username: 'msaperst' });
-    const { container } = render(<Menu />);
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
     expect(container.firstChild.firstChild.children[1]).toHaveClass(
       'navbar-toggler collapsed'
     );
@@ -106,14 +91,9 @@ describe('snnap menu', () => {
   });
 
   it('renders menu contents when data', () => {
-    jest
-      .spyOn(
-        authenticationService.authenticationService,
-        'currentUserValue',
-        'get'
-      )
-      .mockReturnValue({ username: 'msaperst' });
-    const { container } = render(<Menu />);
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
     expect(container.firstChild.firstChild.lastChild).toHaveClass(
       'navbar-collapse collapse'
     );
@@ -139,28 +119,18 @@ describe('snnap menu', () => {
   });
 
   it('has no user menu when not clicked', () => {
-    jest
-      .spyOn(
-        authenticationService.authenticationService,
-        'currentUserValue',
-        'get'
-      )
-      .mockReturnValue({ username: 'msaperst' });
-    const { container } = render(<Menu />);
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[2].children
     ).toHaveLength(1);
   });
 
   it('has user menu when clicked', () => {
-    jest
-      .spyOn(
-        authenticationService.authenticationService,
-        'currentUserValue',
-        'get'
-      )
-      .mockReturnValue({ username: 'msaperst' });
-    const { container } = render(<Menu />);
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
     fireEvent.click(screen.getByText('msaperst'));
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[2].children
@@ -246,14 +216,7 @@ describe('snnap menu', () => {
     const updateX = () => {
       x = 1;
     };
-    jest
-      .spyOn(
-        authenticationService.authenticationService,
-        'currentUserValue',
-        'get'
-      )
-      .mockReturnValue({ username: 'msaperst' });
-    render(<Menu logout={updateX} />);
+    render(<Menu currentUser={{ username: 'msaperst' }} logout={updateX} />);
     fireEvent.click(screen.getByText('msaperst'));
     fireEvent.click(screen.getByText('Logout'));
     expect(x).toEqual(1);
