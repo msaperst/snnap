@@ -38,7 +38,7 @@ const User = class {
         throw new Error('Sorry, that username is already in use.');
       }
       const hash = await bcrypt.hash(password, 10);
-      await Mysql.query(
+      const result = await Mysql.query(
         `INSERT INTO users (first_name, last_name, username, email, number, password, city, state, zip)
          VALUES (${db.escape(firstName)}, ${db.escape(lastName)},
                  ${db.escape(username)}, ${db.escape(email)},
@@ -46,7 +46,7 @@ const User = class {
                  ${db.escape(city)}, ${db.escape(state)},
                  ${db.escape(zip)})`
       );
-      newUser.id = (await Mysql.query('SELECT LAST_INSERT_ID() as id'))[0].id;
+      newUser.id = result.insertId;
       newUser.username = username;
       newUser.name = `${firstName} ${lastName}`;
       newUser.email = email;

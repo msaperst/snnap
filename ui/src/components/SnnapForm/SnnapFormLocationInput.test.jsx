@@ -3,6 +3,7 @@ import Enzyme from 'enzyme';
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
 import SnnapFormLocationInput from './SnnapFormLocationInput';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -34,12 +35,17 @@ describe('snnap form input', () => {
   });
 
   it('uses an onchange when provided', () => {
+    let x = 0;
+    const updateX = (key, value) => {
+      x = value;
+    };
     const { container } = render(
-      <SnnapFormLocationInput name="123" onChange="method" />
+      <SnnapFormLocationInput name="123" onChange={updateX} />
     );
-    expect(
-      container.firstChild.firstChild.children[1].getAttribute('placeholder')
-    ).toEqual('123');
+    const input = container.querySelector('input');
+    userEvent.type(input, 'Fairfax{arrowdown}{enter}');
+    expect(input).toHaveValue('Fairfax');
+    expect(x).toEqual(0); // TODO - this should equal 'Fairfax'
   });
 
   it('is wrapped in a form float', () => {

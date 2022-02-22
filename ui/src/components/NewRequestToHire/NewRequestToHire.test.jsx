@@ -41,15 +41,16 @@ describe('snnap form input', () => {
   it('has a button', () => {
     const { container } = render(<NewRequestToHire />);
     expect(container.children).toHaveLength(2); // button and div to hold modal
-    expect(container.firstChild).toHaveClass('btn btn-primary');
-    expect(container.firstChild.getAttribute('type')).toEqual('button');
-    expect(container.firstChild).toHaveTextContent('New Request To Hire');
+    expect(container.firstChild).toHaveClass('btn btn-primary nav-link');
+    expect(container.firstChild.getAttribute('role')).toEqual('button');
+    expect(container.firstChild.getAttribute('tabindex')).toEqual('0');
+    expect(container.firstChild).toHaveTextContent('New Request to Hire');
   });
 
   it('opens a modal when button is clicked', async () => {
     const { container } = render(<NewRequestToHire />);
     await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request To Hire');
+    const button = getByText(container, 'New Request to Hire');
     fireEvent.click(button);
 
     const modal = await waitFor(() =>
@@ -81,14 +82,14 @@ describe('snnap form input', () => {
 
   it('opens the modal when button is clicked', () => {
     expect(wrapper.state().show).toBeFalsy();
-    const button = wrapper.find('Button');
-    expect(button.text()).toEqual('New Request To Hire');
+    const button = wrapper.find('#openNewRequestToHireButton').at(0);
+    expect(button.text()).toEqual('New Request to Hire');
     button.simulate('click');
     expect(wrapper.state().show).toBeTruthy();
   });
 
   it('has the correct modal header', () => {
-    const button = wrapper.find('Button');
+    const button = wrapper.find('#openNewRequestToHireButton').at(0);
     button.simulate('click');
     const modal = wrapper.find(Modal);
     expect(modal.find('.modal-header').at(0).text()).toEqual(
@@ -98,7 +99,7 @@ describe('snnap form input', () => {
 
   it('updates values when data is selected', () => {
     expect(wrapper.state().formData).toEqual({});
-    const button = wrapper.find('Button');
+    const button = wrapper.find('#openNewRequestToHireButton').at(0);
     button.simulate('click');
     const modal = wrapper.find(Modal);
     modal.find('select').simulate('change', { target: { value: 'hello' } });
@@ -107,7 +108,7 @@ describe('snnap form input', () => {
 
   it('updates inputs when data is entered', () => {
     expect(wrapper.state().formData).toEqual({});
-    const button = wrapper.find('Button');
+    const button = wrapper.find('#openNewRequestToHireButton').at(0);
     button.simulate('click');
     const modal = wrapper.find(Modal);
     const event = {
@@ -126,7 +127,7 @@ describe('snnap form input', () => {
 
   it('validates values when submitted', () => {
     expect(wrapper.state().validated).toBeFalsy();
-    wrapper.find('Button').simulate('click');
+    wrapper.find('#openNewRequestToHireButton').at(0).simulate('click');
     const button = wrapper.find(Modal).find('Button').at(1);
     expect(button.text()).toEqual('Create New Request');
     button.simulate('click');
@@ -135,7 +136,7 @@ describe('snnap form input', () => {
   });
 
   it('shows error messages on invalid inputs', async () => {
-    wrapper.find('Button').simulate('click');
+    wrapper.find('#openNewRequestToHireButton').at(0).simulate('click');
     await waitFor(() => wrapper.find('.invalid-feedback'));
     expect(wrapper.find('.invalid-feedback')).toHaveLength(6);
     expect(wrapper.find('.invalid-feedback').at(0).text()).toEqual(

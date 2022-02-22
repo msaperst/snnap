@@ -12,7 +12,7 @@ describe('new request to hire', () => {
     // load the default page
     driver = await Base.getDriver();
     // login as a user
-    user = await Base.loginUser(driver, 'homeUser');
+    user = await Base.loginUser(driver, 'newRequestToHireUser');
     await driver.get(Base.getApp());
     button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
     await button.click();
@@ -29,7 +29,7 @@ describe('new request to hire', () => {
   it('has a button to open the modal', async () => {
     driver.navigate().refresh();
     const button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
-    expect(await button.getText()).toEqual('New Request To Hire');
+    expect(await button.getText()).toEqual('New Request to Hire');
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
 
