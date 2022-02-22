@@ -38,7 +38,7 @@ describe('snnap form input', () => {
     expect(content.at(2).text()).toEqual('2 Hours');
     expect(content.at(3).text()).toEqual('Submit For Job');
     expect(content.at(4).text()).toEqual('Fairfax, VA');
-    expect(content.at(5).text()).toContain(':40:00 PM');
+    expect(content.at(5).text()).toContain(':40:00 PM'); // TODO - fix for checking different timezones
     expect(content.at(6).text()).toEqual('$200');
     expect(wrapper.find('.card-body').at(1).text()).toEqual('Some details');
   });

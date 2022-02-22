@@ -84,7 +84,7 @@ describe('User', () => {
     Mysql.query
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
-      .mockResolvedValue([{ id: 15 }]);
+      .mockResolvedValue({ insertId: 15 });
 
     const user = User.register(
       'Bob',

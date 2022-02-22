@@ -10,7 +10,7 @@ describe('User', () => {
   });
 
   it('sets the request to hire values on creation', async () => {
-    Mysql.query.mockResolvedValue([{ id: 15 }]);
+    Mysql.query.mockResolvedValue({ insertId: 15 });
 
     const requestToHire = RequestToHire.create(
       1,

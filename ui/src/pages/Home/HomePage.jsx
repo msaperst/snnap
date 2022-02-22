@@ -23,7 +23,7 @@ class HomePage extends React.Component {
 
     this.filterType = this.filterType.bind(this);
     this.filterWhat = this.filterWhat.bind(this);
-    this.sortyBy = this.sortBy.bind(this);
+    this.sortBy = this.sortBy.bind(this);
   }
 
   componentDidMount() {

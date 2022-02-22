@@ -11,6 +11,7 @@ import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import Menu from './components/Menu/Menu';
 import ProfilePage from './pages/Profile/ProfilePage';
+import './App.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -40,7 +41,9 @@ class App extends React.Component {
         <div className="vertical-center">
           <Container>
             <Row>
-              <Col>{currentUser && <Menu logout={() => this.logout()} />}</Col>
+              <Col>
+                <Menu currentUser={currentUser} logout={() => this.logout()} />
+              </Col>
             </Row>
             <PrivateRoute exact path="/" component={HomePage} />
             <PrivateRoute exact path="/profile" component={ProfilePage} />

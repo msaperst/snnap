@@ -17,7 +17,7 @@ const RequestToHire = class {
   ) {
     const newRequestToHire = new RequestToHire();
     newRequestToHire.instancePromise = (async () => {
-      await Mysql.query(
+      const result = await Mysql.query(
         `INSERT INTO hire_requests (user, type, location, details, pay, duration, units, date_time, equipment, skills)
          VALUES (${db.escape(user)}, ${db.escape(type)}, 
                  ${db.escape(location)}, ${db.escape(details)}, 
@@ -25,9 +25,7 @@ const RequestToHire = class {
                  ${db.escape(units)}, ${db.escape(`${date} ${time}:00`)}, 
                  ${db.escape(equipment)}, ${db.escape(skills)})`
       );
-      newRequestToHire.id = (
-        await Mysql.query('SELECT LAST_INSERT_ID() as id')
-      )[0].id;
+      newRequestToHire.id = result.insertId;
       newRequestToHire.type = type;
       newRequestToHire.location = location;
     })();
