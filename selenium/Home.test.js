@@ -1,19 +1,19 @@
-const {By, Key, until} = require('selenium-webdriver');
+const { By, Key, until } = require('selenium-webdriver');
 const Base = require('./common/base');
 require('chromedriver');
-const RequestToHire = require("../api/components/requestToHire/RequestToHire");
-const Mysql = require("../api/services/Mysql");
 
 describe('home page', () => {
   let driver;
   let user;
-  let requestToHire;
+  let requestToHires = [];
 
   beforeEach(async () => {
     // load the default page
     driver = await Base.getDriver();
     // login as a user
-    requestToHire = await Base.addRequestToHire();
+    requestToHires.push(await Base.addRequestToHire(5, '2032-03-12'));
+    requestToHires.push(await Base.addRequestToHire(5, '2032-03-10'));
+
     user = await Base.loginUser(driver, 'homeUser');
     await driver.get(Base.getApp());
   }, 10000);
@@ -21,7 +21,9 @@ describe('home page', () => {
   afterEach(async () => {
     //delete the user
     await Base.removeUser(user.username);
-    await Base.removeRequestToHire(await requestToHire.getId());
+    for (const requestToHire of requestToHires) {
+      await Base.removeRequestToHire(await requestToHire.getId());
+    }
     // close the driver
     await driver.quit();
   }, 15000);
@@ -88,86 +90,62 @@ describe('home page', () => {
   });
 
   it('displays soonest at the top', async () => {
-    let requestId;
-    try {
-      requestId = RequestToHire.create(1, 5, 'Chantilly, VA, United States of America', 'Some details', 200, 4, 'Hours', '2032-03-10', '14:00', '', '');
-      driver.wait(until.elementsLocated(By.className('card')));
-      const cards = await driver.findElements(By.className('card'));
-      let last = Date.now();
-      for (let i = 0; i < cards.length; i++) {
-        const cardDate = await getCardDate(i);
-        expect(cardDate).toBeGreaterThanOrEqual(last);
-        last = cardDate;
-      }
-    } finally {
-      await Mysql.query(`DELETE
-                         FROM hire_requests
-                         WHERE id = ${await requestId.getId()}`);
+    driver.wait(until.elementsLocated(By.className('card')));
+    const cards = await driver.findElements(By.className('card'));
+    let last = Date.now();
+    for (let i = 0; i < cards.length; i++) {
+      const cardDate = await getCardDate(i);
+      expect(cardDate).toBeGreaterThanOrEqual(last);
+      last = cardDate;
     }
   });
 
   it('displays soonest at the bottom when resorted', async () => {
-    let requestId;
-    try {
-      requestId = RequestToHire.create(1, 5, 'Chantilly, VA, United States of America', 'Some details', 200, 4, 'Hours', '2032-03-10', '14:00', '', '');
-      // resort
-      const firstDate = await getCardDate(0);
-      const select = await driver.findElement(By.className('form-select'));
-      (await select.findElements(By.tagName('option')))[1].click();
-      driver.wait(function () {
-        return getCardDate(0).then(function (date) {
-          return date !== firstDate;
-        });
+    // resort
+    const firstDate = await getCardDate(0);
+    const select = await driver.findElement(By.className('form-select'));
+    (await select.findElements(By.tagName('option')))[1].click();
+    driver.wait(function () {
+      return getCardDate(0).then(function (date) {
+        return date !== firstDate;
       });
-      // check the cards
-      driver.wait(until.elementsLocated(By.className('card')));
-      const cards = await driver.findElements(By.className('card'));
-      let last = Date.now();
-      for (let i = cards.length - 1; i >= 0; i--) {
-        const cardDate = await getCardDate(i);
-        expect(cardDate).toBeGreaterThanOrEqual(last);
-        last = cardDate;
-      }
-    } finally {
-      await Mysql.query(`DELETE
-                         FROM hire_requests
-                         WHERE id = ${await requestId.getId()}`);
+    });
+    // check the cards
+    driver.wait(until.elementsLocated(By.className('card')));
+    const cards = await driver.findElements(By.className('card'));
+    let last = Date.now();
+    for (let i = cards.length - 1; i >= 0; i--) {
+      const cardDate = await getCardDate(i);
+      expect(cardDate).toBeGreaterThanOrEqual(last);
+      last = cardDate;
     }
   });
 
   it('displays soonest at the top when reresorted', async () => {
-    let requestId;
-    try {
-      requestId = RequestToHire.create(1, 5, 'Chantilly, VA, United States of America', 'Some details', 200, 4, 'Hours', '2032-03-10', '14:00', '', '');
-      // resort
-      const firstDate = await getCardDate(0);
-      const select = await driver.findElement(By.className('form-select'));
-      (await select.findElements(By.tagName('option')))[1].click();
-      driver.wait(function () {
-        return getCardDate(0).then(function (date) {
-          return date !== firstDate;
-        })
-      });
-      // resort
-      (await select.findElements(By.tagName('option')))[0].click();
-      driver.wait(function () {
-        return getCardDate(0).then(function (date) {
-          return date === firstDate;
-        })
-      });
-      // check the cards
-      driver.wait(until.elementsLocated(By.className('card')));
-      const cards = await driver.findElements(By.className('card'));
-      let last = Date.now();
-      for (let i = 0; i < cards.length; i++) {
-        const cardDate = await getCardDate(i);
-        expect(cardDate).toBeGreaterThanOrEqual(last);
-        last = cardDate;
-      }
-    } finally {
-      await Mysql.query(`DELETE
-                         FROM hire_requests
-                         WHERE id = ${await requestId.getId()}`);
+    // resort
+    const firstDate = await getCardDate(0);
+    const select = await driver.findElement(By.className('form-select'));
+    (await select.findElements(By.tagName('option')))[1].click();
+    driver.wait(function () {
+      return getCardDate(0).then(function (date) {
+        return date !== firstDate;
+      })
+    });
+    // resort
+    (await select.findElements(By.tagName('option')))[0].click();
+    driver.wait(function () {
+      return getCardDate(0).then(function (date) {
+        return date === firstDate;
+      })
+    });
+    // check the cards
+    driver.wait(until.elementsLocated(By.className('card')));
+    const cards = await driver.findElements(By.className('card'));
+    let last = Date.now();
+    for (let i = 0; i < cards.length; i++) {
+      const cardDate = await getCardDate(i);
+      expect(cardDate).toBeGreaterThanOrEqual(last);
+      last = cardDate;
     }
   });
 

@@ -56,8 +56,8 @@ class Base {
     );
   }
 
-  async addRequestToHire() {
-    return RequestToHire.create(1, 5, 'Chantilly, VA, United States of America', 'Some details', 200, 4, 'Hours', '2032-03-12', '14:00', '', '');
+  async addRequestToHire(type, date) {
+    return RequestToHire.create(1, type, 'Chantilly, VA, United States of America', 'Some details', 200, 4, 'Hours', date, '14:00', '', '');
   }
 
   async removeRequestToHire(id) {
