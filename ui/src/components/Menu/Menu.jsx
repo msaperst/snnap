@@ -18,9 +18,7 @@ function Menu(props) {
     menu = (
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto">
-          <Nav.Link>
-            <NewRequestToHire />
-          </Nav.Link>
+          <NewRequestToHire />
           <Nav.Link href="#2">Item 2</Nav.Link>
           <NavDropdown title={currentUser.username} id="nav-dropdown">
             <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>

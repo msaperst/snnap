@@ -11,6 +11,7 @@ import LoginPage from './pages/Login/LoginPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import Menu from './components/Menu/Menu';
 import ProfilePage from './pages/Profile/ProfilePage';
+import './App.css';
 
 class App extends React.Component {
   constructor(props) {

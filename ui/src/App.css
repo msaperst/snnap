@@ -36,3 +36,19 @@
         transform: rotate(360deg);
     }
 }
+
+.btn-primary, .btn-primary:focus, .btn-primary:hover {
+    background: #6A3CA5;
+    border-color: #6A3CA5;
+}
+.btn-primary:focus, .btn-primary:hover {
+    color: #DC7603;
+}
+
+.btn-secondary, .btn-secondary:focus, .btn-secondary:hover {
+    background: #DC7603;
+    border-color: #DC7603;
+}
+.btn-secondary:focus, .btn-secondary:hover {
+    color: #6A3CA5;
+}

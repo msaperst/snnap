@@ -29,7 +29,7 @@ describe('new request to hire', () => {
   it('has a button to open the modal', async () => {
     driver.navigate().refresh();
     const button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
-    expect(await button.getText()).toEqual('New Request To Hire');
+    expect(await button.getText()).toEqual('New Request to Hire');
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
 
