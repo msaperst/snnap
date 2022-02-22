@@ -5,8 +5,6 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import Menu from './Menu';
 
-const authenticationService = require('../../services/authentication.service');
-
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap menu', () => {
@@ -106,15 +104,18 @@ describe('snnap menu', () => {
     );
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children
-    ).toHaveLength(3);
+    ).toHaveLength(4);
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[0]
-    ).toHaveTextContent('New Request To Hire');
+    ).toHaveTextContent('New Request to Hire');
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[1]
-    ).toHaveTextContent('Item 2');
+    ).toHaveTextContent('');
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[2]
+    ).toHaveTextContent('Item 2');
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.children[3]
     ).toHaveTextContent('msaperst');
   });
 
@@ -124,7 +125,7 @@ describe('snnap menu', () => {
     );
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[2].children
-    ).toHaveLength(1);
+    ).toHaveLength(0);
   });
 
   it('has user menu when clicked', () => {
@@ -133,80 +134,80 @@ describe('snnap menu', () => {
     );
     fireEvent.click(screen.getByText('msaperst'));
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].children
+      container.firstChild.firstChild.lastChild.firstChild.children[3].children
     ).toHaveLength(2);
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
         .children
     ).toHaveLength(3);
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
     ).toHaveClass('dropdown-menu show');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.getAttribute(
         'aria-labelledby'
       )
     ).toEqual('nav-dropdown');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.getAttribute(
         'data-bs-popper'
       )
     ).toEqual('static');
 
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
         .firstChild
     ).toHaveClass('dropdown-item');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.firstChild.getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.firstChild.getAttribute(
         'data-rr-ui-dropdown-item'
       )
     ).toEqual('');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.firstChild.getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.firstChild.getAttribute(
         'href'
       )
     ).toEqual('/profile');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
         .firstChild
     ).toHaveTextContent('Profile');
 
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
         .children[1]
     ).toHaveClass('dropdown-divider');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.children[1].getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.children[1].getAttribute(
         'role'
       )
     ).toEqual('separator');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
         .children[1]
     ).toHaveTextContent('');
 
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
         .lastChild
     ).toHaveClass('dropdown-item');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.lastChild.getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.lastChild.getAttribute(
         'data-rr-ui-dropdown-item'
       )
     ).toEqual('');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.lastChild.getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.lastChild.getAttribute(
         'role'
       )
     ).toEqual('button');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild.lastChild.getAttribute(
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.lastChild.getAttribute(
         'tabIndex'
       )
     ).toEqual('0');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].lastChild
+      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
         .lastChild
     ).toHaveTextContent('Logout');
   });
