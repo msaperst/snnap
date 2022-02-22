@@ -24,7 +24,6 @@ module.exports = {
     'jest/prefer-to-have-length': 'warn',
     'jest/no-export': 'error',
     'jest/expect-expect': 'error',
-    'jest/lowercase-name': 'warn',
     'jest/no-commented-out-tests': 'warn',
     /**
      * @bug https://github.com/benmosher/eslint-plugin-import/issues/1282
