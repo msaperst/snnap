@@ -94,21 +94,16 @@ describe('new request to hire', () => {
   });
 
   it('closes modal with successful submission of the form', async () => {
+    const cards = (await driver.findElements(By.className('card'))).length;
     await enterOtherData()
-    await enterData('Fairfax', 'Deetz', '100', '100', '10/13/2031', '1000AM');
-    const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
-    for(let i = 0; i < 7; i++) {
-      expect(await feedbacks[i].isDisplayed()).toBeFalsy();
-    }
-    const alerts = await modal.findElements(By.className('alert-danger'));
-    expect(alerts).toHaveLength(0);
+    await enterData('Fairfax', 'New Deetz', '100', '100', '10/13/2031', '1000AM');
     driver.wait(function() {
       return driver.findElements(By.css('.modal-header')).then(function(elements) {
         return elements.length === 0;
       });
     });
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
-    // TODO - ensure new hire event displays on page
+    expect(await driver.findElements(By.className('card'))).toHaveLength(cards + 1);
   });
 
   async function enterData(location, details, pay, duration, date, time) {
