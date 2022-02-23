@@ -113,7 +113,7 @@ router.post(
         equipment.toString(),
         skills.toString()
       );
-      return res.send(req.body);
+      return res.status(200).send();
     } catch (error) {
       return res.status(422).send({
         msg: error.message,
