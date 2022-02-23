@@ -61,7 +61,7 @@ class NewRequestToHire extends React.Component {
         .then(
           () => {
             this.setState({ isSubmitting: false, status: null, show: false });
-            // TODO - reload homepage items
+            window.location.reload();
           },
           (error) => {
             this.setState({ isSubmitting: false, status: error });
