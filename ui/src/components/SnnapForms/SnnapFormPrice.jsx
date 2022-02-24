@@ -32,8 +32,11 @@ function SnnapFormPrice(props) {
   return (
     <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
       <InputGroup hasValidation>
-        <InputGroup.Text id={`inputGroup${safeName}`}>$</InputGroup.Text>
+        <InputGroup.Text id={`inputGroupPre${safeName}`}>$</InputGroup.Text>
         {formControl}
+        <InputGroup.Text id={`inputGroupPost${safeName}`}>
+          Per Hour
+        </InputGroup.Text>
         {formError}
       </InputGroup>
     </Form.Group>

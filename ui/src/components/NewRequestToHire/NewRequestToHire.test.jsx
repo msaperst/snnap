@@ -146,10 +146,10 @@ describe('snnap form input', () => {
       'Please provide a valid job details.'
     );
     expect(wrapper.find('.invalid-feedback').at(2).text()).toEqual(
-      'Please provide a valid pay.'
+      'Please provide a valid duration.'
     );
     expect(wrapper.find('.invalid-feedback').at(3).text()).toEqual(
-      'Please provide a valid duration.'
+      'Please provide a valid pay.'
     );
     expect(wrapper.find('.invalid-feedback').at(4).text()).toEqual(
       'Please provide a valid date.'

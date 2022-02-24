@@ -17,3 +17,5 @@ CREATE TABLE IF NOT EXISTS hire_requests
   COLLATE = utf8mb4_unicode_ci;
 
 ALTER TABLE hire_requests ADD COLUMN user int(11) NOT NULL;
+ALTER TABLE hire_requests DROP COLUMN units;
+ALTER TABLE hire_requests ADD COLUMN durationMax int(11);

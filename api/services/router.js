@@ -107,7 +107,7 @@ router.post(
         req.body.details,
         req.body.pay,
         req.body.duration,
-        req.body.units,
+        req.body.durationMax,
         req.body.date,
         req.body.time,
         equipment.toString(),

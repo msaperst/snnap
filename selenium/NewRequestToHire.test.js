@@ -58,8 +58,8 @@ describe('new request to hire', () => {
     expect(await feedbacks[0].getText()).toEqual('');     // this is a defect; putting in a test for it that will need to be fixed once the bug is fixed
     expect(await feedbacks[1].getText()).toEqual('Please provide a valid location.');
     expect(await feedbacks[2].getText()).toEqual('Please provide a valid job details.');
-    expect(await feedbacks[3].getText()).toEqual('Please provide a valid pay.');
-    expect(await feedbacks[4].getText()).toEqual('Please provide a valid duration.');
+    expect(await feedbacks[3].getText()).toEqual('Please provide a valid duration.');
+    expect(await feedbacks[4].getText()).toEqual('Please provide a valid pay.');
     expect(await feedbacks[5].getText()).toEqual('Please provide a valid date.');
     expect(await feedbacks[6].getText()).toEqual('Please provide a valid time.');
     const alerts = await modal.findElements(By.className('alert-danger'));
@@ -71,13 +71,6 @@ describe('new request to hire', () => {
   it('shows errors upon submitting when selecting bad job type', async () => {
     const alerts = await basicEnterAndCheck();
     expect(await alerts[0].getText()).toEqual('Please provide a valid job type.');
-  });
-
-  it('shows errors upon submitting when selecting bad duration', async () => {
-    const select = await modal.findElement(By.id('formJobType'));
-    (await select.findElements(By.tagName('option')))[2].click();
-    const alerts = await basicEnterAndCheck();
-    expect(await alerts[0].getText()).toEqual('Please provide a valid duration unit.');
   });
 
   it('shows errors upon submitting when selecting previous day', async () => {
@@ -120,8 +113,6 @@ describe('new request to hire', () => {
   async function enterOtherData() {
     const select = await modal.findElement(By.id('formJobType'));
     (await select.findElements(By.tagName('option')))[2].click();
-    (await modal.findElement(By.id('dropDownDuration'))).click();
-    (await modal.findElements(By.className('dropdown-item')))[1].click();
   }
 
   async function basicEnterAndCheck() {

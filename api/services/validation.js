@@ -29,11 +29,9 @@ exports.newRequestToHireValidation = [
   check('details', 'Please provide a valid job details.').not().isEmpty(),
   check('pay', 'Please provide a valid pay.').isNumeric(),
   check('duration', 'Please provide a valid duration.').isNumeric(),
-  check('units', 'Please provide a valid duration unit.').isIn([
-    'Minutes',
-    'Hours',
-    'Days',
-  ]),
+  check('range', 'Please provide a valid duration range.')
+    .optional()
+    .isNumeric(),
   check('date', 'Please provide a valid date.').isDate(),
   check('date', 'Please provide a date after today.').isAfter(),
   check('time', 'Please provide a valid time.').not().isEmpty(),
