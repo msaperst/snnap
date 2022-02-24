@@ -23,7 +23,11 @@ function RequestToHire(props) {
                   }).format(new Date(hireRequest.date_time))}
                 </Col>
                 <Col md={3}>
-                  {hireRequest.duration} {hireRequest.units}
+                  {hireRequest.duration}
+                  {hireRequest.durationMax
+                    ? ` to ${hireRequest.durationMax}`
+                    : ''}{' '}
+                  hours
                 </Col>
                 <Col md={3}>
                   <Button>Submit For Job</Button>
@@ -44,7 +48,7 @@ function RequestToHire(props) {
                     hour12: true,
                   }).format(new Date(hireRequest.date_time))}
                 </Col>
-                <Col md={3}>${hireRequest.pay}</Col>
+                <Col md={3}>${hireRequest.pay} per hour</Col>
               </Row>
             </Container>
           </Card.Body>

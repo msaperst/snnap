@@ -1,5 +1,5 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
+import Enzyme, { mount } from 'enzyme';
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -37,18 +37,26 @@ describe('snnap form input', () => {
     );
   });
 
-  it('has a label and input', () => {
+  it('has a label and inputs', () => {
     const { container } = render(<SnnapFormPrice size="5" name="123" />);
-    expect(container.firstChild.firstChild.children).toHaveLength(3);
+    expect(container.firstChild.firstChild.children).toHaveLength(4);
   });
 
   it('uses an onchange when provided', () => {
-    const { container } = render(
-      <SnnapFormPrice name="123" onChange="method" />
-    );
-    expect(
-      container.firstChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('inputGroup123');
+    let x = 0;
+    let y = 0;
+    const updateX = (key, value) => {
+      x = key;
+      y = value;
+    };
+    const component = mount(<SnnapFormPrice name="123" onChange={updateX} />);
+    const event = {
+      preventDefault() {},
+      target: { value: '1234' },
+    };
+    component.find('.form-control').simulate('change', event);
+    expect(x).toEqual('123');
+    expect(y).toEqual('1234');
   });
 
   it('has a $', () => {
@@ -58,7 +66,7 @@ describe('snnap form input', () => {
     );
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('inputGroup123');
+    ).toEqual('inputGroupPre123');
     expect(container.firstChild.firstChild.firstChild).toHaveTextContent('$');
   });
 
@@ -86,6 +94,19 @@ describe('snnap form input', () => {
       container.firstChild.firstChild.children[1].getAttribute('onChange')
     ).toBeNull();
     expect(container.firstChild.firstChild.children[1]).toBeRequired();
+  });
+
+  it('has a per hour label', () => {
+    const { container } = render(<SnnapFormPrice name="123" />);
+    expect(container.firstChild.firstChild.children[2]).toHaveClass(
+      'input-group-text'
+    );
+    expect(
+      container.firstChild.firstChild.children[2].getAttribute('id')
+    ).toEqual('inputGroupPost123');
+    expect(container.firstChild.firstChild.children[2]).toHaveTextContent(
+      'Per Hour'
+    );
   });
 
   it('has an error field', () => {
