@@ -1,13 +1,21 @@
 import React from 'react';
-import { Alert, Button, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
-import Nav from 'react-bootstrap/Nav';
-import SnnapFormInput from '../SnnapForm/SnnapFormInput';
+import {
+  Alert,
+  Button,
+  Col,
+  Form,
+  Modal,
+  Nav,
+  Row,
+  Spinner,
+} from 'react-bootstrap';
 import { jobService } from '../../services/job.service';
-import SnnapFormPrice from '../SnnapForm/SnnapFormPrice';
-import SnnapFormInputWithDropdown from '../SnnapForm/SnnapFormInputWithDropdown';
-import SnnapFormMultiSelect from '../SnnapForm/SnnapFormMultiSelect';
-import SnnapFormLocationInput from '../SnnapForm/SnnapFormLocationInput';
-import SnnapFormSelect from '../SnnapForm/SnnapFormSelect';
+import SnnapFormInput from '../SnnapForms/SnnapFormInput';
+import SnnapFormPrice from '../SnnapForms/SnnapFormPrice';
+import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
+import SnnapFormLocationInput from '../SnnapForms/SnnapFormLocationInput';
+import SnnapFormSelect from '../SnnapForms/SnnapFormSelect';
+import SnnapFormDuration from '../SnnapForms/SnnapFormDuration';
 
 class NewRequestToHire extends React.Component {
   constructor(props) {
@@ -52,7 +60,7 @@ class NewRequestToHire extends React.Component {
           formData['Job Details'],
           formData.Pay,
           formData.Duration,
-          formData.Units,
+          formData.DurationRange,
           formData.Date,
           formData.Time,
           formData['Equipment Needed'],
@@ -142,16 +150,16 @@ class NewRequestToHire extends React.Component {
                   />
                 </Row>
                 <Row className="mb-3">
-                  <SnnapFormPrice
-                    size={6}
-                    name="Pay"
-                    onChange={this.updateForm}
-                  />
-                  <SnnapFormInputWithDropdown
+                  <SnnapFormDuration
                     size={6}
                     type="number"
                     name="Duration"
                     options={['Minutes', 'Hours', 'Days']}
+                    onChange={this.updateForm}
+                  />
+                  <SnnapFormPrice
+                    size={6}
+                    name="Pay"
                     onChange={this.updateForm}
                   />
                 </Row>

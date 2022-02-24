@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
-import SnnapFormInput from '../../components/SnnapForm/SnnapFormInput';
+import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
 
 class RegisterPage extends React.Component {
   constructor(props) {
