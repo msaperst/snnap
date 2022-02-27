@@ -109,7 +109,6 @@ router.post(
         req.body.duration,
         req.body.durationMax,
         req.body.date,
-        req.body.time,
         equipment.toString(),
         skills.toString()
       );

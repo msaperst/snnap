@@ -11,7 +11,6 @@ const RequestToHire = class {
     duration,
     durationMax,
     date,
-    time,
     equipment,
     skills
   ) {
@@ -22,7 +21,7 @@ const RequestToHire = class {
          VALUES (${db.escape(user)}, ${db.escape(type)}, 
                  ${db.escape(location)}, ${db.escape(details)}, 
                  ${db.escape(pay)}, ${db.escape(duration)}, 
-                 ${db.escape(durationMax)}, ${db.escape(`${date} ${time}:00`)}, 
+                 ${db.escape(durationMax)}, ${db.escape(`${date} 00:00:00`)}, 
                  ${db.escape(equipment)}, ${db.escape(skills)})`
       );
       newRequestToHire.id = result.insertId;
