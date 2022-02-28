@@ -20,12 +20,6 @@ describe('home page', () => {
     await driver.quit();
   }, 15000);
 
-
-// menu at full size
-// menu at small
-// search guy at small
-// search guy at full size
-
   it('displays full menu at large size', async () => {
     const navBar = driver.wait(until.elementLocated(By.id('responsive-navbar-nav')));
     expect( await navBar.isDisplayed()).toBeTruthy();
