@@ -35,7 +35,7 @@ class Search extends React.Component {
               iaculis quam lectus, ac lobortis tortor porta eget.
             </p>
           </Col>
-          <Col md={6} className="d-md-block d-sm-none">
+          <Col md={6} className="d-md-block d-sm-none d-none">
             <img src={searchGuy} alt="Search" className="searchGuy" />
           </Col>
         </Row>
