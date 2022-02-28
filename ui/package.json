@@ -79,7 +79,7 @@
     "@babel/core": "^7.17.5",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
     "enzyme": "^3.11.0",
-    "eslint": "^8.9.0",
+    "eslint": "^8.10.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-import": "^2.25.4",
