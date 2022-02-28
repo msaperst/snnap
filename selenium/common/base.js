@@ -22,6 +22,7 @@ class Base {
       .setChromeOptions(new Options().headless())
       .build();
     await driver.get(Base.getApp() + url);
+    await driver.manage().window().setSize(1000, 800);
     return driver;
   }
 
