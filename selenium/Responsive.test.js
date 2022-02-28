@@ -43,12 +43,6 @@ describe('home page', () => {
   it('displays search guy at medium size', async () => {
     await driver.manage().window().setSize(800, 800);
     const searchGuy = driver.wait(until.elementLocated(By.className('searchGuy')));
-    expect( await searchGuy.isDisplayed()).toBeTruthy();
-  });
-
-  it('displays no search guy at small size', async () => {
-    await driver.manage().window().setSize(600, 800);
-    const searchGuy = driver.wait(until.elementLocated(By.className('searchGuy')));
     expect( await searchGuy.isDisplayed()).toBeFalsy();
   });
 
