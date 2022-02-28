@@ -139,6 +139,13 @@ class NewRequestToHire extends React.Component {
                   <SnnapFormLocationInput
                     name="Location"
                     type="text"
+                    size={8}
+                    onChange={this.updateForm}
+                  />
+                  <SnnapFormInput
+                    size={4}
+                    name="Date"
+                    type="date"
                     onChange={this.updateForm}
                   />
                 </Row>
@@ -160,20 +167,6 @@ class NewRequestToHire extends React.Component {
                   <SnnapFormPrice
                     size={6}
                     name="Pay"
-                    onChange={this.updateForm}
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormInput
-                    size={6}
-                    name="Date"
-                    type="date"
-                    onChange={this.updateForm}
-                  />
-                  <SnnapFormInput
-                    size={6}
-                    name="Time"
-                    type="time"
                     onChange={this.updateForm}
                   />
                 </Row>

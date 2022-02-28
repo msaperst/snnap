@@ -138,28 +138,25 @@ describe('snnap form input', () => {
   it('shows error messages on invalid inputs', async () => {
     wrapper.find('#openNewRequestToHireButton').at(0).simulate('click');
     await waitFor(() => wrapper.find('.invalid-feedback'));
-    expect(wrapper.find('.invalid-feedback')).toHaveLength(6);
+    expect(wrapper.find('.invalid-feedback')).toHaveLength(5);
     expect(wrapper.find('.invalid-feedback').at(0).text()).toEqual(
       'Please provide a valid job type.'
     );
     expect(wrapper.find('.invalid-feedback').at(1).text()).toEqual(
-      'Please provide a valid job details.'
-    );
-    expect(wrapper.find('.invalid-feedback').at(2).text()).toEqual(
-      'Please provide a valid duration.'
-    );
-    expect(wrapper.find('.invalid-feedback').at(3).text()).toEqual(
-      'Please provide a valid pay.'
-    );
-    expect(wrapper.find('.invalid-feedback').at(4).text()).toEqual(
       'Please provide a valid date.'
     );
-    expect(wrapper.find('.invalid-feedback').at(5).text()).toEqual(
-      'Please provide a valid time.'
+    expect(wrapper.find('.invalid-feedback').at(2).text()).toEqual(
+      'Please provide a valid job details.'
+    );
+    expect(wrapper.find('.invalid-feedback').at(3).text()).toEqual(
+      'Please provide a valid duration.'
+    );
+    expect(wrapper.find('.invalid-feedback').at(4).text()).toEqual(
+      'Please provide a valid pay.'
     );
     wrapper.find(Modal).find('Button').at(1).simulate('click');
     await waitFor(() => wrapper.firstChild);
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 5; i++) {
       expect(
         wrapper.find('.invalid-feedback').at(i).getDOMNode()
       ).toBeVisible();

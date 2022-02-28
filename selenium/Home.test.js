@@ -92,7 +92,7 @@ describe('home page', () => {
   it('displays soonest at the top', async () => {
     driver.wait(until.elementsLocated(By.className('card')));
     const cards = await driver.findElements(By.className('card'));
-    let last = Date.now();
+    let last = Date.now() - 24*60*60*1000;  // makes this yesterday
     for (let i = 0; i < cards.length; i++) {
       const cardDate = await getCardDate(i);
       expect(cardDate).toBeGreaterThanOrEqual(last);
@@ -113,7 +113,7 @@ describe('home page', () => {
     // check the cards
     driver.wait(until.elementsLocated(By.className('card')));
     const cards = await driver.findElements(By.className('card'));
-    let last = Date.now();
+    let last = Date.now() - 24*60*60*1000;  // makes this yesterday
     for (let i = cards.length - 1; i >= 0; i--) {
       const cardDate = await getCardDate(i);
       expect(cardDate).toBeGreaterThanOrEqual(last);
@@ -141,7 +141,7 @@ describe('home page', () => {
     // check the cards
     driver.wait(until.elementsLocated(By.className('card')));
     const cards = await driver.findElements(By.className('card'));
-    let last = Date.now();
+    let last = Date.now() - 24*60*60*1000;  // makes this yesterday
     for (let i = 0; i < cards.length; i++) {
       const cardDate = await getCardDate(i);
       expect(cardDate).toBeGreaterThanOrEqual(last);

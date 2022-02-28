@@ -19,3 +19,4 @@ CREATE TABLE IF NOT EXISTS hire_requests
 ALTER TABLE hire_requests ADD COLUMN user int(11) NOT NULL;
 ALTER TABLE hire_requests DROP COLUMN units;
 ALTER TABLE hire_requests ADD COLUMN durationMax int(11);
+ALTER TABLE hire_requests MODIFY location varchar(256);

@@ -34,19 +34,11 @@ function RequestToHire(props) {
                 </Col>
               </Row>
               <Row>
-                <Col md={3}>
+                <Col md={6}>
                   {hireRequest.location.replace(
                     ', United States of America',
                     ''
                   )}
-                </Col>
-                <Col md={3}>
-                  {new Intl.DateTimeFormat('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                    hour12: true,
-                  }).format(new Date(hireRequest.date_time))}
                 </Col>
                 <Col md={3}>${hireRequest.pay} per hour</Col>
               </Row>

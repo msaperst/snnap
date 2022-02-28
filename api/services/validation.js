@@ -33,6 +33,5 @@ exports.newRequestToHireValidation = [
     .optional()
     .isNumeric(),
   check('date', 'Please provide a valid date.').isDate(),
-  check('date', 'Please provide a date after today.').isAfter(),
-  check('time', 'Please provide a valid time.').not().isEmpty(),
+  check('date', 'Please provide a date after today.').not().isBefore(),
 ];
