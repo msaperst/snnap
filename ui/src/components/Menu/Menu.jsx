@@ -4,27 +4,21 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import './Menu.css';
-import { useNavigate } from 'react-router-dom';
 import snnapLogo from './SNNAP.png';
 import NewRequestToHire from '../NewRequestToHire/NewRequestToHire';
 import { authenticationService } from '../../services/authentication.service';
 
-function Menu() {
+function Menu(props) {
   let collapse = null;
   let menu = null;
   const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useNavigate();
+  const { logout } = props;
 
   useEffect(() => {
     authenticationService.currentUser.subscribe((x) => {
       setCurrentUser(x);
     });
   });
-
-  const logout = () => {
-    authenticationService.logout();
-    navigate('/login');
-  };
 
   if (currentUser) {
     collapse = <Navbar.Toggle aria-controls="responsive-navbar-nav" />;
