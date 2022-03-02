@@ -47,7 +47,7 @@ function register(
 
   return fetch(`/api/register`, requestOptions)
     .then(handleResponse)
-    .then(() => login(username, password));
+    .then(() => login(username, password, true));
 }
 
 function login(username, password, rememberMe) {
