@@ -21,7 +21,6 @@ function Menu() {
     });
   });
 
-  // eslint-disable-next-line class-methods-use-this
   const logout = () => {
     authenticationService.logout();
     navigate('/login');

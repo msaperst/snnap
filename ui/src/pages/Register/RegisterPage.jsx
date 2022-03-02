@@ -5,9 +5,11 @@ import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
 
 function RegisterPage() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (authenticationService.currentUserValue) {
-      navigate('/profile');
+      navigate('/profile', { replace: true });
     }
   });
 
@@ -15,8 +17,6 @@ function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
   const [formData, setFormData] = useState({});
-
-  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();

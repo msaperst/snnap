@@ -5,9 +5,11 @@ import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (authenticationService.currentUserValue) {
-      navigate('/');
+      navigate('/', { replace: true });
     }
   });
 
@@ -15,7 +17,6 @@ function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const navigate = useNavigate();
   const location = useLocation();
 
   let from = '/';
