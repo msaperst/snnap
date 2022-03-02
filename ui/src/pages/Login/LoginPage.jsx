@@ -1,119 +1,107 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
 
-class LoginPage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    // redirect to home if already logged in
+function LoginPage() {
+  useEffect(() => {
     if (authenticationService.currentUserValue) {
-      const { history } = this.props;
-      history.push('/');
+      navigate('/');
     }
+  });
 
-    // otherwise, set up our variables
-    this.state = {
-      validated: false,
-      isSubmitting: false,
-      status: null,
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
+  const [validated, setValidated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  let from = '/';
+  if (location.state && location.state.from && location.state.from.pathname) {
+    from = location.state.from.pathname;
   }
 
-  handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
-      this.setState({ isSubmitting: true });
+      setIsSubmitting(true);
       const data = event.target;
       authenticationService.login(data[0].value, data[1].value).then(
         () => {
-          const { location, history } = this.props;
-          const { from } = location.state || {
-            from: { pathname: '/' },
-          };
-          history.push(from);
+          navigate(from, { replace: true });
         },
         (error) => {
-          this.setState({ isSubmitting: false, status: error });
+          setIsSubmitting(false);
+          setStatus(error);
         }
       );
     }
+    setValidated(true);
+  };
 
-    this.setState({ validated: true });
-  }
-
-  render() {
-    const { isSubmitting, status } = this.state;
-    const { validated } = this.state;
-    return (
-      <Form noValidate validated={validated} onSubmit={this.handleSubmit}>
-        <h2>Login</h2>
-        <Row className="mb-3">
-          <SnnapFormInput size={6} name="Username" />
-          <SnnapFormInput size={6} name="Password" type="password" />
-        </Row>
-        <Row className="mb-3">
-          <Form.Group as={Col}>
-            <Button
-              id="loginButton"
-              type="submit"
-              variant="primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting && (
-                <Spinner
-                  as="span"
-                  animation="grow"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              )}
-              Login
-            </Button>
-          </Form.Group>
-          <Col>
-            <Button
-              id="forgotPasswordButton"
-              type="button"
-              variant="primary"
-              href="/passwordReset"
-            >
-              Forgot Password
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              id="registerButton"
-              type="button"
-              variant="primary"
-              href="/register"
-            >
-              Register
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            {status && (
-              <Alert
-                variant="danger"
-                dismissible
-                onClose={() => this.setState({ status: null })}
-              >
-                {status}
-              </Alert>
+  return (
+    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <h2>Login</h2>
+      <Row className="mb-3">
+        <SnnapFormInput size={6} name="Username" />
+        <SnnapFormInput size={6} name="Password" type="password" />
+      </Row>
+      <Row className="mb-3">
+        <Form.Group as={Col}>
+          <Button
+            id="loginButton"
+            type="submit"
+            variant="primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting && (
+              <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
             )}
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
+            Login
+          </Button>
+        </Form.Group>
+        <Col>
+          <Button
+            id="forgotPasswordButton"
+            type="button"
+            variant="primary"
+            href="/passwordReset"
+          >
+            Forgot Password
+          </Button>
+        </Col>
+        <Col>
+          <Button
+            id="registerButton"
+            type="button"
+            variant="primary"
+            href="/register"
+          >
+            Register
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          {status && (
+            <Alert variant="danger" dismissible onClose={() => setStatus(null)}>
+              {status}
+            </Alert>
+          )}
+        </Col>
+      </Row>
+    </Form>
+  );
 }
 
 export default LoginPage;
