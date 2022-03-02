@@ -10,8 +10,7 @@ import NewRequestToHire from '../NewRequestToHire/NewRequestToHire';
 function Menu(props) {
   let collapse = null;
   let menu = null;
-
-  const { currentUser, logout } = props;
+  const { logout, currentUser } = props;
 
   if (currentUser) {
     collapse = <Navbar.Toggle aria-controls="responsive-navbar-nav" />;
