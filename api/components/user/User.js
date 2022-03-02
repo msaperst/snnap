@@ -54,7 +54,7 @@ const User = class {
     return newUser;
   }
 
-  static login(username, password) {
+  static login(username, password, rememberMe) {
     const newUser = new User();
     newUser.instancePromise = (async () => {
       const user = await Mysql.query(
@@ -73,9 +73,11 @@ const User = class {
       }
       newUser.id = user[0].id;
       if (bcryptResult) {
-        newUser.token = jwt.sign({ id: newUser.id }, JWT_SECRET, {
-          expiresIn: '1h',
-        });
+        let options = {};
+        if (!rememberMe) {
+          options = { expiresIn: '1h' };
+        }
+        newUser.token = jwt.sign({ id: newUser.id }, JWT_SECRET, options);
         await Mysql.query(
           `UPDATE users
            SET last_login = now()

@@ -31,15 +31,17 @@ function LoginPage() {
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
       const data = event.target;
-      authenticationService.login(data[0].value, data[1].value).then(
-        () => {
-          navigate(from, { replace: true });
-        },
-        (error) => {
-          setIsSubmitting(false);
-          setStatus(error);
-        }
-      );
+      authenticationService
+        .login(data[0].value, data[1].value, data[2].checked)
+        .then(
+          () => {
+            navigate(from, { replace: true });
+          },
+          (error) => {
+            setIsSubmitting(false);
+            setStatus(error);
+          }
+        );
     }
     setValidated(true);
   };
@@ -52,6 +54,9 @@ function LoginPage() {
         <SnnapFormInput size={6} name="Password" type="password" />
       </Row>
       <Row className="mb-3">
+        <Col md={5}>
+          <Form.Check id="rememberMe" label="Remember Me" />
+        </Col>
         <Form.Group as={Col}>
           <Button
             id="loginButton"
@@ -71,7 +76,7 @@ function LoginPage() {
             Login
           </Button>
         </Form.Group>
-        <Col>
+        <Col className="text-center">
           <Button
             id="forgotPasswordButton"
             type="button"
@@ -81,7 +86,7 @@ function LoginPage() {
             Forgot Password
           </Button>
         </Col>
-        <Col>
+        <Col className="text-right">
           <Button
             id="registerButton"
             type="button"

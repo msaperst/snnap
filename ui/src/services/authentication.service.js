@@ -47,14 +47,14 @@ function register(
 
   return fetch(`/api/register`, requestOptions)
     .then(handleResponse)
-    .then(() => login(username, password));
+    .then(() => login(username, password, true));
 }
 
-function login(username, password) {
+function login(username, password, rememberMe) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, password, rememberMe }),
   };
 
   return fetch(`/api/login`, requestOptions)
