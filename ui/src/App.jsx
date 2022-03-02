@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import { Col, Row } from 'react-bootstrap';
@@ -14,6 +14,13 @@ import { authenticationService } from './services/authentication.service';
 
 function App() {
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    authenticationService.currentUser.subscribe((x) => {
+      setCurrentUser(x);
+    });
+  });
 
   const logout = () => {
     authenticationService.logout();
@@ -25,7 +32,7 @@ function App() {
       <Container>
         <Row>
           <Col>
-            <Menu logout={logout} />
+            <Menu currentUser={currentUser} logout={logout} />
           </Col>
         </Row>
         <Routes>
