@@ -60,6 +60,54 @@ describe('User', () => {
     await expect(user.getLastLogin()).resolves.toEqual(123);
   });
 
+  it('sets the user values on valid credentials via login with remember me', async () => {
+    const hash = await bcrypt.hash('password', 10);
+    Mysql.query.mockResolvedValue([
+      {
+        id: '1',
+        first_name: 'Bob',
+        last_name: 'Robert',
+        username: 'Bob',
+        password: hash,
+        name: 'Robert',
+        email: 'bobert@gmail.com',
+        last_login: 123,
+      },
+    ]);
+
+    const user = User.login('Bob', 'password', true);
+    await expect(user.getToken()).resolves.not.toBeNull();
+    await expect(user.getId()).resolves.toEqual('1');
+    await expect(user.getName()).resolves.toEqual('Bob Robert');
+    await expect(user.getUsername()).resolves.toEqual('Bob');
+    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
+    await expect(user.getLastLogin()).resolves.toEqual(123);
+  });
+
+  it('sets the user values on valid credentials via login without remember me', async () => {
+    const hash = await bcrypt.hash('password', 10);
+    Mysql.query.mockResolvedValue([
+      {
+        id: '1',
+        first_name: 'Bob',
+        last_name: 'Robert',
+        username: 'Bob',
+        password: hash,
+        name: 'Robert',
+        email: 'bobert@gmail.com',
+        last_login: 123,
+      },
+    ]);
+
+    const user = User.login('Bob', 'password', false);
+    await expect(user.getToken()).resolves.not.toBeNull();
+    await expect(user.getId()).resolves.toEqual('1');
+    await expect(user.getName()).resolves.toEqual('Bob Robert');
+    await expect(user.getUsername()).resolves.toEqual('Bob');
+    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
+    await expect(user.getLastLogin()).resolves.toEqual(123);
+  });
+
   it('throws an error when the email is already in the system via register', async () => {
     Mysql.query.mockResolvedValue([{}]);
 

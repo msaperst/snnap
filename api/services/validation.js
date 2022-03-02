@@ -18,9 +18,8 @@ exports.signupValidation = [
 
 exports.loginValidation = [
   check('username', 'Please include a valid username').not().isEmpty(),
-  check('password', 'Password must be 6 or more characters').isLength({
-    min: 6,
-  }),
+  check('password', 'Please include a valid password').not().isEmpty(),
+  check('rememberMe', 'Remember me must be true or false').isBoolean(),
 ];
 
 exports.newRequestToHireValidation = [

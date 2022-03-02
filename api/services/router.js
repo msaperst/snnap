@@ -52,7 +52,11 @@ router.post('/login', loginValidation, async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(422).send(errors.errors[0]);
   }
-  const user = User.login(req.body.username, req.body.password);
+  const user = User.login(
+    req.body.username,
+    req.body.password,
+    req.body.rememberMe
+  );
   try {
     return res.status(200).send({
       token: await user.getToken(),
