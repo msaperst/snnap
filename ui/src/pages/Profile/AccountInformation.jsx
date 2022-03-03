@@ -1,11 +1,28 @@
 import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
+import './AccountInformation.css';
 
 function AccountInformation(props) {
   const [isSubmitting, setSubmitting] = useState(false);
   const [validated, setValidated] = useState(false);
   const { user } = props;
+
+  const uploadFile = (event) => {
+    const formData = new FormData();
+    formData.append('File', event.target.files[0]);
+    fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log('Success:', result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -23,10 +40,9 @@ function AccountInformation(props) {
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <h3>Account Information</h3>
       <Row className="mb-3">
-        <Col md={2}>
-          {/* https://plugins.krajee.com/file-avatar-upload-demo */}
-          <input id="avatar-1" name="avatar-1" type="file" required />
-        </Col>
+        <Form.Group as={Col} md={2}>
+          <Form.Control id="avatar" type="file" onChange={uploadFile} />
+        </Form.Group>
         <SnnapFormInput
           name="Username"
           size={10}
