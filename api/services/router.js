@@ -58,12 +58,9 @@ router.post('/login', loginValidation, async (req, res) => {
     req.body.rememberMe
   );
   try {
-    return res.status(200).send({
-      token: await user.getToken(),
-      name: await user.getName(),
-      username: await user.getUsername(),
-      email: await user.getEmail(),
-    });
+    const userInfo = await user.getUserInfo();
+    userInfo.token = await user.getToken();
+    return res.status(200).send(userInfo);
   } catch (error) {
     switch (error.message) {
       case 'Username or password is incorrect!':
@@ -137,12 +134,7 @@ router.get('/get-user', async (req, res) => {
   }
   const user = User.auth(token);
   try {
-    return res.send({
-      name: await user.getName(),
-      username: await user.getUsername(),
-      email: await user.getEmail(),
-      lastLogin: await user.getLastLogin(),
-    });
+    return res.send(await user.getUserInfo());
   } catch (error) {
     return res.status(422).send({
       msg: error.message,

@@ -48,8 +48,13 @@ const User = class {
       );
       newUser.id = result.insertId;
       newUser.username = username;
-      newUser.name = `${firstName} ${lastName}`;
+      newUser.firstName = firstName;
+      newUser.lastName = lastName;
       newUser.email = email;
+      newUser.number = number;
+      newUser.city = city;
+      newUser.state = state;
+      newUser.zip = zip;
     })();
     return newUser;
   }
@@ -89,10 +94,14 @@ const User = class {
            WHERE id = '${newUser.id}'`
         );
         newUser.id = user[0].id;
-        newUser.name = `${user[0].first_name} ${user[0].last_name}`;
         newUser.username = user[0].username;
+        newUser.firstName = user[0].first_name;
+        newUser.lastName = user[0].last_name;
         newUser.email = user[0].email;
-        newUser.lastLogin = user[0].last_login;
+        newUser.number = user[0].number;
+        newUser.city = user[0].city;
+        newUser.state = user[0].state;
+        newUser.zip = user[0].zip;
       } else {
         throw new Error('Username or password is incorrect!');
       }
@@ -109,10 +118,14 @@ const User = class {
                                       FROM users
                                       where id = ${decoded.id}`);
       newUser.id = user[0].id;
-      newUser.name = `${user[0].first_name} ${user[0].last_name}`;
       newUser.username = user[0].username;
+      newUser.firstName = user[0].first_name;
+      newUser.lastName = user[0].last_name;
       newUser.email = user[0].email;
-      newUser.lastLogin = user[0].last_login;
+      newUser.number = user[0].number;
+      newUser.city = user[0].city;
+      newUser.state = user[0].state;
+      newUser.zip = user[0].zip;
     })();
     return newUser;
   }
@@ -133,24 +146,19 @@ const User = class {
     return this.id;
   }
 
-  async getName() {
+  async getUserInfo() {
     await this.instancePromise;
-    return this.name;
-  }
-
-  async getUsername() {
-    await this.instancePromise;
-    return this.username;
-  }
-
-  async getEmail() {
-    await this.instancePromise;
-    return this.email;
-  }
-
-  async getLastLogin() {
-    await this.instancePromise;
-    return this.lastLogin;
+    return {
+      id: this.id,
+      username: this.username,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      number: this.number,
+      city: this.city,
+      state: this.state,
+      zip: this.zip,
+    };
   }
 
   static getToken(authorization) {
