@@ -1,5 +1,6 @@
-import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Button, Col, Form, Image, Row, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
+import { userService } from '../../services/user.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
 import './AccountInformation.css';
 
@@ -8,20 +9,16 @@ function AccountInformation(props) {
   const [validated, setValidated] = useState(false);
   const { user } = props;
 
+  const avatarUpload = React.useRef(null);
+
+  const uploadClick = () => {
+    avatarUpload.current.click();
+  };
+
   const uploadFile = (event) => {
-    const formData = new FormData();
-    formData.append('File', event.target.files[0]);
-    fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log('Success:', result);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    userService.uploadAvatar(event.target.files[0]).then((result) => {
+      console.log('Success:', result);
+    });
   };
 
   const handleSubmit = (event) => {
@@ -36,13 +33,33 @@ function AccountInformation(props) {
     setValidated(true);
   };
 
+  let avatar = '';
+  if (user && user.firstName) {
+    avatar = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
+  }
+
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <h3>Account Information</h3>
       <Row className="mb-3">
-        <Form.Group as={Col} md={2}>
-          <Form.Control id="avatar" type="file" onChange={uploadFile} />
-        </Form.Group>
+        <Col md={2}>
+          <Image roundedCircle id="avatar" onClick={uploadClick} />
+          <span
+            id="initials"
+            onClick={uploadClick}
+            onKeyPress={uploadClick}
+            role="button"
+            tabIndex="0"
+          >
+            {avatar}
+          </span>
+          <Form.Control
+            ref={avatarUpload}
+            type="file"
+            hidden
+            onChange={uploadFile}
+          />
+        </Col>
         <SnnapFormInput
           name="Username"
           size={10}
