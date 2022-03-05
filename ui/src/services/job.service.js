@@ -11,15 +11,15 @@ export const jobService = {
 
 function getJobTypes() {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/job-types`, requestOptions).then(handleResponse);
+  return fetch(`/api/jobs/types`, requestOptions).then(handleResponse);
 }
 function getEquipment() {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/equipment`, requestOptions).then(handleResponse);
+  return fetch(`/api/jobs/equipment`, requestOptions).then(handleResponse);
 }
 function getSkills() {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/skills`, requestOptions).then(handleResponse);
+  return fetch(`/api/jobs/skills`, requestOptions).then(handleResponse);
 }
 
 function newRequestToHire(
@@ -53,10 +53,12 @@ function newRequestToHire(
     }),
   };
 
-  return fetch(`/api/new-request-to-hire`, requestOptions).then(handleResponse);
+  return fetch(`/api/jobs/new-request-to-hire`, requestOptions).then(
+    handleResponse
+  );
 }
 
 function getHireRequests() {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/hire-requests`, requestOptions).then(handleResponse);
+  return fetch(`/api/jobs/hire-requests`, requestOptions).then(handleResponse);
 }

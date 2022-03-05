@@ -9,7 +9,7 @@ function ProfilePage() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    userService.getUser().then((user) => {
+    userService.get().then((user) => {
       setUser(user);
     });
   }, []);

@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const indexRouter = require('./services/router.js');
+const job = require('./routes/job.js');
+const authentication = require('./routes/authentication.js');
+const user = require('./routes/user.js');
 
 const app = express();
 
@@ -17,7 +19,9 @@ app.use(
 
 app.use(cors());
 
-app.use('/api', indexRouter);
+app.use('/api/auth', authentication);
+app.use('/api/user', user);
+app.use('/api/jobs', job);
 
 // Handling Errors
 app.use((err, req, res) => {

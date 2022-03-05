@@ -44,7 +44,7 @@ function register(
     }),
   };
 
-  return fetch(`/api/register`, requestOptions)
+  return fetch(`/api/auth/register`, requestOptions)
     .then(handleResponse)
     .then(() => login(username, password, true));
 }
@@ -56,7 +56,7 @@ function login(username, password, rememberMe) {
     body: JSON.stringify({ username, password, rememberMe }),
   };
 
-  return fetch(`/api/login`, requestOptions)
+  return fetch(`/api/auth/login`, requestOptions)
     .then(handleResponse)
     .then((user) => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
