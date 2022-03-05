@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const { validationResult, check } = require('express-validator');
-const Mysql = require('./Mysql');
+const Mysql = require('../services/Mysql');
 const User = require('../components/user/User');
 const RequestToHire = require('../components/requestToHire/RequestToHire');
 
@@ -67,7 +67,7 @@ router.post(
 );
 
 // information about our system
-router.get('/job-types', async (req, res) => {
+router.get('/types', async (req, res) => {
   try {
     await User.isAuth(req.headers.authorization);
   } catch (error) {

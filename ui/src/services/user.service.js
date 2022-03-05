@@ -2,24 +2,24 @@ import { authHeader } from '../helpers/auth-header';
 import { handleResponse } from '../helpers/handle-response';
 
 export const userService = {
-  getUser,
-  updateProfile,
+  get,
+  update,
   uploadAvatar,
 };
 
-function getUser() {
+function get() {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/get-user`, requestOptions).then(handleResponse);
+  return fetch(`/api/user/get`, requestOptions).then(handleResponse);
 }
 
-function updateProfile(name, username, email) {
+function update(name, username, email) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, username, email }),
   };
 
-  return fetch(`/api/updateProfile`, requestOptions).then(handleResponse);
+  return fetch(`/api/user/update`, requestOptions).then(handleResponse);
 }
 
 function uploadAvatar(file) {
@@ -30,5 +30,5 @@ function uploadAvatar(file) {
     headers: authHeader(),
     body: formData,
   };
-  return fetch('/api/set-avatar', requestOptions).then(handleResponse);
+  return fetch('/api/user/set-avatar', requestOptions).then(handleResponse);
 }
