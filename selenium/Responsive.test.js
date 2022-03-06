@@ -9,7 +9,7 @@ describe('home page', () => {
   beforeEach(async () => {
     // load the default page
     driver = await Base.getDriver();
-    user = await Base.loginUser(driver, 'homeUser');
+    user = await Base.loginUser(driver, 'responsiveUser');
     await driver.get(Base.getApp());
   }, 10000);
 

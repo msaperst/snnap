@@ -18,7 +18,7 @@ describe('home page', () => {
   }, 15000);
 
   it('redirects to home after going to login when authenticated', async () => {
-    user = await Base.loginUser(driver, 'homeUser');
+    user = await Base.loginUser(driver, 'redirectUser');
     await driver.get(Base.getApp());
     const initialUrl = await driver.getCurrentUrl();
     await driver.get(Base.getApp() + '/login');
@@ -35,7 +35,7 @@ describe('home page', () => {
   });
 
   it('redirects to profile after going to register when authenticated', async () => {
-    user = await Base.loginUser(driver, 'homeUser');
+    user = await Base.loginUser(driver, 'redirectUser');
     await driver.get(Base.getApp());
     const initialUrl = await driver.getCurrentUrl();
     await driver.get(Base.getApp() + '/register');

@@ -15,7 +15,7 @@ describe('User', () => {
   it('throws an error looking up the user via login', async () => {
     Mysql.query.mockResolvedValue([]);
 
-    await expect(User.login('Bob', 'password').getName()).rejects.toEqual(
+    await expect(User.login('Bob', 'password').getUsername()).rejects.toEqual(
       new Error('Username or password is incorrect!')
     );
   });
@@ -23,7 +23,7 @@ describe('User', () => {
   it('throws an error when no password is provided via login', async () => {
     Mysql.query.mockResolvedValue([{ username: 'Bob' }]);
 
-    await expect(User.login('Bob', 'password').getName()).rejects.toEqual(
+    await expect(User.login('Bob', 'password').getUsername()).rejects.toEqual(
       new Error('Username or password is incorrect!')
     );
   });
@@ -31,7 +31,7 @@ describe('User', () => {
   it('throws an error when the password does not match via login', async () => {
     Mysql.query.mockResolvedValue([{ username: 'Bob', password: 'password' }]);
 
-    await expect(User.login('Bob', 'password').getName()).rejects.toEqual(
+    await expect(User.login('Bob', 'password').getUsername()).rejects.toEqual(
       new Error('Username or password is incorrect!')
     );
   });
@@ -54,10 +54,18 @@ describe('User', () => {
     const user = User.login('Bob', 'password');
     await expect(user.getToken()).resolves.not.toBeNull();
     await expect(user.getId()).resolves.toEqual('1');
-    await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
-    await expect(user.getLastLogin()).resolves.toEqual(123);
+    await expect(user.getUserInfo()).resolves.toEqual({
+      city: undefined,
+      email: 'bobert@gmail.com',
+      firstName: 'Bob',
+      id: '1',
+      lastName: 'Robert',
+      number: undefined,
+      state: undefined,
+      username: 'Bob',
+      zip: undefined,
+    });
   });
 
   it('sets the user values on valid credentials via login with remember me', async () => {
@@ -78,10 +86,18 @@ describe('User', () => {
     const user = User.login('Bob', 'password', true);
     await expect(user.getToken()).resolves.not.toBeNull();
     await expect(user.getId()).resolves.toEqual('1');
-    await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
-    await expect(user.getLastLogin()).resolves.toEqual(123);
+    await expect(user.getUserInfo()).resolves.toEqual({
+      city: undefined,
+      email: 'bobert@gmail.com',
+      firstName: 'Bob',
+      id: '1',
+      lastName: 'Robert',
+      number: undefined,
+      state: undefined,
+      username: 'Bob',
+      zip: undefined,
+    });
   });
 
   it('sets the user values on valid credentials via login without remember me', async () => {
@@ -102,17 +118,30 @@ describe('User', () => {
     const user = User.login('Bob', 'password', false);
     await expect(user.getToken()).resolves.not.toBeNull();
     await expect(user.getId()).resolves.toEqual('1');
-    await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
-    await expect(user.getLastLogin()).resolves.toEqual(123);
+    await expect(user.getUserInfo()).resolves.toEqual({
+      city: undefined,
+      email: 'bobert@gmail.com',
+      firstName: 'Bob',
+      id: '1',
+      lastName: 'Robert',
+      number: undefined,
+      state: undefined,
+      username: 'Bob',
+      zip: undefined,
+    });
   });
 
   it('throws an error when the email is already in the system via register', async () => {
     Mysql.query.mockResolvedValue([{}]);
 
     await expect(
-      User.register('Bob', 'password', 'Robert', 'bobert@gmail.com').getName()
+      User.register(
+        'Bob',
+        'password',
+        'Robert',
+        'bobert@gmail.com'
+      ).getUsername()
     ).rejects.toEqual(
       new Error(
         'This email is already in our system. Try resetting your password.'
@@ -124,7 +153,12 @@ describe('User', () => {
     Mysql.query.mockResolvedValueOnce([]).mockResolvedValue([{}]);
 
     await expect(
-      User.register('Bob', 'password', 'Robert', 'bobert@gmail.com').getName()
+      User.register(
+        'Bob',
+        'password',
+        'Robert',
+        'bobert@gmail.com'
+      ).getUsername()
     ).rejects.toEqual(new Error('Sorry, that username is already in use.'));
   });
 
@@ -147,10 +181,18 @@ describe('User', () => {
     );
     await expect(user.getToken()).resolves.toEqual(undefined);
     await expect(user.getId()).resolves.toEqual(15);
-    await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Robert');
-    await expect(user.getEmail()).resolves.toEqual('bobert@example.org');
-    await expect(user.getLastLogin()).resolves.toBeUndefined();
+    await expect(user.getUserInfo()).resolves.toEqual({
+      city: 'City',
+      email: 'bobert@example.org',
+      firstName: 'Bob',
+      id: 15,
+      lastName: 'Robert',
+      number: 'Number',
+      state: 'State',
+      username: 'Robert',
+      zip: 'Zip',
+    });
   });
 
   it('fails if no token is set', () => {
@@ -176,14 +218,14 @@ describe('User', () => {
   });
 
   it('throws an error on a bad token', async () => {
-    await expect(User.auth('sometoken').getName()).rejects.toEqual(
+    await expect(User.auth('sometoken').getUsername()).rejects.toEqual(
       new JsonWebTokenError('jwt malformed')
     );
   });
 
   it('throws an error on a badly signed token', async () => {
     await expect(
-      User.auth(jwt.sign({ id: 123 }, 'some-secret')).getName()
+      User.auth(jwt.sign({ id: 123 }, 'some-secret')).getUsername()
     ).rejects.toEqual(new JsonWebTokenError('invalid signature'));
   });
 
@@ -204,10 +246,18 @@ describe('User', () => {
     const user = User.auth(token);
     await expect(user.getToken()).resolves.toEqual(token);
     await expect(user.getId()).resolves.toEqual(1);
-    await expect(user.getName()).resolves.toEqual('Bob Robert');
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getEmail()).resolves.toEqual('bobert@gmail.com');
-    await expect(user.getLastLogin()).resolves.toEqual('123');
+    await expect(user.getUserInfo()).resolves.toEqual({
+      city: undefined,
+      email: 'bobert@gmail.com',
+      firstName: 'Bob',
+      id: 1,
+      lastName: 'Robert',
+      number: undefined,
+      state: undefined,
+      username: 'Bob',
+      zip: undefined,
+    });
   });
 
   it('recognizes an invalid token and rejects with an error', async () => {
