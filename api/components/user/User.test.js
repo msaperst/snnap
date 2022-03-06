@@ -281,4 +281,21 @@ describe('User', () => {
     ]);
     expect(await User.isAuth(`Bearer ${token}`)).toEqual(token);
   });
+
+  it('updates the avatar in the db', async () => {
+    Mysql.query.mockResolvedValue([
+      {
+        id: 1,
+        first_name: 'Bob',
+        last_name: 'Robert',
+        username: 'Bob',
+        name: 'Robert',
+        email: 'bobert@gmail.com',
+        last_login: '123',
+      },
+    ]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = await User.auth(token);
+    expect(await user.setAvatar('123')).toBeUndefined();
+  });
 });
