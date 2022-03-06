@@ -24,7 +24,7 @@ function update(name, username, email) {
 
 function uploadAvatar(file) {
   const formData = new FormData();
-  formData.append('File', file);
+  formData.append('avatar', file);
   const requestOptions = {
     method: 'POST',
     headers: authHeader(),

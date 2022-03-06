@@ -6,6 +6,7 @@ npm-debug.log
 coverage/
 dependency-check*
 test-report.html
+avatars/
 
 # Laravel 4 specific
 bootstrap/compiled.php
