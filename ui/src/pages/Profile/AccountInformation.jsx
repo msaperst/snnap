@@ -1,25 +1,12 @@
-import { Button, Col, Form, Image, Row, Spinner } from 'react-bootstrap';
+import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
-import { userService } from '../../services/user.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
-import './AccountInformation.css';
+import Avatar from '../../components/Avatar/Avatar';
 
 function AccountInformation(props) {
   const [isSubmitting, setSubmitting] = useState(false);
   const [validated, setValidated] = useState(false);
   const { user } = props;
-
-  const avatarUpload = React.useRef(null);
-
-  const uploadClick = () => {
-    avatarUpload.current.click();
-  };
-
-  const uploadFile = (event) => {
-    userService.uploadAvatar(event.target.files[0]).then((result) => {
-      console.log('Success:', result);
-    });
-  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -33,33 +20,11 @@ function AccountInformation(props) {
     setValidated(true);
   };
 
-  let avatar = '';
-  if (user && user.firstName) {
-    avatar = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
-  }
-
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <h3>Account Information</h3>
       <Row className="mb-3">
-        <Col md={2}>
-          <Image roundedCircle id="avatar" onClick={uploadClick} />
-          <span
-            id="initials"
-            onClick={uploadClick}
-            onKeyPress={uploadClick}
-            role="button"
-            tabIndex="0"
-          >
-            {avatar}
-          </span>
-          <Form.Control
-            ref={avatarUpload}
-            type="file"
-            hidden
-            onChange={uploadFile}
-          />
-        </Col>
+        <Avatar user={user} />
         <SnnapFormInput
           name="Username"
           size={10}

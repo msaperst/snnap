@@ -46,9 +46,10 @@ router.post('/set-avatar', async (req, res) => {
       if (err) {
         return res.status(500).send(err);
       }
-      return res.send({ avatar: newName });
+      user.setAvatar(newName);
+      return res.status(200).send({ file: newName });
     });
-    return res.status(422).send('Some error occurred');
+    return '';
   } catch (error) {
     return res.status(422).send({
       msg: error.message,

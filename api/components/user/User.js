@@ -95,6 +95,7 @@ const User = class {
         );
         newUser.id = user[0].id;
         newUser.username = user[0].username;
+        newUser.avatar = user[0].avatar;
         newUser.firstName = user[0].first_name;
         newUser.lastName = user[0].last_name;
         newUser.email = user[0].email;
@@ -119,6 +120,7 @@ const User = class {
                                       where id = ${decoded.id}`);
       newUser.id = user[0].id;
       newUser.username = user[0].username;
+      newUser.avatar = user[0].avatar;
       newUser.firstName = user[0].first_name;
       newUser.lastName = user[0].last_name;
       newUser.email = user[0].email;
@@ -134,6 +136,14 @@ const User = class {
     const token = User.getToken(authorizationHeader);
     const user = User.auth(token);
     return user.getToken();
+  }
+
+  async setAvatar(fileName) {
+    await Mysql.query(
+      `UPDATE users SET avatar = ${db.escape(
+        fileName
+      )} WHERE id = ${await this.getId()}`
+    );
   }
 
   async getToken() {
@@ -156,6 +166,7 @@ const User = class {
     return {
       id: this.id,
       username: this.username,
+      avatar: this.avatar,
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,
