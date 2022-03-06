@@ -146,6 +146,11 @@ const User = class {
     return this.id;
   }
 
+  async getUsername() {
+    await this.instancePromise;
+    return this.username;
+  }
+
   async getUserInfo() {
     await this.instancePromise;
     return {
