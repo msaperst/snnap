@@ -1,6 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
+const fs = require('fs');
 const User = require('../components/user/User');
 
 router.get('/get', async (req, res) => {
@@ -41,6 +42,12 @@ router.post('/set-avatar', async (req, res) => {
     const extension = file.name.split('.').pop();
     const newName = `${await user.getUsername()}.${extension}`;
     const path = `${__dirname}/../../ui/public/avatars/${newName}`;
+
+    // clean-up the old file
+    try {
+      fs.unlinkSync(path);
+      // eslint-disable-next-line no-empty
+    } catch (err) {}
 
     file.mv(path, (err) => {
       if (err) {
