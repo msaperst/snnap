@@ -3,7 +3,7 @@ import { handleResponse } from '../helpers/handle-response';
 
 export const userService = {
   get,
-  update,
+  updateAccountInformation,
   uploadAvatar,
 };
 
@@ -12,14 +12,16 @@ function get() {
   return fetch(`/api/user/get`, requestOptions).then(handleResponse);
 }
 
-function update(name, username, email) {
+function updateAccountInformation(email, number) {
   const requestOptions = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, username, email }),
+    headers: authHeader(),
+    body: JSON.stringify({ email, number }),
   };
 
-  return fetch(`/api/user/update`, requestOptions).then(handleResponse);
+  return fetch(`/api/user/update-account-information`, requestOptions).then(
+    handleResponse
+  );
 }
 
 function uploadAvatar(file) {

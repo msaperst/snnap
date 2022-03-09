@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Stack } from 'react-bootstrap';
 import { userService } from '../../services/user.service';
-import AccountInformation from './AccountInformation';
+import AccountInformation from '../../components/UserProfile/AccountInformation/AccountInformation';
 import PersonalInformation from './PersonalInformation';
 import UpdatePassword from './UpdatePassword';
 

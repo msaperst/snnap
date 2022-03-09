@@ -1,9 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import Avatar from './Avatar';
+
+jest.mock('../../../services/user.service');
+const userService = require('../../../services/user.service');
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -11,6 +14,9 @@ describe('avatar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+    userService.userService.uploadAvatar.mockResolvedValue({
+      file: 'pic1.jpg',
+    });
   });
 
   it('renders nothing when no user value is provided', () => {
@@ -91,8 +97,8 @@ describe('avatar', () => {
     expect(container.firstChild.firstChild.getAttribute('id')).toEqual(
       'avatar'
     );
-    expect(container.firstChild.firstChild.getAttribute('src')).toEqual(
-      'avatars/pic.jpg'
+    expect(container.firstChild.firstChild.getAttribute('src')).toMatch(
+      /^avatars\/pic.jpg\?16/
     );
 
     expect(container.firstChild.lastChild.children).toHaveLength(0);
@@ -101,5 +107,34 @@ describe('avatar', () => {
     expect(container.firstChild.lastChild.getAttribute('hidden')).toEqual('');
   });
 
-  // TODO - test the uploading functionality calls
+  it('loads the new image on click', async () => {
+    const { container } = render(<Avatar user={{ avatar: 'pic.jpg' }} />);
+    await fireEvent.click(container.firstChild.firstChild);
+    expect(true).toBeTruthy();
+    // TODO - fix this to spy on the uploadClick method and assert that it was called (it was,
+    //  just can't verify it via code, only via debug)
+  });
+
+  it('loads the new image on file load', async () => {
+    const event = {
+      target: {
+        files: [
+          {
+            name: 'image.png',
+            size: 50000,
+            type: 'image/png',
+          },
+        ],
+      },
+    };
+    const { container } = render(<Avatar user={{ avatar: 'pic.jpg' }} />);
+    const now = container.firstChild.firstChild.getAttribute('src');
+    setTimeout(() => {}, 1000);
+    await act(async () => {
+      await fireEvent.change(container.firstChild.lastChild, event);
+    });
+    expect(container.firstChild.firstChild.getAttribute('src')).not.toEqual(
+      now
+    );
+  });
 });
