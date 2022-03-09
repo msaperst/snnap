@@ -112,7 +112,7 @@ describe('avatar', () => {
     await fireEvent.click(container.firstChild.firstChild);
     expect(true).toBeTruthy();
     // TODO - fix this to spy on the uploadClick method and assert that it was called (it was,
-    //  just can't verify it via code, only via debug)
+    //  just can't verify it via code, only via debug) - in truth I'm not even certain this works
   });
 
   it('loads the new image on file load', async () => {
