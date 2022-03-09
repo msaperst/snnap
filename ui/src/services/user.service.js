@@ -4,6 +4,7 @@ import { handleResponse } from '../helpers/handle-response';
 export const userService = {
   get,
   updateAccountInformation,
+  updatePersonalInformation,
   uploadAvatar,
 };
 
@@ -20,6 +21,18 @@ function updateAccountInformation(email, number) {
   };
 
   return fetch(`/api/user/update-account-information`, requestOptions).then(
+    handleResponse
+  );
+}
+
+function updatePersonalInformation(firstName, lastName, city, state, zip) {
+  const requestOptions = {
+    method: 'POST',
+    headers: authHeader(),
+    body: JSON.stringify({ firstName, lastName, city, state, zip }),
+  };
+
+  return fetch(`/api/user/update-personal-information`, requestOptions).then(
     handleResponse
   );
 }

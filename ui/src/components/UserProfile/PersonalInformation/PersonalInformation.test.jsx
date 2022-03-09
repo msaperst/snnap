@@ -4,14 +4,14 @@ import '@testing-library/jest-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
-import AccountInformation from './AccountInformation';
+import PersonalInformation from './PersonalInformation';
 
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('account information', () => {
+describe('personal information', () => {
   jest.setTimeout(10000);
 
   beforeEach(() => {
@@ -20,76 +20,92 @@ describe('account information', () => {
   });
 
   it('renders nothing when no values are passed', () => {
-    const { container } = render(<AccountInformation />);
+    const { container } = render(<PersonalInformation />);
     expect(container.children).toHaveLength(0);
   });
 
   it('renders header properly', () => {
-    const { container } = render(<AccountInformation user={{}} />);
+    const { container } = render(<PersonalInformation user={{}} />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild.getAttribute('noValidate')).toEqual('');
     expect(container.firstChild.children).toHaveLength(4);
     expect(container.firstChild.firstChild).toHaveTextContent(
-      'Account Information'
+      'Personal Information'
     );
   });
 
   it('has 2 items in the first row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
+    const { container } = render(<PersonalInformation user={{}} />);
     expect(container.firstChild.children[1]).toHaveClass('mb-3 row');
     expect(container.firstChild.children[1].children).toHaveLength(2);
   });
 
-  it('has avatar in the first row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
-    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-2');
+  it('has empty firstname in the first row', () => {
+    const { container } = render(<PersonalInformation user={{}} />);
+    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-6');
     expect(container.firstChild.children[1].firstChild.children).toHaveLength(
-      3
+      1
     );
     expect(container.firstChild.children[1].firstChild.firstChild).toHaveClass(
-      'rounded-circle'
-    );
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.getAttribute('id')
-    ).toEqual('avatar');
-    // the rest is verified in Avatar.test.jsx
-  });
-
-  it('has readonly empty username in the first row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
-    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-10');
-    expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
-    expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
     expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
+      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
         'id'
       )
-    ).toEqual('formUsername');
+    ).toEqual('formFirstName');
     expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
+      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
         'readOnly'
       )
-    ).toEqual('');
+    ).toBeNull();
     expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
+      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
         'type'
       )
     ).toEqual('text');
     expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
+      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
         'value'
       )
     ).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has readonly username in the first row', () => {
+  it('has firstname in the first row', () => {
     const { container } = render(
-      <AccountInformation user={{ username: 'msaperst' }} />
+      <PersonalInformation user={{ firstName: 'Max' }} />
     );
-    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-10');
+    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-6');
+    expect(container.firstChild.children[1].firstChild.children).toHaveLength(
+      1
+    );
+    expect(container.firstChild.children[1].firstChild.firstChild).toHaveClass(
+      'form-floating'
+    );
+    expect(
+      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
+        'id'
+      )
+    ).toEqual('formFirstName');
+    expect(
+      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
+        'type'
+      )
+    ).toEqual('text');
+    expect(
+      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
+        'value'
+      )
+    ).toEqual('Max');
+    // the rest is verified in SnnapFormInput.test.jsx
+  });
+
+  it('has last name in the first row', () => {
+    const { container } = render(
+      <PersonalInformation user={{ lastName: 'Saperstone' }} />
+    );
+    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-6');
     expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
       'form-floating'
@@ -98,12 +114,7 @@ describe('account information', () => {
       container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
         'id'
       )
-    ).toEqual('formUsername');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toEqual('');
+    ).toEqual('formLastName');
     expect(
       container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
         'type'
@@ -113,21 +124,21 @@ describe('account information', () => {
       container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
         'value'
       )
-    ).toEqual('msaperst');
+    ).toEqual('Saperstone');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has 2 items in the second row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
+  it('has 3 items in the second row', () => {
+    const { container } = render(<PersonalInformation user={{}} />);
     expect(container.firstChild.children[2]).toHaveClass('mb-3 row');
-    expect(container.firstChild.children[2].children).toHaveLength(2);
+    expect(container.firstChild.children[2].children).toHaveLength(3);
   });
 
-  it('has email in the second row', () => {
+  it('has city in the second row', () => {
     const { container } = render(
-      <AccountInformation user={{ email: 'msaperst@gmail.com' }} />
+      <PersonalInformation user={{ city: 'Fairfax' }} />
     );
-    expect(container.firstChild.children[2].firstChild).toHaveClass('col-md-6');
+    expect(container.firstChild.children[2].firstChild).toHaveClass('col-md-5');
     expect(container.firstChild.children[2].firstChild.children).toHaveLength(
       1
     );
@@ -138,7 +149,7 @@ describe('account information', () => {
       container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
         'id'
       )
-    ).toEqual('formEmail');
+    ).toEqual('formCity');
     expect(
       container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
         'readOnly'
@@ -153,15 +164,46 @@ describe('account information', () => {
       container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
         'value'
       )
-    ).toEqual('msaperst@gmail.com');
+    ).toEqual('Fairfax');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has number in the second row', () => {
+  it('has state in the second row', () => {
     const { container } = render(
-      <AccountInformation user={{ number: '1234567890' }} />
+      <PersonalInformation user={{ state: 'VA' }} />
     );
-    expect(container.firstChild.children[2].lastChild).toHaveClass('col-md-6');
+    expect(container.firstChild.children[2].children[1]).toHaveClass(
+      'col-md-3'
+    );
+    expect(container.firstChild.children[2].children[1].children).toHaveLength(
+      1
+    );
+    expect(container.firstChild.children[2].children[1].firstChild).toHaveClass(
+      'form-floating'
+    );
+    expect(
+      container.firstChild.children[2].children[1].firstChild.firstChild.getAttribute(
+        'id'
+      )
+    ).toEqual('formState');
+    expect(
+      container.firstChild.children[2].children[1].firstChild.firstChild.getAttribute(
+        'type'
+      )
+    ).toEqual('text');
+    expect(
+      container.firstChild.children[2].children[1].firstChild.firstChild.getAttribute(
+        'value'
+      )
+    ).toEqual('VA');
+    // the rest is verified in SnnapFormInput.test.jsx
+  });
+
+  it('has zip in the second row', () => {
+    const { container } = render(
+      <PersonalInformation user={{ zip: '22030' }} />
+    );
+    expect(container.firstChild.children[2].lastChild).toHaveClass('col-md-4');
     expect(container.firstChild.children[2].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
       'form-floating'
@@ -170,12 +212,7 @@ describe('account information', () => {
       container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
         'id'
       )
-    ).toEqual('formNumber');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toBeNull();
+    ).toEqual('formZip');
     expect(
       container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
         'type'
@@ -185,57 +222,62 @@ describe('account information', () => {
       container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
         'value'
       )
-    ).toEqual('1234567890');
+    ).toEqual('22030');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
   it('has 2 items in the last row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
+    const { container } = render(<PersonalInformation user={{}} />);
     expect(container.firstChild.lastChild).toHaveClass('mb-3 row');
     expect(container.firstChild.lastChild.children).toHaveLength(2);
   });
 
   it('has save information button in the last row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
+    const { container } = render(<PersonalInformation user={{}} />);
     expect(container.firstChild.lastChild.firstChild).toHaveClass('col');
     expect(container.firstChild.lastChild.firstChild.firstChild).toHaveClass(
       'btn btn-primary'
     );
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('saveAccountInformationButton');
+    ).toEqual('savePersonalInformationButton');
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('submit');
     expect(
       container.firstChild.lastChild.firstChild.firstChild
-    ).toHaveTextContent('Save Account Information');
+    ).toHaveTextContent('Save Personal Information');
   });
 
   it('has no alert or update present in the last row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
+    const { container } = render(<PersonalInformation user={{}} />);
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('does not submit if values are not present/valid', async () => {
-    const { container } = render(<AccountInformation user={{}} />);
+    const { container } = render(<PersonalInformation user={{}} />);
     await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('has an alert on failure of a submission', async () => {
-    const spy = jest.spyOn(userService.userService, 'updateAccountInformation');
-    userService.userService.updateAccountInformation.mockRejectedValue(
+    const spy = jest.spyOn(
+      userService.userService,
+      'updatePersonalInformation'
+    );
+    userService.userService.updatePersonalInformation.mockRejectedValue(
       'Some Error'
     );
     const { container } = render(
-      <AccountInformation
+      <PersonalInformation
         user={{
-          username: 'msaperst',
-          email: 'msaperst@gmail.com',
-          number: '1234567890',
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          city: 'Fairfax',
+          state: 'VA',
+          zip: '22030',
         }}
       />
     );
@@ -244,7 +286,13 @@ describe('account information', () => {
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith('msaperst@gmail.com', '1234567890');
+    expect(spy).toHaveBeenCalledWith(
+      'Max',
+      'Saperstone',
+      'Fairfax',
+      'VA',
+      '22030'
+    );
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
@@ -275,15 +323,17 @@ describe('account information', () => {
   });
 
   it('is able to close an alert after failure', async () => {
-    userService.userService.updateAccountInformation.mockRejectedValue(
+    userService.userService.updatePersonalInformation.mockRejectedValue(
       'Some Error'
     );
     const { container } = render(
-      <AccountInformation
+      <PersonalInformation
         user={{
-          username: 'msaperst',
-          email: 'msaperst@gmail.com',
-          number: '1234567890',
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          city: 'Fairfax',
+          state: 'VA',
+          zip: '22030',
         }}
       />
     );
@@ -300,16 +350,21 @@ describe('account information', () => {
   });
 
   it('has an alert on success of a submission', async () => {
-    const spy = jest.spyOn(userService.userService, 'updateAccountInformation');
-    userService.userService.updateAccountInformation.mockResolvedValue(
+    const spy = jest.spyOn(
+      userService.userService,
+      'updatePersonalInformation'
+    );
+    userService.userService.updatePersonalInformation.mockResolvedValue(
       'Some Success'
     );
     const { container } = render(
-      <AccountInformation
+      <PersonalInformation
         user={{
-          username: 'msaperst',
-          email: 'msaperst@gmail.com',
-          number: '1234567890',
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          city: 'Fairfax',
+          state: 'VA',
+          zip: '22030',
         }}
       />
     );
@@ -318,7 +373,13 @@ describe('account information', () => {
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith('msaperst@gmail.com', '1234567890');
+    expect(spy).toHaveBeenCalledWith(
+      'Max',
+      'Saperstone',
+      'Fairfax',
+      'VA',
+      '22030'
+    );
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
@@ -329,7 +390,7 @@ describe('account information', () => {
     ).toEqual('alert');
     expect(
       container.firstChild.lastChild.lastChild.firstChild
-    ).toHaveTextContent('Account Information Updated');
+    ).toHaveTextContent('Personal Information Updated');
     expect(
       container.firstChild.lastChild.lastChild.firstChild.children
     ).toHaveLength(1);
@@ -349,15 +410,17 @@ describe('account information', () => {
   });
 
   it('is able to close an alert after success', async () => {
-    userService.userService.updateAccountInformation.mockResolvedValue(
+    userService.userService.updatePersonalInformation.mockResolvedValue(
       'Some Success'
     );
     const { container } = render(
-      <AccountInformation
+      <PersonalInformation
         user={{
-          username: 'msaperst',
-          email: 'msaperst@gmail.com',
-          number: '1234567890',
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          city: 'Fairfax',
+          state: 'VA',
+          zip: '22030',
         }}
       />
     );
@@ -374,15 +437,17 @@ describe('account information', () => {
   });
 
   it('removes the success alert after 5 seconds', async () => {
-    userService.userService.updateAccountInformation.mockResolvedValue(
+    userService.userService.updatePersonalInformation.mockResolvedValue(
       'Some Success'
     );
     const { container } = render(
-      <AccountInformation
+      <PersonalInformation
         user={{
-          username: 'msaperst',
-          email: 'msaperst@gmail.com',
-          number: '1234567890',
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          city: 'Fairfax',
+          state: 'VA',
+          zip: '22030',
         }}
       />
     );
@@ -400,32 +465,43 @@ describe('account information', () => {
   });
 
   it('can handle changing of values', async () => {
-    const spy = jest.spyOn(userService.userService, 'updateAccountInformation');
-    userService.userService.updateAccountInformation.mockResolvedValue(
+    const spy = jest.spyOn(
+      userService.userService,
+      'updatePersonalInformation'
+    );
+    userService.userService.updatePersonalInformation.mockResolvedValue(
       'Some Success'
     );
     const { container } = render(
-      <AccountInformation
+      <PersonalInformation
         user={{
-          username: 'msaperst',
-          email: 'msaperst@gmail.com',
-          number: '1234567890',
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          city: 'Fairfax',
+          state: 'VA',
+          zip: '22030',
         }}
       />
     );
     await fireEvent.change(
       container.firstChild.children[2].firstChild.firstChild.firstChild,
-      { target: { value: 'newEmail@gmail.com' } }
+      { target: { value: 'City' } }
     );
     await fireEvent.change(
       container.firstChild.children[2].lastChild.firstChild.firstChild,
-      { target: { value: '0987654321' } }
+      { target: { value: '12345' } }
     );
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith('newEmail@gmail.com', '0987654321');
+    expect(spy).toHaveBeenCalledWith(
+      'Max',
+      'Saperstone',
+      'City',
+      'VA',
+      '12345'
+    );
   });
 });
