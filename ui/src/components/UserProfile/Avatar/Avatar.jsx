@@ -1,6 +1,6 @@
 import { Col, Form, Image } from 'react-bootstrap';
 import React, { useEffect, useRef, useState } from 'react';
-import { userService } from '../../services/user.service';
+import { userService } from '../../../services/user.service';
 import './Avatar.css';
 
 function Avatar(props) {
@@ -10,7 +10,9 @@ function Avatar(props) {
   const avatarUpload = useRef(null);
 
   useEffect(() => {
-    setAvatar(user.avatar);
+    if (user !== undefined) {
+      setAvatar(user.avatar);
+    }
   }, [user, avatar]);
 
   if (user === undefined) {
