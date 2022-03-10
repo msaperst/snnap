@@ -298,4 +298,61 @@ describe('User', () => {
     const user = await User.auth(token);
     expect(await user.setAvatar('123')).toBeUndefined();
   });
+
+  it('will not update account information if the email already exists', async () => {
+    Mysql.query.mockResolvedValue([{}]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = await User.auth(token);
+    await expect(
+      user.setAccountInformation('msaperst@gmail.com', '1234567890')
+    ).rejects.toEqual(new Error('This email is already in our system.'));
+  });
+
+  it('updates the account information in the db', async () => {
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'Bob',
+          last_name: 'Robert',
+          username: 'Bob',
+          name: 'Robert',
+          email: 'bobert@gmail.com',
+          last_login: '123',
+        },
+      ])
+      .mockResolvedValue([]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = await User.auth(token);
+    expect(
+      await user.setAccountInformation('msaperst@gmail.com', '1234567890')
+    ).toBeUndefined();
+  });
+
+  it('updates the personal information in the db', async () => {
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'Bob',
+          last_name: 'Robert',
+          username: 'Bob',
+          name: 'Robert',
+          email: 'bobert@gmail.com',
+          last_login: '123',
+        },
+      ])
+      .mockResolvedValue([]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = await User.auth(token);
+    expect(
+      await user.setPersonalInformation(
+        'Max',
+        'Saperstone',
+        'Fairfax',
+        'VA',
+        '22030'
+      )
+    ).toBeUndefined();
+  });
 });
