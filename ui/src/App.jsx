@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import { Col, Row } from 'react-bootstrap';
 import HomePage from './pages/Home/HomePage';

@@ -13,10 +13,12 @@ function getJobTypes() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/jobs/types`, requestOptions).then(handleResponse);
 }
+
 function getEquipment() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/jobs/equipment`, requestOptions).then(handleResponse);
 }
+
 function getSkills() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/jobs/skills`, requestOptions).then(handleResponse);
