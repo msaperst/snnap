@@ -3,7 +3,6 @@ import { Col, Row, Stack } from 'react-bootstrap';
 import { userService } from '../../services/user.service';
 import AccountInformation from '../../components/UserProfile/AccountInformation/AccountInformation';
 import PersonalInformation from '../../components/UserProfile/PersonalInformation/PersonalInformation';
-import UpdatePassword from './UpdatePassword';
 
 function ProfilePage() {
   const [user, setUser] = useState({});
@@ -22,7 +21,7 @@ function ProfilePage() {
           <Col>
             <Stack>
               <AccountInformation user={user} />
-              <UpdatePassword />
+              <h3>Update Password</h3>
               <h3>Company Information</h3>
             </Stack>
           </Col>

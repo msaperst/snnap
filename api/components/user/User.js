@@ -150,7 +150,7 @@ const User = class {
     const exists = await Mysql.query(
       `SELECT *
          FROM users
-         WHERE LOWER(email) = LOWER(${db.escape(email)});`
+         WHERE LOWER(email) = LOWER(${db.escape(email)}) AND id != ${await this.getId()};`
     );
     if (exists.length) {
       throw new Error('This email is already in our system.');
