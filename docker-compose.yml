@@ -37,6 +37,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       API_PORT: ${API_PORT}
+      API_LIMIT: ${API_LIMIT}
   ui:
     build:
       context: ui
