@@ -42,7 +42,7 @@ describe('log in page', () => {
   it('allows you to login with a valid user', async () => {
     await driver.findElement(By.id('formUsername')).sendKeys(user.username);
     await driver.findElement(By.id('formPassword')).sendKeys('password');
-    driver.findElement(By.id('loginButton')).click();
+    await driver.findElement(By.id('loginButton')).click();
     const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
     expect(await dropDownMenu.getText()).toEqual(user.username);
   });
