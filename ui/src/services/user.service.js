@@ -8,9 +8,13 @@ export const userService = {
   uploadAvatar,
 };
 
-function get() {
+function get(id) {
+  let url = `/api/user/get`;
+  if (id) {
+    url += `/${id}`;
+  }
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/user/get`, requestOptions).then(handleResponse);
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function updateAccountInformation(email, number) {

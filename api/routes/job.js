@@ -75,9 +75,9 @@ router.get('/types', async (req, res) => {
       message: error.message,
     });
   }
-  const jobTypes = await Mysql.query(`SELECT *
-                                      FROM job_types;`);
   try {
+    const jobTypes = await Mysql.query(`SELECT *
+                                        FROM job_types;`);
     return res.send(jobTypes);
   } catch (error) {
     return res.status(422).send({
@@ -93,9 +93,9 @@ router.get('/equipment', async (req, res) => {
       message: error.message,
     });
   }
-  const equipment = await Mysql.query(`SELECT *
-                                       FROM equipment;`);
   try {
+    const equipment = await Mysql.query(`SELECT *
+                                         FROM equipment;`);
     return res.send(equipment);
   } catch (error) {
     return res.status(422).send({
@@ -111,9 +111,9 @@ router.get('/skills', async (req, res) => {
       message: error.message,
     });
   }
-  const skills = await Mysql.query(`SELECT *
-                                    FROM skills;`);
   try {
+    const skills = await Mysql.query(`SELECT *
+                                      FROM skills;`);
     return res.send(skills);
   } catch (error) {
     return res.status(422).send({
@@ -130,13 +130,13 @@ router.get('/hire-requests', async (req, res) => {
       message: error.message,
     });
   }
-  const hireRequests = await Mysql.query(
-    `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type
-     FROM hire_requests
-              INNER JOIN job_types ON hire_requests.type = job_types.id
-     WHERE hire_requests.date_time > NOW();`
-  );
   try {
+    const hireRequests = await Mysql.query(
+      `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type
+       FROM hire_requests
+                INNER JOIN job_types ON hire_requests.type = job_types.id
+       WHERE hire_requests.date_time > NOW();`
+    );
     return res.send(hireRequests);
   } catch (error) {
     return res.status(422).send({
