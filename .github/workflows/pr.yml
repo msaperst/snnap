@@ -49,6 +49,7 @@ jobs:
           APP=http://localhost:70 npm run test
 
       - name: Archive Test Results 📊
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: Selenium Test Results
