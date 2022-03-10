@@ -23,19 +23,17 @@ function Avatar(props) {
     avatarUpload.current.click();
   };
 
+  /* istanbul ignore next */
   const uploadFile = (event) => {
     event.preventDefault();
     event.stopPropagation();
     const imageFile = event.target.files[0];
-    // console.log(imageFile);
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = document.createElement('img');
       img.onload = () => {
         // Dynamically create a canvas element
         const canvas = document.createElement('canvas');
-
-        // var canvas = document.getElementById("canvas");
         const ctx = canvas.getContext('2d');
 
         // Actual resizing
