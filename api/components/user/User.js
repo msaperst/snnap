@@ -140,33 +140,39 @@ const User = class {
 
   async setAvatar(fileName) {
     await Mysql.query(
-      `UPDATE users SET avatar = ${db.escape(
-        fileName
-      )} WHERE id = ${await this.getId()}`
+      `UPDATE users
+       SET avatar = ${db.escape(fileName)}
+       WHERE id = ${await this.getId()}`
     );
   }
 
   async setAccountInformation(email, number) {
     const exists = await Mysql.query(
       `SELECT *
-         FROM users
-         WHERE LOWER(email) = LOWER(${db.escape(email)}) AND id != ${await this.getId()};`
+       FROM users
+       WHERE LOWER(email) = LOWER(${db.escape(email)})
+         AND id != ${await this.getId()};`
     );
     if (exists.length) {
       throw new Error('This email is already in our system.');
     }
     await Mysql.query(
-      `UPDATE users SET email = ${db.escape(email)}, 
-                 number = ${db.escape(number)} WHERE id = ${await this.getId()}`
+      `UPDATE users
+       SET email  = ${db.escape(email)},
+           number = ${db.escape(number)}
+       WHERE id = ${await this.getId()}`
     );
   }
 
   async setPersonalInformation(firstName, lastName, city, state, zip) {
     await Mysql.query(
-      `UPDATE users SET first_name = ${db.escape(firstName)}, 
-                 last_name = ${db.escape(lastName)}, city = ${db.escape(city)},
-                 state = ${db.escape(state)}, zip = ${db.escape(zip)} 
-                    WHERE id = ${await this.getId()}`
+      `UPDATE users
+       SET first_name = ${db.escape(firstName)},
+           last_name  = ${db.escape(lastName)},
+           city       = ${db.escape(city)},
+           state      = ${db.escape(state)},
+           zip        = ${db.escape(zip)}
+       WHERE id = ${await this.getId()}`
     );
   }
 
