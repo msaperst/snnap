@@ -10,12 +10,10 @@ function Avatar(props) {
   const avatarUpload = useRef(null);
 
   useEffect(() => {
-    console.log('redraw');
     if (user !== undefined) {
       setAvatar(user.avatar);
-      console.log(`with: ${user.avatar}`);
     }
-  }, [user, avatar]);
+  }, [user]);
 
   if (user === undefined) {
     return null;
@@ -59,7 +57,7 @@ function Avatar(props) {
         // Show resized image in preview element
         const dataurl = canvas.toDataURL(imageFile.type);
         setAvatar(dataurl);
-        userService.uploadAvatar(dataurl).then(setAvatar(dataurl));
+        userService.uploadAvatar(dataurl);
       };
       img.src = e.target.result;
     };
