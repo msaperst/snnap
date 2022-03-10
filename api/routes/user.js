@@ -1,7 +1,6 @@
 const express = require('express');
 
 const router = express.Router();
-const fs = require('fs');
 const { validationResult, check } = require('express-validator');
 const User = require('../components/user/User');
 
@@ -24,9 +23,14 @@ router.get('/get', async (req, res) => {
   }
 });
 
-router.post('/set-avatar', async (req, res) => {
-  if (!req.files) {
-    return res.status(422).send('Please include a valid avatar file');
+const setAvatarValidation = [
+  check('avatar', 'Avatar is required').not().isEmpty(),
+];
+
+router.post('/set-avatar', setAvatarValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
   }
   let token;
   try {
@@ -38,26 +42,8 @@ router.post('/set-avatar', async (req, res) => {
   }
   try {
     const user = User.auth(token);
-
-    const file = req.files.avatar;
-    const extension = file.name.split('.').pop();
-    const newName = `${await user.getUsername()}.${extension}`;
-    const path = `${__dirname}/../../ui/public/avatars/${newName}`;
-
-    // clean-up the old file
-    try {
-      fs.unlinkSync(path);
-      // eslint-disable-next-line no-empty
-    } catch (err) {}
-
-    file.mv(path, async (err) => {
-      if (err) {
-        return res.status(500).send(err);
-      }
-      await user.setAvatar(newName);
-      return res.status(200).send({ file: newName });
-    });
-    return '';
+    await user.setAvatar(req.body.avatar);
+    return res.status(200).send();
   } catch (error) {
     return res.status(422).send({
       msg: error.message,

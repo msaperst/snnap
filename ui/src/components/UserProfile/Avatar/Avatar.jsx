@@ -10,8 +10,10 @@ function Avatar(props) {
   const avatarUpload = useRef(null);
 
   useEffect(() => {
+    console.log('redraw');
     if (user !== undefined) {
       setAvatar(user.avatar);
+      console.log(`with: ${user.avatar}`);
     }
   }, [user, avatar]);
 
@@ -26,20 +28,48 @@ function Avatar(props) {
   const uploadFile = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    userService.uploadAvatar(event.target.files[0]).then((response) => {
-      setAvatar(`${response.file}?${Date.now()}`);
-    });
+    const imageFile = event.target.files[0];
+    // console.log(imageFile);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        // Dynamically create a canvas element
+        const canvas = document.createElement('canvas');
+
+        // var canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext('2d');
+
+        // Actual resizing
+        const MAX_WIDTH = 300;
+        const MAX_HEIGHT = 300;
+        let { width, height } = img;
+        // Change the resizing logic
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Show resized image in preview element
+        const dataurl = canvas.toDataURL(imageFile.type);
+        setAvatar(dataurl);
+        userService.uploadAvatar(dataurl).then(setAvatar(dataurl));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(imageFile);
   };
 
   let avatarBlock;
   if (avatar) {
     avatarBlock = (
-      <Image
-        roundedCircle
-        id="avatar"
-        onClick={uploadClick}
-        src={`avatars/${user.avatar}?${Date.now()}`}
-      />
+      <Image roundedCircle id="avatar" onClick={uploadClick} src={avatar} />
     );
   } else {
     let avatarText = '';
