@@ -14,9 +14,11 @@ function get() {
 }
 
 function updateAccountInformation(email, number) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
   const requestOptions = {
     method: 'POST',
-    headers: authHeader(),
+    headers,
     body: JSON.stringify({ email, number }),
   };
 
@@ -26,9 +28,11 @@ function updateAccountInformation(email, number) {
 }
 
 function updatePersonalInformation(firstName, lastName, city, state, zip) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
   const requestOptions = {
     method: 'POST',
-    headers: authHeader(),
+    headers,
     body: JSON.stringify({ firstName, lastName, city, state, zip }),
   };
 
