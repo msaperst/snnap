@@ -17,7 +17,7 @@ describe('log in page', () => {
     //delete the user
     await Base.removeUser(user.username);
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('takes you to the login page when not authenticated', async () => {
@@ -71,5 +71,5 @@ describe('log in page', () => {
 
   //TODO - able to navigate to forgot password
 
-  //TODO - able to logout
+  //TODO - verify remains logged in works
 });

@@ -1,9 +1,18 @@
 {
   "name": "Snnap",
   "version": "0.0.1",
-  "jest-junit": {
-    "suiteName": "jest tests",
-    "output": "junit.xml"
+  "jest": {
+    "reporters": [
+      "default",
+      [
+        "./node_modules/jest-html-reporters",
+        {
+          "pageTitle": "Selenium Test Report",
+          "filename": "test-report.html",
+          "publicPath": "Selenium Test Results"
+        }
+      ]
+    ]
   },
   "private": true,
   "scripts": {
@@ -37,7 +46,7 @@
     "eslint-plugin-react": "^7.29.3",
     "eslint-plugin-react-hooks": "^4.2.0",
     "jest": "^27.5.1",
-    "jest-html-reporter": "^3.4.2",
+    "jest-html-reporters": "^3.0.6",
     "jest-junit": "^13.0.0",
     "prettier": "^2.5.1",
     "selenium-webdriver": "^3.6.0"

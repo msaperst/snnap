@@ -17,7 +17,7 @@ describe('home page', () => {
     //delete the user
     await Base.removeUser(user.username);
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('displays full menu at large size', async () => {

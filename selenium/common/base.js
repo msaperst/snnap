@@ -1,3 +1,4 @@
+const { addAttach } = require('jest-html-reporters/helper');
 const { Builder } = require('selenium-webdriver');
 const { Options } = require('selenium-webdriver/chrome');
 const User = require('../../api/components/user/User');
@@ -28,6 +29,14 @@ class Base {
 
   getApp() {
     return Base.getApp();
+  }
+
+  async cleanUp(driver) {
+    const image = await driver.takeScreenshot();
+    await addAttach({
+      attach: Buffer.from(image, "base64"),
+    });
+    await driver.quit();
   }
 
   addUser(username) {

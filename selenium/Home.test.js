@@ -25,11 +25,21 @@ describe('home page', () => {
       await Base.removeRequestToHire(await requestToHire.getId());
     }
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('takes us to the homepage', async () => {
     expect(await driver.getCurrentUrl()).toEqual(Base.getApp() + '/');
+  });
+
+  it('allows us to log out', async () => {
+    const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
+    await dropDownMenu.click();
+    const logoutButton = driver.wait(until.elementLocated(By.linkText('Logout')));
+    driver.wait(until.elementIsVisible(logoutButton));
+    await logoutButton.click();
+    expect(await driver.getCurrentUrl()).toEqual(Base.getApp() + '/login');
+    expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Login');
   });
 
   it('shows the tagline', async () => {

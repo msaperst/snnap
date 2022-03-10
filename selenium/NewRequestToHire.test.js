@@ -23,7 +23,7 @@ describe('new request to hire', () => {
     //delete the user
     await Base.removeUser(user.username);
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('has a button to open the modal', async () => {

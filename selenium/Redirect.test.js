@@ -14,7 +14,7 @@ describe('home page', () => {
     //delete the user
     await Base.removeUser(user.username);
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('redirects to home after going to login when authenticated', async () => {
