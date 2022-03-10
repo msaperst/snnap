@@ -30,7 +30,7 @@ describe('register page', () => {
   it('shows error when you register with blank information', async () => {
     const feedback = (await driver.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(10);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < feedback.length; i++) {
       expect(await feedback[i].getText()).toEqual('');
       expect(await feedback[i].isDisplayed()).toBeFalsy();
     }
@@ -45,7 +45,7 @@ describe('register page', () => {
     expect(await feedback[7].getText()).toEqual('Please provide a valid state.');
     expect(await feedback[8].getText()).toEqual('Please provide a valid zip.');
     expect(await feedback[9].getText()).toEqual('You must agree before submitting.');
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < feedback.length; i++) {
       expect(await feedback[i].isDisplayed()).toBeTruthy();
     }
   });

@@ -69,6 +69,14 @@ class Base {
   async removeRequestToHire(id) {
     await Mysql.query(`DELETE FROM hire_requests WHERE id = ${id}`);
   }
+
+  waitUntilNotPresent(driver, locator) {
+    driver.wait(function() {
+      return driver.findElements(locator).then(function(elements) {
+        return elements.length === 0;
+      });
+    });
+  }
 }
 
 module.exports = new Base();
