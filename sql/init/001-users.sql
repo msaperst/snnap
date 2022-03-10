@@ -12,19 +12,12 @@ CREATE TABLE IF NOT EXISTS users
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
-ALTER TABLE users
-    DROP COLUMN name;
-ALTER TABLE users
-    ADD COLUMN first_name varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE users
-    ADD COLUMN last_name varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE users
-    ADD COLUMN number varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE users
-    ADD COLUMN city varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE users
-    ADD COLUMN state varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE users
-    ADD COLUMN zip varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE users
-    ADD COLUMN avatar varchar(60) COLLATE utf8mb4_unicode_ci;
+ALTER TABLE users DROP COLUMN name;
+ALTER TABLE users ADD COLUMN first_name varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE users ADD COLUMN last_name varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE users ADD COLUMN number varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE users ADD COLUMN city varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE users ADD COLUMN state varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE users ADD COLUMN zip varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE users ADD COLUMN avatar varchar(60) COLLATE utf8mb4_unicode_ci;
+ALTER TABLE users MODIFY avatar LONGTEXT;

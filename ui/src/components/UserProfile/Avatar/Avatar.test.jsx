@@ -97,8 +97,8 @@ describe('avatar', () => {
     expect(container.firstChild.firstChild.getAttribute('id')).toEqual(
       'avatar'
     );
-    expect(container.firstChild.firstChild.getAttribute('src')).toMatch(
-      /^avatars\/pic.jpg\?16/
+    expect(container.firstChild.firstChild.getAttribute('src')).toEqual(
+      'pic.jpg'
     );
 
     expect(container.firstChild.lastChild.children).toHaveLength(0);
@@ -127,14 +127,22 @@ describe('avatar', () => {
         ],
       },
     };
+    jest.spyOn(global, 'FileReader').mockImplementation(function () {
+      this.readAsDataURL = jest.fn();
+      this.onload = jest.fn();
+    });
     const { container } = render(<Avatar user={{ avatar: 'pic.jpg' }} />);
     const now = container.firstChild.firstChild.getAttribute('src');
-    setTimeout(() => {}, 1000);
     await act(async () => {
       await fireEvent.change(container.firstChild.lastChild, event);
     });
-    expect(container.firstChild.firstChild.getAttribute('src')).not.toEqual(
-      now
-    );
+    expect(container.firstChild.firstChild.getAttribute('src')).toEqual(now);
+    const reader = FileReader.mock.instances[0];
+    expect(reader.readAsDataURL).toHaveBeenCalledWith({
+      name: 'image.png',
+      size: 50000,
+      type: 'image/png',
+    });
+    reader.onload({ target: { result: 'foo' } });
   });
 });

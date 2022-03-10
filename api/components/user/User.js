@@ -138,10 +138,10 @@ const User = class {
     return user.getToken();
   }
 
-  async setAvatar(fileName) {
+  async setAvatar(file) {
     await Mysql.query(
       `UPDATE users
-       SET avatar = ${db.escape(fileName)}
+       SET avatar = ${db.escape(file)}
        WHERE id = ${await this.getId()}`
     );
   }

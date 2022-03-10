@@ -28,6 +28,7 @@ jobs:
           echo "" >> .env
           echo "# api information" >> .env
           echo "API_PORT=3001" >> .env
+          echo "API_LIMIT=10000" >> .env
 
       - name: Build Dockerfile 🐋
         run: docker-compose -f docker-compose.yml up -d --build

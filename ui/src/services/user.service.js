@@ -41,13 +41,13 @@ function updatePersonalInformation(firstName, lastName, city, state, zip) {
   );
 }
 
-function uploadAvatar(file) {
-  const formData = new FormData();
-  formData.append('avatar', file);
+async function uploadAvatar(avatar) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
   const requestOptions = {
     method: 'POST',
-    headers: authHeader(),
-    body: formData,
+    headers,
+    body: JSON.stringify({ avatar }),
   };
   return fetch('/api/user/set-avatar', requestOptions).then(handleResponse);
 }
