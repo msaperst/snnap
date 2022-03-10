@@ -1,82 +1,23 @@
 const express = require('express');
 
 const router = express.Router();
-const { validationResult } = require('express-validator');
-const {
-  signupValidation,
-  loginValidation,
-  newRequestToHireValidation,
-} = require('./validation');
+const { validationResult, check } = require('express-validator');
+const Mysql = require('../services/Mysql');
 const User = require('../components/user/User');
-const Mysql = require('./Mysql');
 const RequestToHire = require('../components/requestToHire/RequestToHire');
 
-router.post('/register', signupValidation, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).send(errors.errors[0]);
-  }
-  const user = User.register(
-    req.body.firstName,
-    req.body.lastName,
-    req.body.username,
-    req.body.email,
-    req.body.number,
-    req.body.password,
-    req.body.city,
-    req.body.state,
-    req.body.zip
-  );
-  try {
-    await user.getToken();
-    return res.status(201).send({
-      msg: 'Thank you for registering with us!',
-    });
-  } catch (error) {
-    switch (error.message) {
-      case 'This email is already in our system. Try resetting your password.':
-      case 'Sorry, that username is already in use.':
-        return res.status(409).send({
-          msg: error.message,
-        });
-      default:
-        return res.status(400).send({
-          msg: error.message,
-        });
-    }
-  }
-});
-
-router.post('/login', loginValidation, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).send(errors.errors[0]);
-  }
-  const user = User.login(
-    req.body.username,
-    req.body.password,
-    req.body.rememberMe
-  );
-  try {
-    return res.status(200).send({
-      token: await user.getToken(),
-      name: await user.getName(),
-      username: await user.getUsername(),
-      email: await user.getEmail(),
-    });
-  } catch (error) {
-    switch (error.message) {
-      case 'Username or password is incorrect!':
-        return res.status(401).send({
-          msg: error.message,
-        });
-      default:
-        return res.status(400).send({
-          msg: error.message,
-        });
-    }
-  }
-});
+const newRequestToHireValidation = [
+  check('type', 'Please provide a valid job type.').isNumeric(),
+  check('location', 'Please provide a valid location.').not().isEmpty(),
+  check('details', 'Please provide a valid job details.').not().isEmpty(),
+  check('pay', 'Please provide a valid pay.').isNumeric(),
+  check('duration', 'Please provide a valid duration.').isNumeric(),
+  check('range', 'Please provide a valid duration range.')
+    .optional()
+    .isNumeric(),
+  check('date', 'Please provide a valid date.').isDate(),
+  check('date', 'Please provide a date after today.').not().isBefore(),
+];
 
 router.post(
   '/new-request-to-hire',
@@ -125,33 +66,8 @@ router.post(
   }
 );
 
-// information about our user
-router.get('/get-user', async (req, res) => {
-  let token;
-  try {
-    token = await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  const user = User.auth(token);
-  try {
-    return res.send({
-      name: await user.getName(),
-      username: await user.getUsername(),
-      email: await user.getEmail(),
-      lastLogin: await user.getLastLogin(),
-    });
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
-});
-
 // information about our system
-router.get('/job-types', async (req, res) => {
+router.get('/types', async (req, res) => {
   try {
     await User.isAuth(req.headers.authorization);
   } catch (error) {
@@ -216,7 +132,9 @@ router.get('/hire-requests', async (req, res) => {
   }
   const hireRequests = await Mysql.query(
     `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type
-        FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.date_time > NOW();`
+     FROM hire_requests
+              INNER JOIN job_types ON hire_requests.type = job_types.id
+     WHERE hire_requests.date_time > NOW();`
   );
   try {
     return res.send(hireRequests);

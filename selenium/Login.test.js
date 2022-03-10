@@ -17,7 +17,7 @@ describe('log in page', () => {
     //delete the user
     await Base.removeUser(user.username);
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('takes you to the login page when not authenticated', async () => {
@@ -42,7 +42,7 @@ describe('log in page', () => {
   it('allows you to login with a valid user', async () => {
     await driver.findElement(By.id('formUsername')).sendKeys(user.username);
     await driver.findElement(By.id('formPassword')).sendKeys('password');
-    driver.findElement(By.id('loginButton')).click();
+    await driver.findElement(By.id('loginButton')).click();
     const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
     expect(await dropDownMenu.getText()).toEqual(user.username);
   });
@@ -71,5 +71,5 @@ describe('log in page', () => {
 
   //TODO - able to navigate to forgot password
 
-  //TODO - able to logout
+  //TODO - verify remains logged in works
 });

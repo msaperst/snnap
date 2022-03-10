@@ -13,6 +13,7 @@ RUN npm ci
 COPY server.js ./
 COPY components ./components
 COPY services ./services
+COPY routes ./routes
 
 # Exports
 EXPOSE ${API_PORT}

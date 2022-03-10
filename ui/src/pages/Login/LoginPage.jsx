@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';

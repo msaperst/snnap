@@ -1,23 +1,36 @@
+const rateLimit = require('express-rate-limit');
 const express = require('express');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 const cors = require('cors');
-const indexRouter = require('./services/router.js');
+const job = require('./routes/job.js');
+const authentication = require('./routes/authentication.js');
+const user = require('./routes/user.js');
+
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 10000, // Limit each IP to 10000 requests per `window`
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
 
 const app = express();
+
+app.use(limiter);
 
 app.use(express.json());
 
 app.use(bodyParser.json());
 
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(fileUpload({ createParentPath: true }));
 
 app.use(cors());
 
-app.use('/api', indexRouter);
+app.use('/api/auth', authentication);
+app.use('/api/user', user);
+app.use('/api/jobs', job);
 
 // Handling Errors
 app.use((err, req, res) => {

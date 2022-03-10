@@ -27,7 +27,7 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    userService.getUser().then((user) => {
+    userService.get().then((user) => {
       const { currentUser } = this.state;
       currentUser.lastLogin = user.lastLogin;
       this.setState({ currentUser });

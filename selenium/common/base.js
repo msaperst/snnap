@@ -1,3 +1,4 @@
+const { addAttach } = require('jest-html-reporters/helper');
 const { Builder } = require('selenium-webdriver');
 const { Options } = require('selenium-webdriver/chrome');
 const User = require('../../api/components/user/User');
@@ -22,12 +23,20 @@ class Base {
       .setChromeOptions(new Options().headless())
       .build();
     await driver.get(Base.getApp() + url);
-    await driver.manage().window().setSize(1000, 800);
+    await driver.manage().window().setSize(1200, 800);
     return driver;
   }
 
   getApp() {
     return Base.getApp();
+  }
+
+  async cleanUp(driver) {
+    const image = await driver.takeScreenshot();
+    await addAttach({
+      attach: Buffer.from(image, "base64"),
+    });
+    await driver.quit();
   }
 
   addUser(username) {
@@ -37,15 +46,11 @@ class Base {
   async loginUser(driver, username) {
     let user = this.addUser(username);
     user = await User.login(await user.getUsername(), 'password');
-    const userJson = {
-      token: await user.getToken(),
-      name: await user.getName(),
-      username: await user.getUsername(),
-      email: await user.getEmail(),
-    };
+    const userInfo = await user.getUserInfo();
+    userInfo.token = await user.getToken();
     await driver.executeScript(async function (json) {
       localStorage.setItem("currentUser", JSON.stringify(json));
-    }, userJson);
+    }, userInfo);
     return user;
   }
 

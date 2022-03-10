@@ -47,3 +47,10 @@ jobs:
           export $(grep -v '^#' .env | xargs)
           docker exec snnap_mysql ./setup-database.sh
           APP=http://localhost:70 npm run test
+
+      - name: Archive Test Results 📊
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Selenium Test Results
+          path: 'Selenium Test Results'

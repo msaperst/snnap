@@ -48,8 +48,13 @@ const User = class {
       );
       newUser.id = result.insertId;
       newUser.username = username;
-      newUser.name = `${firstName} ${lastName}`;
+      newUser.firstName = firstName;
+      newUser.lastName = lastName;
       newUser.email = email;
+      newUser.number = number;
+      newUser.city = city;
+      newUser.state = state;
+      newUser.zip = zip;
     })();
     return newUser;
   }
@@ -89,10 +94,15 @@ const User = class {
            WHERE id = '${newUser.id}'`
         );
         newUser.id = user[0].id;
-        newUser.name = `${user[0].first_name} ${user[0].last_name}`;
         newUser.username = user[0].username;
+        newUser.avatar = user[0].avatar;
+        newUser.firstName = user[0].first_name;
+        newUser.lastName = user[0].last_name;
         newUser.email = user[0].email;
-        newUser.lastLogin = user[0].last_login;
+        newUser.number = user[0].number;
+        newUser.city = user[0].city;
+        newUser.state = user[0].state;
+        newUser.zip = user[0].zip;
       } else {
         throw new Error('Username or password is incorrect!');
       }
@@ -109,10 +119,15 @@ const User = class {
                                       FROM users
                                       where id = ${decoded.id}`);
       newUser.id = user[0].id;
-      newUser.name = `${user[0].first_name} ${user[0].last_name}`;
       newUser.username = user[0].username;
+      newUser.avatar = user[0].avatar;
+      newUser.firstName = user[0].first_name;
+      newUser.lastName = user[0].last_name;
       newUser.email = user[0].email;
-      newUser.lastLogin = user[0].last_login;
+      newUser.number = user[0].number;
+      newUser.city = user[0].city;
+      newUser.state = user[0].state;
+      newUser.zip = user[0].zip;
     })();
     return newUser;
   }
@@ -121,6 +136,44 @@ const User = class {
     const token = User.getToken(authorizationHeader);
     const user = User.auth(token);
     return user.getToken();
+  }
+
+  async setAvatar(fileName) {
+    await Mysql.query(
+      `UPDATE users
+       SET avatar = ${db.escape(fileName)}
+       WHERE id = ${await this.getId()}`
+    );
+  }
+
+  async setAccountInformation(email, number) {
+    const exists = await Mysql.query(
+      `SELECT *
+       FROM users
+       WHERE LOWER(email) = LOWER(${db.escape(email)})
+         AND id != ${await this.getId()};`
+    );
+    if (exists.length) {
+      throw new Error('This email is already in our system.');
+    }
+    await Mysql.query(
+      `UPDATE users
+       SET email  = ${db.escape(email)},
+           number = ${db.escape(number)}
+       WHERE id = ${await this.getId()}`
+    );
+  }
+
+  async setPersonalInformation(firstName, lastName, city, state, zip) {
+    await Mysql.query(
+      `UPDATE users
+       SET first_name = ${db.escape(firstName)},
+           last_name  = ${db.escape(lastName)},
+           city       = ${db.escape(city)},
+           state      = ${db.escape(state)},
+           zip        = ${db.escape(zip)}
+       WHERE id = ${await this.getId()}`
+    );
   }
 
   async getToken() {
@@ -133,24 +186,25 @@ const User = class {
     return this.id;
   }
 
-  async getName() {
-    await this.instancePromise;
-    return this.name;
-  }
-
   async getUsername() {
     await this.instancePromise;
     return this.username;
   }
 
-  async getEmail() {
+  async getUserInfo() {
     await this.instancePromise;
-    return this.email;
-  }
-
-  async getLastLogin() {
-    await this.instancePromise;
-    return this.lastLogin;
+    return {
+      id: this.id,
+      username: this.username,
+      avatar: this.avatar,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      number: this.number,
+      city: this.city,
+      state: this.state,
+      zip: this.zip,
+    };
   }
 
   static getToken(authorization) {

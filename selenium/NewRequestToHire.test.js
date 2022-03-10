@@ -23,7 +23,7 @@ describe('new request to hire', () => {
     //delete the user
     await Base.removeUser(user.username);
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('has a button to open the modal', async () => {
@@ -90,7 +90,8 @@ describe('new request to hire', () => {
   });
 
   async function enterData(option, location, details, pay, duration, date) {
-    const select = await modal.findElement(By.id('formJobType'));
+    const select = driver.wait(until.elementLocated(By.id('formJobType')));
+    driver.wait(until.elementIsEnabled(select));
     (await select.findElements(By.tagName('option')))[option].click();
     (await modal.findElement(By.css('[placeholder="Location"]'))).sendKeys(location);
     (driver.wait(until.elementLocated(By.className('geoapify-autocomplete-item')))).click();

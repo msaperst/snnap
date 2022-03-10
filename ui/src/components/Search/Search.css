@@ -1,20 +1,20 @@
 #search {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 .searchGuy {
-    position: absolute;
-    z-index: 9;
-    bottom: -100px;
-    right: 0;
+  position: absolute;
+  z-index: 9;
+  bottom: -100px;
+  right: 0;
 }
 
 #searchForJobButton {
-    z-index: 10;
+  z-index: 10;
 }
 
 .btn-filter {
-    z-index: 10;
-    margin-right: 10px;
-    margin-bottom: 10px;
+  z-index: 10;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }

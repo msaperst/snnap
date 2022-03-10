@@ -9,7 +9,7 @@ describe('home page', () => {
   beforeEach(async () => {
     // load the default page
     driver = await Base.getDriver();
-    user = await Base.loginUser(driver, 'homeUser');
+    user = await Base.loginUser(driver, 'responsiveUser');
     await driver.get(Base.getApp());
   }, 10000);
 
@@ -17,7 +17,7 @@ describe('home page', () => {
     //delete the user
     await Base.removeUser(user.username);
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('displays full menu at large size', async () => {

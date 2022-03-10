@@ -15,7 +15,7 @@ describe('register page', () => {
     //delete the user
     await Base.removeUser('registerUser');
     // close the driver
-    await driver.quit();
+    await Base.cleanUp(driver);
   }, 15000);
 
   it('takes us to the register page', async () => {
