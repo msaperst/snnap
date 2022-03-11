@@ -70,10 +70,6 @@ function Portfolio(props) {
   };
 
   const updatePortfilioItems = (key) => {
-    // this means we have some bad data
-    if (!key.includes(':')) {
-      return;
-    }
     addRequired();
     // pull the data that we need/want
     const parts = key.split(':');
