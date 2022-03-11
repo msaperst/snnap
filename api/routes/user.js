@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { validationResult, check } = require('express-validator');
 const User = require('../components/user/User');
+const Mysql = require('../services/Mysql');
 
 router.get('/get', async (req, res) => {
   let token;
@@ -16,6 +17,26 @@ router.get('/get', async (req, res) => {
   try {
     const user = User.auth(token);
     return res.send(await user.getUserInfo());
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
+router.get('/get/:id', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  try {
+    const userInfo =
+      await Mysql.query(`SELECT id, username, first_name, last_name, avatar
+                                         FROM users WHERE id = ${req.params.id};`);
+    return res.send(userInfo[0]);
   } catch (error) {
     return res.status(422).send({
       msg: error.message,

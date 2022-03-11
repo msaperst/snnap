@@ -4,6 +4,9 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import RequestToHire from './RequestToHire';
 
+jest.mock('../../services/user.service');
+const userService = require('../../services/user.service');
+
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap form input', () => {
@@ -11,6 +14,10 @@ describe('snnap form input', () => {
   let wrapper1;
 
   beforeEach(() => {
+    userService.userService.get.mockResolvedValue({
+      first_name: 'Max',
+      last_name: 'Saperstone',
+    });
     wrapper = Enzyme.mount(
       <RequestToHire
         hireRequest={{
@@ -58,6 +65,7 @@ describe('snnap form input', () => {
     expect(content.at(2).text()).toEqual('2 hours');
     expect(content.at(3).text()).toEqual('Submit For Job');
     expect(content.at(4).text()).toEqual('$200 per hour');
+    expect(wrapper.find('.col-md-1').at(0).text()).toEqual('MS');
     expect(wrapper.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
     expect(wrapper.find('.card-body').at(1).text()).toEqual('Some details');
   });
@@ -70,6 +78,7 @@ describe('snnap form input', () => {
     expect(content.at(2).text()).toEqual('2 to 3 hours');
     expect(content.at(3).text()).toEqual('Submit For Job');
     expect(content.at(4).text()).toEqual('$200 per hour');
+    expect(wrapper.find('.col-md-1').at(0).text()).toEqual('MS');
     expect(wrapper.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
     expect(wrapper.find('.card-body').at(1).text()).toEqual('Some details');
   });

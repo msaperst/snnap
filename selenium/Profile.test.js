@@ -40,6 +40,7 @@ describe('profile page', () => {
     expect(forms).toHaveLength(2);
 
   });
+
   //////////////////////
   // Account Information
   //////////////////////
@@ -170,4 +171,9 @@ describe('profile page', () => {
     email = driver.wait(until.elementLocated(By.id('formNumber')));
     expect(await email.getAttribute('value')).toEqual('Numbero');
   });
+
+  //////////////////////
+  // Personal Information
+  //////////////////////
+  // TODO
 });
