@@ -3,6 +3,7 @@ import { Col, Row, Stack } from 'react-bootstrap';
 import { userService } from '../../services/user.service';
 import AccountInformation from '../../components/UserProfile/AccountInformation/AccountInformation';
 import PersonalInformation from '../../components/UserProfile/PersonalInformation/PersonalInformation';
+import Portfolio from '../../components/UserProfile/Portfolio/Portfolio';
 
 function ProfilePage() {
   const [user, setUser] = useState({});
@@ -28,7 +29,7 @@ function ProfilePage() {
           <Col>
             <Stack>
               <PersonalInformation user={user} />
-              <h3>Portfolio</h3>
+              <Portfolio companyExperience="Some experience" portfolio={[{}]} />
             </Stack>
           </Col>
         </Row>

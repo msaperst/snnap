@@ -25,6 +25,7 @@ function PersonalInformation(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
+    setValidated(true);
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
@@ -42,6 +43,7 @@ function PersonalInformation(props) {
             setUpdate('Personal Information Updated');
             setTimeout(() => {
               setUpdate(null);
+              setValidated(false);
             }, 5000);
           },
           (error) => {
@@ -50,7 +52,6 @@ function PersonalInformation(props) {
           }
         );
     }
-    setValidated(true);
   };
 
   const updateForm = (key, value) => {

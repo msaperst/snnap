@@ -20,6 +20,7 @@ function AccountInformation(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
+    setValidated(true);
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
@@ -31,6 +32,7 @@ function AccountInformation(props) {
             setUpdate('Account Information Updated');
             setTimeout(() => {
               setUpdate(null);
+              setValidated(false);
             }, 5000);
           },
           (error) => {
@@ -39,7 +41,6 @@ function AccountInformation(props) {
           }
         );
     }
-    setValidated(true);
   };
 
   const updateForm = (key, value) => {
