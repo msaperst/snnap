@@ -1,35 +1,37 @@
 const { By, Key, until } = require('selenium-webdriver');
-const Base = require('./common/base');
+const Test = require('./common/Test');
 require('chromedriver');
 
 describe('home page', () => {
+  let test;
   let driver;
   let user;
   let requestToHires = [];
 
   beforeEach(async () => {
+    test = new Test();
     // load the default page
-    driver = await Base.getDriver();
+    driver = await test.getDriver();
     // login as a user
-    requestToHires.push(await Base.addRequestToHire(5, '2032-03-12'));
-    requestToHires.push(await Base.addRequestToHire(5, '2032-03-10'));
+    requestToHires.push(await Test.addRequestToHire(2, '2023-03-12'));
+    requestToHires.push(await Test.addRequestToHire(2, '2023-03-10'));
 
-    user = await Base.loginUser(driver, 'homeUser');
-    await driver.get(Base.getApp());
+    user = await test.loginUser('homeUser');
+    await driver.get(Test.getApp());
   }, 10000);
 
   afterEach(async () => {
     //delete the user
-    await Base.removeUser(user.username);
+    await test.removeUser();
     for (const requestToHire of requestToHires) {
-      await Base.removeRequestToHire(await requestToHire.getId());
+      await Test.removeRequestToHire(await requestToHire.getId());
     }
     // close the driver
-    await Base.cleanUp(driver);
+    await test.cleanUp();
   }, 15000);
 
   it('takes us to the homepage', async () => {
-    expect(await driver.getCurrentUrl()).toEqual(Base.getApp() + '/');
+    expect(await driver.getCurrentUrl()).toEqual(Test.getApp() + '/');
   });
 
   it('allows us to log out', async () => {
@@ -38,7 +40,7 @@ describe('home page', () => {
     const logoutButton = driver.wait(until.elementLocated(By.linkText('Logout')));
     driver.wait(until.elementIsVisible(logoutButton));
     await logoutButton.click();
-    expect(await driver.getCurrentUrl()).toEqual(Base.getApp() + '/login');
+    expect(await driver.getCurrentUrl()).toEqual(Test.getApp() + '/login');
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Login');
   });
 

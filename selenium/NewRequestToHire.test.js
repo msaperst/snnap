@@ -1,19 +1,21 @@
 const { By, until } = require('selenium-webdriver');
-const Base = require('./common/base');
+const Test = require('./common/Test');
 require('chromedriver');
 
 describe('new request to hire', () => {
+  let test;
   let driver;
   let user;
   let button;
   let modal;
 
   beforeEach(async () => {
+    test = new Test();
     // load the default page
-    driver = await Base.getDriver();
+    driver = await test.getDriver();
     // login as a user
-    user = await Base.loginUser(driver, 'newRequestToHireUser');
-    await driver.get(Base.getApp());
+    user = await test.loginUser('newRequestToHireUser');
+    await driver.get(Test.getApp());
     button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
     await button.click();
     modal = driver.wait(until.elementLocated(By.css('[data-testid="newRequestToHireModal"]')));
@@ -21,9 +23,9 @@ describe('new request to hire', () => {
 
   afterEach(async () => {
     //delete the user
-    await Base.removeUser(user.username);
+    await test.removeUser();
     // close the driver
-    await Base.cleanUp(driver);
+    await test.cleanUp();
   }, 15000);
 
   it('has a button to open the modal', async () => {
