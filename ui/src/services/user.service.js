@@ -5,7 +5,6 @@ export const userService = {
   get,
   updateAccountInformation,
   updatePersonalInformation,
-  updatePortfolio,
   uploadAvatar,
 };
 
@@ -42,20 +41,6 @@ function updatePersonalInformation(firstName, lastName, city, state, zip) {
   };
 
   return fetch(`/api/user/update-personal-information`, requestOptions).then(
-    handleResponse
-  );
-}
-
-function updatePortfolio(experience, portfolioItems) {
-  const headers = authHeader();
-  headers['Content-Type'] = 'application/json';
-  const requestOptions = {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ experience, portfolioItems }),
-  };
-
-  return fetch(`/api/user/update-portfolio`, requestOptions).then(
     handleResponse
   );
 }

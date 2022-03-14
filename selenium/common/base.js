@@ -46,7 +46,7 @@ class Base {
   async loginUser(driver, username) {
     let user = this.addUser(username);
     user = await User.login(await user.getUsername(), 'password');
-    const userInfo = await user.getUserInfo();
+    const userInfo = await user.getInfo();
     userInfo.token = await user.getToken();
     await driver.executeScript(async function (json) {
       localStorage.setItem("currentUser", JSON.stringify(json));

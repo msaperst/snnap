@@ -5,6 +5,7 @@ const cors = require('cors');
 const job = require('./routes/job.js');
 const authentication = require('./routes/authentication.js');
 const user = require('./routes/user.js');
+const company = require('./routes/company.js');
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
@@ -27,6 +28,7 @@ app.use(cors());
 
 app.use('/api/auth', authentication);
 app.use('/api/user', user);
+app.use('/api/company', company);
 app.use('/api/jobs', job);
 
 // Handling Errors

@@ -16,7 +16,7 @@ router.get('/get', async (req, res) => {
   }
   try {
     const user = User.auth(token);
-    return res.send(await user.getUserInfo());
+    return res.send(await user.getInfo());
   } catch (error) {
     return res.status(422).send({
       msg: error.message,

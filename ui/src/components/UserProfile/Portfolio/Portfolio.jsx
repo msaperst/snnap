@@ -1,19 +1,33 @@
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
-import { userService } from '../../../services/user.service';
 import PortfolioItem from './PortfolioItem/PortfolioItem';
+import { companyService } from '../../../services/company.service';
 
 function Portfolio(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validated, setValidated] = useState(false);
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
-  const { companyExperience, portfolio } = props;
-  const [portfolioItems, setPortfolioItems] = useState(portfolio);
-  const [experience, setExperience] = useState(companyExperience);
+  const { company } = props;
+  const [experience, setExperience] = useState('');
+  const [portfolioItems, setPortfolioItems] = useState([]);
 
-  if (companyExperience === undefined || portfolio === undefined) {
+  useEffect(() => {
+    if (company) {
+      setExperience(company.experience);
+      // adding a blank portfolio instance to allow for editing ability
+      let { portfolio } = company;
+      if (portfolio) {
+        portfolio.push({});
+      } else {
+        portfolio = [];
+      }
+      setPortfolioItems(portfolio);
+    }
+  }, [company]);
+
+  if (company === undefined) {
     return null;
   }
 
@@ -47,15 +61,15 @@ function Portfolio(props) {
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
-      userService.updatePortfolio(experience, portfolioItems).then(
+      companyService.updatePortfolio(experience, portfolioItems).then(
         () => {
           setIsSubmitting(false);
           setUpdate('Portfolio Updated');
           setTimeout(() => {
             setUpdate(null);
             setValidated(false);
+            addRequired();
           }, 5000);
-          addRequired();
         },
         (error) => {
           setIsSubmitting(false);

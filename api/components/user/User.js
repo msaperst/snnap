@@ -191,7 +191,7 @@ const User = class {
     return this.username;
   }
 
-  async getUserInfo() {
+  async getInfo() {
     await this.instancePromise;
     return {
       id: this.id,
