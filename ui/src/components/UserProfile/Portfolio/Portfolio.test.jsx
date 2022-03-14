@@ -6,8 +6,8 @@ import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import Portfolio from './Portfolio';
 
-jest.mock('../../../services/user.service');
-const userService = require('../../../services/user.service');
+jest.mock('../../../services/company.service');
+const companyService = require('../../../services/company.service');
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -24,30 +24,24 @@ describe('portfolio', () => {
     expect(container.children).toHaveLength(0);
   });
 
-  it('renders nothing without an experience', () => {
-    const { container } = render(<Portfolio portfolio={[]} />);
-    expect(container.children).toHaveLength(0);
-  });
-
-  it('renders nothing without a portfolio', () => {
-    const { container } = render(<Portfolio companyExperience="" />);
-    expect(container.children).toHaveLength(0);
+  it('renders multiple portfolios properly with no data', () => {
+    const { container } = render(<Portfolio company={{}} />);
+    expect(container.children).toHaveLength(1);
+    expect(container.firstChild.children).toHaveLength(3);
   });
 
   it('renders header properly', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[]} />
-    );
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild.getAttribute('noValidate')).toEqual('');
-    expect(container.firstChild.children).toHaveLength(3);
+    expect(container.firstChild.children).toHaveLength(4);
     expect(container.firstChild.firstChild).toHaveTextContent('Portfolio');
   });
 
   it('renders multiple portfolios properly', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}, {}, {}]} />
-    );
+    const company = { experience: '', portfolio: [{}, {}] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild.getAttribute('noValidate')).toEqual('');
     expect(container.firstChild.children).toHaveLength(6);
@@ -55,9 +49,8 @@ describe('portfolio', () => {
   });
 
   it('has empty experience in the first row', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}]} />
-    );
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-12');
     expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
@@ -80,9 +73,8 @@ describe('portfolio', () => {
   });
 
   it('has experience in the first row', () => {
-    const { container } = render(
-      <Portfolio companyExperience="Some experience" portfolio={[{}]} />
-    );
+    const company = { experience: 'Some experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-12');
     expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
@@ -105,20 +97,18 @@ describe('portfolio', () => {
   });
 
   it('has 2 items in the second row', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}]} />
-    );
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.children[2]).toHaveClass('mb-3 row');
     expect(container.firstChild.children[2].children).toHaveLength(2);
   });
 
   it('has description in the second row', () => {
-    const { container } = render(
-      <Portfolio
-        companyExperience=""
-        portfolio={[{ description: 'description1' }]}
-      />
-    );
+    const company = {
+      experience: '',
+      portfolio: [{ description: 'description1' }],
+    };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.children[2].firstChild).toHaveClass(
       'col-md-12'
     );
@@ -145,9 +135,8 @@ describe('portfolio', () => {
   });
 
   it('has link in the second row', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{ link: 'link1' }]} />
-    );
+    const company = { experience: '', portfolio: [{ link: 'link1' }] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.children[2].lastChild).toHaveClass('col-md-12');
     expect(container.firstChild.children[2].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
@@ -172,17 +161,15 @@ describe('portfolio', () => {
   });
 
   it('has 2 items in the last row', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}]} />
-    );
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.lastChild).toHaveClass('mb-3 row');
     expect(container.firstChild.lastChild.children).toHaveLength(2);
   });
 
   it('has save information button in the last row', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}]} />
-    );
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.lastChild.firstChild).toHaveClass('col');
     expect(container.firstChild.lastChild.firstChild.firstChild).toHaveClass(
       'btn btn-primary'
@@ -199,40 +186,77 @@ describe('portfolio', () => {
   });
 
   it('has no alert or update present in the last row', () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}]} />
-    );
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('does not submit if values are not present/valid', async () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}]} />
-    );
-    await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+    await act(async () => {
+      await fireEvent.click(
+        container.firstChild.lastChild.firstChild.firstChild
+      );
+    });
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('does not submit if partial portfolio values are present', async () => {
-    const { container } = render(
-      <Portfolio
-        companyExperience="experience"
-        portfolio={[{ description: 'some description' }]}
-      />
-    );
-    await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    const company = {
+      experience: 'experience',
+      portfolio: [{ description: 'some description' }],
+    };
+    const { container } = render(<Portfolio company={company} />);
+    await act(async () => {
+      await fireEvent.click(
+        container.firstChild.lastChild.firstChild.firstChild
+      );
+    });
+    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
+    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
+  });
+
+  it('does not submit if other partial portfolio values are present', async () => {
+    const company = {
+      experience: 'experience',
+      portfolio: [{ link: 'link' }],
+    };
+    const { container } = render(<Portfolio company={company} />);
+    await act(async () => {
+      await fireEvent.click(
+        container.firstChild.lastChild.firstChild.firstChild
+      );
+    });
+    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
+    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
+  });
+
+  it('does not submit if no experience is present', async () => {
+    const company = {
+      experience: '',
+      portfolio: [{ description: 'some description', link: 'link' }],
+    };
+    const { container } = render(<Portfolio company={company} />);
+    await act(async () => {
+      await fireEvent.click(
+        container.firstChild.lastChild.firstChild.firstChild
+      );
+    });
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('has an alert on failure of a submission', async () => {
-    const spy = jest.spyOn(userService.userService, 'updatePortfolio');
-    userService.userService.updatePortfolio.mockRejectedValue('Some Error');
-    const { container } = render(
-      <Portfolio companyExperience="experience" portfolio={[{}]} />
+    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
+    companyService.companyService.updatePortfolio.mockRejectedValue(
+      'Some Error'
     );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
@@ -269,28 +293,32 @@ describe('portfolio', () => {
   });
 
   it('is able to close an alert after failure', async () => {
-    userService.userService.updatePortfolio.mockRejectedValue('Some Error');
-    const { container } = render(
-      <Portfolio companyExperience="experience" portfolio={[{}]} />
+    companyService.companyService.updatePortfolio.mockRejectedValue(
+      'Some Error'
     );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    await fireEvent.click(
+    fireEvent.click(
       container.firstChild.lastChild.lastChild.firstChild.firstChild
     );
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('has an alert on success of a submission', async () => {
-    const spy = jest.spyOn(userService.userService, 'updatePortfolio');
-    userService.userService.updatePortfolio.mockResolvedValue('Some Success');
-    const { container } = render(
-      <Portfolio companyExperience="experience" portfolio={[{}]} />
+    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
+    companyService.companyService.updatePortfolio.mockResolvedValue(
+      'Some Success'
     );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
@@ -327,27 +355,31 @@ describe('portfolio', () => {
   });
 
   it('is able to close an alert after success', async () => {
-    userService.userService.updatePortfolio.mockResolvedValue('Some Success');
-    const { container } = render(
-      <Portfolio companyExperience="experience" portfolio={[{}]} />
+    companyService.companyService.updatePortfolio.mockResolvedValue(
+      'Some Success'
     );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    await fireEvent.click(
+    fireEvent.click(
       container.firstChild.lastChild.lastChild.firstChild.firstChild
     );
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('removes the success alert after 5 seconds', async () => {
-    userService.userService.updatePortfolio.mockResolvedValue('Some Success');
-    const { container } = render(
-      <Portfolio companyExperience="experience" portfolio={[{}]} />
+    companyService.companyService.updatePortfolio.mockResolvedValue(
+      'Some Success'
     );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
@@ -362,20 +394,22 @@ describe('portfolio', () => {
   });
 
   it('can handle changing of values', async () => {
-    const spy = jest.spyOn(userService.userService, 'updatePortfolio');
-    userService.userService.updatePortfolio.mockResolvedValue('Some Success');
-    const { container } = render(
-      <Portfolio companyExperience="experience" portfolio={[{}]} />
+    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
+    companyService.companyService.updatePortfolio.mockResolvedValue(
+      'Some Success'
     );
-    await fireEvent.change(
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
+    fireEvent.change(
       container.firstChild.children[1].firstChild.firstChild.firstChild,
       { target: { value: 'new experience' } }
     );
-    await fireEvent.change(
+    fireEvent.change(
       container.firstChild.children[2].firstChild.firstChild.firstChild,
       { target: { value: 'some description' } }
     );
-    await fireEvent.change(
+    fireEvent.change(
       container.firstChild.children[2].lastChild.firstChild.firstChild,
       { target: { value: 'https://linkity.link' } }
     );
@@ -391,18 +425,18 @@ describe('portfolio', () => {
   });
 
   it('adds a new row once description AND link have been filled out', async () => {
-    const { container } = render(
-      <Portfolio companyExperience="" portfolio={[{}]} />
-    );
+    const company = { experience: '', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
     expect(container.children).toHaveLength(1);
     expect(container.firstChild.getAttribute('noValidate')).toEqual('');
     expect(container.firstChild.children).toHaveLength(4);
-    await fireEvent.change(
+    fireEvent.change(
       container.firstChild.children[2].firstChild.firstChild.firstChild,
       { target: { value: 'some description' } }
     );
     expect(container.firstChild.children).toHaveLength(4);
-    await fireEvent.change(
+    fireEvent.change(
       container.firstChild.children[2].lastChild.firstChild.firstChild,
       { target: { value: 'https://linkity.link' } }
     );
@@ -417,5 +451,92 @@ describe('portfolio', () => {
         'id'
       )
     ).toEqual('1:Link');
+  });
+
+  it('does not have required on last portfolio items', async () => {
+    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
+    companyService.companyService.updatePortfolio.mockResolvedValue(
+      'Some Success'
+    );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+
+    await act(async () => {
+      await fireEvent.click(
+        container.firstChild.lastChild.firstChild.firstChild
+      );
+    });
+    expect(spy).toHaveBeenCalledWith('experience', [{}]);
+
+    expect(
+      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
+    expect(
+      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
+  });
+
+  it('does have required on last portfolio items with only description', async () => {
+    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
+    companyService.companyService.updatePortfolio.mockResolvedValue(
+      'Some Success'
+    );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+    fireEvent.change(
+      container.firstChild.children[2].firstChild.firstChild.firstChild,
+      { target: { value: 'some description' } }
+    );
+    await act(async () => {
+      await fireEvent.click(
+        container.firstChild.lastChild.firstChild.firstChild
+      );
+    });
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    expect(
+      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toEqual('');
+    expect(
+      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toEqual('');
+  });
+
+  it('does have required on last portfolio items with only link', async () => {
+    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
+    companyService.companyService.updatePortfolio.mockResolvedValue(
+      'Some Success'
+    );
+    const company = { experience: 'experience', portfolio: [] };
+    const { container } = render(<Portfolio company={company} />);
+    fireEvent.change(
+      container.firstChild.children[2].lastChild.firstChild.firstChild,
+      { target: { value: 'some link' } }
+    );
+    await act(async () => {
+      await fireEvent.click(
+        container.firstChild.lastChild.firstChild.firstChild
+      );
+    });
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    expect(
+      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toEqual('');
+    expect(
+      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toEqual('');
   });
 });

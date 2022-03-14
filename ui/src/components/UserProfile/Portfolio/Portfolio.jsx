@@ -83,7 +83,7 @@ function Portfolio(props) {
     setExperience(value);
   };
 
-  const updatePortfilioItems = (key) => {
+  const updatePortfolioItems = (key) => {
     addRequired();
     // pull the data that we need/want
     const parts = key.split(':');
@@ -135,11 +135,11 @@ function Portfolio(props) {
       </Row>
       {portfolioItems.map((portfolioItem, index) => (
         <PortfolioItem
-          key={portfolioItem.id || index}
+          key={portfolioItem.id || index - 10}
           order={index}
           link={portfolioItem.link}
           description={portfolioItem.description}
-          onChange={updatePortfilioItems}
+          onChange={updatePortfolioItems}
         />
       ))}
       <Row className="mb-3">
