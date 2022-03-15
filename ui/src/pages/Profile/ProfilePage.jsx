@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Stack } from 'react-bootstrap';
 import { userService } from '../../services/user.service';
+import { companyService } from '../../services/company.service';
 import AccountInformation from '../../components/UserProfile/AccountInformation/AccountInformation';
 import PersonalInformation from '../../components/UserProfile/PersonalInformation/PersonalInformation';
+import Portfolio from '../../components/UserProfile/Portfolio/Portfolio';
 
 function ProfilePage() {
   const [user, setUser] = useState({});
+  const [company, setCompany] = useState({});
 
   useEffect(() => {
     userService.get().then((user) => {
       setUser(user);
+    });
+    companyService.get().then((company) => {
+      setCompany(company);
     });
   }, []);
 
@@ -28,7 +34,7 @@ function ProfilePage() {
           <Col>
             <Stack>
               <PersonalInformation user={user} />
-              <h3>Portfolio</h3>
+              <Portfolio company={company} />
             </Stack>
           </Col>
         </Row>

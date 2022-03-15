@@ -1,27 +1,28 @@
 const { By, until } = require('selenium-webdriver');
-const Base = require('./common/base');
 require('chromedriver');
+const Test = require("./common/Test");
 
 describe('log in page', () => {
+  let test;
   let driver;
-  let user;
 
   beforeEach(async () => {
+    test = new Test();
     //add a user
-    user = Base.addUser('loginUser');
+    test.addUser('loginUser');
     // load the default page
-    driver = await Base.getDriver();
+    driver = await test.getDriver();
   }, 10000);
 
   afterEach(async () => {
     //delete the user
-    await Base.removeUser(user.username);
+    await test.removeUser();
     // close the driver
-    await Base.cleanUp(driver);
+    await test.cleanUp();
   }, 15000);
 
   it('takes you to the login page when not authenticated', async () => {
-    expect(await driver.getCurrentUrl()).toEqual(Base.getApp() + '/login');
+    expect(await driver.getCurrentUrl()).toEqual(Test.getApp() + '/login');
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Login');
   });
 
@@ -40,11 +41,11 @@ describe('log in page', () => {
   });
 
   it('allows you to login with a valid user', async () => {
-    await driver.findElement(By.id('formUsername')).sendKeys(user.username);
+    await driver.findElement(By.id('formUsername')).sendKeys('loginUser');
     await driver.findElement(By.id('formPassword')).sendKeys('password');
     await driver.findElement(By.id('loginButton')).click();
     const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
-    expect(await dropDownMenu.getText()).toEqual(user.username);
+    expect(await dropDownMenu.getText()).toEqual('loginUser');
   });
 
   it('does not allow you to login with an invalid user', async () => {
@@ -56,7 +57,7 @@ describe('log in page', () => {
   });
 
   it('does not allow you to login with an invalid password', async () => {
-    await driver.findElement(By.id('formUsername')).sendKeys(user.username);
+    await driver.findElement(By.id('formUsername')).sendKeys('loginUser');
     await driver.findElement(By.id('formPassword')).sendKeys('passwor');
     driver.findElement(By.id('loginButton')).click();
     const header = driver.wait(until.elementLocated(By.className('alert-danger')));

@@ -1,23 +1,25 @@
 const { By, until } = require('selenium-webdriver');
-const Base = require('./common/base');
+const Test = require('./common/Test');
 require('chromedriver');
 
 describe('home page', () => {
+  let test;
   let driver;
   let user;
 
   beforeEach(async () => {
+    test = new Test();
     // load the default page
-    driver = await Base.getDriver();
-    user = await Base.loginUser(driver, 'responsiveUser');
-    await driver.get(Base.getApp());
+    driver = await test.getDriver();
+    user = await test.loginUser('responsiveUser');
+    await driver.get(Test.getApp());
   }, 10000);
 
   afterEach(async () => {
     //delete the user
-    await Base.removeUser(user.username);
+    await test.removeUser();
     // close the driver
-    await Base.cleanUp(driver);
+    await test.cleanUp();
   }, 15000);
 
   it('displays full menu at large size', async () => {

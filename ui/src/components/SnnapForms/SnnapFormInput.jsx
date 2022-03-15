@@ -3,18 +3,26 @@ import React from 'react';
 import './SnnapForm.css';
 
 function SnnapFormInput(props) {
-  const { size, name, value, type, onChange, readOnly } = props;
+  const { size, name, id, value, type, onChange, readOnly } = props;
   if (!name) {
     return null;
   }
   const safeName = name.replace(/[\W]+/g, '');
+  let controlId = `form${safeName}`;
+  if (id) {
+    controlId = id;
+  }
   let as;
   if (type === 'textarea') {
     as = type;
   }
   let change = null;
   if (onChange) {
-    change = (e) => onChange(name, e.target.value);
+    let key = name;
+    if (id) {
+      key = id;
+    }
+    change = (e) => onChange(key, e.target.value);
   }
   const formControl = (
     <Form.Control
@@ -34,8 +42,8 @@ function SnnapFormInput(props) {
   );
 
   return (
-    <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
-      <FloatingLabel controlId={`form${safeName}`} label={name}>
+    <Form.Group as={Col} md={size} controlId={controlId}>
+      <FloatingLabel controlId={controlId} label={name}>
         {formControl}
         {formError}
       </FloatingLabel>

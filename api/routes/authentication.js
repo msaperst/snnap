@@ -73,7 +73,7 @@ router.post('/login', loginValidation, async (req, res) => {
     req.body.rememberMe
   );
   try {
-    const userInfo = await user.getUserInfo();
+    const userInfo = await user.getInfo();
     userInfo.token = await user.getToken();
     return res.status(200).send(userInfo);
   } catch (error) {

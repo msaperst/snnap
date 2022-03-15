@@ -55,7 +55,7 @@ describe('User', () => {
     await expect(user.getToken()).resolves.not.toBeNull();
     await expect(user.getId()).resolves.toEqual('1');
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getUserInfo()).resolves.toEqual({
+    await expect(user.getInfo()).resolves.toEqual({
       city: undefined,
       email: 'bobert@gmail.com',
       firstName: 'Bob',
@@ -87,7 +87,7 @@ describe('User', () => {
     await expect(user.getToken()).resolves.not.toBeNull();
     await expect(user.getId()).resolves.toEqual('1');
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getUserInfo()).resolves.toEqual({
+    await expect(user.getInfo()).resolves.toEqual({
       city: undefined,
       email: 'bobert@gmail.com',
       firstName: 'Bob',
@@ -119,7 +119,7 @@ describe('User', () => {
     await expect(user.getToken()).resolves.not.toBeNull();
     await expect(user.getId()).resolves.toEqual('1');
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getUserInfo()).resolves.toEqual({
+    await expect(user.getInfo()).resolves.toEqual({
       city: undefined,
       email: 'bobert@gmail.com',
       firstName: 'Bob',
@@ -182,7 +182,7 @@ describe('User', () => {
     await expect(user.getToken()).resolves.toEqual(undefined);
     await expect(user.getId()).resolves.toEqual(15);
     await expect(user.getUsername()).resolves.toEqual('Robert');
-    await expect(user.getUserInfo()).resolves.toEqual({
+    await expect(user.getInfo()).resolves.toEqual({
       city: 'City',
       email: 'bobert@example.org',
       firstName: 'Bob',
@@ -247,7 +247,7 @@ describe('User', () => {
     await expect(user.getToken()).resolves.toEqual(token);
     await expect(user.getId()).resolves.toEqual(1);
     await expect(user.getUsername()).resolves.toEqual('Bob');
-    await expect(user.getUserInfo()).resolves.toEqual({
+    await expect(user.getInfo()).resolves.toEqual({
       city: undefined,
       email: 'bobert@gmail.com',
       firstName: 'Bob',

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users
     last_login datetime,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 4
+  AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 

@@ -1,25 +1,27 @@
 const { By, until } = require('selenium-webdriver');
-const Base = require('./common/base');
+const Test = require('./common/Test');
 require('chromedriver');
+const Mysql = require("../api/services/Mysql");
 
 describe('register page', () => {
+  let test;
   let driver;
-  let user;
 
   beforeEach(async () => {
+    test = new Test();
     // load the default page
-    driver = await Base.getDriver('/register');
+    driver = await test.getDriver('/register');
   }, 10000);
 
   afterEach(async () => {
     //delete the user
-    await Base.removeUser('registerUser');
+    await test.removeUser();
     // close the driver
-    await Base.cleanUp(driver);
+    await test.cleanUp();
   }, 15000);
 
   it('takes us to the register page', async () => {
-    expect(await driver.getCurrentUrl()).toEqual(Base.getApp() + '/register');
+    expect(await driver.getCurrentUrl()).toEqual(Test.getApp() + '/register');
   });
 
   it('shows the register header', async () => {
@@ -54,6 +56,11 @@ describe('register page', () => {
     await register('Test', 'User', 'registerUser', 'registerUser@example.org', '0123456789', 'password', 'City', 'State', 'Zip', true);
     const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
     expect(await dropDownMenu.getText()).toEqual('registerUser');
+    await Mysql.query(
+      `DELETE
+         FROM users
+         WHERE username = 'registerUser';`
+    );
   });
 
   it('does not allow you to register without a valid email', async () => {
@@ -65,14 +72,14 @@ describe('register page', () => {
   });
 
   it('does not allow you to register with a duplicate email', async () => {
-    user = Base.addUser('registerUser');
+    test.addUser('registerUser');
     await register('Test', 'User', 'registerUser', 'registerUser@example.org', '0123456789', 'password', 'City', 'State', 'Zip', true);
     const alert = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await alert.getText()).toEqual('This email is already in our system. Try resetting your password.');
   });
 
   it('does not allow you to register with a duplicate username', async () => {
-    user = Base.addUser('registerUser');
+    test.addUser('registerUser');
     await register('Test', 'User', 'registerUser', 'registerUser1@example.org', '0123456789', 'password', 'City', 'State', 'Zip', true);
     const alert = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await alert.getText()).toEqual('Sorry, that username is already in use.');
