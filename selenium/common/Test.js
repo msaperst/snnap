@@ -25,7 +25,7 @@ class Test {
       .setChromeOptions(new Options().headless())
       .build();
     await driver.get(Test.getApp() + url);
-    await driver.manage().window().setSize(1200, 800);
+    await driver.manage().window().setSize(1200, 1800);
     this.driver = driver;
     return driver;
   }

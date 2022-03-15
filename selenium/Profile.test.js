@@ -318,8 +318,8 @@ describe('profile page', () => {
     expect(await feedback[0].isDisplayed()).toBeTruthy();
     // blank last portfolio link doesn't need to be filled in
     expect(await feedback[1].getText()).toEqual('');
-    expect(await feedback[2].getText()).toEqual('');
     expect(await feedback[1].isDisplayed()).toBeFalsy();
+    expect(await feedback[2].getText()).toEqual('');
     expect(await feedback[2].isDisplayed()).toBeFalsy();
   });
 
@@ -393,16 +393,16 @@ describe('profile page', () => {
     expect(await link.getAttribute('value')).toEqual('Link');
   });
 
-  it('adds a new row when you fill out both description and link', () => {
+  it('adds a new row when you fill out both description and link', async () => {
     let experience = driver.wait(until.elementLocated(By.id('formExperience')));
     let description = driver.wait(until.elementLocated(By.id('0:Description')));
     let link = driver.wait(until.elementLocated(By.id('0:Link')));
-    expect(driver.findElements(By.id('1:Description'))).toHaveLength(0);
-    expect(driver.findElements(By.id('1:Link'))).toHaveLength(0);
+    expect(await driver.findElements(By.id('1:Description'))).toHaveLength(0);
+    expect(await driver.findElements(By.id('1:Link'))).toHaveLength(0);
     experience.sendKeys('Some Experience');
     description.sendKeys('Description')
     link.sendKeys('Link')
-    expect(driver.findElements(By.id('1:Description'))).toHaveLength(1);
-    expect(driver.findElements(By.id('1:Link'))).toHaveLength(1);
+    expect(await driver.findElements(By.id('1:Description'))).toHaveLength(1);
+    expect(await driver.findElements(By.id('1:Link'))).toHaveLength(1);
   });
 });
