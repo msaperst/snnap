@@ -5,6 +5,7 @@ import { companyService } from '../../services/company.service';
 import AccountInformation from '../../components/UserProfile/AccountInformation/AccountInformation';
 import PersonalInformation from '../../components/UserProfile/PersonalInformation/PersonalInformation';
 import Portfolio from '../../components/UserProfile/Portfolio/Portfolio';
+import Password from '../../components/UserProfile/Password/Password';
 
 function ProfilePage() {
   const [user, setUser] = useState({});
@@ -27,7 +28,7 @@ function ProfilePage() {
           <Col>
             <Stack>
               <AccountInformation user={user} />
-              <h3>Update Password</h3>
+              <Password />
               <h3>Company Information</h3>
             </Stack>
           </Col>
