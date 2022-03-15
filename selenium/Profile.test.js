@@ -284,11 +284,125 @@ describe('profile page', () => {
     expect(await lastName.getAttribute('value')).toEqual('User0');
     expect(await city.getAttribute('value')).toEqual('City0');
     expect(await state.getAttribute('value')).toEqual('State0');
-    expect(await zip.getAttribute('value')).toEqual('Zip0');  });
+    expect(await zip.getAttribute('value')).toEqual('Zip0');
+  });
 
   /////////////////
   // Portfolio
   ////////////////
 
-  // TODO
+  it('shows the portfolio information', async () => {
+    driver.wait(until.elementLocated(By.tagName('h2')));
+    const portfolioInfo = (await driver.findElements(By.tagName('form')))[2];
+    expect(await portfolioInfo.findElement(By.tagName('h3')).getText()).toEqual('Portfolio');
+  });
+
+  it('displays the experience', async () => {
+    const experience = driver.wait(until.elementLocated(By.id('formExperience')));
+    expect(await experience.getAttribute('value')).toEqual('');
+    expect(await experience.getAttribute('readonly')).toBeNull();
+  });
+
+  it('shows error when you update portfolio blank information', async () => {
+    driver.wait(until.elementLocated(By.tagName('h2')));
+    const portfolio = (await driver.findElements(By.tagName('form')))[2];
+    driver.wait(until.elementLocated(By.id('0:Description')));
+    const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
+    expect(feedback.length).toEqual(3);
+    for (let i = 0; i < feedback.length; i++) {
+      expect(await feedback[i].getText()).toEqual('');
+      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    }
+    driver.findElement(By.id('savePortfolioButton')).click();
+    expect(await feedback[0].getText()).toEqual('Please provide a valid experience.');
+    expect(await feedback[0].isDisplayed()).toBeTruthy();
+    // blank last portfolio link doesn't need to be filled in
+    expect(await feedback[1].getText()).toEqual('');
+    expect(await feedback[2].getText()).toEqual('');
+    expect(await feedback[1].isDisplayed()).toBeFalsy();
+    expect(await feedback[2].isDisplayed()).toBeFalsy();
+  });
+
+  it('throws an error if you try to submit with only a description filled out', async () => {
+    driver.wait(until.elementLocated(By.tagName('h2')));
+    const portfolio = (await driver.findElements(By.tagName('form')))[2];
+    driver.wait(until.elementLocated(By.id('0:Description')));
+    const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
+    expect(feedback.length).toEqual(3);
+    for (let i = 0; i < feedback.length; i++) {
+      expect(await feedback[i].getText()).toEqual('');
+      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    }
+    let experience = driver.wait(until.elementLocated(By.id('formExperience')));
+    let description = driver.wait(until.elementLocated(By.id('0:Description')));
+    experience.sendKeys('Some Experience');
+    description.sendKeys('Some Description');
+    driver.findElement(By.id('savePortfolioButton')).click();
+    expect(await feedback[0].getText()).toEqual('');
+    expect(await feedback[0].isDisplayed()).toBeFalsy();
+    expect(await feedback[1].getText()).toEqual('');
+    expect(await feedback[1].isDisplayed()).toBeFalsy();
+    expect(await feedback[2].getText()).toEqual('Please provide a valid link.');
+    expect(await feedback[2].isDisplayed()).toBeTruthy();
+  });
+
+  it('throws an error if you try to submit with only a link filled out', async () => {
+    driver.wait(until.elementLocated(By.tagName('h2')));
+    const portfolio = (await driver.findElements(By.tagName('form')))[2];
+    driver.wait(until.elementLocated(By.id('0:Description')));
+    const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
+    expect(feedback.length).toEqual(3);
+    for (let i = 0; i < feedback.length; i++) {
+      expect(await feedback[i].getText()).toEqual('');
+      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    }
+    let experience = driver.wait(until.elementLocated(By.id('formExperience')));
+    let link = driver.wait(until.elementLocated(By.id('0:Link')));
+    experience.sendKeys('Some Experience');
+    link.sendKeys('Linky');
+    driver.findElement(By.id('savePortfolioButton')).click();
+    expect(await feedback[0].getText()).toEqual('');
+    expect(await feedback[0].isDisplayed()).toBeFalsy();
+    expect(await feedback[1].getText()).toEqual('Please provide a valid description.');
+    expect(await feedback[1].isDisplayed()).toBeTruthy();
+    expect(await feedback[2].getText()).toEqual('');
+    expect(await feedback[2].isDisplayed()).toBeFalsy();
+  });
+
+  it('allows updating the portfolio values', async () => {
+    let experience = driver.wait(until.elementLocated(By.id('formExperience')));
+    let description = driver.wait(until.elementLocated(By.id('0:Description')));
+    let link = driver.wait(until.elementLocated(By.id('0:Link')));
+    experience.sendKeys('Some Experience');
+    description.sendKeys('Description')
+    link.sendKeys('Link')
+    expect(await experience.getAttribute('value')).toEqual('Some Experience');
+    expect(await description.getAttribute('value')).toEqual('Description');
+    expect(await link.getAttribute('value')).toEqual('Link');
+    await driver.findElement(By.id('savePortfolioButton')).click();
+    const success = driver.wait(until.elementLocated(By.className('alert-success')));
+    expect(await success.getText()).toEqual('Portfolio Updated');
+    await Test.sleep(5000);
+    expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
+    driver.navigate().refresh();
+    experience = driver.wait(until.elementLocated(By.id('formExperience')));
+    description = driver.wait(until.elementLocated(By.id('0:Description')));
+    link = driver.wait(until.elementLocated(By.id('0:Link')));
+    expect(await experience.getAttribute('value')).toEqual('Some Experience');
+    expect(await description.getAttribute('value')).toEqual('Description');
+    expect(await link.getAttribute('value')).toEqual('Link');
+  });
+
+  it('adds a new row when you fill out both description and link', () => {
+    let experience = driver.wait(until.elementLocated(By.id('formExperience')));
+    let description = driver.wait(until.elementLocated(By.id('0:Description')));
+    let link = driver.wait(until.elementLocated(By.id('0:Link')));
+    expect(driver.findElements(By.id('1:Description'))).toHaveLength(0);
+    expect(driver.findElements(By.id('1:Link'))).toHaveLength(0);
+    experience.sendKeys('Some Experience');
+    description.sendKeys('Description')
+    link.sendKeys('Link')
+    expect(driver.findElements(By.id('1:Description'))).toHaveLength(1);
+    expect(driver.findElements(By.id('1:Link'))).toHaveLength(1);
+  });
 });
