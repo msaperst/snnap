@@ -36,10 +36,10 @@ describe('profile page', () => {
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Profile');
   });
 
-  it('has 2 different forms for updated data', async () => {
+  it('has 4 different forms for updated data', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
     const forms = await driver.findElements(By.tagName('form'));
-    expect(forms).toHaveLength(3);
+    expect(forms).toHaveLength(4);
 
   });
 
