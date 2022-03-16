@@ -8,8 +8,7 @@ function Password() {
   const [validated, setValidated] = useState(false);
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
-
-  const formData = {};
+  const [formData, setFormData] = useState({});
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -38,7 +37,7 @@ function Password() {
   };
 
   const updateForm = (key, value) => {
-    formData[key] = value;
+    setFormData({ ...formData, [key]: value });
   };
 
   return (

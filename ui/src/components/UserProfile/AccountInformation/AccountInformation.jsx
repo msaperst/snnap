@@ -1,5 +1,5 @@
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import Avatar from '../Avatar/Avatar';
 import { userService } from '../../../services/user.service';
@@ -9,13 +9,18 @@ function AccountInformation(props) {
   const [validated, setValidated] = useState(false);
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
+  const [formData, setFormData] = useState(null);
   const { user } = props;
+
+  useEffect(() => {
+    if (user) {
+      setFormData({ Email: user.email, Number: user.number });
+    }
+  }, [user]);
 
   if (user === undefined) {
     return null;
   }
-
-  const formData = { Email: user.email, Number: user.number };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -44,7 +49,7 @@ function AccountInformation(props) {
   };
 
   const updateForm = (key, value) => {
-    formData[key] = value;
+    setFormData({ ...formData, [key]: value });
   };
 
   return (

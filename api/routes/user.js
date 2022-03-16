@@ -149,4 +149,42 @@ router.post(
   }
 );
 
+const updatePasswordValidation = [
+  check('currentPassword', 'Current password is required').not().isEmpty(),
+  check('newPassword', 'Password must be 6 or more characters').isLength({
+    min: 6,
+  }),
+];
+
+router.post('/update-password', updatePasswordValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
+  let token;
+  try {
+    token = await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  try {
+    const user = User.auth(token);
+    await user.updatePassword(req.body.currentPassword, req.body.newPassword);
+    return res.status(200).send();
+  } catch (error) {
+    switch (error.message) {
+      case "Current password doesn't match existing password.":
+        return res.status(409).send({
+          msg: error.message,
+        });
+      default:
+        return res.status(422).send({
+          msg: error.message,
+        });
+    }
+  }
+});
+
 module.exports = router;
