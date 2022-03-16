@@ -355,4 +355,75 @@ describe('User', () => {
       )
     ).toBeUndefined();
   });
+
+  it('throws an error when the password has an error via update password', async () => {
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'Bob',
+          last_name: 'Robert',
+          username: 'Bob',
+          name: 'Robert',
+          email: 'bobert@gmail.com',
+          last_login: '123',
+        },
+      ])
+      .mockResolvedValue([]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = await User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValue([{ username: 'password' }]);
+    await expect(user.updatePassword('Bob', 'password')).rejects.toEqual(
+      new Error("Current password doesn't match existing password.")
+    );
+    expect(spy).toHaveBeenCalledTimes(2);
+  });
+
+  it('throws an error when the password does not match via update password', async () => {
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'Bob',
+          last_name: 'Robert',
+          username: 'Bob',
+          name: 'Robert',
+          email: 'bobert@gmail.com',
+          last_login: '123',
+        },
+      ])
+      .mockResolvedValue([]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = await User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValue([{ password: 'password' }]);
+    await expect(user.updatePassword('Bob', 'password')).rejects.toEqual(
+      new Error("Current password doesn't match existing password.")
+    );
+    expect(spy).toHaveBeenCalledTimes(2);
+  });
+
+  it('sets the password on valid credentials', async () => {
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'Bob',
+          last_name: 'Robert',
+          username: 'Bob',
+          name: 'Robert',
+          email: 'bobert@gmail.com',
+          last_login: '123',
+        },
+      ])
+      .mockResolvedValue([]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = await User.auth(token);
+    const hash = await bcrypt.hash('password', 10);
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValue([{ password: hash }]);
+    await user.updatePassword('password', 'password');
+    expect(spy).toHaveBeenCalledTimes(3);
+  });
 });

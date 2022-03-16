@@ -6,6 +6,7 @@ export const userService = {
   updateAccountInformation,
   updatePersonalInformation,
   uploadAvatar,
+  updatePassword,
 };
 
 function get(id) {
@@ -54,4 +55,18 @@ async function uploadAvatar(avatar) {
     body: JSON.stringify({ avatar }),
   };
   return fetch('/api/user/set-avatar', requestOptions).then(handleResponse);
+}
+
+async function updatePassword(currentPassword, newPassword) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ currentPassword, newPassword }),
+  };
+
+  return fetch(`/api/user/update-password`, requestOptions).then(
+    handleResponse
+  );
 }

@@ -36,10 +36,10 @@ describe('profile page', () => {
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Profile');
   });
 
-  it('has 2 different forms for updated data', async () => {
+  it('has 4 different forms for updated data', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
     const forms = await driver.findElements(By.tagName('form'));
-    expect(forms).toHaveLength(3);
+    expect(forms).toHaveLength(4);
 
   });
 
@@ -188,7 +188,7 @@ describe('profile page', () => {
 
   it('shows the personal information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const personalInfo = (await driver.findElements(By.tagName('form')))[1];
+    const personalInfo = (await driver.findElements(By.tagName('form')))[2];
     expect(await personalInfo.findElement(By.tagName('h3')).getText()).toEqual('Personal Information');
   });
 
@@ -229,7 +229,7 @@ describe('profile page', () => {
 
   it('shows error when you update profile blank information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const profile = (await driver.findElements(By.tagName('form')))[1];
+    const profile = (await driver.findElements(By.tagName('form')))[2];
     const feedback = (await profile.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(5);
     for (let i = 0; i < feedback.length; i++) {
@@ -293,7 +293,7 @@ describe('profile page', () => {
 
   it('shows the portfolio information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolioInfo = (await driver.findElements(By.tagName('form')))[2];
+    const portfolioInfo = (await driver.findElements(By.tagName('form')))[3];
     expect(await portfolioInfo.findElement(By.tagName('h3')).getText()).toEqual('Portfolio');
   });
 
@@ -305,7 +305,7 @@ describe('profile page', () => {
 
   it('shows error when you update portfolio blank information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolio = (await driver.findElements(By.tagName('form')))[2];
+    const portfolio = (await driver.findElements(By.tagName('form')))[3];
     driver.wait(until.elementLocated(By.id('0:Description')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
@@ -325,7 +325,7 @@ describe('profile page', () => {
 
   it('throws an error if you try to submit with only a description filled out', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolio = (await driver.findElements(By.tagName('form')))[2];
+    const portfolio = (await driver.findElements(By.tagName('form')))[3];
     driver.wait(until.elementLocated(By.id('0:Description')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
@@ -348,7 +348,7 @@ describe('profile page', () => {
 
   it('throws an error if you try to submit with only a link filled out', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolio = (await driver.findElements(By.tagName('form')))[2];
+    const portfolio = (await driver.findElements(By.tagName('form')))[3];
     driver.wait(until.elementLocated(By.id('0:Description')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
@@ -404,5 +404,78 @@ describe('profile page', () => {
     link.sendKeys('Link')
     expect(await driver.findElements(By.id('1:Description'))).toHaveLength(1);
     expect(await driver.findElements(By.id('1:Link'))).toHaveLength(1);
+  });
+
+  //////////////////
+  // Profile
+  //////////////////
+
+  it('shows the password', async () => {
+    driver.wait(until.elementLocated(By.tagName('h2')));
+    const password = (await driver.findElements(By.tagName('form')))[1];
+    expect(await password.findElement(By.tagName('h3')).getText()).toEqual('Password');
+  });
+
+  it('displays the current password', async () => {
+    const currentPassword = driver.wait(until.elementLocated(By.id('formCurrentPassword')));
+    expect(await currentPassword.getAttribute('value')).toEqual('');
+    expect(await currentPassword.getAttribute('readonly')).toBeNull();
+  });
+
+  it('displays the new password', async () => {
+    const newPassword = driver.wait(until.elementLocated(By.id('formNewPassword')));
+    expect(await newPassword.getAttribute('value')).toEqual('');
+    expect(await newPassword.getAttribute('readonly')).toBeNull();
+  });
+
+  it('shows error when you update password blank information', async () => {
+    driver.wait(until.elementLocated(By.tagName('h2')));
+    const profile = (await driver.findElements(By.tagName('form')))[1];
+    const feedback = (await profile.findElements(By.className('invalid-feedback')));
+    expect(feedback.length).toEqual(2);
+    for (let i = 0; i < feedback.length; i++) {
+      expect(await feedback[i].getText()).toEqual('');
+      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    }
+    driver.findElement(By.id('savePasswordButton')).click();
+    expect(await feedback[0].getText()).toEqual('Please provide a valid current password.');
+    expect(await feedback[1].getText()).toEqual('Please provide a valid new password.');
+    for (let i = 0; i < feedback.length; i++) {
+      expect(await feedback[i].isDisplayed()).toBeTruthy();
+    }
+  });
+
+  it('allows updating the password values', async () => {
+    const currentPassword = driver.wait(until.elementLocated(By.id('formCurrentPassword')));
+    const newPassword = driver.wait(until.elementLocated(By.id('formNewPassword')));
+    currentPassword.sendKeys('password');
+    newPassword.sendKeys('password1')
+    expect(await currentPassword.getAttribute('value')).toEqual('password');
+    expect(await newPassword.getAttribute('value')).toEqual('password1');
+    await driver.findElement(By.id('savePasswordButton')).click();
+    const success = driver.wait(until.elementLocated(By.className('alert-success')));
+    expect(await success.getText()).toEqual('Password Updated');
+    await Test.sleep(5000);
+    expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
+  });
+
+  it('does not allow updating with a bad password', async () => {
+    const currentPassword = driver.wait(until.elementLocated(By.id('formCurrentPassword')));
+    const newPassword = driver.wait(until.elementLocated(By.id('formNewPassword')));
+    currentPassword.sendKeys('pass');
+    newPassword.sendKeys('password1')
+    await driver.findElement(By.id('savePasswordButton')).click();
+    const danger = driver.wait(until.elementLocated(By.className('alert-danger')));
+    expect(await danger.getText()).toEqual('Current password doesn\'t match existing password.');
+  });
+
+  it('does not allow updating with a too short password', async () => {
+    const currentPassword = driver.wait(until.elementLocated(By.id('formCurrentPassword')));
+    const newPassword = driver.wait(until.elementLocated(By.id('formNewPassword')));
+    currentPassword.sendKeys('pass');
+    newPassword.sendKeys('pass')
+    await driver.findElement(By.id('savePasswordButton')).click();
+    const danger = driver.wait(until.elementLocated(By.className('alert-danger')));
+    expect(await danger.getText()).toEqual('Password must be 6 or more characters');
   });
 });

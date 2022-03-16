@@ -1,5 +1,5 @@
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import { userService } from '../../../services/user.service';
 
@@ -8,19 +8,24 @@ function PersonalInformation(props) {
   const [validated, setValidated] = useState(false);
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
+  const [formData, setFormData] = useState(null);
   const { user } = props;
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        'First Name': user.firstName,
+        'Last Name': user.lastName,
+        City: user.city,
+        State: user.state,
+        Zip: user.zip,
+      });
+    }
+  }, [user]);
 
   if (user === undefined) {
     return null;
   }
-
-  const formData = {
-    'First Name': user.firstName,
-    'Last Name': user.lastName,
-    City: user.city,
-    State: user.state,
-    Zip: user.zip,
-  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -55,7 +60,7 @@ function PersonalInformation(props) {
   };
 
   const updateForm = (key, value) => {
-    formData[key] = value;
+    setFormData({ ...formData, [key]: value });
   };
 
   return (

@@ -176,6 +176,28 @@ const User = class {
     );
   }
 
+  async updatePassword(currentPassword, newPassword) {
+    const user = await Mysql.query(
+      `SELECT password FROM users WHERE id = ${await this.getId()};`
+    );
+    let bcryptResult;
+    try {
+      bcryptResult = await bcrypt.compare(currentPassword, user[0].password);
+    } catch (error) {
+      throw new Error("Current password doesn't match existing password.");
+    }
+    if (bcryptResult) {
+      const hash = await bcrypt.hash(newPassword, 10);
+      await Mysql.query(
+        `UPDATE users
+         SET password = ${db.escape(hash)}
+         WHERE id = ${await this.getId()}`
+      );
+    } else {
+      throw new Error("Current password doesn't match existing password.");
+    }
+  }
+
   async getToken() {
     await this.instancePromise;
     return this.token;
