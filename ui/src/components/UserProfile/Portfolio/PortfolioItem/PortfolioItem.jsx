@@ -9,14 +9,14 @@ function PortfolioItem(props) {
     <Row className="mb-3">
       <SnnapFormInput
         id={`${order}:Description`}
-        name="Description"
+        name="Gallery Description"
         type="textarea"
         value={description}
         onChange={onChange}
       />
       <SnnapFormInput
         id={`${order}:Link`}
-        name="Link"
+        name="Gallery Link"
         value={link}
         onChange={onChange}
       />
