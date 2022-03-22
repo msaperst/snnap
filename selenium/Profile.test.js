@@ -342,7 +342,7 @@ describe('profile page', () => {
     expect(await feedback[0].isDisplayed()).toBeFalsy();
     expect(await feedback[1].getText()).toEqual('');
     expect(await feedback[1].isDisplayed()).toBeFalsy();
-    expect(await feedback[2].getText()).toEqual('Please provide a valid link.');
+    expect(await feedback[2].getText()).toEqual('Please provide a valid gallery link.');
     expect(await feedback[2].isDisplayed()).toBeTruthy();
   });
 
@@ -363,7 +363,7 @@ describe('profile page', () => {
     driver.findElement(By.id('savePortfolioButton')).click();
     expect(await feedback[0].getText()).toEqual('');
     expect(await feedback[0].isDisplayed()).toBeFalsy();
-    expect(await feedback[1].getText()).toEqual('Please provide a valid description.');
+    expect(await feedback[1].getText()).toEqual('Please provide a valid gallery description.');
     expect(await feedback[1].isDisplayed()).toBeTruthy();
     expect(await feedback[2].getText()).toEqual('');
     expect(await feedback[2].isDisplayed()).toBeFalsy();

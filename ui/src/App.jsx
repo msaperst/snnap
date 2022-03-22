@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import { Col, Row } from 'react-bootstrap';
-import HomePage from './pages/Home/HomePage';
-import LoginPage from './pages/Login/LoginPage';
-import RegisterPage from './pages/Register/RegisterPage';
-import Menu from './components/Menu/Menu';
-import ProfilePage from './pages/Profile/ProfilePage';
-import { PrivateRoute } from './helpers/PrivateRoute';
-import './App.css';
-import NotFound from './pages/NotFound/NotFound';
 import { authenticationService } from './services/authentication.service';
+import { PrivateRoute } from './helpers/PrivateRoute';
+import Menu from './components/Menu/Menu';
+import './App.css';
+
+const HomePage = lazy(() => import('./pages/Home/HomePage'));
+const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
+const RegisterPage = lazy(() => import('./pages/Register/RegisterPage'));
+const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
+const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
 function App() {
   const navigate = useNavigate();
@@ -35,27 +36,29 @@ function App() {
             <Menu currentUser={currentUser} logout={logout} />
           </Col>
         </Row>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <HomePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <ProfilePage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback="Loading...">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <HomePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Container>
     </div>
   );
