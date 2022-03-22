@@ -44,6 +44,16 @@ npm run start
 ## Testing
 
 ### Unit
+Unit tests exist for both the API and the UI. To execute these tests, simply navigate 
+to the folder, and run the test command:
+```shell
+npm install
+npm run test
+```
+Coverage goals are set to 95%, so even if all tests pass, the execution might fail 
+if desired coverage isn't acheived. With that, not all directories are required for
+coverage; checkout `package.json` in each directory to determine what files need
+coverage.
 
 ### Integration
 
@@ -66,9 +76,3 @@ a GitHub action that runs on each push. This runs UTs, ITs, along with some lint
 security scanning of dependencies.
 When a PR is opened, the functional tests are executed.
 These are all set as checks before the code can be merged into `main`
-
-## Things to fix
-- Auto populate db using ./setup-database.sh script
-- Retrieve backend port using env for nginx instead of hard-coding
-
-REFACTOR FOR UI UT TESTING
