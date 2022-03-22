@@ -4,6 +4,7 @@ import { handleResponse } from '../helpers/handle-response';
 export const companyService = {
   get,
   updatePortfolio,
+  updateCompanyInformation,
 };
 
 function get(id) {
@@ -25,6 +26,20 @@ function updatePortfolio(experience, portfolioItems) {
   };
 
   return fetch(`/api/company/update-portfolio`, requestOptions).then(
+    handleResponse
+  );
+}
+
+function updateCompanyInformation(name, website, insta, fb, equipment, skills) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ name, website, insta, fb, equipment, skills }),
+  };
+
+  return fetch(`/api/company/update-company-information`, requestOptions).then(
     handleResponse
   );
 }

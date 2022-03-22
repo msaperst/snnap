@@ -3,7 +3,8 @@ import React from 'react';
 import './SnnapForm.css';
 
 function SnnapFormInput(props) {
-  const { size, name, id, value, type, onChange, readOnly } = props;
+  const { size, name, id, value, type, onChange, readOnly, notRequired } =
+    props;
   if (!name) {
     return null;
   }
@@ -24,9 +25,13 @@ function SnnapFormInput(props) {
     }
     change = (e) => onChange(key, e.target.value);
   }
+  let required = true;
+  if (notRequired) {
+    required = false;
+  }
   const formControl = (
     <Form.Control
-      required
+      required={required}
       type={type}
       as={as}
       placeholder={name}

@@ -4,6 +4,8 @@ import './SnnapForm.css';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 
+import './SnnapFormMultiSelect.css';
+
 const animatedComponents = makeAnimated();
 
 function SnnapFormMultiSelect(props) {
@@ -26,6 +28,7 @@ function SnnapFormMultiSelect(props) {
       components={animatedComponents}
       placeholder={name}
       isMulti
+      className="multi-select-form"
       onChange={change}
     />
   );
