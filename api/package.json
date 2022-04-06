@@ -60,7 +60,7 @@
     "eslint-plugin-react-hooks": "^4.4.0",
     "jest": "^27.5.1",
     "jest-html-reporter": "^3.4.2",
-    "jest-junit": "^13.0.0",
+    "jest-junit": "^13.1.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.6.2"
   },
