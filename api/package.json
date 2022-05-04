@@ -61,7 +61,7 @@
     "jest": "^28.0.3",
     "jest-html-reporter": "^3.5.0",
     "jest-junit": "^13.2.0",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.16",
     "prettier": "^2.6.2"
   },
   "eslintConfig": {
