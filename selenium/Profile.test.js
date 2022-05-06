@@ -39,7 +39,7 @@ describe('profile page', () => {
   it('has 4 different forms for updated data', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
     const forms = await driver.findElements(By.tagName('form'));
-    expect(forms).toHaveLength(4);
+    expect(forms).toHaveLength(5);
 
   });
 
@@ -188,7 +188,7 @@ describe('profile page', () => {
 
   it('shows the personal information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const personalInfo = (await driver.findElements(By.tagName('form')))[2];
+    const personalInfo = (await driver.findElements(By.tagName('form')))[1];
     expect(await personalInfo.findElement(By.tagName('h3')).getText()).toEqual('Personal Information');
   });
 
@@ -229,7 +229,7 @@ describe('profile page', () => {
 
   it('shows error when you update profile blank information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const profile = (await driver.findElements(By.tagName('form')))[2];
+    const profile = (await driver.findElements(By.tagName('form')))[1];
     const feedback = (await profile.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(5);
     for (let i = 0; i < feedback.length; i++) {
@@ -293,7 +293,7 @@ describe('profile page', () => {
 
   it('shows the portfolio information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolioInfo = (await driver.findElements(By.tagName('form')))[3];
+    const portfolioInfo = (await driver.findElements(By.tagName('form')))[4];
     expect(await portfolioInfo.findElement(By.tagName('h3')).getText()).toEqual('Portfolio');
   });
 
@@ -305,7 +305,7 @@ describe('profile page', () => {
 
   it('shows error when you update portfolio blank information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolio = (await driver.findElements(By.tagName('form')))[3];
+    const portfolio = (await driver.findElements(By.tagName('form')))[4];
     driver.wait(until.elementLocated(By.id('0:Description')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
@@ -325,7 +325,7 @@ describe('profile page', () => {
 
   it('throws an error if you try to submit with only a description filled out', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolio = (await driver.findElements(By.tagName('form')))[3];
+    const portfolio = (await driver.findElements(By.tagName('form')))[4];
     driver.wait(until.elementLocated(By.id('0:Description')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
@@ -348,7 +348,7 @@ describe('profile page', () => {
 
   it('throws an error if you try to submit with only a link filled out', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const portfolio = (await driver.findElements(By.tagName('form')))[3];
+    const portfolio = (await driver.findElements(By.tagName('form')))[4];
     driver.wait(until.elementLocated(By.id('0:Description')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
@@ -407,12 +407,12 @@ describe('profile page', () => {
   });
 
   //////////////////
-  // Profile
+  // Password
   //////////////////
 
   it('shows the password', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const password = (await driver.findElements(By.tagName('form')))[1];
+    const password = (await driver.findElements(By.tagName('form')))[2];
     expect(await password.findElement(By.tagName('h3')).getText()).toEqual('Password');
   });
 
@@ -430,7 +430,7 @@ describe('profile page', () => {
 
   it('shows error when you update password blank information', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
-    const profile = (await driver.findElements(By.tagName('form')))[1];
+    const profile = (await driver.findElements(By.tagName('form')))[2];
     const feedback = (await profile.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(2);
     for (let i = 0; i < feedback.length; i++) {
@@ -478,4 +478,98 @@ describe('profile page', () => {
     const danger = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await danger.getText()).toEqual('Password must be 6 or more characters');
   });
+
+  /////////////////////////
+  // Company Info
+  /////////////////////////
+
+  it('shows the company information', async () => {
+    driver.wait(until.elementLocated(By.tagName('h2')));
+    const companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    expect(await companyInformation.findElement(By.tagName('h3')).getText()).toEqual('Company Information');
+  });
+
+  it('displays the company name', async () => {
+    const companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
+    expect(await companyName.getAttribute('value')).toEqual('');
+    expect(await companyName.getAttribute('readonly')).toBeNull();
+  });
+
+  it('displays the website', async () => {
+    const website = driver.wait(until.elementLocated(By.id('formWebsite')));
+    expect(await website.getAttribute('value')).toEqual('');
+    expect(await website.getAttribute('readonly')).toBeNull();
+  });
+
+  it('displays the instagram link', async () => {
+    const insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    expect(await insta.getAttribute('value')).toEqual('');
+    expect(await insta.getAttribute('readonly')).toBeNull();
+  });
+
+  it('displays the facebook link', async () => {
+    const facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
+    expect(await facebook.getAttribute('value')).toEqual('');
+    expect(await facebook.getAttribute('readonly')).toBeNull();
+  });
+
+  it('allows keeping the company values empty', async () => {
+    let companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
+    let website = driver.wait(until.elementLocated(By.id('formWebsite')));
+    let insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    let facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
+    expect(await companyName.getAttribute('value')).toEqual('');
+    expect(await website.getAttribute('value')).toEqual('');
+    expect(await insta.getAttribute('value')).toEqual('');
+    expect(await facebook.getAttribute('value')).toEqual('');
+    await driver.findElement(By.id('saveCompanyInformationButton')).click();
+    const success = driver.wait(until.elementLocated(By.className('alert-success')));
+    expect(await success.getText()).toEqual('Company Information Updated');
+    await Test.sleep(5000);
+    expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
+    driver.navigate().refresh();
+    companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
+    website = driver.wait(until.elementLocated(By.id('formWebsite')));
+    insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
+    expect(await companyName.getAttribute('value')).toEqual('');
+    expect(await website.getAttribute('value')).toEqual('');
+    expect(await insta.getAttribute('value')).toEqual('');
+    expect(await facebook.getAttribute('value')).toEqual('');
+  });
+
+  it('allows updating the company values', async () => {
+    let companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
+    let website = driver.wait(until.elementLocated(By.id('formWebsite')));
+    let insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    let facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
+    companyName.sendKeys('0');
+    website.sendKeys('0')
+    insta.sendKeys('0')
+    facebook.sendKeys('0')
+    expect(await companyName.getAttribute('value')).toEqual('0');
+    expect(await website.getAttribute('value')).toEqual('0');
+    expect(await insta.getAttribute('value')).toEqual('0');
+    expect(await facebook.getAttribute('value')).toEqual('0');
+    await driver.findElement(By.id('saveCompanyInformationButton')).click();
+    const success = driver.wait(until.elementLocated(By.className('alert-success')));
+    expect(await success.getText()).toEqual('Company Information Updated');
+    await Test.sleep(5000);
+    expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
+    driver.navigate().refresh();
+    companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
+    website = driver.wait(until.elementLocated(By.id('formWebsite')));
+    insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
+    expect(await companyName.getAttribute('value')).toEqual('0');
+    expect(await website.getAttribute('value')).toEqual('0');
+    expect(await insta.getAttribute('value')).toEqual('0');
+    expect(await facebook.getAttribute('value')).toEqual('0');
+  });
+
+  // TODO
+  // able to wipe out values
+  // able to add/save equipment
+  // able to add/save skills
+
 });

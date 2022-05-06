@@ -97,6 +97,16 @@ describe('snnap form input', () => {
     ).toEqual('someId');
   });
 
+  it('is required when not specified', () => {
+    const { container } = render(<SnnapFormInput name="123" />);
+    expect(container.firstChild.firstChild.firstChild).toBeRequired();
+  });
+
+  it('is not required when specified', () => {
+    const { container } = render(<SnnapFormInput name="123" notRequired />);
+    expect(container.firstChild.firstChild.firstChild).not.toBeRequired();
+  });
+
   it('has an input field input', () => {
     const { container } = render(<SnnapFormInput name="123" />);
     expect(container.firstChild.firstChild.firstChild).toHaveClass(

@@ -78,4 +78,52 @@ router.post(
   }
 );
 
+router.post('/update-company-information', async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
+  let token;
+  try {
+    token = await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  try {
+    const user = User.auth(token);
+    let equipment = [];
+    if (req.body.equipment) {
+      equipment = req.body.equipment.map((option) => option.value);
+      // if value is not set, just use the basic array value
+      if (equipment.some((item) => item === undefined)) {
+        equipment = req.body.equipment;
+      }
+    }
+    let skills = [];
+    if (req.body.skills) {
+      skills = req.body.skills.map((option) => option.value);
+      // if value is not set, just use the basic array value
+      if (skills.some((item) => item === undefined)) {
+        skills = req.body.skills;
+      }
+    }
+    const company = new Company(await user.getId());
+    await company.setCompanyInformation(
+      req.body.name,
+      req.body.website,
+      req.body.insta,
+      req.body.fb,
+      equipment.toString(),
+      skills.toString()
+    );
+    return res.status(200).send();
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
 module.exports = router;
