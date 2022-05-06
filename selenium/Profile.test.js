@@ -491,28 +491,24 @@ describe('profile page', () => {
 
   it('displays the company name', async () => {
     const companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
-    test.waitUntilInputFilled(By.id('formCompanyName'));
     expect(await companyName.getAttribute('value')).toEqual('');
     expect(await companyName.getAttribute('readonly')).toBeNull();
   });
 
   it('displays the website', async () => {
     const website = driver.wait(until.elementLocated(By.id('formWebsite')));
-    test.waitUntilInputFilled(By.id('formWebsite'));
     expect(await website.getAttribute('value')).toEqual('');
     expect(await website.getAttribute('readonly')).toBeNull();
   });
 
   it('displays the instagram link', async () => {
     const insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
-    test.waitUntilInputFilled(By.id('formInstagramLink'));
     expect(await insta.getAttribute('value')).toEqual('');
     expect(await insta.getAttribute('readonly')).toBeNull();
   });
 
   it('displays the facebook link', async () => {
     const facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
-    test.waitUntilInputFilled(By.id('formFacebookLink'));
     expect(await facebook.getAttribute('value')).toEqual('');
     expect(await facebook.getAttribute('readonly')).toBeNull();
   });
