@@ -114,4 +114,7 @@ describe('new request to hire', () => {
     expect(alerts).toHaveLength(1);
     return alerts;
   }
+
+  // TODO
+  // ability to add/save skills and equipment
 });
