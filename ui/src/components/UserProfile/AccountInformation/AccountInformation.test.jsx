@@ -82,6 +82,11 @@ describe('account information', () => {
         'value'
       )
     ).toEqual('');
+    expect(
+      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -94,26 +99,13 @@ describe('account information', () => {
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formUsername');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toEqual('');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('msaperst');
+    const form =
+      container.firstChild.children[1].lastChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formUsername');
+    expect(form.getAttribute('readOnly')).toEqual('');
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('msaperst');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -134,26 +126,13 @@ describe('account information', () => {
     expect(container.firstChild.children[2].firstChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formEmail');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toBeNull();
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('msaperst@gmail.com');
+    const form =
+      container.firstChild.children[2].firstChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formEmail');
+    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('msaperst@gmail.com');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -166,26 +145,13 @@ describe('account information', () => {
     expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formNumber');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toBeNull();
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('1234567890');
+    const form =
+      container.firstChild.children[2].lastChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formNumber');
+    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('1234567890');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 

@@ -30,8 +30,8 @@ function CompanyInformation(props) {
         Website: company.website,
         'Instagram Link': company.insta,
         'Facebook Link': company.fb,
-        Equipment: company.equipment,
-        Skills: company.skills,
+        Equipment: company.equipment || [],
+        Skills: company.skills || [],
       });
     }
   }, [company]);
@@ -44,33 +44,30 @@ function CompanyInformation(props) {
     event.preventDefault();
     event.stopPropagation();
     setValidated(true);
-    const form = event.currentTarget;
-    if (form.checkValidity() === true) {
-      setIsSubmitting(true);
-      companyService
-        .updateCompanyInformation(
-          formData['Company Name'],
-          formData.Website,
-          formData['Instagram Link'],
-          formData['Facebook Link'],
-          formData.Equipment,
-          formData.Skills
-        )
-        .then(
-          () => {
-            setIsSubmitting(false);
-            setUpdate('Company Information Updated');
-            setTimeout(() => {
-              setUpdate(null);
-              setValidated(false);
-            }, 5000);
-          },
-          (error) => {
-            setIsSubmitting(false);
-            setStatus(error.toString());
-          }
-        );
-    }
+    setIsSubmitting(true);
+    companyService
+      .updateCompanyInformation(
+        formData['Company Name'],
+        formData.Website,
+        formData['Instagram Link'],
+        formData['Facebook Link'],
+        formData.Equipment,
+        formData.Skills
+      )
+      .then(
+        () => {
+          setIsSubmitting(false);
+          setUpdate('Company Information Updated');
+          setTimeout(() => {
+            setUpdate(null);
+            setValidated(false);
+          }, 5000);
+        },
+        (error) => {
+          setIsSubmitting(false);
+          setStatus(error.toString());
+        }
+      );
   };
 
   const updateForm = (key, value) => {
@@ -123,6 +120,7 @@ function CompanyInformation(props) {
       <Row className="mb-3">
         <SnnapFormMultiSelect
           name="Equipment"
+          values={company.equipment}
           onChange={updateForm}
           options={equipment}
         />
@@ -130,6 +128,7 @@ function CompanyInformation(props) {
       <Row className="mb-3">
         <SnnapFormMultiSelect
           name="Skills"
+          values={company.skills}
           onChange={updateForm}
           options={skills}
         />

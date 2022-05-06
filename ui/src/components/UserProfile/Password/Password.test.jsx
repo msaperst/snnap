@@ -44,26 +44,13 @@ describe('personal information', () => {
     expect(container.firstChild.children[1].firstChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formCurrentPassword');
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toBeNull();
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('password');
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('');
+    const form =
+      container.firstChild.children[1].firstChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formCurrentPassword');
+    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('type')).toEqual('password');
+    expect(form.getAttribute('value')).toEqual('');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -84,26 +71,13 @@ describe('personal information', () => {
     expect(container.firstChild.children[2].firstChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formNewPassword');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toBeNull();
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('password');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('');
+    const form =
+      container.firstChild.children[2].firstChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formNewPassword');
+    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('type')).toEqual('password');
+    expect(form.getAttribute('value')).toEqual('');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 

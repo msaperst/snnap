@@ -56,19 +56,12 @@ describe('portfolio', () => {
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formExperience');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('textarea');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild
-    ).toHaveTextContent('');
+    const form =
+      container.firstChild.children[1].lastChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formExperience');
+    expect(form.getAttribute('type')).toEqual('textarea');
+    expect(form).toHaveTextContent('');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -80,19 +73,12 @@ describe('portfolio', () => {
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formExperience');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('textarea');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild
-    ).toHaveTextContent('Some experience');
+    const form =
+      container.firstChild.children[1].lastChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formExperience');
+    expect(form.getAttribute('type')).toEqual('textarea');
+    expect(form).toHaveTextContent('Some experience');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -118,19 +104,12 @@ describe('portfolio', () => {
     expect(container.firstChild.children[2].firstChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('0:Description');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('textarea');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild
-    ).toHaveTextContent('description1');
+    const form =
+      container.firstChild.children[2].firstChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('0:Description');
+    expect(form.getAttribute('type')).toEqual('textarea');
+    expect(form).toHaveTextContent('description1');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -142,21 +121,12 @@ describe('portfolio', () => {
     expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('0:Link');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('link1');
+    const form =
+      container.firstChild.children[2].lastChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('0:Link');
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('link1');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 

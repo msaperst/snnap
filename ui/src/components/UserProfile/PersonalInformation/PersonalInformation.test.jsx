@@ -49,26 +49,13 @@ describe('personal information', () => {
     expect(container.firstChild.children[1].firstChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formFirstName');
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toBeNull();
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('');
+    const form =
+      container.firstChild.children[1].firstChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formFirstName');
+    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -83,21 +70,12 @@ describe('personal information', () => {
     expect(container.firstChild.children[1].firstChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formFirstName');
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('Max');
+    const form =
+      container.firstChild.children[1].firstChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formFirstName');
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('Max');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -110,21 +88,12 @@ describe('personal information', () => {
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formLastName');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('Saperstone');
+    const form =
+      container.firstChild.children[1].lastChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formLastName');
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('Saperstone');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -145,26 +114,13 @@ describe('personal information', () => {
     expect(container.firstChild.children[2].firstChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formCity');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'readOnly'
-      )
-    ).toBeNull();
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('Fairfax');
+    const form =
+      container.firstChild.children[2].firstChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formCity');
+    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('Fairfax');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -181,21 +137,12 @@ describe('personal information', () => {
     expect(container.firstChild.children[2].children[1].firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].children[1].firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formState');
-    expect(
-      container.firstChild.children[2].children[1].firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[2].children[1].firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('VA');
+    const form =
+      container.firstChild.children[2].children[1].firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formState');
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('VA');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -208,21 +155,12 @@ describe('personal information', () => {
     expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formZip');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('22030');
+    const form =
+      container.firstChild.children[2].lastChild.firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formZip');
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('22030');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 

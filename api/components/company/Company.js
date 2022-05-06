@@ -29,6 +29,16 @@ class Company {
     company.portfolio = await Mysql.query(
       `SELECT * FROM portfolio WHERE company = ${company.id};`
     );
+    if (company.equipment) {
+      company.equipment = company.equipment.split(',').map(Number);
+    } else {
+      company.equipment = [];
+    }
+    if (company.skills) {
+      company.skills = company.skills.split(',').map(Number);
+    } else {
+      company.skills = [];
+    }
     return company;
   }
 
@@ -58,6 +68,20 @@ class Company {
         );
       }
     }
+  }
+
+  async setCompanyInformation(name, website, insta, fb, equipment, skills) {
+    await this.initialize;
+    await Mysql.query(
+      `UPDATE companies
+       SET name = ${db.escape(name)},
+           website  = ${db.escape(website)},
+           insta       = ${db.escape(insta)},
+           fb      = ${db.escape(fb)},
+           equipment        = ${db.escape(equipment)},
+           skills        = ${db.escape(skills)}
+       WHERE user = ${this.userId}`
+    );
   }
 }
 

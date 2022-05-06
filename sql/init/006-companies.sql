@@ -14,4 +14,4 @@ CREATE TABLE IF NOT EXISTS companies
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
-ALTER TABLE companies ADD COLUMN equipment varchar(200) NULL;
+ALTER TABLE companies ADD COLUMN skills varchar(200) NULL;
