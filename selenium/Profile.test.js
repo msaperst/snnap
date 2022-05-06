@@ -513,7 +513,7 @@ describe('profile page', () => {
     expect(await facebook.getAttribute('readonly')).toBeNull();
   });
 
-  it('allows updating the personal values', async () => {
+  it('allows keeping the company values empty', async () => {
     let companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
     let website = driver.wait(until.elementLocated(By.id('formWebsite')));
     let insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
@@ -538,12 +538,11 @@ describe('profile page', () => {
     expect(await facebook.getAttribute('value')).toEqual('');
   });
 
-  it('allows updating the personal values', async () => {
+  it('allows updating the company values', async () => {
     let companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
     let website = driver.wait(until.elementLocated(By.id('formWebsite')));
     let insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
     let facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
-    test.waitUntilInputFilled(By.id('companyName'));
     companyName.sendKeys('0');
     website.sendKeys('0')
     insta.sendKeys('0')
