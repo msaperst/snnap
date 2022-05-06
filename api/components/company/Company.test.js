@@ -16,7 +16,42 @@ describe('Company', () => {
       .mockResolvedValueOnce([{ id: 1 }])
       .mockResolvedValueOnce([]);
     const company = new Company(1);
-    expect(await company.getInfo()).toEqual({ id: 1, portfolio: [] });
+    expect(await company.getInfo()).toEqual({
+      id: 1,
+      portfolio: [],
+      equipment: [],
+      skills: [],
+    });
+    expect(company.userId).toEqual('1');
+    expect(company.companyId).toEqual(1);
+    expect(spy).toHaveBeenCalledTimes(3);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM companies WHERE user = 1;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM companies WHERE user = 1;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      3,
+      'SELECT * FROM portfolio WHERE company = 1;'
+    );
+  });
+
+  it('will get all company info', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query
+      .mockResolvedValueOnce([{ id: 1 }])
+      .mockResolvedValueOnce([{ id: 1, equipment: '1,2,3', skills: '2, 4, 6' }])
+      .mockResolvedValueOnce([]);
+    const company = new Company(1);
+    expect(await company.getInfo()).toEqual({
+      id: 1,
+      portfolio: [],
+      equipment: [1, 2, 3],
+      skills: [2, 4, 6],
+    });
     expect(company.userId).toEqual('1');
     expect(company.companyId).toEqual(1);
     expect(spy).toHaveBeenCalledTimes(3);
@@ -42,7 +77,13 @@ describe('Company', () => {
       .mockResolvedValueOnce([{ id: 2, user: 5 }])
       .mockResolvedValueOnce([]);
     const company = new Company(5);
-    expect(await company.getInfo()).toEqual({ id: 2, user: 5, portfolio: [] });
+    expect(await company.getInfo()).toEqual({
+      id: 2,
+      user: 5,
+      portfolio: [],
+      equipment: [],
+      skills: [],
+    });
     expect(company.userId).toEqual('5');
     expect(company.companyId).toEqual(2);
     expect(spy).toHaveBeenCalledTimes(4);
@@ -125,6 +166,29 @@ describe('Company', () => {
     expect(spy).toHaveBeenNthCalledWith(
       5,
       "INSERT INTO portfolio (company, link, description) VALUES (3, 'link2', 'description2');"
+    );
+  });
+
+  it('sets the company information', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValueOnce([{ id: 2 }]);
+    const company = new Company(2);
+    await company.setCompanyInformation(
+      'name',
+      'site',
+      'insta',
+      'fb',
+      '1,2,4',
+      ''
+    );
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM companies WHERE user = 2;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb', equipment = '1,2,4', skills = '' WHERE user = 2"
     );
   });
 });

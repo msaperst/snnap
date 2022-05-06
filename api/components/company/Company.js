@@ -73,14 +73,13 @@ class Company {
   async setCompanyInformation(name, website, insta, fb, equipment, skills) {
     await this.initialize;
     await Mysql.query(
-      `UPDATE companies
-       SET name = ${db.escape(name)},
-           website  = ${db.escape(website)},
-           insta       = ${db.escape(insta)},
-           fb      = ${db.escape(fb)},
-           equipment        = ${db.escape(equipment)},
-           skills        = ${db.escape(skills)}
-       WHERE user = ${this.userId}`
+      `UPDATE companies SET name = ${db.escape(name)}, website = ${db.escape(
+        website
+      )}, insta = ${db.escape(insta)}, fb = ${db.escape(
+        fb
+      )}, equipment = ${db.escape(equipment)}, skills = ${db.escape(
+        skills
+      )} WHERE user = ${this.userId}`
     );
   }
 }
