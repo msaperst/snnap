@@ -3,7 +3,7 @@ import { act, fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
-import Avatar from './Avatar';
+import Avatar from './EditAvatar';
 
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');

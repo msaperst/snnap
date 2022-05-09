@@ -1,10 +1,19 @@
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './RequestToHire.css';
 import Avatar from '../Avatar/Avatar';
+import { userService } from '../../services/user.service';
 
 function RequestToHire(props) {
   const { hireRequest } = props;
+
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    userService.get(hireRequest.user).then((user) => {
+      setUser(user);
+    });
+  }, [hireRequest.user]);
+
   return (
     <Row>
       <Col>
@@ -12,7 +21,13 @@ function RequestToHire(props) {
           <Card.Body>
             <Container>
               <Row>
-                <Avatar userId={hireRequest.user} />
+                <Col md={1}>
+                  <Avatar
+                    avatar={user.avatar}
+                    firstname={user.first_name}
+                    lastname={user.last_name}
+                  />
+                </Col>
                 <Col md={11}>
                   <Row>
                     <Col md={3}>
@@ -48,9 +63,11 @@ function RequestToHire(props) {
                   </Row>
                 </Col>
               </Row>
+              <Row className="mt-3">
+                <Col>{hireRequest.details}</Col>
+              </Row>
             </Container>
           </Card.Body>
-          <Card.Body>{hireRequest.details}</Card.Body>
         </Card>
       </Col>
     </Row>
