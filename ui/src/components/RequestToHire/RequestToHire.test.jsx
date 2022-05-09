@@ -67,7 +67,7 @@ describe('snnap form input', () => {
     expect(content.at(4).text()).toEqual('$200 per hour');
     expect(wrapper.find('.col-md-1').at(0).text()).toEqual('MS');
     expect(wrapper.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
-    expect(wrapper.find('.card-body').at(1).text()).toEqual('Some details');
+    expect(wrapper.find('.mt-3').at(1).text()).toEqual('Some details');
   });
 
   it('displays the range detail', () => {
@@ -80,6 +80,6 @@ describe('snnap form input', () => {
     expect(content.at(4).text()).toEqual('$200 per hour');
     expect(wrapper.find('.col-md-1').at(0).text()).toEqual('MS');
     expect(wrapper.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
-    expect(wrapper.find('.card-body').at(1).text()).toEqual('Some details');
+    expect(wrapper.find('.mt-3').at(1).text()).toEqual('Some details');
   });
 });
