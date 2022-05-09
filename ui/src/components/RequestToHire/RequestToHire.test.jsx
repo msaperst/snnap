@@ -9,9 +9,14 @@ const userService = require('../../services/user.service');
 
 Enzyme.configure({ adapter: new Adapter() });
 
+let x = 0;
+const updateX = (value) => {
+  x = value;
+};
+
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
+  useNavigate: () => updateX(),
 }));
 
 describe('snnap form input', () => {
@@ -83,8 +88,13 @@ describe('snnap form input', () => {
     expect(content.at(2).text()).toEqual('2 to 3 hours');
     expect(content.at(3).text()).toEqual('Submit For Job');
     expect(content.at(4).text()).toEqual('$200 per hour');
-    expect(wrapper.find('.col-md-1').at(0).text()).toEqual('MS');
-    expect(wrapper.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
-    expect(wrapper.find('.mt-3').at(1).text()).toEqual('Some details');
+    expect(wrapper1.find('.col-md-1').at(0).text()).toEqual('MS');
+    expect(wrapper1.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
+    expect(wrapper1.find('.mt-3').at(1).text()).toEqual('Some details');
+  });
+
+  it('takes me to the profile when clicked', () => {
+    wrapper1.find('.col-md-1').at(0).simulate('click');
+    expect(x).toBeUndefined();
   });
 });

@@ -66,8 +66,8 @@ function EditAvatar(props) {
     <Col md={2}>
       <Avatar
         avatar={avatar}
-        firstname={user.first_name}
-        lastname={user.last_name}
+        firstname={user.firstName}
+        lastname={user.lastName}
         onClick={uploadClick}
       />
       <Form.Control
