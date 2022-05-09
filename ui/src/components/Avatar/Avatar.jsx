@@ -3,19 +3,6 @@ import { Image } from 'react-bootstrap';
 import './Avatar.css';
 
 function Avatar(props) {
-  // const { userId } = props;
-  // const [user, setUser] = useState(null);
-  //
-  // useEffect(() => {
-  //   userService.get(userId).then((user) => {
-  //     setUser(user);
-  //   });
-  // }, [userId]);
-  //
-  // if (userId === undefined) {
-  //   return null;
-  // }
-
   const { avatar, firstname, lastname, onClick } = props;
 
   let style;
