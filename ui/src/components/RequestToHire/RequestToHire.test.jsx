@@ -9,6 +9,11 @@ const userService = require('../../services/user.service');
 
 Enzyme.configure({ adapter: new Adapter() });
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+}));
+
 describe('snnap form input', () => {
   let wrapper;
   let wrapper1;
