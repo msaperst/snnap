@@ -1,11 +1,13 @@
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './RequestToHire.css';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '../Avatar/Avatar';
 import { userService } from '../../services/user.service';
 
 function RequestToHire(props) {
   const { hireRequest } = props;
+  const navigate = useNavigate();
 
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -26,6 +28,7 @@ function RequestToHire(props) {
                     avatar={user.avatar}
                     firstname={user.first_name}
                     lastname={user.last_name}
+                    onClick={() => navigate(`/profile/${user.username}`)}
                   />
                 </Col>
                 <Col md={11}>
