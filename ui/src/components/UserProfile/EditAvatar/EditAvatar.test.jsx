@@ -56,7 +56,7 @@ describe('avatar', () => {
 
   it('renders a circle with initial with an user information', () => {
     const { container } = render(
-      <Avatar user={{ first_name: 'Max', last_name: 'Saps' }} />
+      <Avatar user={{ firstName: 'Max', lastName: 'Saps' }} />
     );
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('col-md-2');
