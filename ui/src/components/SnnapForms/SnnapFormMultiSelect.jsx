@@ -15,7 +15,7 @@ function SnnapFormMultiSelect(props) {
   useEffect(() => {
     // setup our selected values
     if (values) {
-      setSelectedValue(values);
+      setSelectedValue(values.map((option) => option.value));
     }
   }, [values]);
 

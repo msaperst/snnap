@@ -15,3 +15,5 @@ CREATE TABLE IF NOT EXISTS companies
   COLLATE = utf8mb4_unicode_ci;
 
 ALTER TABLE companies ADD COLUMN skills varchar(200) NULL;
+ALTER TABLE companies DROP COLUMN equipment;
+ALTER TABLE companies DROP COLUMN skills;

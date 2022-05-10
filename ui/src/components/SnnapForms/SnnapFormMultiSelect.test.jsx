@@ -143,7 +143,7 @@ describe('snnap form input', () => {
           { id: 3, name: 'Action' },
           { id: 4, name: 'More' },
         ]}
-        values={[2]}
+        values={[{ value: 2 }]}
       />
     );
     const child = await waitFor(() => container.firstChild);

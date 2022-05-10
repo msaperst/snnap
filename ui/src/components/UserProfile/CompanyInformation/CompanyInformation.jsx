@@ -1,6 +1,6 @@
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
-import { Facebook, Instagram } from 'react-bootstrap-icons';
+import { Facebook, Globe, Instagram } from 'react-bootstrap-icons';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import SnnapFormMultiSelect from '../../SnnapForms/SnnapFormMultiSelect';
 import { companyService } from '../../../services/company.service';
@@ -86,8 +86,12 @@ function CompanyInformation(props) {
         />
       </Row>
       <Row className="mb-3">
+        <Col md={2}>
+          <Globe className="icon" />
+        </Col>
         <SnnapFormInput
           name="Website"
+          size={10}
           value={company.website}
           onChange={updateForm}
           notRequired

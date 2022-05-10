@@ -99,19 +99,20 @@ describe('Company information', () => {
       <CompanyInformation company={{ website: 'Saperstone' }} />
     );
     expect(container.firstChild.children[2]).toHaveClass('mb-3 row');
-    expect(container.firstChild.children[2].children).toHaveLength(1);
-    expect(container.firstChild.children[2].firstChild).toHaveClass(
-      'col-md-12'
-    );
+    expect(container.firstChild.children[2].children).toHaveLength(2);
+    expect(container.firstChild.children[2].firstChild).toHaveClass('col-md-2');
     expect(container.firstChild.children[2].firstChild.children).toHaveLength(
       1
     );
-    expect(container.firstChild.children[2].firstChild.firstChild).toHaveClass(
+    expect(container.firstChild.children[2].lastChild).toHaveClass('col-md-10');
+    expect(container.firstChild.children[2].lastChild.children).toHaveLength(1);
+    expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
       'form-floating'
     );
     const form =
-      container.firstChild.children[2].firstChild.firstChild.firstChild;
+      container.firstChild.children[2].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formWebsite');
+    expect(form.getAttribute('readOnly')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('Saperstone');
     expect(form.getAttribute('required')).toBeNull();
@@ -407,7 +408,7 @@ describe('Company information', () => {
       />
     );
     await fireEvent.change(
-      container.firstChild.children[2].firstChild.firstChild.firstChild,
+      container.firstChild.children[1].firstChild.firstChild.firstChild,
       { target: { value: 'City' } }
     );
     await fireEvent.change(
@@ -419,6 +420,13 @@ describe('Company information', () => {
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith('Max', 'City', '12345', undefined, [], []);
+    expect(spy).toHaveBeenCalledWith(
+      'City',
+      'Saperstone',
+      '12345',
+      undefined,
+      [],
+      []
+    );
   });
 });
