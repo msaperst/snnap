@@ -653,7 +653,7 @@ describe('profile page', () => {
     nextDivs = await firstDiv.findElement(By.tagName('div'));
     driver.wait(function() {
       return nextDivs.findElements(By.tagName('div')).then(function(elements) {
-        return elements.length === 5;
+        return elements.length === 9;
       });
     });
     expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(9);
