@@ -29,16 +29,12 @@ class Company {
     company.portfolio = await Mysql.query(
       `SELECT * FROM portfolio WHERE company = ${company.id};`
     );
-    if (company.equipment) {
-      company.equipment = company.equipment.split(',').map(Number);
-    } else {
-      company.equipment = [];
-    }
-    if (company.skills) {
-      company.skills = company.skills.split(',').map(Number);
-    } else {
-      company.skills = [];
-    }
+    company.equipment = await Mysql.query(
+      `SELECT equipment.id as value, equipment.name FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = ${company.id};`
+    );
+    company.skills = await Mysql.query(
+      `SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = ${company.id};`
+    );
     return company;
   }
 
@@ -50,11 +46,11 @@ class Company {
         experience
       )} WHERE user = ${this.userId}`
     );
-    // wipe out all old experiences
+    // wipe out all old portfolio info
     await Mysql.query(
       `DELETE FROM portfolio WHERE company = ${this.companyId};`
     );
-    // set new experiences
+    // set new portfolio info
     for (let i = 0; i < portfolioItems.length; i++) {
       const portfolioItem = portfolioItems[i];
       if (portfolioItem.description && portfolioItem.link) {
@@ -72,15 +68,38 @@ class Company {
 
   async setCompanyInformation(name, website, insta, fb, equipment, skills) {
     await this.initialize;
+    // set our basic company information
     await Mysql.query(
       `UPDATE companies SET name = ${db.escape(name)}, website = ${db.escape(
         website
-      )}, insta = ${db.escape(insta)}, fb = ${db.escape(
-        fb
-      )}, equipment = ${db.escape(equipment)}, skills = ${db.escape(
-        skills
-      )} WHERE user = ${this.userId}`
+      )}, insta = ${db.escape(insta)}, fb = ${db.escape(fb)} WHERE user = ${
+        this.userId
+      }`
     );
+    // wipe out all old equipment
+    await Mysql.query(
+      `DELETE FROM company_equipment WHERE company = ${this.companyId};`
+    );
+    // set new equipment
+    equipment.map(async (equip) => {
+      await Mysql.query(
+        `INSERT INTO company_equipment (company, equipment) VALUES (${
+          this.companyId
+        }, ${db.escape(equip)});`
+      );
+    });
+    // wipe out all old skills
+    await Mysql.query(
+      `DELETE FROM company_skills WHERE company = ${this.companyId};`
+    );
+    // set new skills
+    skills.map(async (skill) => {
+      await Mysql.query(
+        `INSERT INTO company_skills (company, skill) VALUES (${
+          this.companyId
+        }, ${db.escape(skill)});`
+      );
+    });
   }
 }
 

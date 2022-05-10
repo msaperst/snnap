@@ -4,7 +4,6 @@ const router = express.Router();
 const { validationResult, check } = require('express-validator');
 const User = require('../components/user/User');
 const Company = require('../components/company/Company');
-const Mysql = require('../services/Mysql');
 
 router.get('/get', async (req, res) => {
   let token;
@@ -35,10 +34,9 @@ router.get('/get/:user', async (req, res) => {
     });
   }
   try {
-    const userInfo = await Mysql.query(`SELECT id, name, website, insta, fb
-                                         FROM companies WHERE user = '${req.params.user}';`);
-    if (userInfo[0] && userInfo[0].id) {
-      return res.send(userInfo[0]);
+    const company = new Company(req.params.user);
+    if (company) {
+      return res.send(await company.getInfo());
     }
     return res.status(422).send({ msg: 'company not found' });
   } catch (error) {
@@ -118,8 +116,8 @@ router.post('/update-company-information', async (req, res) => {
       req.body.website,
       req.body.insta,
       req.body.fb,
-      equipment.toString(),
-      skills.toString()
+      equipment,
+      skills
     );
     return res.status(200).send();
   } catch (error) {
