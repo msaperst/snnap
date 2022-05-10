@@ -591,6 +591,11 @@ describe('profile page', () => {
     multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     firstDiv = await multiSelects[0].findElement(By.tagName('div'));
     nextDivs = await firstDiv.findElement(By.tagName('div'));
+    driver.wait(function() {
+      return nextDivs.findElements(By.tagName('div')).then(function(elements) {
+        return elements.length === 5;
+      });
+    });
     expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(5);
   });
 
@@ -603,6 +608,11 @@ describe('profile page', () => {
     let multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     let firstDiv = await multiSelects[0].findElement(By.tagName('div'));
     let nextDivs = await firstDiv.findElement(By.tagName('div'));
+    driver.wait(function() {
+      return nextDivs.findElements(By.tagName('div')).then(function(elements) {
+        return elements.length === 5;
+      });
+    });
     expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(5);
     await driver.findElement(By.css('[aria-label="Remove Camera"]')).click();
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
@@ -641,6 +651,11 @@ describe('profile page', () => {
     multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     firstDiv = await multiSelects[1].findElement(By.tagName('div'));
     nextDivs = await firstDiv.findElement(By.tagName('div'));
+    driver.wait(function() {
+      return nextDivs.findElements(By.tagName('div')).then(function(elements) {
+        return elements.length === 5;
+      });
+    });
     expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(9);
   });
 
@@ -653,6 +668,11 @@ describe('profile page', () => {
     let multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     let firstDiv = await multiSelects[1].findElement(By.tagName('div'));
     let nextDivs = await firstDiv.findElement(By.tagName('div'));
+    driver.wait(function() {
+      return nextDivs.findElements(By.tagName('div')).then(function(elements) {
+        return elements.length === 9;
+      });
+    });
     expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(9);
     await driver.findElement(By.css('[aria-label="Remove Photography"]')).click();
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
@@ -663,6 +683,11 @@ describe('profile page', () => {
     multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     firstDiv = await multiSelects[1].findElement(By.tagName('div'));
     nextDivs = await firstDiv.findElement(By.tagName('div'));
+    driver.wait(function() {
+      return nextDivs.findElements(By.tagName('div')).then(function(elements) {
+        return elements.length === 5;
+      });
+    });
     expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(5);
   });
 
