@@ -2,6 +2,7 @@ const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 const { resolve } = require('path');
+const Company = require("../api/components/company/Company");
 
 describe('profile page', () => {
   jest.setTimeout(10000);
@@ -569,9 +570,102 @@ describe('profile page', () => {
     expect(await facebook.getAttribute('value')).toEqual('0');
   });
 
+  it('allows adding and saving equipment', async () => {
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    let companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    let multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    let firstDiv = await multiSelects[0].findElement(By.tagName('div'));
+    let nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(2);
+    const equipmentMultiSelectInput = multiSelects[0].findElement(By.css('[role="combobox"]'));
+    const id = await equipmentMultiSelectInput.getAttribute('id');
+    await equipmentMultiSelectInput.click();
+    const option1 = By.id(id.replace('input', 'option-1'));
+    driver.wait(until.elementLocated(option1));
+    driver.findElement(option1).click();
+    await driver.findElement(By.id('saveCompanyInformationButton')).click();
+    driver.wait(until.elementLocated(By.className('alert-success')));
+    driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    firstDiv = await multiSelects[0].findElement(By.tagName('div'));
+    nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(5);
+  });
+
+  it('allows removing a piece of equipment', async () => {
+    const company = new Company(await user.getId());
+    company.setCompanyInformation('Test', 'website', 'insta', 'fb', [1], []);
+    driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    let companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    let multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    let firstDiv = await multiSelects[0].findElement(By.tagName('div'));
+    let nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(5);
+    await driver.findElement(By.css('[aria-label="Remove Camera"]')).click();
+    await driver.findElement(By.id('saveCompanyInformationButton')).click();
+    driver.wait(until.elementLocated(By.className('alert-success')));
+    driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    firstDiv = await multiSelects[0].findElement(By.tagName('div'));
+    nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(2);
+  });
+
+  it('allows adding and saving skills', async () => {
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    let companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    let multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    let firstDiv = await multiSelects[1].findElement(By.tagName('div'));
+    let nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(2);
+    const equipmentMultiSelectInput = multiSelects[1].findElement(By.css('[role="combobox"]'));
+    const id = await equipmentMultiSelectInput.getAttribute('id');
+    await equipmentMultiSelectInput.click();
+    const option1 = By.id(id.replace('input', 'option-1'));
+    driver.wait(until.elementLocated(option1));
+    driver.findElement(option1).click();
+    await equipmentMultiSelectInput.click();
+    const option2 = By.id(id.replace('input', 'option-2'));
+    driver.wait(until.elementLocated(option2));
+    driver.findElement(option2).click();
+    await driver.findElement(By.id('saveCompanyInformationButton')).click();
+    driver.wait(until.elementLocated(By.className('alert-success')));
+    driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    firstDiv = await multiSelects[1].findElement(By.tagName('div'));
+    nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(9);
+  });
+
+  it('allows removing a skill', async () => {
+    const company = new Company(await user.getId());
+    company.setCompanyInformation('Test', 'website', 'insta', 'fb', [], [1,2]);
+    driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    let companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    let multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    let firstDiv = await multiSelects[1].findElement(By.tagName('div'));
+    let nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(9);
+    await driver.findElement(By.css('[aria-label="Remove Photography"]')).click();
+    await driver.findElement(By.id('saveCompanyInformationButton')).click();
+    driver.wait(until.elementLocated(By.className('alert-success')));
+    driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.tagName('h2')));
+    companyInformation = (await driver.findElements(By.tagName('form')))[3];
+    multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
+    firstDiv = await multiSelects[1].findElement(By.tagName('div'));
+    nextDivs = await firstDiv.findElement(By.tagName('div'));
+    expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(5);
+  });
+
   // TODO
   // able to wipe out values
-  // able to add/save equipment
-  // able to add/save skills
-
 });
