@@ -11,6 +11,7 @@ const HomePage = lazy(() => import('./pages/Home/HomePage'));
 const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/Register/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
+const UserPage = lazy(() => import('./pages/User/UserPage'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
 function App() {
@@ -51,6 +52,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <ProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile/:username"
+              element={
+                <PrivateRoute>
+                  <UserPage />
                 </PrivateRoute>
               }
             />

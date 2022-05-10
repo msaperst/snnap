@@ -24,7 +24,7 @@ router.get('/get', async (req, res) => {
   }
 });
 
-router.get('/get/:id', async (req, res) => {
+router.get('/get/:user', async (req, res) => {
   try {
     await User.isAuth(req.headers.authorization);
   } catch (error) {
@@ -35,8 +35,11 @@ router.get('/get/:id', async (req, res) => {
   try {
     const userInfo =
       await Mysql.query(`SELECT id, username, first_name, last_name, avatar
-                                         FROM users WHERE id = ${req.params.id};`);
-    return res.send(userInfo[0]);
+                                         FROM users WHERE id = '${req.params.user}' OR username = '${req.params.user}';`);
+    if (userInfo[0] && userInfo[0].id) {
+      return res.send(userInfo[0]);
+    }
+    return res.status(422).send({ msg: 'user not found' });
   } catch (error) {
     return res.status(422).send({
       msg: error.message,

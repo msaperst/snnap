@@ -132,6 +132,7 @@ describe('profile page', () => {
     expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
     driver.navigate().refresh();
     email = driver.wait(until.elementLocated(By.id('formEmail')));
+    test.waitUntilInputFilled(By.id('formEmail'));
     expect(await email.getAttribute('value')).toEqual('profileuser@example.orgo');
   });
 
@@ -168,18 +169,19 @@ describe('profile page', () => {
   });
 
   it('allows updating the number', async () => {
-    let email = driver.wait(until.elementLocated(By.id('formNumber')));
+    let number = driver.wait(until.elementLocated(By.id('formNumber')));
     test.waitUntilInputFilled(By.id('formNumber'));
-    email.sendKeys('o');
-    expect(await email.getAttribute('value')).toEqual('Numbero');
+    number.sendKeys('o');
+    expect(await number.getAttribute('value')).toEqual('Numbero');
     await driver.findElement(By.id('saveAccountInformationButton')).click();
     const success = driver.wait(until.elementLocated(By.className('alert-success')));
     expect(await success.getText()).toEqual('Account Information Updated');
     await Test.sleep(5000);
     expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
     driver.navigate().refresh();
-    email = driver.wait(until.elementLocated(By.id('formNumber')));
-    expect(await email.getAttribute('value')).toEqual('Numbero');
+    number = driver.wait(until.elementLocated(By.id('formNumber')));
+    test.waitUntilInputFilled(By.id('formNumber'));
+    expect(await number.getAttribute('value')).toEqual('Numbero');
   });
 
   //////////////////////

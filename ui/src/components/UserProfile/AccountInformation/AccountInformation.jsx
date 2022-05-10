@@ -1,7 +1,7 @@
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
-import Avatar from '../Avatar/Avatar';
+import EditAvatar from '../EditAvatar/EditAvatar';
 import { userService } from '../../../services/user.service';
 
 function AccountInformation(props) {
@@ -56,7 +56,7 @@ function AccountInformation(props) {
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <h3>Account Information</h3>
       <Row className="mb-3">
-        <Avatar user={user} />
+        <EditAvatar user={user} />
         <SnnapFormInput
           name="Username"
           size={10}
