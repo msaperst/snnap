@@ -64,6 +64,7 @@ function Portfolio(props) {
       companyService.updatePortfolio(experience, portfolioItems).then(
         () => {
           setIsSubmitting(false);
+          setStatus(null);
           setUpdate('Portfolio Updated');
           setTimeout(() => {
             setUpdate(null);
@@ -131,6 +132,7 @@ function Portfolio(props) {
           type="textarea"
           value={experience}
           onChange={updateExperience}
+          notRequired
         />
       </Row>
       {portfolioItems.map((portfolioItem, index) => (

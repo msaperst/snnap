@@ -22,6 +22,7 @@ function Password() {
         .then(
           () => {
             setIsSubmitting(false);
+            setStatus(null);
             setUpdate('Password Updated');
             setTimeout(() => {
               setUpdate(null);

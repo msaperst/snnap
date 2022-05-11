@@ -85,21 +85,63 @@ function UserPage() {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col>
-            <a href={company.website} target="_blank" rel="noreferrer">
-              <Globe className="icon" />
-            </a>
-          </Col>
-          <Col>
-            <a href={company.insta} target="_blank" rel="noreferrer">
-              <Instagram className="icon" />
-            </a>
-          </Col>
-          <Col>
-            <a href={company.fb} target="_blank" rel="noreferrer">
-              <Facebook className="icon" />
-            </a>
-          </Col>
+          {/* only display if this is set */}
+          {company.website ? (
+            <Col>
+              {/* if this doesn't start with an http, add one */}
+              <a
+                href={
+                  company.website.startsWith('http')
+                    ? company.website
+                    : `http://${company.website}`
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Globe className="icon" />
+              </a>
+            </Col>
+          ) : (
+            ''
+          )}
+          {/* only display if this is set */}
+          {company.insta ? (
+            <Col>
+              {/* if this doesn't start with an http, add one */}
+              <a
+                href={
+                  company.insta.startsWith('http')
+                    ? company.insta
+                    : `http://${company.insta}`
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Instagram className="icon" />
+              </a>
+            </Col>
+          ) : (
+            ''
+          )}
+          {/* only display if this is set */}
+          {company.fb ? (
+            <Col>
+              {/* if this doesn't start with an http, add one */}
+              <a
+                href={
+                  company.fb.startsWith('http')
+                    ? company.fb
+                    : `http://${company.fb}`
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Facebook className="icon" />
+              </a>
+            </Col>
+          ) : (
+            ''
+          )}
         </Row>
         <Row className="mb-3">
           <Col>
