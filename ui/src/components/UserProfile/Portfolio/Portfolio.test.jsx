@@ -61,7 +61,7 @@ describe('portfolio', () => {
     expect(form.getAttribute('id')).toEqual('formExperience');
     expect(form.getAttribute('type')).toEqual('textarea');
     expect(form).toHaveTextContent('');
-    expect(form.getAttribute('required')).toEqual('');
+    expect(form.getAttribute('required')).toBeNull();
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -78,7 +78,7 @@ describe('portfolio', () => {
     expect(form.getAttribute('id')).toEqual('formExperience');
     expect(form.getAttribute('type')).toEqual('textarea');
     expect(form).toHaveTextContent('Some experience');
-    expect(form.getAttribute('required')).toEqual('');
+    expect(form.getAttribute('required')).toBeNull();
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -162,18 +162,6 @@ describe('portfolio', () => {
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
-  it('does not submit if values are not present/valid', async () => {
-    const company = { experience: '', portfolio: [] };
-    const { container } = render(<Portfolio company={company} />);
-    await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
-    });
-    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
-    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
-  });
-
   it('does not submit if partial portfolio values are present', async () => {
     const company = {
       experience: 'experience',
@@ -193,21 +181,6 @@ describe('portfolio', () => {
     const company = {
       experience: 'experience',
       portfolio: [{ link: 'link' }],
-    };
-    const { container } = render(<Portfolio company={company} />);
-    await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
-    });
-    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
-    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
-  });
-
-  it('does not submit if no experience is present', async () => {
-    const company = {
-      experience: '',
-      portfolio: [{ description: 'some description', link: 'link' }],
     };
     const { container } = render(<Portfolio company={company} />);
     await act(async () => {
