@@ -48,15 +48,22 @@ function CompanyInformation(props) {
     companyService
       .updateCompanyInformation(
         formData['Company Name'],
-        formData.Website,
-        formData['Instagram Link'],
-        formData['Facebook Link'],
+        !formData.Website || formData.Website === ''
+          ? undefined
+          : formData.Website,
+        !formData['Instagram Link'] || formData['Instagram Link'] === ''
+          ? undefined
+          : formData['Instagram Link'],
+        !formData['Facebook Link'] || formData['Facebook Link'] === ''
+          ? undefined
+          : formData['Facebook Link'],
         formData.Equipment,
         formData.Skills
       )
       .then(
         () => {
           setIsSubmitting(false);
+          setStatus(null);
           setUpdate('Company Information Updated');
           setTimeout(() => {
             setUpdate(null);

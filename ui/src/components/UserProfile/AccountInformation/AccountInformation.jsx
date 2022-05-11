@@ -34,6 +34,7 @@ function AccountInformation(props) {
         .then(
           () => {
             setIsSubmitting(false);
+            setStatus(null);
             setUpdate('Account Information Updated');
             setTimeout(() => {
               setUpdate(null);

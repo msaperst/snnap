@@ -31,4 +31,7 @@ describe('user page', () => {
 
   // TODO
   // verify links and content - all static data
+  // verify links take to new page
+  // verify links add http when not in them
+  // verify links don't display when not set
 });

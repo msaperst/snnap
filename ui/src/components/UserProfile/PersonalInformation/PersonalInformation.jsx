@@ -45,6 +45,7 @@ function PersonalInformation(props) {
         .then(
           () => {
             setIsSubmitting(false);
+            setStatus(null);
             setUpdate('Personal Information Updated');
             setTimeout(() => {
               setUpdate(null);
