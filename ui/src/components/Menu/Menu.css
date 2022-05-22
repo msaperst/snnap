@@ -2,3 +2,8 @@
   padding-top: 30px;
   padding-bottom: 200px;
 }
+
+.logo {
+  position: absolute;
+  left: 0;
+}

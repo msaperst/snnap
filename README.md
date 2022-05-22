@@ -76,3 +76,9 @@ a GitHub action that runs on each push. This runs UTs, ITs, along with some lint
 security scanning of dependencies.
 When a PR is opened, the functional tests are executed.
 These are all set as checks before the code can be merged into `main`
+
+## Documentation
+
+[Workflow](https://docs.google.com/presentation/d/1BjzJkv9XqFue_Srer7AKXsyXZ8qBxGLwcC6cHl9HGp4/edit#slide=id.p)
+[Design](https://www.figma.com/file/FBqEl0QylgkvUPxU27RxTh)
+[Feedback](https://app.markup.io/markup/35f53d33-98fc-4a1a-83b9-5888530c2c4f)
