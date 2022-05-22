@@ -36,7 +36,7 @@ function Menu(props) {
           <img
             alt="SNNAP"
             src={snnapLogo}
-            className="d-inline-block align-top"
+            className="d-inline-block align-top logo"
           />
         </Navbar.Brand>
         {collapse}
