@@ -104,19 +104,78 @@ describe('snnap menu', () => {
     );
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children
-    ).toHaveLength(4);
+    ).toHaveLength(2);
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[0]
-    ).toHaveTextContent('New Request to Hire');
+    ).toHaveTextContent('Gigs');
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[1]
-    ).toHaveTextContent('');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2]
-    ).toHaveTextContent('Item 2');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3]
     ).toHaveTextContent('msaperst');
+  });
+
+  it('has no gig menu when not clicked', () => {
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.children[0].children
+    ).toHaveLength(1);
+  });
+
+  it('has gig menu when clicked', () => {
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
+    fireEvent.click(screen.getByText('Gigs'));
+    const gigMenu =
+      container.firstChild.firstChild.lastChild.firstChild.children[0];
+    expect(gigMenu.children).toHaveLength(2);
+    expect(gigMenu.lastChild.children).toHaveLength(5);
+    expect(gigMenu.lastChild).toHaveClass('dropdown-menu show');
+    expect(gigMenu.lastChild.getAttribute('aria-labelledby')).toEqual(
+      'gig-dropdown'
+    );
+    expect(gigMenu.lastChild.getAttribute('data-bs-popper')).toEqual('static');
+
+    expect(gigMenu.lastChild.firstChild).toHaveClass('dropdown-item');
+    expect(
+      gigMenu.lastChild.firstChild.getAttribute('data-rr-ui-dropdown-item')
+    ).toEqual('');
+    expect(gigMenu.lastChild.firstChild.getAttribute('id')).toEqual(
+      'openNewRequestToHireButton'
+    );
+    expect(gigMenu.lastChild.firstChild.getAttribute('href')).toEqual('#');
+    expect(gigMenu.lastChild.firstChild.getAttribute('role')).toEqual('button');
+    expect(gigMenu.lastChild.firstChild.getAttribute('tabIndex')).toEqual('0');
+    expect(gigMenu.lastChild.firstChild).toHaveTextContent(
+      'New Request to Hire'
+    );
+
+    expect(gigMenu.lastChild.children[1].children).toHaveLength(0);
+
+    expect(gigMenu.lastChild.children[2]).toHaveClass('dropdown-item');
+    expect(
+      gigMenu.lastChild.children[2].getAttribute('data-rr-ui-dropdown-item')
+    ).toEqual('');
+    expect(gigMenu.lastChild.children[2].getAttribute('href')).toEqual(
+      '/hire-requests/msaperst'
+    );
+    expect(gigMenu.lastChild.children[2]).toHaveTextContent('My Hire Requests');
+
+    expect(gigMenu.lastChild.children[3]).toHaveClass('dropdown-divider');
+    expect(gigMenu.lastChild.children[3].getAttribute('role')).toEqual(
+      'separator'
+    );
+    expect(gigMenu.lastChild.children[3]).toHaveTextContent('');
+
+    expect(gigMenu.lastChild.lastChild).toHaveClass('dropdown-item');
+    expect(
+      gigMenu.lastChild.lastChild.getAttribute('data-rr-ui-dropdown-item')
+    ).toEqual('');
+    expect(gigMenu.lastChild.lastChild.getAttribute('href')).toEqual(
+      '/work-requests/msaperst'
+    );
+    expect(gigMenu.lastChild.lastChild).toHaveTextContent('My Work Requests');
   });
 
   it('has no user menu when not clicked', () => {
@@ -124,8 +183,8 @@ describe('snnap menu', () => {
       <Menu currentUser={{ username: 'msaperst' }} />
     );
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[2].children
-    ).toHaveLength(0);
+      container.firstChild.firstChild.lastChild.firstChild.children[1].children
+    ).toHaveLength(1);
   });
 
   it('has user menu when clicked', () => {
@@ -133,83 +192,47 @@ describe('snnap menu', () => {
       <Menu currentUser={{ username: 'msaperst' }} />
     );
     fireEvent.click(screen.getByText('msaperst'));
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].children
-    ).toHaveLength(2);
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-        .children
-    ).toHaveLength(3);
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-    ).toHaveClass('dropdown-menu show');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.getAttribute(
-        'aria-labelledby'
-      )
-    ).toEqual('nav-dropdown');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.getAttribute(
-        'data-bs-popper'
-      )
-    ).toEqual('static');
+    const userNav =
+      container.firstChild.firstChild.lastChild.firstChild.children[1];
+    expect(userNav.children).toHaveLength(2);
+    expect(userNav.lastChild.children).toHaveLength(4);
+    expect(userNav.lastChild).toHaveClass('dropdown-menu show');
+    expect(userNav.lastChild.getAttribute('aria-labelledby')).toEqual(
+      'user-dropdown'
+    );
+    expect(userNav.lastChild.getAttribute('data-bs-popper')).toEqual('static');
 
+    expect(userNav.lastChild.firstChild).toHaveClass('dropdown-item');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-        .firstChild
-    ).toHaveClass('dropdown-item');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.firstChild.getAttribute(
-        'data-rr-ui-dropdown-item'
-      )
+      userNav.lastChild.firstChild.getAttribute('data-rr-ui-dropdown-item')
     ).toEqual('');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.firstChild.getAttribute(
-        'href'
-      )
-    ).toEqual('/profile');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-        .firstChild
-    ).toHaveTextContent('Profile');
+    expect(userNav.lastChild.firstChild.getAttribute('href')).toEqual(
+      '/notifications'
+    );
+    expect(userNav.lastChild.firstChild).toHaveTextContent('Notifications');
 
+    expect(userNav.lastChild.children[1]).toHaveClass('dropdown-item');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-        .children[1]
-    ).toHaveClass('dropdown-divider');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.children[1].getAttribute(
-        'role'
-      )
-    ).toEqual('separator');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-        .children[1]
-    ).toHaveTextContent('');
-
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-        .lastChild
-    ).toHaveClass('dropdown-item');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.lastChild.getAttribute(
-        'data-rr-ui-dropdown-item'
-      )
+      userNav.lastChild.children[1].getAttribute('data-rr-ui-dropdown-item')
     ).toEqual('');
+    expect(userNav.lastChild.children[1].getAttribute('href')).toEqual(
+      '/profile'
+    );
+    expect(userNav.lastChild.children[1]).toHaveTextContent('Profile');
+
+    expect(userNav.lastChild.children[2]).toHaveClass('dropdown-divider');
+    expect(userNav.lastChild.children[2].getAttribute('role')).toEqual(
+      'separator'
+    );
+    expect(userNav.lastChild.children[2]).toHaveTextContent('');
+
+    expect(userNav.lastChild.lastChild).toHaveClass('dropdown-item');
     expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.lastChild.getAttribute(
-        'role'
-      )
-    ).toEqual('button');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild.lastChild.getAttribute(
-        'tabIndex'
-      )
-    ).toEqual('0');
-    expect(
-      container.firstChild.firstChild.lastChild.firstChild.children[3].lastChild
-        .lastChild
-    ).toHaveTextContent('Logout');
+      userNav.lastChild.lastChild.getAttribute('data-rr-ui-dropdown-item')
+    ).toEqual('');
+    expect(userNav.lastChild.lastChild.getAttribute('role')).toEqual('button');
+    expect(userNav.lastChild.lastChild.getAttribute('tabIndex')).toEqual('0');
+    expect(userNav.lastChild.lastChild).toHaveTextContent('Logout');
   });
 
   it('logs out when clicked', () => {

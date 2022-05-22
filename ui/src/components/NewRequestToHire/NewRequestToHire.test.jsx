@@ -38,10 +38,10 @@ describe('snnap form input', () => {
     wrapper = Enzyme.mount(<NewRequestToHire />);
   });
 
-  it('has a button', () => {
+  it('is a drop down item', () => {
     const { container } = render(<NewRequestToHire />);
     expect(container.children).toHaveLength(2); // button and div to hold modal
-    expect(container.firstChild).toHaveClass('btn btn-primary nav-link');
+    expect(container.firstChild).toHaveClass('dropdown-item');
     expect(container.firstChild.getAttribute('role')).toEqual('button');
     expect(container.firstChild.getAttribute('tabindex')).toEqual('0');
     expect(container.firstChild).toHaveTextContent('New Request to Hire');
