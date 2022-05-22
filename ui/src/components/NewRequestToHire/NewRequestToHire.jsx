@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  Alert,
-  Button,
-  Col,
-  Form,
-  Modal,
-  Nav,
-  Row,
-  Spinner,
-} from 'react-bootstrap';
+import { Alert, Button, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import { jobService } from '../../services/job.service';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import SnnapFormPrice from '../SnnapForms/SnnapFormPrice';
@@ -97,13 +89,13 @@ class NewRequestToHire extends React.Component {
     } = this.state;
     return (
       <>
-        <Nav.Link
+        <NavDropdown.Item
           id="openNewRequestToHireButton"
-          className="btn btn-primary"
+          // className="btn btn-primary"
           onClick={() => this.setState({ validated: false, show: true })}
         >
           New Request to Hire
-        </Nav.Link>
+        </NavDropdown.Item>
 
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div // adding in this div due to issue https://github.com/react-bootstrap/react-bootstrap/issues/3105

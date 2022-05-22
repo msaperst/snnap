@@ -28,7 +28,7 @@ describe('profile page', () => {
 
   it('allows us to navigate to the profile', async () => {
     await driver.get(Test.getApp());
-    const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
+    const dropDownMenu = driver.wait(until.elementLocated(By.id('user-dropdown')));
     await dropDownMenu.click();
     const profileLink = driver.wait(until.elementLocated(By.linkText('Profile')));
     driver.wait(until.elementIsVisible(profileLink));
