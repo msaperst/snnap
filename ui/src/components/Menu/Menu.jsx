@@ -17,9 +17,21 @@ function Menu(props) {
     menu = (
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto">
-          <NewRequestToHire />
-          <Nav.Link href="#2">Item 2</Nav.Link>
-          <NavDropdown title={currentUser.username} id="nav-dropdown">
+          <NavDropdown title="Gigs" id="gig-dropdown">
+            <NewRequestToHire />
+            <NavDropdown.Item href={`/hire-requests/${currentUser.username}`}>
+              My Hire Requests
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+            {/* <NewRequestToWork /> */}
+            <NavDropdown.Item href={`/work-requests/${currentUser.username}`}>
+              My Work Requests
+            </NavDropdown.Item>
+          </NavDropdown>
+          <NavDropdown title={currentUser.username} id="user-dropdown">
+            <NavDropdown.Item href="/notifications">
+              Notifications
+            </NavDropdown.Item>
             <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>

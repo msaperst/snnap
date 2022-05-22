@@ -54,7 +54,7 @@ describe('register page', () => {
 
   it('allows you to register with a valid information', async () => {
     await register('Test', 'User', 'registerUser', 'registerUser@example.org', '0123456789', 'password', 'City', 'State', 'Zip', true);
-    const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
+    const dropDownMenu = driver.wait(until.elementLocated(By.id('user-dropdown')));
     expect(await dropDownMenu.getText()).toEqual('registerUser');
     await Mysql.query(
       `DELETE

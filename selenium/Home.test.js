@@ -35,7 +35,7 @@ describe('home page', () => {
   });
 
   it('allows us to log out', async () => {
-    const dropDownMenu = driver.wait(until.elementLocated(By.id('nav-dropdown')));
+    const dropDownMenu = driver.wait(until.elementLocated(By.id('user-dropdown')));
     await dropDownMenu.click();
     const logoutButton = driver.wait(until.elementLocated(By.linkText('Logout')));
     driver.wait(until.elementIsVisible(logoutButton));

@@ -16,6 +16,8 @@ describe('new request to hire', () => {
     // login as a user
     user = await test.loginUser('newRequestToHireUser');
     await driver.get(Test.getApp());
+    const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')));
+    gigs.click();
     button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
     await button.click();
     modal = driver.wait(until.elementLocated(By.css('[data-testid="newRequestToHireModal"]')));
@@ -28,8 +30,10 @@ describe('new request to hire', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('has a button to open the modal', async () => {
+  it('has a link to open the modal', async () => {
     driver.navigate().refresh();
+    const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')));
+    gigs.click();
     const button = driver.wait(until.elementLocated(By.id('openNewRequestToHireButton')));
     expect(await button.getText()).toEqual('New Request to Hire');
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
