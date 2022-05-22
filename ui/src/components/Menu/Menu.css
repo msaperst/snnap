@@ -4,6 +4,11 @@
 }
 
 .logo {
-  position: absolute;
-  left: 0;
+  position: relative;
+  left: -30px;
+}
+@media only screen and (max-width:640px) {
+  .logo {
+    left: 0;
+  }
 }
