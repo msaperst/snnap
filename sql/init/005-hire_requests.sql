@@ -21,3 +21,5 @@ ALTER TABLE hire_requests DROP COLUMN units;
 ALTER TABLE hire_requests ADD COLUMN durationMax int(11);
 ALTER TABLE hire_requests MODIFY location varchar(256);
 ALTER TABLE hire_requests MODIFY details longtext;
+ALTER TABLE hire_requests DROP COLUMN equipment;
+ALTER TABLE hire_requests DROP COLUMN skills;

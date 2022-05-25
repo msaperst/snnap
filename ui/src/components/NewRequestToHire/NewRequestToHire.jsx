@@ -15,7 +15,8 @@ class NewRequestToHire extends React.Component {
 
     this.state = {
       show: false,
-      status: false,
+      status: null,
+      update: null,
       validated: false,
       isSubmitting: false,
       formData: {},
@@ -60,11 +61,26 @@ class NewRequestToHire extends React.Component {
         )
         .then(
           () => {
-            this.setState({ isSubmitting: false, status: null, show: false });
-            window.location.reload();
+            this.setState({
+              status: null,
+              update: 'New Request to Hire Submitted',
+            });
+            setTimeout(() => {
+              this.setState({
+                isSubmitting: false,
+                show: false,
+                update: null,
+                validated: false,
+              });
+              window.location.reload();
+            }, 5000);
           },
           (error) => {
-            this.setState({ isSubmitting: false, status: error });
+            this.setState({
+              isSubmitting: false,
+              status: error.toString(),
+              update: null,
+            });
           }
         );
     }
@@ -81,6 +97,7 @@ class NewRequestToHire extends React.Component {
     const {
       show,
       status,
+      update,
       validated,
       isSubmitting,
       jobTypes,
@@ -205,6 +222,15 @@ class NewRequestToHire extends React.Component {
                         onClose={() => this.setState({ status: null })}
                       >
                         {status}
+                      </Alert>
+                    )}
+                    {update && (
+                      <Alert
+                        variant="success"
+                        dismissible
+                        onClose={() => this.setState({ update: null })}
+                      >
+                        {update}
                       </Alert>
                     )}
                   </Col>

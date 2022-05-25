@@ -19,6 +19,8 @@ class HomePage extends React.Component {
       filteredOn: null,
       showHelpers: true,
       showEmployers: true,
+      equipment: [],
+      skills: [],
     };
 
     this.filterType = this.filterType.bind(this);
@@ -31,6 +33,12 @@ class HomePage extends React.Component {
       const { currentUser } = this.state;
       currentUser.lastLogin = user.lastLogin;
       this.setState({ currentUser });
+    });
+    jobService.getEquipment().then((equipment) => {
+      this.setState({ equipment });
+    });
+    jobService.getSkills().then((skills) => {
+      this.setState({ skills });
     });
     jobService.getHireRequests().then((hireRequests) => {
       hireRequests.sort(
@@ -94,8 +102,14 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { filteredHireRequests, filteredOn, showHelpers, showEmployers } =
-      this.state;
+    const {
+      filteredHireRequests,
+      filteredOn,
+      showHelpers,
+      showEmployers,
+      equipment,
+      skills,
+    } = this.state;
     const select = (
       <Form.Select
         aria-label="Sort By"
@@ -145,7 +159,12 @@ class HomePage extends React.Component {
         </Form>
 
         {filteredHireRequests.map((hireRequest) => (
-          <RequestToHire key={hireRequest.id} hireRequest={hireRequest} />
+          <RequestToHire
+            key={hireRequest.id}
+            hireRequest={hireRequest}
+            equipment={equipment}
+            skills={skills}
+          />
         ))}
       </>
     );

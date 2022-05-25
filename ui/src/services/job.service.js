@@ -6,7 +6,9 @@ export const jobService = {
   getEquipment,
   getSkills,
   newRequestToHire,
+  getHireRequest,
   getHireRequests,
+  applyToHireRequest,
 };
 
 function getJobTypes() {
@@ -60,7 +62,30 @@ function newRequestToHire(
   );
 }
 
+function getHireRequest(id) {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/jobs/hire-request/${id}`, requestOptions).then(
+    handleResponse
+  );
+}
+
 function getHireRequests() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/jobs/hire-requests`, requestOptions).then(handleResponse);
+}
+
+function applyToHireRequest(hireRequest) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      hireRequest,
+    }),
+  };
+
+  return fetch(`/api/jobs/apply-to-hire-request`, requestOptions).then(
+    handleResponse
+  );
 }

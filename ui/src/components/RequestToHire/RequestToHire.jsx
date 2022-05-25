@@ -1,12 +1,13 @@
-import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { Card, Col, Container, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './RequestToHire.css';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '../Avatar/Avatar';
 import { userService } from '../../services/user.service';
+import ApplyToRequestToHire from '../ApplyToRequestToHire/ApplyToRequestToHire';
 
 function RequestToHire(props) {
-  const { hireRequest } = props;
+  const { hireRequest, equipment, skills } = props;
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
@@ -52,7 +53,12 @@ function RequestToHire(props) {
                       hours
                     </Col>
                     <Col md={3}>
-                      <Button>Submit For Job</Button>
+                      <ApplyToRequestToHire
+                        hireRequest={hireRequest}
+                        user={user}
+                        equipment={equipment}
+                        skills={skills}
+                      />
                     </Col>
                   </Row>
                   <Row>
