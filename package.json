@@ -49,6 +49,6 @@
     "jest-html-reporters": "^3.0.9",
     "jest-junit": "^13.2.0",
     "prettier": "^2.7.1",
-    "selenium-webdriver": "^3.6.0"
+    "selenium-webdriver": "^4.2.0"
   }
 }
