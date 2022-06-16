@@ -74,7 +74,7 @@ function getHireRequests() {
   return fetch(`/api/jobs/hire-requests`, requestOptions).then(handleResponse);
 }
 
-function applyToHireRequest(hireRequest) {
+function applyToHireRequest(hireRequest, formData) {
   const headers = authHeader();
   headers['Content-Type'] = 'application/json';
   const requestOptions = {
@@ -82,6 +82,7 @@ function applyToHireRequest(hireRequest) {
     headers,
     body: JSON.stringify({
       hireRequest,
+      formData,
     }),
   };
 

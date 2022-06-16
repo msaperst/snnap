@@ -41,9 +41,9 @@ class ApplyToRequestToHire extends React.Component {
     const { hireRequest } = this.state;
     const form = document.querySelector('#ApplyToRequestToHireForm');
     if (form.checkValidity() === true) {
-      // const { formData } = this.state;
+      const { formData } = this.state;
       this.setState({ isSubmitting: true });
-      jobService.applyToHireRequest(hireRequest.id).then(
+      jobService.applyToHireRequest(hireRequest.id, formData).then(
         () => {
           this.setState({
             status: null,
@@ -175,17 +175,29 @@ class ApplyToRequestToHire extends React.Component {
                   />
                 </Row>
                 <Row className="mb-3">
-                  <SnnapFormMultiSelect
+                  <SnnapFormInput
                     size={6}
                     name="Equipment"
-                    values={hireRequest.equipment}
-                    options={equipment}
+                    value={
+                      hireRequest.equipment
+                        ? hireRequest.equipment
+                            .map((option) => option.name)
+                            .toString()
+                        : ''
+                    }
+                    readOnly
                   />
-                  <SnnapFormMultiSelect
+                  <SnnapFormInput
                     size={6}
                     name="Skills"
-                    values={hireRequest.skills}
-                    options={skills}
+                    value={
+                      hireRequest.skills
+                        ? hireRequest.skills
+                            .map((option) => option.name)
+                            .toString()
+                        : ''
+                    }
+                    readOnly
                   />
                 </Row>
                 <Row className="mb-3">

@@ -8,6 +8,7 @@ function PortfolioItem(props) {
   return (
     <Row className="mb-3">
       <SnnapFormInput
+        size={11}
         id={`${order}:Description`}
         name="Gallery Description"
         type="textarea"

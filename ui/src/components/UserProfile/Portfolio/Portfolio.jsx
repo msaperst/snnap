@@ -99,28 +99,26 @@ function Portfolio(props) {
 
     // if each row has some data, we should add another row
     let anyEmpty = true;
-    for (let i = 0; i < items.length; i++) {
-      const description = document.getElementById(`${i}:Description`).value;
-      const link = document.getElementById(`${i}:Link`).value;
-      if (description === '' || link === '') {
+    items.forEach((item) => {
+      if (!item.description || !item.link) {
         anyEmpty = false;
-        break;
       }
-    }
+    });
     if (anyEmpty) {
       items.push({});
       setPortfolioItems(items);
     }
 
     // if we just emptied a row, and it's not the last one, we should remove it
-    // TODO - this does odd things, i think because of promises, so leaving out for now...
-    // for (let i = 0; i < items.length; i++) {
-    //   if (items[i].description === '' && items[i].link === '') {
-    //     items.splice(index, 1);
-    //     setPortfolioItems(items);
-    //     break;
-    //   }
-    // }
+    let isEmpty = null;
+    items.forEach((item, index) => {
+      if (!item.description && !item.link && index < items.length - 1) {
+        isEmpty = index;
+      }
+    });
+    if (isEmpty != null) {
+      items.splice(isEmpty, 1);
+    }
   };
 
   return (
