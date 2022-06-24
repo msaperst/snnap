@@ -1,8 +1,8 @@
 import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
-import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
-import PortfolioItem from './PortfolioItem/PortfolioItem';
 import { companyService } from '../../../services/company.service';
+import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
+import PortfolioItems from './PortfolioItems/PortfolioItems';
 
 function Portfolio(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,32 +31,9 @@ function Portfolio(props) {
     return null;
   }
 
-  const removeRequired = () => {
-    const lastDescription = document.getElementById(
-      `${portfolioItems.length - 1}:Description`
-    );
-    const lastLink = document.getElementById(
-      `${portfolioItems.length - 1}:Link`
-    );
-    if (lastDescription.value === '' && lastLink.value === '') {
-      lastDescription.removeAttribute('required');
-      lastLink.removeAttribute('required');
-    }
-  };
-
-  const addRequired = () => {
-    document
-      .getElementById(`${portfolioItems.length - 1}:Description`)
-      .setAttribute('required', '');
-    document
-      .getElementById(`${portfolioItems.length - 1}:Link`)
-      .setAttribute('required', '');
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    removeRequired();
     setValidated(true);
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
@@ -69,7 +46,6 @@ function Portfolio(props) {
           setTimeout(() => {
             setUpdate(null);
             setValidated(false);
-            addRequired();
           }, 5000);
         },
         (error) => {
@@ -84,42 +60,8 @@ function Portfolio(props) {
     setExperience(value);
   };
 
-  const updatePortfolioItems = (key) => {
-    addRequired();
-    // pull the data that we need/want
-    const parts = key.split(':');
-    const index = parseInt(parts[0], 10);
-    const description = document.getElementById(
-      `${parts[0]}:Description`
-    ).value;
-    const link = document.getElementById(`${parts[0]}:Link`).value;
-    const items = [...portfolioItems];
-    items[index] = { description, link };
+  const updatePortfolioItems = (items) => {
     setPortfolioItems(items);
-
-    // if each row has some data, we should add another row
-    let anyEmpty = true;
-    items.forEach((item) => {
-      if (!item.description || !item.link) {
-        anyEmpty = false;
-      }
-    });
-    if (anyEmpty) {
-      items.push({});
-      setPortfolioItems(items);
-    }
-
-    // if we just emptied a row, and it's not the last one, we should remove it
-    let isEmpty = null;
-    items.forEach((item, index) => {
-      if (!item.description && !item.link && index < items.length - 1) {
-        isEmpty = index;
-      }
-    });
-    if (isEmpty != null) {
-      items.splice(isEmpty, 1);
-      setPortfolioItems(items);
-    }
   };
 
   return (
@@ -134,15 +76,10 @@ function Portfolio(props) {
           notRequired
         />
       </Row>
-      {portfolioItems.map((portfolioItem, index) => (
-        <PortfolioItem
-          key={portfolioItem.id || index - 10}
-          order={index}
-          link={portfolioItem.link}
-          description={portfolioItem.description}
-          onChange={updatePortfolioItems}
-        />
-      ))}
+      <PortfolioItems
+        company={company}
+        getPortfolioItems={updatePortfolioItems}
+      />
       <Row className="mb-3">
         <Form.Group as={Col}>
           <Button
