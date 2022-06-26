@@ -73,7 +73,7 @@ function PortfolioItems(props) {
       items.splice(isEmpty, 1);
       setPortfolioItems(items);
     }
-    getPortfolioItems(portfolioItems);
+    getPortfolioItems(items);
     setRequired();
   };
 

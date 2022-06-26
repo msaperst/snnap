@@ -16,14 +16,7 @@ function Portfolio(props) {
   useEffect(() => {
     if (company) {
       setExperience(company.experience);
-      // adding a blank portfolio instance to allow for editing ability
-      let { portfolio } = company;
-      if (portfolio) {
-        portfolio.push({});
-      } else {
-        portfolio = [];
-      }
-      setPortfolioItems(portfolio);
+      setPortfolioItems(company.portfolio);
     }
   }, [company]);
 
