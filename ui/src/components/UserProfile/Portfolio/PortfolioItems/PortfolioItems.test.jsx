@@ -184,8 +184,6 @@ describe('portfolio', () => {
     ).toEqual('');
   });
 
-  // TODO removes an element when removed
-
   const updateX = (value) => {
     x = value;
   };
