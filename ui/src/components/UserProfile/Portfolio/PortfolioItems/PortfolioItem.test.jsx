@@ -9,7 +9,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 describe('portfolio item', () => {
   it('displays the basic portfolio inputs', () => {
-    const { container } = render(<PortfolioItem />);
+    const { container } = render(<PortfolioItem notRequired />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('row mb-3');
 
@@ -21,6 +21,11 @@ describe('portfolio item', () => {
     expect(
       container.firstChild.firstChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('undefined:Description');
+    expect(
+      container.firstChild.firstChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('');
@@ -34,6 +39,11 @@ describe('portfolio item', () => {
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('undefined:Link');
+    expect(
+      container.firstChild.lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('value')
     ).toEqual('');
@@ -56,6 +66,11 @@ describe('portfolio item', () => {
       container.firstChild.firstChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('2:Description');
     expect(
+      container.firstChild.firstChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toEqual('');
+    expect(
       container.firstChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('5');
     // the rest is verified in SnnapFormInput.test.jsx
@@ -68,6 +83,11 @@ describe('portfolio item', () => {
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('2:Link');
+    expect(
+      container.firstChild.lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toEqual('');
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('value')
     ).toEqual('123');

@@ -165,13 +165,15 @@ describe('portfolio', () => {
   it('does not submit if partial portfolio values are present', async () => {
     const company = {
       experience: 'experience',
-      portfolio: [{ description: 'some description' }],
+      portfolio: [],
     };
     const { container } = render(<Portfolio company={company} />);
+    fireEvent.change(
+      container.firstChild.children[2].firstChild.firstChild.firstChild,
+      { target: { value: 'some description' } }
+    );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
@@ -180,13 +182,15 @@ describe('portfolio', () => {
   it('does not submit if other partial portfolio values are present', async () => {
     const company = {
       experience: 'experience',
-      portfolio: [{ link: 'link' }],
+      portfolio: [],
     };
     const { container } = render(<Portfolio company={company} />);
+    fireEvent.change(
+      container.firstChild.children[2].lastChild.firstChild.firstChild,
+      { target: { value: 'some link' } }
+    );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
@@ -199,11 +203,8 @@ describe('portfolio', () => {
     );
     const company = { experience: 'experience', portfolio: [] };
     const { container } = render(<Portfolio company={company} />);
-
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith('experience', [{}]);
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
@@ -243,9 +244,7 @@ describe('portfolio', () => {
     const { container } = render(<Portfolio company={company} />);
 
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     fireEvent.click(
@@ -263,9 +262,7 @@ describe('portfolio', () => {
     const { container } = render(<Portfolio company={company} />);
 
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith('experience', [{}]);
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
@@ -305,9 +302,7 @@ describe('portfolio', () => {
     const { container } = render(<Portfolio company={company} />);
 
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     fireEvent.click(
@@ -324,9 +319,7 @@ describe('portfolio', () => {
     const { container } = render(<Portfolio company={company} />);
 
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     await act(async () => {
@@ -357,129 +350,11 @@ describe('portfolio', () => {
       { target: { value: 'https://linkity.link' } }
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith('new experience', [
       { description: 'some description', link: 'https://linkity.link' },
       {},
     ]);
-  });
-
-  it('adds a new row once description AND link have been filled out', async () => {
-    const company = { experience: '', portfolio: [] };
-    const { container } = render(<Portfolio company={company} />);
-
-    expect(container.children).toHaveLength(1);
-    expect(container.firstChild.getAttribute('noValidate')).toEqual('');
-    expect(container.firstChild.children).toHaveLength(4);
-    fireEvent.change(
-      container.firstChild.children[2].firstChild.firstChild.firstChild,
-      { target: { value: 'some description' } }
-    );
-    expect(container.firstChild.children).toHaveLength(4);
-    fireEvent.change(
-      container.firstChild.children[2].lastChild.firstChild.firstChild,
-      { target: { value: 'https://linkity.link' } }
-    );
-    expect(container.firstChild.children).toHaveLength(5);
-    expect(
-      container.firstChild.children[3].firstChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('1:Description');
-    expect(
-      container.firstChild.children[3].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('1:Link');
-  });
-
-  it('does not have required on last portfolio items', async () => {
-    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
-    companyService.companyService.updatePortfolio.mockResolvedValue(
-      'Some Success'
-    );
-    const company = { experience: 'experience', portfolio: [] };
-    const { container } = render(<Portfolio company={company} />);
-
-    await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
-    });
-    expect(spy).toHaveBeenCalledWith('experience', [{}]);
-
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'required'
-      )
-    ).toBeNull();
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'required'
-      )
-    ).toBeNull();
-  });
-
-  it('does have required on last portfolio items with only description', async () => {
-    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
-    companyService.companyService.updatePortfolio.mockResolvedValue(
-      'Some Success'
-    );
-    const company = { experience: 'experience', portfolio: [] };
-    const { container } = render(<Portfolio company={company} />);
-    fireEvent.change(
-      container.firstChild.children[2].firstChild.firstChild.firstChild,
-      { target: { value: 'some description' } }
-    );
-    await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
-    });
-    expect(spy).toHaveBeenCalledTimes(0);
-
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'required'
-      )
-    ).toEqual('');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'required'
-      )
-    ).toEqual('');
-  });
-
-  it('does have required on last portfolio items with only link', async () => {
-    const spy = jest.spyOn(companyService.companyService, 'updatePortfolio');
-    companyService.companyService.updatePortfolio.mockResolvedValue(
-      'Some Success'
-    );
-    const company = { experience: 'experience', portfolio: [] };
-    const { container } = render(<Portfolio company={company} />);
-    fireEvent.change(
-      container.firstChild.children[2].lastChild.firstChild.firstChild,
-      { target: { value: 'some link' } }
-    );
-    await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
-    });
-    expect(spy).toHaveBeenCalledTimes(0);
-
-    expect(
-      container.firstChild.children[2].firstChild.firstChild.firstChild.getAttribute(
-        'required'
-      )
-    ).toEqual('');
-    expect(
-      container.firstChild.children[2].lastChild.firstChild.firstChild.getAttribute(
-        'required'
-      )
-    ).toEqual('');
   });
 });
