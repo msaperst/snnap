@@ -37,7 +37,7 @@ describe('profile page', () => {
     expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Profile');
   });
 
-  it('has 4 different forms for updated data', async () => {
+  it('has 5 different forms for updated data', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
     const forms = await driver.findElements(By.tagName('form'));
     expect(forms).toHaveLength(5);
@@ -373,10 +373,10 @@ describe('profile page', () => {
     let link = driver.wait(until.elementLocated(By.id('0:Link')));
     experience.sendKeys('Some Experience');
     description.sendKeys('Description')
-    link.sendKeys('Link')
+    link.sendKeys('https://Link.com')
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
     expect(await description.getAttribute('value')).toEqual('Description');
-    expect(await link.getAttribute('value')).toEqual('Link');
+    expect(await link.getAttribute('value')).toEqual('https://Link.com');
     await driver.findElement(By.id('savePortfolioButton')).click();
     const success = driver.wait(until.elementLocated(By.className('alert-success')));
     expect(await success.getText()).toEqual('Portfolio Updated');
@@ -388,7 +388,7 @@ describe('profile page', () => {
     link = driver.wait(until.elementLocated(By.id('0:Link')));
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
     expect(await description.getAttribute('value')).toEqual('Description');
-    expect(await link.getAttribute('value')).toEqual('Link');
+    expect(await link.getAttribute('value')).toEqual('https://Link.com');
   });
 
   it('adds a new row when you fill out both description and link', async () => {
@@ -402,6 +402,23 @@ describe('profile page', () => {
     link.sendKeys('Link')
     expect(await driver.findElements(By.id('1:Description'))).toHaveLength(1);
     expect(await driver.findElements(By.id('1:Link'))).toHaveLength(1);
+  });
+
+  //TODO removes a row
+
+  it('requires a valid link when updating the portfolio values', async () => {
+    let experience = driver.wait(until.elementLocated(By.id('formExperience')));
+    let description = driver.wait(until.elementLocated(By.id('0:Description')));
+    let link = driver.wait(until.elementLocated(By.id('0:Link')));
+    experience.sendKeys('Some Experience');
+    description.sendKeys('Description');
+    link.sendKeys('Link');
+    expect(await experience.getAttribute('value')).toEqual('Some Experience');
+    expect(await description.getAttribute('value')).toEqual('Description');
+    expect(await link.getAttribute('value')).toEqual('Link');
+    await driver.findElement(By.id('savePortfolioButton')).click();
+    const danger = driver.wait(until.elementLocated(By.className('alert-danger')));
+    expect(await danger.getText()).toEqual('Portfolio Link must be a valid URL');
   });
 
   //////////////////
@@ -739,7 +756,4 @@ describe('profile page', () => {
     });
     expect(await nextDivs.findElements(By.tagName('div'))).toHaveLength(5);
   });
-
-  // TODO
-  // able to wipe out values
 });
