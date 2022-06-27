@@ -64,9 +64,9 @@ function PortfolioItems(props) {
 
     // if we just emptied a row, and it's not the last one, we should remove it
     let isEmpty = null;
-    items.forEach((item, index) => {
-      if (!item.description && !item.link && index < items.length - 1) {
-        isEmpty = index;
+    items.forEach((item, i) => {
+      if (!item.description && !item.link && i < items.length - 1) {
+        isEmpty = i;
       }
     });
     if (isEmpty != null) {

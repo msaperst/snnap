@@ -22,6 +22,11 @@ describe('portfolio item', () => {
       container.firstChild.firstChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('undefined:Description');
     expect(
+      container.firstChild.firstChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
+    expect(
       container.firstChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('');
     // the rest is verified in SnnapFormInput.test.jsx
@@ -34,6 +39,11 @@ describe('portfolio item', () => {
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('undefined:Link');
+    expect(
+      container.firstChild.lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('value')
     ).toEqual('');
@@ -56,6 +66,11 @@ describe('portfolio item', () => {
       container.firstChild.firstChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('2:Description');
     expect(
+      container.firstChild.firstChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
+    expect(
       container.firstChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('5');
     // the rest is verified in SnnapFormInput.test.jsx
@@ -68,6 +83,11 @@ describe('portfolio item', () => {
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
     ).toEqual('2:Link');
+    expect(
+      container.firstChild.lastChild.firstChild.firstChild.getAttribute(
+        'required'
+      )
+    ).toBeNull();
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('value')
     ).toEqual('123');

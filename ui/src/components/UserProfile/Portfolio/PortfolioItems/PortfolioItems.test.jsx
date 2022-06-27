@@ -53,7 +53,7 @@ describe('portfolio', () => {
     expect(form.getAttribute('id')).toEqual('0:Description');
     expect(form.getAttribute('type')).toEqual('textarea');
     expect(form).toHaveTextContent('description1');
-    expect(form.getAttribute('required')).toEqual('');
+    expect(form.getAttribute('required')).toBeNull();
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -69,7 +69,7 @@ describe('portfolio', () => {
     expect(form.getAttribute('id')).toEqual('0:Link');
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('link1');
-    expect(form.getAttribute('required')).toEqual('');
+    expect(form.getAttribute('required')).toBeNull();
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -128,12 +128,12 @@ describe('portfolio', () => {
       container.lastChild.firstChild.firstChild.firstChild.getAttribute(
         'required'
       )
-    ).toEqual('');
+    ).toBeNull();
     expect(
       container.lastChild.lastChild.firstChild.firstChild.getAttribute(
         'required'
       )
-    ).toEqual('');
+    ).toBeNull();
   });
 
   it('does have required on last portfolio items with only description', async () => {

@@ -13,12 +13,14 @@ function PortfolioItem(props) {
         type="textarea"
         value={description}
         onChange={onChange}
+        notRequired
       />
       <SnnapFormInput
         id={`${order}:Link`}
         name="Gallery Link"
         value={link}
         onChange={onChange}
+        notRequired
       />
     </Row>
   );
