@@ -46,30 +46,40 @@ router.get('/get/:user', async (req, res) => {
   }
 });
 
-router.post('/update-portfolio', async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).send(errors.errors[0]);
+const updatePortfolioInformationValidation = [
+  check('portfolioItems.*.link', 'Portfolio Link must be a valid URL')
+    .optional()
+    .isURL(),
+];
+
+router.post(
+  '/update-portfolio',
+  updatePortfolioInformationValidation,
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).send(errors.errors[0]);
+    }
+    let token;
+    try {
+      token = await User.isAuth(req.headers.authorization);
+    } catch (error) {
+      return res.status(401).json({
+        message: error.message,
+      });
+    }
+    try {
+      const user = User.auth(token);
+      const company = new Company(await user.getId());
+      await company.setPortfolio(req.body.experience, req.body.portfolioItems);
+      return res.status(200).send();
+    } catch (error) {
+      return res.status(422).send({
+        msg: error.message,
+      });
+    }
   }
-  let token;
-  try {
-    token = await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
-    const user = User.auth(token);
-    const company = new Company(await user.getId());
-    await company.setPortfolio(req.body.experience, req.body.portfolioItems);
-    return res.status(200).send();
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
-});
+);
 
 const updateCompanyInformationValidation = [
   check('website', 'Website must be a valid URL').optional().isURL(),
