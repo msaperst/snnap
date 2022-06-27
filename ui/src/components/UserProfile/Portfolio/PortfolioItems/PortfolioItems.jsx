@@ -29,14 +29,12 @@ function PortfolioItems(props) {
     const lastLink = document.getElementById(
       `${portfolioItems.length - 1}:Link`
     );
-    if (lastDescription) {
-      if (lastDescription.value === '' && lastLink.value === '') {
-        lastDescription.removeAttribute('required');
-        lastLink.removeAttribute('required');
-      } else {
-        lastDescription.setAttribute('required', '');
-        lastLink.setAttribute('required', '');
-      }
+    if (lastDescription.value === '' && lastLink.value === '') {
+      lastDescription.removeAttribute('required');
+      lastLink.removeAttribute('required');
+    } else {
+      lastDescription.setAttribute('required', '');
+      lastLink.setAttribute('required', '');
     }
   };
 
