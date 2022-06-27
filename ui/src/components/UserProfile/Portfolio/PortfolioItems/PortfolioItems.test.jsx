@@ -53,7 +53,7 @@ describe('portfolio', () => {
     expect(form.getAttribute('id')).toEqual('0:Description');
     expect(form.getAttribute('type')).toEqual('textarea');
     expect(form).toHaveTextContent('description1');
-    expect(form.getAttribute('required')).toBeNull();
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -69,7 +69,7 @@ describe('portfolio', () => {
     expect(form.getAttribute('id')).toEqual('0:Link');
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('link1');
-    expect(form.getAttribute('required')).toBeNull();
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -123,6 +123,11 @@ describe('portfolio', () => {
   it('does not have required on last portfolio items', async () => {
     const company = { portfolio: [] };
     const { container } = render(<PortfolioItems company={company} />);
+    expect(container.children).toHaveLength(1);
+    // throwing in an update, as values aren't updated until secondary render
+    fireEvent.change(container.firstChild.firstChild.firstChild.firstChild, {
+      target: { value: '' },
+    });
     expect(container.children).toHaveLength(1);
     expect(
       container.lastChild.firstChild.firstChild.firstChild.getAttribute(

@@ -3,7 +3,7 @@ import React from 'react';
 import SnnapFormInput from '../../../SnnapForms/SnnapFormInput';
 
 function PortfolioItem(props) {
-  const { order, link, description, onChange } = props;
+  const { order, link, description, onChange, notRequired } = props;
 
   return (
     <Row className="mb-3">
@@ -13,14 +13,14 @@ function PortfolioItem(props) {
         type="textarea"
         value={description}
         onChange={onChange}
-        notRequired
+        notRequired={notRequired}
       />
       <SnnapFormInput
         id={`${order}:Link`}
         name="Gallery Link"
         value={link}
         onChange={onChange}
-        notRequired
+        notRequired={notRequired}
       />
     </Row>
   );

@@ -29,12 +29,14 @@ function PortfolioItems(props) {
     const lastLink = document.getElementById(
       `${portfolioItems.length - 1}:Link`
     );
-    if (lastDescription.value === '' && lastLink.value === '') {
-      lastDescription.removeAttribute('required');
-      lastLink.removeAttribute('required');
-    } else {
-      lastDescription.setAttribute('required', '');
-      lastLink.setAttribute('required', '');
+    if (lastDescription) {
+      if (lastDescription.value === '' && lastLink.value === '') {
+        lastDescription.removeAttribute('required');
+        lastLink.removeAttribute('required');
+      } else {
+        lastDescription.setAttribute('required', '');
+        lastLink.setAttribute('required', '');
+      }
     }
   };
 
@@ -79,13 +81,18 @@ function PortfolioItems(props) {
 
   return (
     <>
-      {portfolioItems.map((portfolioItem, index) => (
+      {portfolioItems.map((portfolioItem, index, arr) => (
         <PortfolioItem
           key={portfolioItem.id || index - 10}
           order={index}
           link={portfolioItem.link}
           description={portfolioItem.description}
           onChange={updatePortfolioItems}
+          notRequired={
+            arr.length - 1 === index &&
+            !portfolioItem.link &&
+            !portfolioItem.description
+          }
         />
       ))}
     </>

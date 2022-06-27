@@ -9,7 +9,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 describe('portfolio item', () => {
   it('displays the basic portfolio inputs', () => {
-    const { container } = render(<PortfolioItem />);
+    const { container } = render(<PortfolioItem notRequired />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('row mb-3');
 
@@ -69,7 +69,7 @@ describe('portfolio item', () => {
       container.firstChild.firstChild.firstChild.firstChild.getAttribute(
         'required'
       )
-    ).toBeNull();
+    ).toEqual('');
     expect(
       container.firstChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('5');
@@ -87,7 +87,7 @@ describe('portfolio item', () => {
       container.firstChild.lastChild.firstChild.firstChild.getAttribute(
         'required'
       )
-    ).toBeNull();
+    ).toEqual('');
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('value')
     ).toEqual('123');
