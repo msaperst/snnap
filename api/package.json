@@ -46,7 +46,7 @@
     "express-validator": "^6.14.2",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
-    "owasp-dependency-check": "^0.0.18"
+    "owasp-dependency-check": "^0.0.19"
   },
   "devDependencies": {
     "eslint": "^8.18.0",
