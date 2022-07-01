@@ -47,7 +47,7 @@
   "scripts": {
     "start": "react-scripts start",
     "lint": "eslint ./src/",
-    "owasp": "owasp-dependency-check --scan package-lock.json --project 'number-muncher' -f HTML JSON",
+    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap ui' -f HTML JSON",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
     "test:ci": "react-scripts test --coverage --watchAll=false",

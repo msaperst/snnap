@@ -29,4 +29,4 @@ jobs:
         run: cd api; npm run test
 
       - name: Dependency Check 🐛
-        run: cd api; npm run owasp
+        run: cd api; ls -lart; npm run owasp

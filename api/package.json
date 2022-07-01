@@ -32,7 +32,7 @@
     "start": "nodemon server.js",
     "lint": "eslint ./components ./services server.js",
     "test": "jest --coverage",
-    "owasp": "owasp-dependency-check --scan package-lock.json --project 'number-muncher' -f HTML JSON"
+    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap api' -f HTML JSON"
   },
   "keywords": [],
   "author": "",
