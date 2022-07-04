@@ -25,6 +25,7 @@ class ApplyToRequestToHire extends React.Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateForm = this.updateForm.bind(this);
+    this.updatePortfolioItems = this.updatePortfolioItems.bind(this);
   }
 
   componentDidMount() {
@@ -57,7 +58,9 @@ class ApplyToRequestToHire extends React.Component {
           formData['Facebook Link'] || formData.fb,
           formData['Instagram Link'] || formData.insta,
           formData.Experience || formData.experience,
-          formData
+          formData.Equipment || formData.equipment,
+          formData.Skills || formData.skills,
+          formData.portfolio
         )
         .then(
           () => {
