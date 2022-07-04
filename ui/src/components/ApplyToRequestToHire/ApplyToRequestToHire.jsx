@@ -46,7 +46,6 @@ class ApplyToRequestToHire extends React.Component {
     if (form.checkValidity() === true) {
       const { formData } = this.state;
       this.setState({ isSubmitting: true });
-      // TODO split out formData - still need skills, equipment and portfolio
       jobService
         .applyToHireRequest(
           hireRequest.id,
@@ -114,7 +113,10 @@ class ApplyToRequestToHire extends React.Component {
     const { user, equipment, skills } = this.props;
     return (
       <>
-        <Button onClick={() => this.setState({ show: true })}>
+        <Button
+          id={`openApplyToRequestToHireButton-${hireRequest.id}`}
+          onClick={() => this.setState({ show: true })}
+        >
           Submit For Job
         </Button>
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
@@ -186,7 +188,7 @@ class ApplyToRequestToHire extends React.Component {
                   />
                   <SnnapFormInput
                     size={4}
-                    name="Duration"
+                    name="Pay"
                     value={`${hireRequest.pay} per hour`}
                     readOnly
                   />

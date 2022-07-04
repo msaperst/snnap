@@ -74,7 +74,6 @@ function getHireRequests() {
   return fetch(`/api/jobs/hire-requests`, requestOptions).then(handleResponse);
 }
 
-// TODO - split out formData - still need skills, equipment and portfolio
 function applyToHireRequest(
   hireRequest,
   user,
@@ -85,7 +84,9 @@ function applyToHireRequest(
   fb,
   insta,
   experience,
-  formData
+  equipment,
+  skills,
+  portfolio
 ) {
   const headers = authHeader();
   headers['Content-Type'] = 'application/json';
@@ -102,7 +103,9 @@ function applyToHireRequest(
       fb,
       insta,
       experience,
-      formData,
+      equipment,
+      skills,
+      portfolio,
     }),
   };
 

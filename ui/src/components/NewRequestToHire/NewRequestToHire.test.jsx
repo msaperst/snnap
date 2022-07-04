@@ -17,7 +17,7 @@ const jobService = require('../../services/job.service');
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe('snnap form input', () => {
+describe('new request to hire form', () => {
   let wrapper;
 
   beforeEach(() => {

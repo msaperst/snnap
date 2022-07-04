@@ -108,7 +108,6 @@ class NewRequestToHire extends React.Component {
       <>
         <NavDropdown.Item
           id="openNewRequestToHireButton"
-          // className="btn btn-primary"
           onClick={() => this.setState({ validated: false, show: true })}
         >
           New Request to Hire
