@@ -18,84 +18,83 @@ const companyService = require('../../services/company.service');
 
 describe('apply to request to hire form', () => {
   jest.setTimeout(10000);
-  const hireRequest = {
-    id: 5,
-    type: 'Event',
-    location: 'Fairfax, VA, United States of America',
-    details: "Max's 40th Birthday, woot!!!",
-    pay: 0.5,
-    duration: 8,
-    date_time: '2023-10-13T04:00:00.000Z',
-    user: 1,
-    durationMax: null,
-    typeId: 2,
-    equipment: [
-      {
-        value: 1,
-        name: 'Camera',
-      },
-    ],
-    skills: [
-      {
-        value: 4,
-        name: 'Posing',
-      },
-      {
-        value: 3,
-        name: 'Something',
-      },
-    ],
-  };
-  const user = {
-    id: 3,
-    username: 'msaperst',
-    first_name: 'Max',
-    last_name: 'Saperstone',
-    avatar: null,
-  };
-  const company = {
-    id: 1,
-    user: 1,
-    name: 'Butts R Us',
-    website: 'butts.com',
-    insta: null,
-    fb: null,
-    experience: "None really, but somebody's gotta work this bitch",
-    portfolio: [
-      {
-        id: 1,
-        company: 1,
-        link: 'link1.com',
-        description: 'Gallery 1',
-      },
-    ],
-    equipment: [
-      {
-        value: 2,
-        name: 'Flash',
-      },
-    ],
-    skills: [
-      {
-        value: 1,
-        name: 'Photography',
-      },
-      {
-        value: 2,
-        name: 'Boogers',
-      },
-    ],
-  };
+  let hireRequest;
+  let user;
+  let company;
 
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+    hireRequest = {
+      id: 5,
+      type: 'Event',
+      location: 'Fairfax, VA, United States of America',
+      details: "Max's 40th Birthday, woot!!!",
+      pay: 0.5,
+      duration: 8,
+      date_time: '2023-10-13T04:00:00.000Z',
+      user: 1,
+      durationMax: null,
+      typeId: 2,
+      equipment: [
+        {
+          value: 1,
+          name: 'Camera',
+        },
+      ],
+      skills: [
+        {
+          value: 4,
+          name: 'Posing',
+        },
+        {
+          value: 3,
+          name: 'Something',
+        },
+      ],
+    };
+    user = {
+      id: 3,
+      username: 'msaperst',
+      first_name: 'Max',
+      last_name: 'Saperstone',
+      avatar: null,
+    };
+    company = {
+      id: 1,
+      user: 1,
+      name: 'Butts R Us',
+      website: 'butts.com',
+      insta: null,
+      fb: null,
+      experience: "None really, but somebody's gotta work this bitch",
+      portfolio: [
+        {
+          id: 1,
+          company: 1,
+          link: 'link1.com',
+          description: 'Gallery 1',
+        },
+      ],
+      equipment: [
+        {
+          value: 2,
+          name: 'Flash',
+        },
+      ],
+      skills: [
+        {
+          value: 1,
+          name: 'Photography',
+        },
+        {
+          value: 2,
+          name: 'Boogers',
+        },
+      ],
+    };
     companyService.companyService.get.mockResolvedValue(company);
     jobService.jobService.getHireRequest.mockResolvedValue(hireRequest);
-  });
-
-  afterEach(() => {
-    document.getElementsByTagName('html')[0].innerHTML = '';
   });
 
   it('is a button', () => {
@@ -686,7 +685,7 @@ describe('apply to request to hire form', () => {
     expect(modal).toBeVisible();
     await act(async () => {
       // eslint-disable-next-line no-promise-executor-return
-      await new Promise((r) => setTimeout(r, 5000));
+      await new Promise((r) => setTimeout(r, 7000));
     });
     expect(saveRow.lastChild.children).toHaveLength(0);
     expect(modal).not.toBeVisible();
