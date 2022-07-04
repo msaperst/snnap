@@ -106,7 +106,7 @@ describe('portfolio', () => {
     );
     const form =
       container.firstChild.children[2].firstChild.firstChild.firstChild;
-    expect(form.getAttribute('id')).toEqual('0:Description');
+    expect(form.getAttribute('id')).toEqual('galleryDescription-0');
     expect(form.getAttribute('type')).toEqual('textarea');
     expect(form).toHaveTextContent('description1');
     expect(form.getAttribute('required')).toEqual('');
@@ -123,7 +123,7 @@ describe('portfolio', () => {
     );
     const form =
       container.firstChild.children[2].lastChild.firstChild.firstChild;
-    expect(form.getAttribute('id')).toEqual('0:Link');
+    expect(form.getAttribute('id')).toEqual('galleryLink-0');
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('link1');
     expect(form.getAttribute('required')).toEqual('');

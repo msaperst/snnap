@@ -148,6 +148,14 @@ describe('apply to request to hire form', () => {
   });
 
   it('updates inputs when data is entered', () => {
+    // const wrapper = Enzyme.mount(
+    //   <ApplyToRequestToHire
+    //     hireRequest={hireRequest}
+    //     user={user}
+    //     company={company}
+    //   />
+    // );
+    // wrapper.update();
     expect(wrapper.state().formData).toEqual(company);
     wrapper.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
     const modal = wrapper.find(Modal);
@@ -161,6 +169,8 @@ describe('apply to request to hire form', () => {
     modal.find('#formInstagramLink').simulate('change', event);
     modal.find('#formFacebookLink').simulate('change', event);
     modal.find('#formExperience').simulate('change', event);
+    modal.find('#galleryDescription-0').at(1).simulate('change', event);
+    modal.find('#galleryLink-0').at(0).simulate('change', event);
     expect(wrapper.state().formData).toEqual({
       experience: "None really, but somebody's gotta work this bitch",
       fb: null,
@@ -183,12 +193,9 @@ describe('apply to request to hire form', () => {
       ],
       portfolio: [
         {
-          company: 1,
           description: 'Gallery 1',
-          id: 1,
           link: 'link1.com',
         },
-        {},
         {},
         {},
         {},
@@ -204,20 +211,22 @@ describe('apply to request to hire form', () => {
 
   it('validates values when submitted', () => {
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    expect(wrapper.state().validated).toBeFalsy();
-    wrapper.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
-    const button = wrapper.find(Modal).find('Button').at(0);
+    const instance = wrapper.instance();
+    expect(instance.state().validated).toBeFalsy();
+    instance.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
+    const button = instance.find(Modal).find('Button').at(0);
     expect(button.text()).toEqual('Apply to Request to Hire');
     button.simulate('click');
-    expect(wrapper.state().validated).toBeTruthy();
-    expect(wrapper.state().show).toBeTruthy();
+    expect(instance.state().validated).toBeTruthy();
+    expect(instance.state().show).toBeTruthy();
   });
 
   it('shows error messages on invalid inputs', async () => {
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    wrapper.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
-    await waitFor(() => wrapper.find('.invalid-feedback'));
-    expect(wrapper.find('.invalid-feedback')).toHaveLength(28);
+    const instance = wrapper.instance();
+    instance.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
+    await waitFor(() => instance.find('.invalid-feedback'));
+    expect(instance.find('.invalid-feedback')).toHaveLength(26);
     const items = [
       'job type',
       'date',
@@ -239,51 +248,45 @@ describe('apply to request to hire form', () => {
       'gallery link',
     ];
     for (let i = 0; i < 18; i++) {
-      expect(wrapper.find('.invalid-feedback').at(i).text()).toEqual(
+      expect(instance.find('.invalid-feedback').at(i).text()).toEqual(
         `Please provide a valid ${items[i]}.`
       );
     }
-    wrapper
+    instance
       .find(Modal)
       .find('#formName')
       .simulate('change', {
         preventDefault() {},
         target: { value: '' },
       });
-    wrapper.find(Modal).find('Button').at(0).simulate('click');
-    await waitFor(() => wrapper.firstChild);
+    instance.find(Modal).find('Button').at(0).simulate('click');
+    await waitFor(() => instance.firstChild);
     for (let i = 0; i < 18; i++) {
       expect(
-        wrapper.find('.invalid-feedback').at(i).getDOMNode()
+        instance.find('.invalid-feedback').at(i).getDOMNode()
       ).toBeVisible();
     }
   });
 
-  // it('displays an error message on failure', () => {
-  //   jobService.jobService.applyToHireRequest.mockRejectedValue('Some Error');
-  //   wrapper.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
-  //   expect(wrapper.state().status).toBeNull();
-  //   expect(wrapper.state().update).toBeNull();
-  //   wrapper.find(Modal).find('Button').at(0).simulate('click');
-  //   expect(wrapper.state().status).toEqual('Some Error');
-  //   expect(wrapper.state().update).toBeNull();
-  //   const alert = wrapper.find(Modal).find('Alert').at(0);
-  //   expect(alert.text()).toEqual('Some Error');
-  //   expect(alert.getAttribute('class')).toEqual('danger');
-  //   expect(alert).toBeVisible();
-  // });
-  //
-  // it('displays a success message on success', () => {
-  //   jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-  //   wrapper.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
-  //   expect(wrapper.state().status).toBeNull();
-  //   expect(wrapper.state().update).toBeNull();
-  //   wrapper.find(Modal).find('Button').at(0).simulate('click');
-  //   expect(wrapper.state().status).toBeNull();
-  //   expect(wrapper.state().update).toEqual('Some Success');
-  //   const alert = wrapper.find(Modal).find('Alert').at(0);
-  //   expect(alert.text()).toEqual('Some Error');
-  //   expect(alert.getAttribute('class')).toEqual('success');
-  //   expect(alert).toBeVisible();
-  // });
+  it('displays an error message on failure', async () => {
+    jobService.jobService.applyToHireRequest.mockRejectedValue('Some Error');
+    const instance = wrapper.instance();
+    instance.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
+    expect(instance.state().status).toBeNull();
+    expect(instance.state().update).toBeNull();
+    await instance.find(Modal).find('Button').at(0).simulate('click');
+    expect(instance.state().status).toEqual('Some Error');
+    expect(instance.state().update).toBeNull();
+  });
+
+  it('displays a success message on success', async () => {
+    jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
+    const instance = wrapper.instance();
+    instance.find('#openApplyToRequestToHireButton-5').at(0).simulate('click');
+    expect(instance.state().status).toBeNull();
+    expect(instance.state().update).toBeNull();
+    await instance.find(Modal).find('Button').at(0).simulate('click');
+    expect(instance.state().status).toBeNull();
+    expect(instance.state().update).toEqual('Job Filing Submitted');
+  });
 });

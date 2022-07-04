@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import PortfolioItem from './PortfolioItem';
+import GalleryItem from './GalleryItem';
 
-function PortfolioItems(props) {
+function Gallery(props) {
   const { company, getPortfolioItems } = props;
   const [portfolioItems, setPortfolioItems] = useState([]);
 
@@ -24,10 +24,10 @@ function PortfolioItems(props) {
 
   const setRequired = () => {
     const lastDescription = document.getElementById(
-      `${portfolioItems.length - 1}:Description`
+      `galleryDescription-${portfolioItems.length - 1}`
     );
     const lastLink = document.getElementById(
-      `${portfolioItems.length - 1}:Link`
+      `galleryLink-${portfolioItems.length - 1}`
     );
     if (lastDescription.value === '' && lastLink.value === '') {
       lastDescription.removeAttribute('required');
@@ -40,12 +40,12 @@ function PortfolioItems(props) {
 
   const updatePortfolioItems = (key) => {
     // pull the data that we need/want
-    const parts = key.split(':');
-    const index = parseInt(parts[0], 10);
+    const parts = key.split('-');
+    const index = parseInt(parts[1], 10);
     const description = document.getElementById(
-      `${parts[0]}:Description`
+      `galleryDescription-${index}`
     ).value;
-    const link = document.getElementById(`${parts[0]}:Link`).value;
+    const link = document.getElementById(`galleryLink-${index}`).value;
     const items = [...portfolioItems];
     items[index] = { description, link };
     setPortfolioItems(items);
@@ -80,7 +80,7 @@ function PortfolioItems(props) {
   return (
     <>
       {portfolioItems.map((portfolioItem, index, arr) => (
-        <PortfolioItem
+        <GalleryItem
           key={portfolioItem.id || index - 10}
           order={index}
           link={portfolioItem.link}
@@ -97,4 +97,4 @@ function PortfolioItems(props) {
   );
 }
 
-export default PortfolioItems;
+export default Gallery;

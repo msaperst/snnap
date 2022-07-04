@@ -5,7 +5,7 @@ import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import { jobService } from '../../services/job.service';
 import { companyService } from '../../services/company.service';
 import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
-import PortfolioItems from '../UserProfile/Portfolio/PortfolioItems/PortfolioItems';
+import Gallery from '../UserProfile/Portfolio/Gallery/Gallery';
 import './ApplyToRequestToHire.css';
 
 class ApplyToRequestToHire extends React.Component {
@@ -42,20 +42,21 @@ class ApplyToRequestToHire extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { hireRequest } = this.state;
-    const form = document.querySelector('#ApplyToRequestToHireForm');
+    const form = document.querySelector('#applyToRequestToHireForm');
     if (form.checkValidity() === true) {
       const { formData } = this.state;
+      const { user } = this.props;
       this.setState({ isSubmitting: true });
       jobService
         .applyToHireRequest(
-          hireRequest.id,
-          formData.user,
-          formData.id,
-          formData.Name,
+          hireRequest.id, // hire request id
+          formData.user, // user id
+          formData.id, // company id
+          formData.Name || `${user.first_name} ${user.last_name}`,
           formData.Company || formData.name,
           formData.Website || formData.website,
-          formData['Facebook Link'] || formData.fb,
           formData['Instagram Link'] || formData.insta,
+          formData['Facebook Link'] || formData.fb,
           formData.Experience || formData.experience,
           formData.Equipment || formData.equipment,
           formData.Skills || formData.skills,
@@ -139,7 +140,7 @@ class ApplyToRequestToHire extends React.Component {
             </Modal.Header>
             <Modal.Body className="show-grid">
               <Form
-                id="ApplyToRequestToHireForm"
+                id="applyToRequestToHireForm"
                 noValidate
                 validated={validated}
                 onSubmit={this.handleSubmit}
@@ -302,14 +303,14 @@ class ApplyToRequestToHire extends React.Component {
                     options={skills}
                   />
                 </Row>
-                <PortfolioItems
+                <Gallery
                   company={company}
                   getPortfolioItems={this.updatePortfolioItems}
                 />
                 <Row className="mb-3">
                   <Form.Group as={Col} md={6}>
                     <Button
-                      id="ApplyToRequestToHireButton"
+                      id="applyToRequestToHireButton"
                       type="submit"
                       variant="primary"
                       disabled={isSubmitting}

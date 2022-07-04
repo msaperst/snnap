@@ -3,13 +3,13 @@ import Enzyme from 'enzyme';
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PortfolioItem from './PortfolioItem';
+import GalleryItem from './GalleryItem';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('portfolio item', () => {
   it('displays the basic portfolio inputs', () => {
-    const { container } = render(<PortfolioItem notRequired />);
+    const { container } = render(<GalleryItem notRequired />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('row mb-3');
 
@@ -20,7 +20,7 @@ describe('portfolio item', () => {
     );
     expect(
       container.firstChild.firstChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('undefined:Description');
+    ).toEqual('galleryDescription-undefined');
     expect(
       container.firstChild.firstChild.firstChild.firstChild.getAttribute(
         'required'
@@ -38,7 +38,7 @@ describe('portfolio item', () => {
     );
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('undefined:Link');
+    ).toEqual('galleryLink-undefined');
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute(
         'required'
@@ -52,7 +52,7 @@ describe('portfolio item', () => {
 
   it('displays the portfolio data', () => {
     const { container } = render(
-      <PortfolioItem order={2} link="123" description={5} />
+      <GalleryItem order={2} link="123" description={5} />
     );
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('row mb-3');
@@ -64,7 +64,7 @@ describe('portfolio item', () => {
     );
     expect(
       container.firstChild.firstChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('2:Description');
+    ).toEqual('galleryDescription-2');
     expect(
       container.firstChild.firstChild.firstChild.firstChild.getAttribute(
         'required'
@@ -82,7 +82,7 @@ describe('portfolio item', () => {
     );
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('2:Link');
+    ).toEqual('galleryLink-2');
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute(
         'required'

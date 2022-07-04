@@ -2,7 +2,7 @@ import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { companyService } from '../../../services/company.service';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
-import PortfolioItems from './PortfolioItems/PortfolioItems';
+import Gallery from './Gallery/Gallery';
 
 function Portfolio(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,10 +69,7 @@ function Portfolio(props) {
           notRequired
         />
       </Row>
-      <PortfolioItems
-        company={company}
-        getPortfolioItems={updatePortfolioItems}
-      />
+      <Gallery company={company} getPortfolioItems={updatePortfolioItems} />
       <Row className="mb-3">
         <Form.Group as={Col}>
           <Button

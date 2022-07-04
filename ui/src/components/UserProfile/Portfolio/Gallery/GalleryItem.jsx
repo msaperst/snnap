@@ -2,13 +2,13 @@ import { Row } from 'react-bootstrap';
 import React from 'react';
 import SnnapFormInput from '../../../SnnapForms/SnnapFormInput';
 
-function PortfolioItem(props) {
+function GalleryItem(props) {
   const { order, link, description, onChange, notRequired } = props;
 
   return (
     <Row className="mb-3">
       <SnnapFormInput
-        id={`${order}:Description`}
+        id={`galleryDescription-${order}`}
         name="Gallery Description"
         type="textarea"
         value={description}
@@ -16,7 +16,7 @@ function PortfolioItem(props) {
         notRequired={notRequired}
       />
       <SnnapFormInput
-        id={`${order}:Link`}
+        id={`galleryLink-${order}`}
         name="Gallery Link"
         value={link}
         onChange={onChange}
@@ -26,4 +26,4 @@ function PortfolioItem(props) {
   );
 }
 
-export default PortfolioItem;
+export default GalleryItem;
