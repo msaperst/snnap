@@ -5,6 +5,7 @@ import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import { jobService } from '../../services/job.service';
 import { companyService } from '../../services/company.service';
 import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
+import PortfolioItems from '../UserProfile/Portfolio/PortfolioItems/PortfolioItems';
 import './ApplyToRequestToHire.css';
 
 class ApplyToRequestToHire extends React.Component {
@@ -30,6 +31,7 @@ class ApplyToRequestToHire extends React.Component {
     const { hireRequest } = this.state;
     companyService.get().then((company) => {
       this.setState({ company });
+      this.setState({ formData: company });
     });
     jobService.getHireRequest(hireRequest.id).then((hireRequest) => {
       this.setState({ hireRequest });
@@ -43,29 +45,43 @@ class ApplyToRequestToHire extends React.Component {
     if (form.checkValidity() === true) {
       const { formData } = this.state;
       this.setState({ isSubmitting: true });
-      jobService.applyToHireRequest(hireRequest.id, formData).then(
-        () => {
-          this.setState({
-            status: null,
-            update: 'Job Filing Submitted',
-          });
-          setTimeout(() => {
+      // TODO split out formData - still need skills, equipment and portfolio
+      jobService
+        .applyToHireRequest(
+          hireRequest.id,
+          formData.user,
+          formData.id,
+          formData.Name,
+          formData.Company || formData.name,
+          formData.Website || formData.website,
+          formData['Facebook Link'] || formData.fb,
+          formData['Instagram Link'] || formData.insta,
+          formData.Experience || formData.experience,
+          formData
+        )
+        .then(
+          () => {
+            this.setState({
+              status: null,
+              update: 'Job Filing Submitted',
+            });
+            setTimeout(() => {
+              this.setState({
+                isSubmitting: false,
+                show: false,
+                update: null,
+                validated: false,
+              });
+            }, 5000);
+          },
+          (error) => {
             this.setState({
               isSubmitting: false,
-              show: false,
+              status: error.toString(),
               update: null,
-              validated: false,
             });
-          }, 5000);
-        },
-        (error) => {
-          this.setState({
-            isSubmitting: false,
-            status: error.toString(),
-            update: null,
-          });
-        }
-      );
+          }
+        );
     }
     this.setState({ validated: true });
   }
@@ -73,6 +89,12 @@ class ApplyToRequestToHire extends React.Component {
   updateForm(key, value) {
     const { formData } = this.state;
     formData[key] = value;
+    this.setState({ formData });
+  }
+
+  updatePortfolioItems(items) {
+    const { formData } = this.state;
+    formData.portfolio = items;
     this.setState({ formData });
   }
 
@@ -208,11 +230,13 @@ class ApplyToRequestToHire extends React.Component {
                     size={6}
                     name="Name"
                     value={`${user.first_name} ${user.last_name}`}
+                    onChange={this.updateForm}
                   />
                   <SnnapFormInput
                     size={6}
                     name="Company"
                     value={company.name ? company.name : ''}
+                    onChange={this.updateForm}
                     notRequired
                   />
                 </Row>
@@ -252,6 +276,7 @@ class ApplyToRequestToHire extends React.Component {
                   <SnnapFormInput
                     name="Experience"
                     value={company.experience}
+                    onChange={this.updateForm}
                     type="textarea"
                     notRequired
                   />
@@ -261,16 +286,21 @@ class ApplyToRequestToHire extends React.Component {
                     size={6}
                     name="Equipment"
                     values={company.equipment}
+                    onChange={this.updateForm}
                     options={equipment}
                   />
                   <SnnapFormMultiSelect
                     size={6}
                     name="Skills"
                     values={company.skills}
+                    onChange={this.updateForm}
                     options={skills}
                   />
                 </Row>
-                {/* Portfolio Links */}
+                <PortfolioItems
+                  company={company}
+                  getPortfolioItems={this.updatePortfolioItems}
+                />
                 <Row className="mb-3">
                   <Form.Group as={Col} md={6}>
                     <Button
