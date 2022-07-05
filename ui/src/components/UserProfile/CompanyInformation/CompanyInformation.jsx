@@ -44,40 +44,37 @@ function CompanyInformation(props) {
     event.preventDefault();
     event.stopPropagation();
     setValidated(true);
-    const form = event.currentTarget;
-    if (form.checkValidity() === true) {
-      setIsSubmitting(true);
-      companyService
-        .updateCompanyInformation(
-          formData['Company Name'],
-          !formData.Website || formData.Website === ''
-            ? undefined
-            : formData.Website,
-          !formData['Instagram Link'] || formData['Instagram Link'] === ''
-            ? undefined
-            : formData['Instagram Link'],
-          !formData['Facebook Link'] || formData['Facebook Link'] === ''
-            ? undefined
-            : formData['Facebook Link'],
-          formData.Equipment,
-          formData.Skills
-        )
-        .then(
-          () => {
-            setIsSubmitting(false);
-            setStatus(null);
-            setUpdate('Company Information Updated');
-            setTimeout(() => {
-              setUpdate(null);
-              setValidated(false);
-            }, 5000);
-          },
-          (error) => {
-            setIsSubmitting(false);
-            setStatus(error.toString());
-          }
-        );
-    }
+    setIsSubmitting(true);
+    companyService
+      .updateCompanyInformation(
+        formData['Company Name'],
+        !formData.Website || formData.Website === ''
+          ? undefined
+          : formData.Website,
+        !formData['Instagram Link'] || formData['Instagram Link'] === ''
+          ? undefined
+          : formData['Instagram Link'],
+        !formData['Facebook Link'] || formData['Facebook Link'] === ''
+          ? undefined
+          : formData['Facebook Link'],
+        formData.Equipment,
+        formData.Skills
+      )
+      .then(
+        () => {
+          setIsSubmitting(false);
+          setStatus(null);
+          setUpdate('Company Information Updated');
+          setTimeout(() => {
+            setUpdate(null);
+            setValidated(false);
+          }, 5000);
+        },
+        (error) => {
+          setIsSubmitting(false);
+          setStatus(error.toString());
+        }
+      );
   };
 
   const updateForm = (key, value) => {
