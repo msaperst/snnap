@@ -7,7 +7,7 @@ on: [ push ]
 
 jobs:
   ui:
-
+    name: UI Testing
     runs-on: ubuntu-latest
 
     steps:

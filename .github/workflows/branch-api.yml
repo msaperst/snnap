@@ -7,7 +7,7 @@ on: [ push ]
 
 jobs:
   api:
-
+    name: API Testing
     runs-on: ubuntu-latest
 
     steps:
