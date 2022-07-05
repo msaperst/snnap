@@ -3,6 +3,7 @@ const Test = require('./common/Test');
 require('chromedriver');
 
 describe('new request to hire', () => {
+  jest.setTimeout(10000);
   let test;
   let driver;
   let user;
@@ -56,7 +57,7 @@ describe('new request to hire', () => {
   });
 
   it('shows errors when submitting an empty form', async () => {
-    (await modal.findElement(By.id('newRequestToHireButton'))).click();
+    (await modal.findElement(By.id('createNewRequestButton'))).click();
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
     for(let i = 0; i < 6; i++) {
       expect(await feedbacks[i].isDisplayed()).toBeTruthy();
@@ -105,7 +106,7 @@ describe('new request to hire', () => {
     (await modal.findElement(By.id('formPay'))).sendKeys(pay);
     (await modal.findElement(By.id('formDuration'))).sendKeys(duration);
     (await modal.findElement(By.id('formDate'))).sendKeys(date);
-    (await modal.findElement(By.id('newRequestToHireButton'))).click();
+    (await modal.findElement(By.id('createNewRequestButton'))).click();
   }
 
   async function basicEnterAndCheck() {

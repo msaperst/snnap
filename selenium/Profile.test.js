@@ -324,7 +324,7 @@ describe('profile page', () => {
   it('throws an error if you try to submit with only a description filled out', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
     const portfolio = (await driver.findElements(By.tagName('form')))[4];
-    driver.wait(until.elementLocated(By.id('0:Description')));
+    driver.wait(until.elementLocated(By.id('galleryDescription-0')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
     for (let i = 0; i < feedback.length; i++) {
@@ -332,7 +332,7 @@ describe('profile page', () => {
       expect(await feedback[i].isDisplayed()).toBeFalsy();
     }
     let experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    let description = driver.wait(until.elementLocated(By.id('0:Description')));
+    let description = driver.wait(until.elementLocated(By.id('galleryDescription-0')));
     experience.sendKeys('Some Experience');
     description.sendKeys('Some Description');
     driver.findElement(By.id('savePortfolioButton')).click();
@@ -347,7 +347,7 @@ describe('profile page', () => {
   it('throws an error if you try to submit with only a link filled out', async () => {
     driver.wait(until.elementLocated(By.tagName('h2')));
     const portfolio = (await driver.findElements(By.tagName('form')))[4];
-    driver.wait(until.elementLocated(By.id('0:Description')));
+    driver.wait(until.elementLocated(By.id('galleryDescription-0')));
     const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
     expect(feedback.length).toEqual(3);
     for (let i = 0; i < feedback.length; i++) {
@@ -355,7 +355,7 @@ describe('profile page', () => {
       expect(await feedback[i].isDisplayed()).toBeFalsy();
     }
     let experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    let link = driver.wait(until.elementLocated(By.id('0:Link')));
+    let link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
     experience.sendKeys('Some Experience');
     link.sendKeys('Linky');
     driver.findElement(By.id('savePortfolioButton')).click();
@@ -369,8 +369,8 @@ describe('profile page', () => {
 
   it('allows updating the portfolio values', async () => {
     let experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    let description = driver.wait(until.elementLocated(By.id('0:Description')));
-    let link = driver.wait(until.elementLocated(By.id('0:Link')));
+    let description = driver.wait(until.elementLocated(By.id('galleryDescription-0')));
+    let link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
     experience.sendKeys('Some Experience');
     description.sendKeys('Description')
     link.sendKeys('https://Link.com')
@@ -384,8 +384,8 @@ describe('profile page', () => {
     expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
     driver.navigate().refresh();
     experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    description = driver.wait(until.elementLocated(By.id('0:Description')));
-    link = driver.wait(until.elementLocated(By.id('0:Link')));
+    description = driver.wait(until.elementLocated(By.id('galleryDescription-0')));
+    link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
     expect(await description.getAttribute('value')).toEqual('Description');
     expect(await link.getAttribute('value')).toEqual('https://Link.com');
@@ -393,23 +393,23 @@ describe('profile page', () => {
 
   it('adds a new row when you fill out both description and link', async () => {
     let experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    let description = driver.wait(until.elementLocated(By.id('0:Description')));
-    let link = driver.wait(until.elementLocated(By.id('0:Link')));
-    expect(await driver.findElements(By.id('1:Description'))).toHaveLength(0);
-    expect(await driver.findElements(By.id('1:Link'))).toHaveLength(0);
+    let description = driver.wait(until.elementLocated(By.id('galleryDescription-0')));
+    let link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
+    expect(await driver.findElements(By.id('galleryDescription-1'))).toHaveLength(0);
+    expect(await driver.findElements(By.id('galleryLink-1'))).toHaveLength(0);
     experience.sendKeys('Some Experience');
     description.sendKeys('Description')
     link.sendKeys('Link')
-    expect(await driver.findElements(By.id('1:Description'))).toHaveLength(1);
-    expect(await driver.findElements(By.id('1:Link'))).toHaveLength(1);
+    expect(await driver.findElements(By.id('galleryDescription-1'))).toHaveLength(1);
+    expect(await driver.findElements(By.id('galleryLink-1'))).toHaveLength(1);
   });
 
   //TODO removes a row
 
   it('requires a valid link when updating the portfolio values', async () => {
     let experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    let description = driver.wait(until.elementLocated(By.id('0:Description')));
-    let link = driver.wait(until.elementLocated(By.id('0:Link')));
+    let description = driver.wait(until.elementLocated(By.id('galleryDescription-0')));
+    let link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
     experience.sendKeys('Some Experience');
     description.sendKeys('Description');
     link.sendKeys('Link');
@@ -452,7 +452,7 @@ describe('profile page', () => {
       expect(await feedback[i].getText()).toEqual('');
       expect(await feedback[i].isDisplayed()).toBeFalsy();
     }
-    driver.findElement(By.id('savePasswordButton')).click();
+    driver.findElement(By.id('updatePasswordButton')).click();
     expect(await feedback[0].getText()).toEqual('Please provide a valid current password.');
     expect(await feedback[1].getText()).toEqual('Please provide a valid new password.');
     for (let i = 0; i < feedback.length; i++) {
@@ -467,7 +467,7 @@ describe('profile page', () => {
     newPassword.sendKeys('password1')
     expect(await currentPassword.getAttribute('value')).toEqual('password');
     expect(await newPassword.getAttribute('value')).toEqual('password1');
-    await driver.findElement(By.id('savePasswordButton')).click();
+    await driver.findElement(By.id('updatePasswordButton')).click();
     const success = driver.wait(until.elementLocated(By.className('alert-success')));
     expect(await success.getText()).toEqual('Password Updated');
     await Test.sleep(5000);
@@ -479,7 +479,7 @@ describe('profile page', () => {
     const newPassword = driver.wait(until.elementLocated(By.id('formNewPassword')));
     currentPassword.sendKeys('pass');
     newPassword.sendKeys('password1')
-    await driver.findElement(By.id('savePasswordButton')).click();
+    await driver.findElement(By.id('updatePasswordButton')).click();
     const danger = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await danger.getText()).toEqual('Current password doesn\'t match existing password.');
   });
@@ -489,7 +489,7 @@ describe('profile page', () => {
     const newPassword = driver.wait(until.elementLocated(By.id('formNewPassword')));
     currentPassword.sendKeys('pass');
     newPassword.sendKeys('pass')
-    await driver.findElement(By.id('savePasswordButton')).click();
+    await driver.findElement(By.id('updatePasswordButton')).click();
     const danger = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await danger.getText()).toEqual('Password must be 6 or more characters');
   });
@@ -499,12 +499,12 @@ describe('profile page', () => {
     const newPassword = driver.wait(until.elementLocated(By.id('formNewPassword')));
     currentPassword.sendKeys('pass');
     newPassword.sendKeys('pass')
-    await driver.findElement(By.id('savePasswordButton')).click();
+    await driver.findElement(By.id('updatePasswordButton')).click();
     const danger = driver.wait(until.elementLocated(By.className('alert-danger')));
     expect(await danger.getText()).toEqual('Password must be 6 or more characters');
     currentPassword.sendKeys('word')
     newPassword.sendKeys('word')
-    await driver.findElement(By.id('savePasswordButton')).click();
+    await driver.findElement(By.id('updatePasswordButton')).click();
     const success = driver.wait(until.elementLocated(By.className('alert-success')));
     expect(await success.getText()).toEqual('Password Updated');
     expect(await driver.findElements(By.className('alert-danger'))).toHaveLength(0);
