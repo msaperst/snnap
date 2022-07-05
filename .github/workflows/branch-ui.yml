@@ -6,7 +6,7 @@ name: Branch CI for UI
 on: [ push ]
 
 jobs:
-  build:
+  ui:
 
     runs-on: ubuntu-latest
 

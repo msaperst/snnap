@@ -6,7 +6,7 @@ name: Branch CI for API
 on: [ push ]
 
 jobs:
-  build:
+  api:
 
     runs-on: ubuntu-latest
 
