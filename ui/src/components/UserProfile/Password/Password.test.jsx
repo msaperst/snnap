@@ -95,7 +95,7 @@ describe('personal information', () => {
     );
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('savePasswordButton');
+    ).toEqual('updatePasswordButton');
     expect(
       container.firstChild.lastChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('submit');

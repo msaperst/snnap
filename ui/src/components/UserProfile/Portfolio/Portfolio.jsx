@@ -1,8 +1,9 @@
-import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { companyService } from '../../../services/company.service';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import Gallery from './Gallery/Gallery';
+import Submit from '../../Submit/Submit';
 
 function Portfolio(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,43 +71,14 @@ function Portfolio(props) {
         />
       </Row>
       <Gallery company={company} getPortfolioItems={updatePortfolioItems} />
-      <Row className="mb-3">
-        <Form.Group as={Col}>
-          <Button
-            id="savePortfolioButton"
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting && (
-              <Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            )}
-            Save Portfolio
-          </Button>
-        </Form.Group>
-        <Col>
-          {status && (
-            <Alert variant="danger" dismissible onClose={() => setStatus(null)}>
-              {status}
-            </Alert>
-          )}
-          {update && (
-            <Alert
-              variant="success"
-              dismissible
-              onClose={() => setUpdate(null)}
-            >
-              {update}
-            </Alert>
-          )}
-        </Col>
-      </Row>
+      <Submit
+        buttonText="Save Portfolio"
+        isSubmitting={isSubmitting}
+        error={status}
+        updateError={setStatus}
+        success={update}
+        updateSuccess={setUpdate}
+      />
     </Form>
   );
 }

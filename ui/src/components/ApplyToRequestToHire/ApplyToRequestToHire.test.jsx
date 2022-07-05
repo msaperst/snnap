@@ -464,7 +464,7 @@ describe('apply to request to hire form', () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
     const saveRow = modalForm.lastChild;
     expect(saveRow).toHaveClass('mb-3 row');
-    expect(saveRow.firstChild).toHaveClass('col-md-6');
+    expect(saveRow.firstChild).toHaveClass('col');
     expect(saveRow.firstChild.firstChild).toHaveClass('btn btn-primary');
     expect(saveRow.firstChild.firstChild.getAttribute('id')).toEqual(
       'applyToRequestToHireButton'
@@ -493,7 +493,7 @@ describe('apply to request to hire form', () => {
       screen.getByTestId('applyToRequestToHireModal-5')
     );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
@@ -518,7 +518,7 @@ describe('apply to request to hire form', () => {
     });
     const saveRow = modalForm.lastChild;
     fireEvent.click(saveRow.firstChild.firstChild);
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
@@ -560,7 +560,7 @@ describe('apply to request to hire form', () => {
       ],
       [{ company: 1, description: 'Gallery 1', id: 1, link: 'link1.com' }, {}]
     );
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
     expect(saveRow.lastChild.firstChild).toHaveClass(
       'fade alert alert-danger alert-dismissible show'
@@ -640,7 +640,7 @@ describe('apply to request to hire form', () => {
       ],
       [{ company: 1, description: 'Gallery 1', id: 1, link: 'link1.com' }, {}]
     );
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
     expect(saveRow.lastChild.firstChild).toHaveClass(
       'fade alert alert-success alert-dismissible show'

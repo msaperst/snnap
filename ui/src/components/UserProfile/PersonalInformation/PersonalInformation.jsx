@@ -1,7 +1,8 @@
-import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import { userService } from '../../../services/user.service';
+import Submit from '../../Submit/Submit';
 
 function PersonalInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -101,43 +102,14 @@ function PersonalInformation(props) {
           onChange={updateForm}
         />
       </Row>
-      <Row className="mb-3">
-        <Form.Group as={Col}>
-          <Button
-            id="savePersonalInformationButton"
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting && (
-              <Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            )}
-            Save Personal Information
-          </Button>
-        </Form.Group>
-        <Col>
-          {status && (
-            <Alert variant="danger" dismissible onClose={() => setStatus(null)}>
-              {status}
-            </Alert>
-          )}
-          {update && (
-            <Alert
-              variant="success"
-              dismissible
-              onClose={() => setUpdate(null)}
-            >
-              {update}
-            </Alert>
-          )}
-        </Col>
-      </Row>
+      <Submit
+        buttonText="Save Personal Information"
+        isSubmitting={isSubmitting}
+        error={status}
+        updateError={setStatus}
+        success={update}
+        updateSuccess={setUpdate}
+      />
     </Form>
   );
 }

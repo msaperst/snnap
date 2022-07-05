@@ -262,10 +262,10 @@ describe('new request to hire form', () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
     const saveRow = modalForm.lastChild;
     expect(saveRow).toHaveClass('mb-3 row');
-    expect(saveRow.firstChild).toHaveClass('col-md-6');
+    expect(saveRow.firstChild).toHaveClass('col');
     expect(saveRow.firstChild.firstChild).toHaveClass('btn btn-primary');
     expect(saveRow.firstChild.firstChild.getAttribute('id')).toEqual(
-      'newRequestToHireButton'
+      'createNewRequestButton'
     );
     expect(saveRow.firstChild.firstChild.getAttribute('type')).toEqual(
       'submit'
@@ -285,7 +285,7 @@ describe('new request to hire form', () => {
       screen.getByTestId('newRequestToHireModal')
     );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
@@ -300,7 +300,7 @@ describe('new request to hire form', () => {
     );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     fireEvent.click(saveRow.firstChild.firstChild);
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
@@ -352,7 +352,7 @@ describe('new request to hire form', () => {
       undefined,
       undefined
     );
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
     expect(saveRow.lastChild.firstChild).toHaveClass(
       'fade alert alert-danger alert-dismissible show'
@@ -457,7 +457,7 @@ describe('new request to hire form', () => {
       undefined,
       undefined
     );
-    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
     expect(saveRow.lastChild.firstChild).toHaveClass(
       'fade alert alert-success alert-dismissible show'

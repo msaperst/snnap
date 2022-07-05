@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Button, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { Facebook, Globe, Instagram } from 'react-bootstrap-icons';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import { jobService } from '../../services/job.service';
@@ -7,6 +7,7 @@ import { companyService } from '../../services/company.service';
 import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
 import Gallery from '../UserProfile/Portfolio/Gallery/Gallery';
 import './ApplyToRequestToHire.css';
+import Submit from '../Submit/Submit';
 
 class ApplyToRequestToHire extends React.Component {
   constructor(props) {
@@ -26,6 +27,8 @@ class ApplyToRequestToHire extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateForm = this.updateForm.bind(this);
     this.updatePortfolioItems = this.updatePortfolioItems.bind(this);
+    this.clearUpdate = this.clearUpdate.bind(this);
+    this.clearStatus = this.clearStatus.bind(this);
   }
 
   componentDidMount() {
@@ -99,6 +102,14 @@ class ApplyToRequestToHire extends React.Component {
     const { formData } = this.state;
     formData.portfolio = items;
     this.setState({ formData });
+  }
+
+  clearStatus() {
+    this.setState({ status: null });
+  }
+
+  clearUpdate() {
+    this.setState({ update: null });
   }
 
   render() {
@@ -307,48 +318,14 @@ class ApplyToRequestToHire extends React.Component {
                   company={company}
                   getPortfolioItems={this.updatePortfolioItems}
                 />
-                <Row className="mb-3">
-                  <Form.Group as={Col} md={6}>
-                    <Button
-                      id="applyToRequestToHireButton"
-                      type="submit"
-                      variant="primary"
-                      disabled={isSubmitting}
-                      onClick={this.handleSubmit}
-                    >
-                      {isSubmitting && (
-                        <Spinner
-                          as="span"
-                          animation="grow"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      )}
-                      Apply to Request to Hire
-                    </Button>
-                  </Form.Group>
-                  <Col md={6}>
-                    {status && (
-                      <Alert
-                        variant="danger"
-                        dismissible
-                        onClose={() => this.setState({ status: null })}
-                      >
-                        {status}
-                      </Alert>
-                    )}
-                    {update && (
-                      <Alert
-                        variant="success"
-                        dismissible
-                        onClose={() => this.setState({ update: null })}
-                      >
-                        {update}
-                      </Alert>
-                    )}
-                  </Col>
-                </Row>
+                <Submit
+                  buttonText="Apply to Request to Hire"
+                  isSubmitting={isSubmitting}
+                  error={status}
+                  updateError={this.clearStatus}
+                  success={update}
+                  updateSuccess={this.clearUpdate}
+                />
               </Form>
             </Modal.Body>
           </Modal>
