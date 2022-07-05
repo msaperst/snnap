@@ -6,19 +6,15 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
-import { Modal } from 'react-bootstrap';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import NewRequestToHire from './NewRequestToHire';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
-Enzyme.configure({ adapter: new Adapter() });
-
 describe('new request to hire form', () => {
-  let wrapper;
+  jest.setTimeout(10000);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -35,7 +31,6 @@ describe('new request to hire form', () => {
       { id: 9, name: 'Children' },
       { id: 5, name: 'Retouch' },
     ]);
-    wrapper = Enzyme.mount(<NewRequestToHire />);
   });
 
   it('is a drop down item', () => {
@@ -59,109 +54,510 @@ describe('new request to hire form', () => {
     expect(modal).toBeVisible();
   });
 
-  it('gets the job types', () => {
-    expect(wrapper.state().jobTypes).toEqual([
-      { id: 5, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
-      { id: 7, type: 'Misc', plural: 'Misc' },
-    ]);
+  it('closes the modal when button is clicked', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    fireEvent.click(modal.firstChild.firstChild.lastChild);
+    await act(async () => {
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 2000));
+    });
+    expect(modal).not.toBeVisible();
   });
 
-  it('gets the equipment', () => {
-    expect(wrapper.state().equipment).toEqual([
-      { id: 4, name: 'Camera' },
-      { id: 6, name: 'Lights' },
-    ]);
-  });
+  it('has the correct modal header', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
 
-  it('gets the skills', () => {
-    expect(wrapper.state().skills).toEqual([
-      { id: 9, name: 'Children' },
-      { id: 5, name: 'Retouch' },
-    ]);
-  });
-
-  it('opens the modal when button is clicked', () => {
-    expect(wrapper.state().show).toBeFalsy();
-    const button = wrapper.find('#openNewRequestToHireButton').at(0);
-    expect(button.text()).toEqual('New Request to Hire');
-    button.simulate('click');
-    expect(wrapper.state().show).toBeTruthy();
-  });
-
-  it('has the correct modal header', () => {
-    const button = wrapper.find('#openNewRequestToHireButton').at(0);
-    button.simulate('click');
-    const modal = wrapper.find(Modal);
-    expect(modal.find('.modal-header').at(0).text()).toEqual(
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    expect(modal.firstChild.children).toHaveLength(2);
+    expect(modal.firstChild.firstChild).toHaveTextContent(
       'Create a new request to hire'
     );
   });
 
-  it('updates values when data is selected', () => {
-    expect(wrapper.state().formData).toEqual({});
-    const button = wrapper.find('#openNewRequestToHireButton').at(0);
-    button.simulate('click');
-    const modal = wrapper.find(Modal);
-    modal.find('select').simulate('change', { target: { value: 'hello' } });
-    expect(wrapper.state().formData).toEqual({ 'Job Type': 'hello' });
+  it('has the correct layout for the form', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    expect(modalForm.children).toHaveLength(6);
+    expect(modalForm.getAttribute('noValidate')).toEqual('');
   });
 
-  it('updates inputs when data is entered', () => {
-    expect(wrapper.state().formData).toEqual({});
-    const button = wrapper.find('#openNewRequestToHireButton').at(0);
-    button.simulate('click');
-    const modal = wrapper.find(Modal);
-    const event = {
-      preventDefault() {},
-      target: { value: '100' },
-    };
-    modal.find('#formJobDetails').simulate('change', event);
-    modal.find('#formPay').simulate('change', event);
-    modal.find('#formDuration').simulate('change', event);
-    expect(wrapper.state().formData).toEqual({
-      Duration: '100',
-      'Job Details': '100',
-      Pay: '100',
+  it('first row has the job type selection', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+
+    expect(modalForm.firstChild).toHaveClass('mb-3 row');
+    expect(modalForm.firstChild.children).toHaveLength(1);
+    expect(modalForm.firstChild.firstChild).toHaveClass('col-md-12');
+    const jobTypeInput = modalForm.firstChild.firstChild.firstChild.firstChild;
+    expect(jobTypeInput.getAttribute('id')).toEqual('formJobType');
+    expect(jobTypeInput.getAttribute('aria-label')).toEqual('Job Type');
+    expect(jobTypeInput.getAttribute('readonly')).toBeNull();
+
+    expect(jobTypeInput.children).toHaveLength(3);
+    expect(jobTypeInput.firstChild).toHaveTextContent('Select an option');
+    expect(jobTypeInput.firstChild.getAttribute('value')).toEqual('');
+    expect(jobTypeInput.children[1]).toHaveTextContent("B'nai Mitzvah");
+    expect(jobTypeInput.children[1].getAttribute('value')).toEqual('5');
+    expect(jobTypeInput.lastChild).toHaveTextContent('Misc');
+    expect(jobTypeInput.lastChild.getAttribute('value')).toEqual('7');
+  });
+
+  it('second row has the location and date', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    expect(modalForm.children[1]).toHaveClass('mb-3 row');
+    expect(modalForm.children[1].children).toHaveLength(2);
+
+    expect(modalForm.children[1].firstChild).toHaveClass('col-md-8');
+    const locationInput =
+      modalForm.children[1].firstChild.firstChild.children[1];
+    expect(modalForm.children[1].firstChild.firstChild.firstChild).toHaveClass(
+      'geoapify-close-button'
+    );
+    expect(locationInput.getAttribute('id')).toBeNull();
+    expect(locationInput.getAttribute('placeholder')).toEqual('Location');
+    expect(locationInput.getAttribute('readonly')).toBeNull();
+    expect(locationInput.getAttribute('type')).toEqual('text');
+    expect(locationInput.getAttribute('value')).toBeNull();
+
+    expect(modalForm.children[1].lastChild).toHaveClass('col-md-4');
+    const dateInput = modalForm.children[1].lastChild.firstChild.firstChild;
+    expect(dateInput.getAttribute('id')).toEqual('formDate');
+    expect(dateInput.getAttribute('placeholder')).toEqual('Date');
+    expect(dateInput.getAttribute('readonly')).toBeNull();
+    expect(dateInput.getAttribute('type')).toEqual('date');
+    expect(dateInput.getAttribute('value')).toEqual('');
+  });
+
+  it('third row has the details', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    expect(modalForm.children[2]).toHaveClass('mb-3 row');
+    expect(modalForm.children[2].children).toHaveLength(1);
+
+    expect(modalForm.children[2].firstChild).toHaveClass('col-md-12');
+    const detailsInput = modalForm.children[2].firstChild.firstChild.firstChild;
+    expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
+    expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
+    expect(detailsInput.getAttribute('readonly')).toBeNull();
+    expect(detailsInput.getAttribute('type')).toEqual('textarea');
+    expect(detailsInput.getAttribute('value')).toBeNull();
+    expect(detailsInput).toHaveTextContent('');
+  });
+
+  it('fourth row has the duration and pay', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    expect(modalForm.children[3]).toHaveClass('mb-3 row');
+    expect(modalForm.children[3].children).toHaveLength(2);
+
+    expect(modalForm.children[3].firstChild).toHaveClass('col-md-6');
+    const durationInput =
+      modalForm.children[3].firstChild.firstChild.firstChild;
+    expect(durationInput.getAttribute('id')).toEqual('formDuration');
+    expect(durationInput.getAttribute('placeholder')).toEqual('Duration');
+    expect(durationInput.getAttribute('readonly')).toBeNull();
+    expect(durationInput.getAttribute('type')).toEqual('number');
+    expect(durationInput.getAttribute('value')).toBeNull();
+
+    expect(modalForm.children[3].lastChild).toHaveClass('col-md-6');
+    expect(modalForm.children[3].lastChild.firstChild.firstChild).toHaveClass(
+      'input-group-text'
+    );
+    expect(
+      modalForm.children[3].lastChild.firstChild.firstChild.getAttribute('id')
+    ).toEqual('inputGroupPrePay');
+    const payInput = modalForm.children[3].lastChild.firstChild.children[1];
+    expect(payInput.getAttribute('id')).toEqual('formPay');
+    expect(payInput.getAttribute('placeholder')).toEqual('Pay');
+    expect(payInput.getAttribute('readonly')).toBeNull();
+    expect(payInput.getAttribute('type')).toEqual('number');
+    expect(payInput.getAttribute('value')).toBeNull();
+  });
+
+  it('fifth row has the equipment and skills', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    expect(modalForm.children[4]).toHaveClass('mb-3 row');
+    expect(modalForm.children[4].children).toHaveLength(2);
+
+    expect(modalForm.children[4].firstChild).toHaveClass('col-md-6');
+    expect(
+      modalForm.children[4].firstChild.firstChild.children[2].firstChild
+        .firstChild
+    ).toHaveTextContent('Equipment Needed');
+    // TODO - verify correct options, and that none are selected
+
+    expect(modalForm.children[4].lastChild).toHaveClass('col-md-6');
+    expect(
+      modalForm.children[4].lastChild.firstChild.children[2].firstChild
+        .firstChild
+    ).toHaveTextContent('Skills Needed');
+    // TODO - verify correct options, and that none are selected
+  });
+
+  it('has save information button in the last row', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    const saveRow = modalForm.lastChild;
+    expect(saveRow).toHaveClass('mb-3 row');
+    expect(saveRow.firstChild).toHaveClass('col-md-6');
+    expect(saveRow.firstChild.firstChild).toHaveClass('btn btn-primary');
+    expect(saveRow.firstChild.firstChild.getAttribute('id')).toEqual(
+      'newRequestToHireButton'
+    );
+    expect(saveRow.firstChild.firstChild.getAttribute('type')).toEqual(
+      'submit'
+    );
+    expect(saveRow.firstChild.firstChild).toHaveTextContent(
+      'Create New Request'
+    );
+  });
+
+  it('has no alert or update present in the last row', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
+    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild.children).toHaveLength(0);
+  });
+
+  it('does not submit if values are not present/valid', async () => {
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
+    fireEvent.click(saveRow.firstChild.firstChild);
+    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild.children).toHaveLength(0);
+  });
+
+  it('has an alert on failure of a submission', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
+    jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
+      target: { value: '7' },
     });
+    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
+      target: { value: 'Fairfax, VA' },
+    });
+    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
+      target: { value: '10/13/2030' },
+    });
+    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
+      target: { value: 'Some Deets' },
+    });
+    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
+      target: { value: '8' },
+    });
+    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
+      target: { value: '50' },
+    });
+    // hack to remove location because this is blocking our submission
+    modalForm.children[1].remove();
+    const saveRow = modalForm.lastChild;
+    await act(async () => {
+      fireEvent.click(saveRow.firstChild.firstChild);
+    });
+    expect(spy).toHaveBeenCalledWith(
+      '7',
+      undefined,
+      'Some Deets',
+      '50',
+      '8',
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild.children).toHaveLength(1);
+    expect(saveRow.lastChild.firstChild).toHaveClass(
+      'fade alert alert-danger alert-dismissible show'
+    );
+    expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
+    expect(saveRow.lastChild.firstChild).toHaveTextContent('Some Error');
+    expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
+    expect(
+      saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
+    ).toEqual('Close alert');
+    expect(
+      saveRow.lastChild.firstChild.firstChild.getAttribute('type')
+    ).toEqual('button');
+    expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
   });
 
-  it('validates values when submitted', () => {
-    expect(wrapper.state().validated).toBeFalsy();
-    wrapper.find('#openNewRequestToHireButton').at(0).simulate('click');
-    const button = wrapper.find(Modal).find('Button').at(1);
-    expect(button.text()).toEqual('Create New Request');
-    button.simulate('click');
-    expect(wrapper.state().validated).toBeTruthy();
-    expect(wrapper.state().show).toBeTruthy();
+  it('is able to close an alert after failure', async () => {
+    jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
+      target: { value: '7' },
+    });
+    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
+      target: { value: 'Fairfax, VA' },
+    });
+    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
+      target: { value: '10/13/2030' },
+    });
+    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
+      target: { value: 'Some Deets' },
+    });
+    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
+      target: { value: '8' },
+    });
+    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
+      target: { value: '50' },
+    });
+    // hack to remove location because this is blocking our submission
+    modalForm.children[1].remove();
+    const saveRow = modalForm.lastChild;
+    await act(async () => {
+      fireEvent.click(saveRow.firstChild.firstChild);
+    });
+    expect(saveRow.lastChild.children).toHaveLength(1);
+    fireEvent.click(saveRow.lastChild.firstChild.firstChild);
+    expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
-  it('shows error messages on invalid inputs', async () => {
-    wrapper.find('#openNewRequestToHireButton').at(0).simulate('click');
-    await waitFor(() => wrapper.find('.invalid-feedback'));
-    expect(wrapper.find('.invalid-feedback')).toHaveLength(5);
-    expect(wrapper.find('.invalid-feedback').at(0).text()).toEqual(
-      'Please provide a valid job type.'
+  it('has an alert on success of a submission', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
+    jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
     );
-    expect(wrapper.find('.invalid-feedback').at(1).text()).toEqual(
-      'Please provide a valid date.'
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
+      target: { value: '7' },
+    });
+    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
+      target: { value: 'Fairfax, VA' },
+    });
+    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
+      target: { value: '10/13/2030' },
+    });
+    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
+      target: { value: 'Some Deets' },
+    });
+    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
+      target: { value: '8' },
+    });
+    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
+      target: { value: '50' },
+    });
+    // hack to remove location because this is blocking our submission
+    modalForm.children[1].remove();
+    const saveRow = modalForm.lastChild;
+    await act(async () => {
+      fireEvent.click(saveRow.firstChild.firstChild);
+    });
+    expect(spy).toHaveBeenCalledWith(
+      '7',
+      undefined,
+      'Some Deets',
+      '50',
+      '8',
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
     );
-    expect(wrapper.find('.invalid-feedback').at(2).text()).toEqual(
-      'Please provide a valid job details.'
+    expect(saveRow.lastChild).toHaveClass('col-md-6');
+    expect(saveRow.lastChild.children).toHaveLength(1);
+    expect(saveRow.lastChild.firstChild).toHaveClass(
+      'fade alert alert-success alert-dismissible show'
     );
-    expect(wrapper.find('.invalid-feedback').at(3).text()).toEqual(
-      'Please provide a valid duration.'
+    expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
+    expect(saveRow.lastChild.firstChild).toHaveTextContent(
+      'New Request to Hire Submitted'
     );
-    expect(wrapper.find('.invalid-feedback').at(4).text()).toEqual(
-      'Please provide a valid pay.'
-    );
-    wrapper.find(Modal).find('Button').at(1).simulate('click');
-    await waitFor(() => wrapper.firstChild);
-    for (let i = 0; i < 5; i++) {
-      expect(
-        wrapper.find('.invalid-feedback').at(i).getDOMNode()
-      ).toBeVisible();
-    }
+    expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
+    expect(
+      saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
+    ).toEqual('Close alert');
+    expect(
+      saveRow.lastChild.firstChild.firstChild.getAttribute('type')
+    ).toEqual('button');
+    expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
   });
 
-  // TODO - verify good data submits the form
+  it('is able to close an alert after success', async () => {
+    jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
+      target: { value: '7' },
+    });
+    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
+      target: { value: 'Fairfax, VA' },
+    });
+    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
+      target: { value: '10/13/2030' },
+    });
+    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
+      target: { value: 'Some Deets' },
+    });
+    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
+      target: { value: '8' },
+    });
+    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
+      target: { value: '50' },
+    });
+    // hack to remove location because this is blocking our submission
+    modalForm.children[1].remove();
+    const saveRow = modalForm.lastChild;
+    await act(async () => {
+      fireEvent.click(saveRow.firstChild.firstChild);
+    });
+    expect(saveRow.lastChild.children).toHaveLength(1);
+    fireEvent.click(saveRow.lastChild.firstChild.firstChild);
+    expect(saveRow.lastChild.children).toHaveLength(0);
+  });
+
+  it('removes the success alert after 5 seconds', async () => {
+    jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
+    const { container } = render(<NewRequestToHire />);
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'New Request to Hire');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('newRequestToHireModal')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
+      target: { value: '7' },
+    });
+    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
+      target: { value: 'Fairfax, VA' },
+    });
+    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
+      target: { value: '10/13/2030' },
+    });
+    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
+      target: { value: 'Some Deets' },
+    });
+    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
+      target: { value: '8' },
+    });
+    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
+      target: { value: '50' },
+    });
+    // hack to remove location because this is blocking our submission
+    modalForm.children[1].remove();
+    const saveRow = modalForm.lastChild;
+    await act(async () => {
+      fireEvent.click(saveRow.firstChild.firstChild);
+    });
+    expect(saveRow.lastChild.children).toHaveLength(1);
+    expect(modal).toBeVisible();
+    await act(async () => {
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 7000));
+    });
+    expect(saveRow.lastChild.children).toHaveLength(0);
+    expect(modal).not.toBeVisible();
+  });
 });
