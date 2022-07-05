@@ -21,11 +21,13 @@ const RequestToHire = class {
     const newRequestToHire = new RequestToHire();
     newRequestToHire.instancePromise = (async () => {
       const result = await Mysql.query(
-        `INSERT INTO hire_requests (user, type, location, details, pay, duration, durationMax, date_time)
-         VALUES (${db.escape(user)}, ${db.escape(type)},
-                 ${db.escape(location)}, ${db.escape(details)},
-                 ${db.escape(pay)}, ${db.escape(duration)},
-                 ${db.escape(durationMax)}, ${db.escape(`${date} 00:00:00`)})`
+        `INSERT INTO hire_requests (user, type, location, details, pay, duration, durationMax, date_time) VALUES (${db.escape(
+          user
+        )}, ${db.escape(type)}, ${db.escape(location)}, ${db.escape(
+          details
+        )}, ${db.escape(pay)}, ${db.escape(duration)}, ${db.escape(
+          durationMax
+        )}, ${db.escape(`${date} 00:00:00`)})`
       );
       equipment.map(async (equip) => {
         await Mysql.query(
@@ -65,10 +67,7 @@ const RequestToHire = class {
 
   static async getHireRequests() {
     return Mysql.query(
-      `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type
-       FROM hire_requests
-                INNER JOIN job_types ON hire_requests.type = job_types.id
-       WHERE hire_requests.date_time > NOW();`
+      `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.date_time > NOW();`
     );
   }
 
@@ -76,10 +75,7 @@ const RequestToHire = class {
     await this.instancePromise;
     const hireRequest = (
       await Mysql.query(
-        `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type
-       FROM hire_requests
-                INNER JOIN job_types ON hire_requests.type = job_types.id
-       WHERE hire_requests.id = ${this.id};`
+        `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.id = ${this.id};`
       )
     )[0];
     hireRequest.equipment = await Mysql.query(
