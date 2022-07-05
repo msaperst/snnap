@@ -6,8 +6,8 @@ name: Pull Request CI
 on: [ pull_request ]
 
 jobs:
-  build:
-
+  test:
+    name: Functional Testing
     runs-on: ubuntu-latest
 
     steps:

@@ -39,7 +39,7 @@ function LoginPage() {
           },
           (error) => {
             setIsSubmitting(false);
-            setStatus(error);
+            setStatus(error.toString());
           }
         );
     }

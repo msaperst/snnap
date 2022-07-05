@@ -19,7 +19,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => updateX(),
 }));
 
-describe('snnap form input', () => {
+describe('request to hire', () => {
   let wrapper;
   let wrapper1;
 

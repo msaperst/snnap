@@ -6,8 +6,8 @@ name: Branch CI for UI
 on: [ push ]
 
 jobs:
-  build:
-
+  ui:
+    name: UI Testing
     runs-on: ubuntu-latest
 
     steps:

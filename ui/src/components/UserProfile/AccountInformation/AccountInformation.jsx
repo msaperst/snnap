@@ -1,8 +1,9 @@
-import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import EditAvatar from '../EditAvatar/EditAvatar';
 import { userService } from '../../../services/user.service';
+import Submit from '../../Submit/Submit';
 
 function AccountInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -79,43 +80,14 @@ function AccountInformation(props) {
           onChange={updateForm}
         />
       </Row>
-      <Row className="mb-3">
-        <Form.Group as={Col}>
-          <Button
-            id="saveAccountInformationButton"
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting && (
-              <Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            )}
-            Save Account Information
-          </Button>
-        </Form.Group>
-        <Col>
-          {status && (
-            <Alert variant="danger" dismissible onClose={() => setStatus(null)}>
-              {status}
-            </Alert>
-          )}
-          {update && (
-            <Alert
-              variant="success"
-              dismissible
-              onClose={() => setUpdate(null)}
-            >
-              {update}
-            </Alert>
-          )}
-        </Col>
-      </Row>
+      <Submit
+        buttonText="Save Account Information"
+        isSubmitting={isSubmitting}
+        error={status}
+        updateError={setStatus}
+        success={update}
+        updateSuccess={setUpdate}
+      />
     </Form>
   );
 }

@@ -42,7 +42,7 @@ function UserPage() {
         });
       },
       (error) => {
-        setUserError(error);
+        setUserError(error.toString());
       }
     );
   }, [username]);

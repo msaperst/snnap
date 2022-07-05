@@ -6,8 +6,8 @@ name: Branch CI for API
 on: [ push ]
 
 jobs:
-  build:
-
+  api:
+    name: API Testing
     runs-on: ubuntu-latest
 
     steps:

@@ -70,7 +70,7 @@ class Test {
   }
 
   static async addRequestToHire(type, date) {
-    return RequestToHire.create(1, type, 'Chantilly, VA, United States of America', 'Some details', 200, 4, null, date, '', '');
+    return RequestToHire.create(1, type, 'Chantilly, VA, United States of America', 'Some details', 200, 4, null, date, [], []);
   }
 
   static async removeRequestToHire(id) {

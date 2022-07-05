@@ -54,8 +54,8 @@ router.post(
         req.body.duration,
         req.body.durationMax,
         req.body.date,
-        equipment.toString(),
-        skills.toString()
+        equipment,
+        skills
       );
       return res.status(200).send();
     } catch (error) {
@@ -122,6 +122,27 @@ router.get('/skills', async (req, res) => {
   }
 });
 
+router.get('/hire-request/:id', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  try {
+    const hireRequest = new RequestToHire(req.params.id);
+    if (hireRequest) {
+      return res.send(await hireRequest.getInfo());
+    }
+    return res.status(422).send({ msg: 'hire request not found' });
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
 router.get('/hire-requests', async (req, res) => {
   try {
     await User.isAuth(req.headers.authorization);
@@ -131,12 +152,7 @@ router.get('/hire-requests', async (req, res) => {
     });
   }
   try {
-    const hireRequests = await Mysql.query(
-      `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type
-       FROM hire_requests
-                INNER JOIN job_types ON hire_requests.type = job_types.id
-       WHERE hire_requests.date_time > NOW();`
-    );
+    const hireRequests = await RequestToHire.getHireRequests();
     return res.send(hireRequests);
   } catch (error) {
     return res.status(422).send({

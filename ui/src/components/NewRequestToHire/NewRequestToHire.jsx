@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Button, Col, Form, Modal, Row, Spinner } from 'react-bootstrap';
+import { Form, Modal, Row } from 'react-bootstrap';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { jobService } from '../../services/job.service';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
@@ -8,6 +8,7 @@ import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
 import SnnapFormLocationInput from '../SnnapForms/SnnapFormLocationInput';
 import SnnapFormSelect from '../SnnapForms/SnnapFormSelect';
 import SnnapFormDuration from '../SnnapForms/SnnapFormDuration';
+import Submit from '../Submit/Submit';
 
 class NewRequestToHire extends React.Component {
   constructor(props) {
@@ -15,7 +16,8 @@ class NewRequestToHire extends React.Component {
 
     this.state = {
       show: false,
-      status: false,
+      status: null,
+      update: null,
       validated: false,
       isSubmitting: false,
       formData: {},
@@ -25,6 +27,8 @@ class NewRequestToHire extends React.Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateForm = this.updateForm.bind(this);
+    this.clearUpdate = this.clearUpdate.bind(this);
+    this.clearStatus = this.clearStatus.bind(this);
   }
 
   componentDidMount() {
@@ -60,11 +64,26 @@ class NewRequestToHire extends React.Component {
         )
         .then(
           () => {
-            this.setState({ isSubmitting: false, status: null, show: false });
-            window.location.reload();
+            this.setState({
+              status: null,
+              update: 'New Request to Hire Submitted',
+            });
+            setTimeout(() => {
+              this.setState({
+                isSubmitting: false,
+                show: false,
+                update: null,
+                validated: false,
+              });
+              window.location.reload();
+            }, 5000);
           },
           (error) => {
-            this.setState({ isSubmitting: false, status: error });
+            this.setState({
+              isSubmitting: false,
+              status: error.toString(),
+              update: null,
+            });
           }
         );
     }
@@ -77,10 +96,19 @@ class NewRequestToHire extends React.Component {
     this.setState({ formData });
   }
 
+  clearStatus() {
+    this.setState({ status: null });
+  }
+
+  clearUpdate() {
+    this.setState({ update: null });
+  }
+
   render() {
     const {
       show,
       status,
+      update,
       validated,
       isSubmitting,
       jobTypes,
@@ -91,7 +119,6 @@ class NewRequestToHire extends React.Component {
       <>
         <NavDropdown.Item
           id="openNewRequestToHireButton"
-          // className="btn btn-primary"
           onClick={() => this.setState({ validated: false, show: true })}
         >
           New Request to Hire
@@ -176,39 +203,14 @@ class NewRequestToHire extends React.Component {
                     options={skills}
                   />
                 </Row>
-                <Row className="mb-3">
-                  <Form.Group as={Col} md={6}>
-                    <Button
-                      id="newRequestToHireButton"
-                      type="submit"
-                      variant="primary"
-                      disabled={isSubmitting}
-                      onClick={this.handleSubmit}
-                    >
-                      {isSubmitting && (
-                        <Spinner
-                          as="span"
-                          animation="grow"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      )}
-                      Create New Request
-                    </Button>
-                  </Form.Group>
-                  <Col md={6}>
-                    {status && (
-                      <Alert
-                        variant="danger"
-                        dismissible
-                        onClose={() => this.setState({ status: null })}
-                      >
-                        {status}
-                      </Alert>
-                    )}
-                  </Col>
-                </Row>
+                <Submit
+                  buttonText="Create New Request"
+                  isSubmitting={isSubmitting}
+                  error={status}
+                  updateError={this.clearStatus}
+                  success={update}
+                  updateSuccess={this.clearUpdate}
+                />
               </Form>
             </Modal.Body>
           </Modal>

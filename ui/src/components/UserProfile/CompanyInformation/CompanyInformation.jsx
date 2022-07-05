@@ -1,8 +1,9 @@
-import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { Facebook, Globe, Instagram } from 'react-bootstrap-icons';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import SnnapFormMultiSelect from '../../SnnapForms/SnnapFormMultiSelect';
+import Submit from '../../Submit/Submit';
 import { companyService } from '../../../services/company.service';
 import { jobService } from '../../../services/job.service';
 import './CompanyInformation.css';
@@ -144,43 +145,14 @@ function CompanyInformation(props) {
           options={skills}
         />
       </Row>
-      <Row className="mb-3">
-        <Form.Group as={Col}>
-          <Button
-            id="saveCompanyInformationButton"
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting && (
-              <Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            )}
-            Save Company Information
-          </Button>
-        </Form.Group>
-        <Col>
-          {status && (
-            <Alert variant="danger" dismissible onClose={() => setStatus(null)}>
-              {status}
-            </Alert>
-          )}
-          {update && (
-            <Alert
-              variant="success"
-              dismissible
-              onClose={() => setUpdate(null)}
-            >
-              {update}
-            </Alert>
-          )}
-        </Col>
-      </Row>
+      <Submit
+        buttonText="Save Company Information"
+        isSubmitting={isSubmitting}
+        error={status}
+        updateError={setStatus}
+        success={update}
+        updateSuccess={setUpdate}
+      />
     </Form>
   );
 }

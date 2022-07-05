@@ -217,9 +217,7 @@ describe('Company information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith(
       'Max',
@@ -271,12 +269,10 @@ describe('Company information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    await fireEvent.click(
+    fireEvent.click(
       container.firstChild.lastChild.lastChild.firstChild.firstChild
     );
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
@@ -299,9 +295,7 @@ describe('Company information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith(
       undefined,
@@ -354,12 +348,10 @@ describe('Company information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    await fireEvent.click(
+    fireEvent.click(
       container.firstChild.lastChild.lastChild.firstChild.firstChild
     );
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
@@ -379,9 +371,7 @@ describe('Company information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     await act(async () => {
@@ -407,18 +397,16 @@ describe('Company information', () => {
         }}
       />
     );
-    await fireEvent.change(
+    fireEvent.change(
       container.firstChild.children[1].firstChild.firstChild.firstChild,
       { target: { value: 'City' } }
     );
-    await fireEvent.change(
+    fireEvent.change(
       container.firstChild.children[3].lastChild.firstChild.firstChild,
       { target: { value: '12345' } }
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith(
       'City',
