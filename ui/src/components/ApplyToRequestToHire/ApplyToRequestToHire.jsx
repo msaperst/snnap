@@ -37,8 +37,8 @@ class ApplyToRequestToHire extends React.Component {
       this.setState({ company });
       this.setState({ formData: company });
     });
-    jobService.getHireRequest(hireRequest.id).then((hireRequest) => {
-      this.setState({ hireRequest });
+    jobService.getHireRequest(hireRequest.id).then((hr) => {
+      this.setState({ hireRequest: hr });
     });
   }
 
