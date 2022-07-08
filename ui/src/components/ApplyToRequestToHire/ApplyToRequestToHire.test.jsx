@@ -550,8 +550,8 @@ describe('apply to request to hire form', () => {
       'Max Saperstone',
       'Butts R Us',
       'butts.com',
-      null,
-      null,
+      undefined,
+      undefined,
       "None really, but somebody's gotta work this bitch",
       [{ name: 'Flash', value: 2 }],
       [
@@ -630,8 +630,8 @@ describe('apply to request to hire form', () => {
       'Max Saperstone',
       'Butts R Us',
       'butts.com',
-      null,
-      null,
+      undefined,
+      undefined,
       "None really, but somebody's gotta work this bitch",
       [{ name: 'Flash', value: 2 }],
       [
