@@ -44,12 +44,14 @@ class ApplyToRequestToHire extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const { hireRequest } = this.state;
     const form = document.querySelector('#applyToRequestToHireForm');
     if (form.checkValidity() === true) {
-      const { formData } = this.state;
+      const { hireRequest, formData } = this.state;
       const { user } = this.props;
       this.setState({ isSubmitting: true });
+      const website = formData.Website || formData.website;
+      const insta = formData['Instagram Link'] || formData.insta;
+      const fb = formData['Facebook Link'] || formData.fb;
       jobService
         .applyToHireRequest(
           hireRequest.id, // hire request id
@@ -57,9 +59,9 @@ class ApplyToRequestToHire extends React.Component {
           formData.id, // company id
           formData.Name || `${user.first_name} ${user.last_name}`,
           formData.Company || formData.name,
-          formData.Website || formData.website,
-          formData['Instagram Link'] || formData.insta,
-          formData['Facebook Link'] || formData.fb,
+          !website || website === '' ? undefined : website,
+          !insta || insta === '' ? undefined : insta,
+          !fb || fb === '' ? undefined : fb,
           formData.Experience || formData.experience,
           formData.Equipment || formData.equipment,
           formData.Skills || formData.skills,
