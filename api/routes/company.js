@@ -1,9 +1,10 @@
 const express = require('express');
 
 const router = express.Router();
-const { validationResult, check } = require('express-validator');
+const { check } = require('express-validator');
 const User = require('../components/user/User');
 const Company = require('../components/company/Company');
+const Common = require('./common');
 
 router.get('/get', async (req, res) => {
   let token;
@@ -56,17 +57,9 @@ router.post(
   '/update-portfolio',
   updatePortfolioInformationValidation,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors.errors[0]);
-    }
-    let token;
-    try {
-      token = await User.isAuth(req.headers.authorization);
-    } catch (error) {
-      return res.status(401).json({
-        message: error.message,
-      });
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
     }
     try {
       const user = User.auth(token);
@@ -91,17 +84,9 @@ router.post(
   '/update-company-information',
   updateCompanyInformationValidation,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors.errors[0]);
-    }
-    let token;
-    try {
-      token = await User.isAuth(req.headers.authorization);
-    } catch (error) {
-      return res.status(401).json({
-        message: error.message,
-      });
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
     }
     try {
       const user = User.auth(token);

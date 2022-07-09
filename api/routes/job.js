@@ -1,11 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const { validationResult, check } = require('express-validator');
+const { check } = require('express-validator');
 const Mysql = require('../services/Mysql');
 const User = require('../components/user/User');
 const RequestToHire = require('../components/requestToHire/RequestToHire');
 const ApplicationForRequestToHire = require('../components/applicationForRequestToHire/ApplicationForRequestToHire');
+const Common = require('./common');
 
 const newRequestToHireValidation = [
   check('type', 'Please provide a valid job type.').isNumeric(),
@@ -24,17 +25,9 @@ router.post(
   '/new-request-to-hire',
   newRequestToHireValidation,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors.errors[0]);
-    }
-    let token;
-    try {
-      token = await User.isAuth(req.headers.authorization);
-    } catch (error) {
-      return res.status(401).json({
-        message: error.message,
-      });
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
     }
     try {
       const user = User.auth(token);
@@ -81,17 +74,9 @@ router.post(
   '/apply-to-hire-request',
   applyToRequireToHireValidation,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors.errors[0]);
-    }
-    let token;
-    try {
-      token = await User.isAuth(req.headers.authorization);
-    } catch (error) {
-      return res.status(401).json({
-        message: error.message,
-      });
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
     }
     try {
       const user = User.auth(token);
