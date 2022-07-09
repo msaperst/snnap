@@ -17,6 +17,18 @@ const Common = class {
     }
     return token;
   }
+
+  static getEquipmentAndSkills(req) {
+    let equipment = [];
+    if (req.body.equipment) {
+      equipment = req.body.equipment.map((option) => option.value);
+    }
+    let skills = [];
+    if (req.body.skills) {
+      skills = req.body.skills.map((option) => option.value);
+    }
+    return { equipment, skills };
+  }
 };
 
 module.exports = Common;

@@ -31,14 +31,7 @@ router.post(
     }
     try {
       const user = User.auth(token);
-      let equipment = [];
-      if (req.body.equipment) {
-        equipment = req.body.equipment.map((option) => option.value);
-      }
-      let skills = [];
-      if (req.body.skills) {
-        skills = req.body.skills.map((option) => option.value);
-      }
+      const { equipment, skills } = Common.getEquipmentAndSkills(req);
       RequestToHire.create(
         await user.getId(),
         req.body.type,
@@ -80,14 +73,7 @@ router.post(
     }
     try {
       const user = User.auth(token);
-      let equipment = [];
-      if (req.body.equipment) {
-        equipment = req.body.equipment.map((option) => option.value);
-      }
-      let skills = [];
-      if (req.body.skills) {
-        skills = req.body.skills.map((option) => option.value);
-      }
+      const { equipment, skills } = Common.getEquipmentAndSkills(req);
       ApplicationForRequestToHire.create(
         req.body.hireRequest,
         await user.getId(),
