@@ -99,44 +99,44 @@ describe('apply to request to hire', () => {
     expect(await skills.getAttribute('value')).toEqual('');
   });
 
-  // it('displays profile information', async () => {
-  //   const form = await driver.findElement(By.id('applyToRequestToHireForm'));
-  //   expect(await (await form.findElements(By.className('mb-3 row')))[5].getText()).toEqual('Your Information');
-  //
-  //   const name = await driver.findElement(By.id('formName'));
-  //   expect(await name.getAttribute('readonly')).toBeFalsy();
-  //   expect(await name.getAttribute('value')).toEqual('Test User');
-  //
-  //   const company = await driver.findElement(By.id('formCompany'));
-  //   expect(await company.getAttribute('readonly')).toBeFalsy();
-  //   expect(await company.getAttribute('value')).toEqual('');
-  //
-  //   const website = await driver.findElement(By.id('formWebsite'));
-  //   expect(await website.getAttribute('readonly')).toBeFalsy();
-  //   expect(await website.getAttribute('value')).toEqual('');
-  //
-  //   const insta = await driver.findElement(By.id('formInstagramLink'));
-  //   expect(await insta.getAttribute('readonly')).toBeFalsy();
-  //   expect(await insta.getAttribute('value')).toEqual('');
-  //
-  //   const fb = await driver.findElement(By.id('formFacebookLink'));
-  //   expect(await fb.getAttribute('readonly')).toBeFalsy();
-  //   expect(await fb.getAttribute('value')).toEqual('');
-  //
-  //   const experience = await driver.findElement(By.id('formExperience'));
-  //   expect(await experience.getAttribute('readonly')).toBeFalsy();
-  //   expect(await experience.getAttribute('value')).toEqual('');
-  //
-  //   //TODO - experience/skills - pull from profile
-  //
-  //   const galleryDescription = await driver.findElement(By.id('galleryDescription-0'));
-  //   expect(await galleryDescription.getAttribute('readonly')).toBeFalsy();
-  //   expect(await galleryDescription.getAttribute('value')).toEqual('');
-  //
-  //   const galleryLink = await driver.findElement(By.id('galleryLink-0'));
-  //   expect(await galleryLink.getAttribute('readonly')).toBeFalsy();
-  //   expect(await galleryLink.getAttribute('value')).toEqual('');
-  // });
+  it('displays profile information', async () => {
+    const form = await driver.findElement(By.id('applyToRequestToHireForm'));
+    expect(await (await form.findElements(By.className('mb-3 row')))[5].getText()).toEqual('Your Information');
+
+    const name = await driver.findElement(By.id('formName'));
+    expect(await name.getAttribute('readonly')).toBeFalsy();
+    expect(await name.getAttribute('value')).toEqual('Test User');
+
+    const company = await driver.findElement(By.id('formCompany'));
+    expect(await company.getAttribute('readonly')).toBeFalsy();
+    expect(await company.getAttribute('value')).toEqual('');
+
+    const website = await driver.findElement(By.id('formWebsite'));
+    expect(await website.getAttribute('readonly')).toBeFalsy();
+    expect(await website.getAttribute('value')).toEqual('');
+
+    const insta = await driver.findElement(By.id('formInstagramLink'));
+    expect(await insta.getAttribute('readonly')).toBeFalsy();
+    expect(await insta.getAttribute('value')).toEqual('');
+
+    const fb = await driver.findElement(By.id('formFacebookLink'));
+    expect(await fb.getAttribute('readonly')).toBeFalsy();
+    expect(await fb.getAttribute('value')).toEqual('');
+
+    const experience = await driver.findElement(By.id('formExperience'));
+    expect(await experience.getAttribute('readonly')).toBeFalsy();
+    expect(await experience.getAttribute('value')).toEqual('');
+
+    //TODO - experience/skills - pull from profile
+
+    const galleryDescription = await driver.findElement(By.id('galleryDescription-0'));
+    expect(await galleryDescription.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryDescription.getAttribute('value')).toEqual('');
+
+    const galleryLink = await driver.findElement(By.id('galleryLink-0'));
+    expect(await galleryLink.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryLink.getAttribute('value')).toEqual('');
+  });
 
   it('can be submitted with profile information', () => {
     // TODO
@@ -150,4 +150,6 @@ describe('apply to request to hire', () => {
   it('gets rejected with bad values', () => {
     // TODO - expand for all the bad values
   });
+
+  // TODO - add tests for different button types
 });
