@@ -1,10 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const { validationResult, check } = require('express-validator');
+const { check } = require('express-validator');
 const Mysql = require('../services/Mysql');
 const User = require('../components/user/User');
 const RequestToHire = require('../components/requestToHire/RequestToHire');
+const ApplicationForRequestToHire = require('../components/applicationForRequestToHire/ApplicationForRequestToHire');
+const Common = require('./common');
 
 const newRequestToHireValidation = [
   check('type', 'Please provide a valid job type.').isNumeric(),
@@ -23,28 +25,13 @@ router.post(
   '/new-request-to-hire',
   newRequestToHireValidation,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors.errors[0]);
-    }
-    let token;
-    try {
-      token = await User.isAuth(req.headers.authorization);
-    } catch (error) {
-      return res.status(401).json({
-        message: error.message,
-      });
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
     }
     try {
       const user = User.auth(token);
-      let equipment = [];
-      if (req.body.equipment) {
-        equipment = req.body.equipment.map((option) => option.value);
-      }
-      let skills = [];
-      if (req.body.skills) {
-        skills = req.body.skills.map((option) => option.value);
-      }
+      const { equipment, skills } = Common.getEquipmentAndSkills(req);
       RequestToHire.create(
         await user.getId(),
         req.body.type,
@@ -56,6 +43,50 @@ router.post(
         req.body.date,
         equipment,
         skills
+      );
+      return res.status(200).send();
+    } catch (error) {
+      return res.status(422).send({
+        msg: error.message,
+      });
+    }
+  }
+);
+
+const applyToRequireToHireValidation = [
+  check('userName', 'Please provide a valid name.').not().isEmpty(),
+  check('portfolio.*.link', 'Portfolio Link must be a valid URL')
+    .optional()
+    .isURL(),
+  check('website', 'Website must be a valid URL').optional().isURL(),
+  check('insta', 'Instagram Link must be a valid URL').optional().isURL(),
+  check('fb', 'Facebook Link must be a valid URL').optional().isURL(),
+];
+
+router.post(
+  '/apply-to-hire-request',
+  applyToRequireToHireValidation,
+  async (req, res) => {
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
+    }
+    try {
+      const user = User.auth(token);
+      const { equipment, skills } = Common.getEquipmentAndSkills(req);
+      ApplicationForRequestToHire.create(
+        req.body.hireRequest,
+        await user.getId(),
+        req.body.company,
+        req.body.userName,
+        req.body.companyName,
+        req.body.website,
+        req.body.insta,
+        req.body.fb,
+        req.body.experience,
+        equipment,
+        skills,
+        req.body.portfolio
       );
       return res.status(200).send();
     } catch (error) {

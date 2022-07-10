@@ -1,9 +1,10 @@
 const express = require('express');
 
 const router = express.Router();
-const { validationResult, check } = require('express-validator');
+const { check } = require('express-validator');
 const User = require('../components/user/User');
 const Mysql = require('../services/Mysql');
+const Common = require('./common');
 
 router.get('/get', async (req, res) => {
   let token;
@@ -52,17 +53,9 @@ const setAvatarValidation = [
 ];
 
 router.post('/set-avatar', setAvatarValidation, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).send(errors.errors[0]);
-  }
-  let token;
-  try {
-    token = await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
+  const token = await Common.checkInput(req, res);
+  if (typeof token !== 'string' && !(token instanceof String)) {
+    return token;
   }
   try {
     const user = User.auth(token);
@@ -86,17 +79,9 @@ router.post(
   '/update-account-information',
   updateAccountInformationValidation,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors.errors[0]);
-    }
-    let token;
-    try {
-      token = await User.isAuth(req.headers.authorization);
-    } catch (error) {
-      return res.status(401).json({
-        message: error.message,
-      });
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
     }
     try {
       const user = User.auth(token);
@@ -122,17 +107,9 @@ router.post(
   '/update-personal-information',
   updatePersonalInformationValidation,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors.errors[0]);
-    }
-    let token;
-    try {
-      token = await User.isAuth(req.headers.authorization);
-    } catch (error) {
-      return res.status(401).json({
-        message: error.message,
-      });
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
     }
     try {
       const user = User.auth(token);
@@ -160,17 +137,9 @@ const updatePasswordValidation = [
 ];
 
 router.post('/update-password', updatePasswordValidation, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).send(errors.errors[0]);
-  }
-  let token;
-  try {
-    token = await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
+  const token = await Common.checkInput(req, res);
+  if (typeof token !== 'string' && !(token instanceof String)) {
+    return token;
   }
   try {
     const user = User.auth(token);

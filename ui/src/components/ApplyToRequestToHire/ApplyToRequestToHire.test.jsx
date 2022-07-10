@@ -261,7 +261,7 @@ describe('apply to request to hire form', () => {
     expect(payInput.getAttribute('placeholder')).toEqual('Pay');
     expect(payInput.getAttribute('readonly')).toEqual('');
     expect(payInput.getAttribute('type')).toEqual('text');
-    expect(payInput.getAttribute('value')).toEqual('0.5 per hour');
+    expect(payInput.getAttribute('value')).toEqual('$0.5 per hour');
 
     // job info third row
     expect(modalForm.children[3].children).toHaveLength(1);
@@ -550,8 +550,8 @@ describe('apply to request to hire form', () => {
       'Max Saperstone',
       'Butts R Us',
       'butts.com',
-      null,
-      null,
+      undefined,
+      undefined,
       "None really, but somebody's gotta work this bitch",
       [{ name: 'Flash', value: 2 }],
       [
@@ -630,8 +630,8 @@ describe('apply to request to hire form', () => {
       'Max Saperstone',
       'Butts R Us',
       'butts.com',
-      null,
-      null,
+      undefined,
+      undefined,
       "None really, but somebody's gotta work this bitch",
       [{ name: 'Flash', value: 2 }],
       [

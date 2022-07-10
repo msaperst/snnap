@@ -26,6 +26,7 @@ describe('home page', () => {
     for (const requestToHire of requestToHires) {
       await Test.removeRequestToHire(await requestToHire.getId());
     }
+    requestToHires = [];
     // close the driver
     await test.cleanUp();
   }, 15000);

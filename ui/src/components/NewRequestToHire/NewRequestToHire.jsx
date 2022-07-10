@@ -70,19 +70,19 @@ class NewRequestToHire extends React.Component {
             });
             setTimeout(() => {
               this.setState({
-                isSubmitting: false,
                 show: false,
                 update: null,
                 validated: false,
+                isSubmitting: false,
               });
               window.location.reload();
             }, 5000);
           },
           (error) => {
             this.setState({
-              isSubmitting: false,
               status: error.toString(),
               update: null,
+              isSubmitting: false,
             });
           }
         );
