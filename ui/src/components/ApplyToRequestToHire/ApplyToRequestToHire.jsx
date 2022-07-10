@@ -203,7 +203,7 @@ class ApplyToRequestToHire extends React.Component {
                   <SnnapFormInput
                     size={4}
                     name="Pay"
-                    value={`${hireRequest.pay} per hour`}
+                    value={`$${hireRequest.pay} per hour`}
                     readOnly
                   />
                 </Row>
