@@ -97,6 +97,29 @@ router.post(
   }
 );
 
+router.get('/hire-request-applications/:id', async (req, res) => {
+  try {
+    await User.isAuth(req.headers.authorization);
+  } catch (error) {
+    return res.status(401).json({
+      message: error.message,
+    });
+  }
+  try {
+    const applications = ApplicationForRequestToHire.getApplications(
+      req.params.id
+    );
+    if (applications) {
+      return res.send(await applications);
+    }
+    return res.status(422).send({ msg: 'hire request applications not found' });
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
 // information about our system
 router.get('/types', async (req, res) => {
   try {

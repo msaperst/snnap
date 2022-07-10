@@ -109,6 +109,7 @@ class HomePage extends React.Component {
       showEmployers,
       equipment,
       skills,
+      currentUser,
     } = this.state;
     const select = (
       <Form.Select
@@ -161,6 +162,7 @@ class HomePage extends React.Component {
         {filteredHireRequests.map((hireRequest) => (
           <RequestToHire
             key={hireRequest.id}
+            currentUser={currentUser}
             hireRequest={hireRequest}
             equipment={equipment}
             skills={skills}

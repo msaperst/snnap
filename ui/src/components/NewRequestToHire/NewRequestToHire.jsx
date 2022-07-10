@@ -75,7 +75,7 @@ class NewRequestToHire extends React.Component {
                 validated: false,
                 isSubmitting: false,
               });
-              window.location.reload();
+              window.location.reload(); // TODO - figure out how to redraw
             }, 5000);
           },
           (error) => {
