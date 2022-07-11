@@ -41,7 +41,7 @@ function RequestToHire(props) {
   return (
     <Row>
       <Col>
-        <Card>
+        <Card data-testid={`requestToHire-${hireRequest.id}`}>
           <Card.Body>
             <Container>
               <Row>

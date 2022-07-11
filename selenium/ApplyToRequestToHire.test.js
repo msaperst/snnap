@@ -6,7 +6,8 @@ describe('apply to request to hire', () => {
   let driver;
   let user;
   let requestToHires = [];
-  let modal;
+  let applicationsForRequestToHires = [];
+  let form;
 
   beforeEach(async () => {
     test = new Test();
@@ -14,11 +15,10 @@ describe('apply to request to hire', () => {
     driver = await test.getDriver();
     // login as a user
     user = await test.loginUser('newApplyToRequestToHireUser');
-    requestToHires.push(await Test.addRequestToHire(1, '2023-03-12'));
+    requestToHires.push(await Test.addRequestToHire(0, 1, '2023-03-12'));
     await driver.get(Test.getApp());
-    const card = driver.wait(until.elementLocated(By.className('card-body')));
-    await card.findElement(By.id(`openApplyToRequestToHireButton-${await requestToHires[0].getId()}`)).click();
-    modal = driver.wait(until.elementLocated(By.className('modal-dialog')));
+    driver.wait(until.elementLocated(By.id(`openApplyToRequestToHireButton-${await requestToHires[0].getId()}`))).click();
+    form = driver.wait(until.elementLocated(By.id('applyToRequestToHireForm')));
   }, 10000);
 
   afterEach(async () => {
@@ -27,6 +27,11 @@ describe('apply to request to hire', () => {
       await Test.removeRequestToHire(await requestToHire.getId());
     }
     requestToHires = [];
+    // clean up the applications for hire requests
+    for (const applicationsForRequestToHire of applicationsForRequestToHires) {
+      await Test.removeApplicationForRequestToHire(await applicationsForRequestToHire.getId());
+    }
+    applicationsForRequestToHires = [];
     // delete the user
     await test.removeUser();
     // close the driver
@@ -34,28 +39,61 @@ describe('apply to request to hire', () => {
   }, 15000);
 
   it('can be viewed from any hire request', async () => {
-    requestToHires.push(await Test.addRequestToHire(2, '2023-03-10'));
-    requestToHires.push(await Test.addRequestToHire(4, '2023-03-10'));
-    driver.navigate().refresh();
-    const cards = await driver.findElements(By.className('card-body'));
-    for (const card in cards) {
+    requestToHires.push(await Test.addRequestToHire(0, 2, '2023-03-10'));
+    requestToHires.push(await Test.addRequestToHire(1, 4, '2023-03-10'));
+    await driver.navigate().refresh();
+    for(const requestToHire in requestToHires) {
+      console.log(`SOME ID: ${await requestToHire.getId()}`);
+      const card = driver.wait(until.elementLocated(By.css(`*[data-testid="requestToHire-${await requestToHire.getId()}"]`)));
       expect(await card.findElement(By.tagName('button')).isDisplayed()).toBeTruthy();
     }
   });
 
+  it('has the submit button when someone else created the request', async () => {
+    await driver.navigate().refresh();
+    const requestToHire = requestToHires[0];
+    const card = driver.wait(until.elementLocated(By.css(`*[data-testid="requestToHire-${await requestToHire.getId()}"]`)));
+    const button = card.findElement(By.tagName('button'));
+    expect(await button.isDisplayed()).toBeTruthy();
+    expect(await button.isEnabled()).toBeTruthy();
+    expect(await button.getText()).toEqual('Submit For Job');
+  });
+
+  it('has the view applications button when you created the request', async () => {
+    requestToHires.push(await Test.addRequestToHire(await user.getId(), 4, '2023-03-10'));
+    await driver.navigate().refresh();
+    const requestToHire = requestToHires[1];
+    const card = driver.wait(until.elementLocated(By.css(`*[data-testid="requestToHire-${await requestToHire.getId()}"]`)));
+    const button = card.findElement(By.tagName('button'));
+    expect(await button.isDisplayed()).toBeTruthy();
+    expect(await button.isEnabled()).toBeTruthy();
+    expect(await button.getText()).toEqual('Show Applications');
+  });
+
+  it('has the button disabled when you already applied to the request', async () => {
+    applicationsForRequestToHires.push(await Test.addApplicationForRequestToHire(await requestToHires[0].getId(), await user.getId(), 0));
+    await driver.navigate().refresh();
+    const requestToHire = requestToHires[0];
+    const card = driver.wait(until.elementLocated(By.css(`*[data-testid="requestToHire-${await requestToHire.getId()}"]`)));
+    const button = card.findElement(By.tagName('button'));
+    expect(await button.isDisplayed()).toBeTruthy();
+    expect(await button.isEnabled()).toBeFalsy();
+    expect(await button.getText()).toEqual('Already Applied');
+  });
+
   it('displays hire request application', async () => {
     const events = ['Wedding', "B'nai Mitzvah", 'Commercial Event', 'Misc'];
-    requestToHires.push(await Test.addRequestToHire(2, '2024-03-10'));
-    requestToHires.push(await Test.addRequestToHire(3, '2025-03-10'));
-    requestToHires.push(await Test.addRequestToHire(4, '2026-03-10'));
-    driver.navigate().refresh();
-    const cards = await driver.findElements(By.className('card-body'));
+    requestToHires.push(await Test.addRequestToHire(0, 2, '2024-03-10'));
+    requestToHires.push(await Test.addRequestToHire(0, 3, '2025-03-10'));
+    requestToHires.push(await Test.addRequestToHire(0, 4, '2026-03-10'));
+    await driver.navigate().refresh();
     let i = 0;
-    for (const card in cards) {
+    for (const requestToHire in requestToHires) {
+      const card = driver.wait(until.elementLocated(By.id(`openApplyToRequestToHireButton-${await requestToHire.getId()}`)));
       i++;
       await card.findElement(By.tagName('button')).click();
-      modal = driver.wait(until.elementLocated(By.className('modal-dialog')));
-      expect(modal.isDisplayed()).toBeTruthy();
+      const modal = driver.wait(until.elementLocated(By.className('modal-dialog')));
+      expect(await modal.isDisplayed()).toBeTruthy();
       expect(await modal.findElement(By.className('modal-title')).getText()).toEqual(`Submit to work the ${events[i]} Session`);
       const rows = await modal.findElements(By.className('mb-3 row'));
       expect(rows).toHaveLength(12);
@@ -63,7 +101,6 @@ describe('apply to request to hire', () => {
   });
 
   it('displays hire request information', async () => {
-    const form = await driver.findElement(By.id('applyToRequestToHireForm'));
     expect(await (await form.findElements(By.className('mb-3 row')))[0].getText()).toEqual('Job Information');
 
     const jobType = await driver.findElement(By.id('formJobType'));
@@ -100,7 +137,6 @@ describe('apply to request to hire', () => {
   });
 
   it('displays profile information', async () => {
-    const form = await driver.findElement(By.id('applyToRequestToHireForm'));
     expect(await (await form.findElements(By.className('mb-3 row')))[5].getText()).toEqual('Your Information');
 
     const name = await driver.findElement(By.id('formName'));
@@ -138,18 +174,16 @@ describe('apply to request to hire', () => {
     expect(await galleryLink.getAttribute('value')).toEqual('');
   });
 
-  it('can be submitted with profile information', () => {
-    // TODO
-  });
-  it('can be submitted with updated information', () => {
-    // TODO
-  });
-  it('can not be submitted if name is missing', () => {
-    // TODO
-  });
-  it('gets rejected with bad values', () => {
-    // TODO - expand for all the bad values
-  });
-
-  // TODO - add tests for different button types
+  // it('can be submitted with profile information', () => {
+  //   // TODO
+  // });
+  // it('can be submitted with updated information', () => {
+  //   // TODO
+  // });
+  // it('can not be submitted if name is missing', () => {
+  //   // TODO
+  // });
+  // it('gets rejected with bad values', () => {
+  //   // TODO - expand for all the bad values
+  // });
 });
