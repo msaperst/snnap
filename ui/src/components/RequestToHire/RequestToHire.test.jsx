@@ -2,10 +2,14 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
+import { render, waitFor } from '@testing-library/react';
 import RequestToHire from './RequestToHire';
 
 jest.mock('../../services/user.service');
 const userService = require('../../services/user.service');
+
+jest.mock('../../services/job.service');
+const jobService = require('../../services/job.service');
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -21,80 +25,165 @@ jest.mock('react-router-dom', () => ({
 
 describe('request to hire', () => {
   let wrapper;
-  let wrapper1;
+
+  let hireRequest;
+  let hireRequestDuration;
+  let createUser;
+  let otherUser;
 
   beforeEach(() => {
+    jobService.jobService.getHireRequestApplications.mockResolvedValue([]);
     userService.userService.get.mockResolvedValue({
       first_name: 'Max',
       last_name: 'Saperstone',
     });
+
+    hireRequest = {
+      id: 5,
+      type: "B'nai Mitzvah",
+      location: 'Fairfax, VA, United States of America',
+      details: 'Some details',
+      pay: 200,
+      duration: 2,
+      units: 'Hours',
+      date_time: '2022-03-04T23:40:00.000Z',
+      equipment: '',
+      skills: '',
+      user: 4,
+      typeId: 5,
+    };
+    hireRequestDuration = {
+      id: 5,
+      type: "B'nai Mitzvah",
+      location: 'Fairfax, VA, United States of America',
+      details: 'Some details',
+      pay: 200,
+      duration: 2,
+      durationMax: 3,
+      units: 'Hours',
+      date_time: '2022-03-04T23:40:00.000Z',
+      equipment: '',
+      skills: '',
+      user: 4,
+      typeId: 5,
+    };
+    createUser = { id: 4 };
+    otherUser = { id: 5 };
+
     wrapper = Enzyme.mount(
       <RequestToHire
-        hireRequest={{
-          id: 5,
-          type: "B'nai Mitzvah",
-          location: 'Fairfax, VA, United States of America',
-          details: 'Some details',
-          pay: 200,
-          duration: 2,
-          units: 'Hours',
-          date_time: '2022-03-04T23:40:00.000Z',
-          equipment: '',
-          skills: '',
-          user: 4,
-          typeId: 5,
-        }}
-      />
-    );
-    wrapper1 = Enzyme.mount(
-      <RequestToHire
-        hireRequest={{
-          id: 5,
-          type: "B'nai Mitzvah",
-          location: 'Fairfax, VA, United States of America',
-          details: 'Some details',
-          pay: 200,
-          duration: 2,
-          durationMax: 3,
-          units: 'Hours',
-          date_time: '2022-03-04T23:40:00.000Z',
-          equipment: '',
-          skills: '',
-          user: 4,
-          typeId: 5,
-        }}
+        hireRequest={hireRequestDuration}
+        currentUser={createUser}
       />
     );
   });
 
-  it('displays the basic detail', () => {
-    const content = wrapper.find('.col-md-3');
-    expect(content).toHaveLength(5);
-    expect(content.at(0).text()).toEqual("B'nai Mitzvah");
-    expect(content.at(1).text()).toEqual('Friday, March 04, 2022');
-    expect(content.at(2).text()).toEqual('2 hours');
-    expect(content.at(3).text()).toEqual('Submit For Job');
-    expect(content.at(4).text()).toEqual('$200 per hour');
-    expect(wrapper.find('.col-md-1').at(0).text()).toEqual('MS');
-    expect(wrapper.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
-    expect(wrapper.find('.mt-3').at(1).text()).toEqual('Some details');
+  it('displays the basic detail', async () => {
+    const { container } = render(
+      <RequestToHire hireRequest={hireRequest} currentUser={createUser} />
+    );
+    expect(container.children).toHaveLength(1);
+    expect(container.firstChild.children).toHaveLength(1);
+    expect(container.firstChild.firstChild.children).toHaveLength(1);
+    expect(container.firstChild.firstChild.firstChild.children).toHaveLength(1);
+
+    const cardContainer = container.firstChild.firstChild.firstChild.firstChild;
+    expect(cardContainer.children).toHaveLength(1);
+    expect(cardContainer.firstChild.children).toHaveLength(2);
+
+    expect(cardContainer.firstChild.firstChild.children).toHaveLength(2);
+    expect(
+      cardContainer.firstChild.firstChild.firstChild.children
+    ).toHaveLength(2);
+    expect(
+      cardContainer.firstChild.firstChild.firstChild.firstChild
+    ).toHaveClass('rounded-circle');
+    expect(cardContainer.firstChild.firstChild.lastChild.children).toHaveLength(
+      2
+    );
+
+    const data = cardContainer.firstChild.firstChild.lastChild;
+    expect(data.firstChild.children).toHaveLength(4);
+    expect(data.firstChild.children[0]).toHaveTextContent("B'nai Mitzvah");
+    expect(data.firstChild.children[1]).toHaveTextContent(
+      'Friday, March 04, 2022'
+    );
+    expect(data.firstChild.children[2]).toHaveTextContent('2 hours');
+    expect(data.firstChild.children[3]).toHaveTextContent('Show Applications');
+    expect(data.lastChild.children).toHaveLength(2);
+    expect(data.lastChild.children[0]).toHaveTextContent('Fairfax, VA');
+    expect(data.lastChild.children[1]).toHaveTextContent('$200 per hour');
+
+    expect(cardContainer.firstChild.lastChild).toHaveTextContent(
+      'Some details'
+    );
+  });
+
+  it('displays the already applied button', async () => {
+    jobService.jobService.getHireRequestApplications.mockResolvedValue([
+      { user_id: 5 },
+    ]);
+    jobService.jobService.getHireRequest.mockResolvedValue({
+      date_time: '2023-10-13 00:00:00',
+      location: 'paris',
+    });
+    const { container } = render(
+      <RequestToHire hireRequest={hireRequest} currentUser={otherUser} />
+    );
+    await waitFor(() => container.firstChild);
+
+    const cardContainer = container.firstChild.firstChild.firstChild.firstChild;
+    const data = cardContainer.firstChild.firstChild.lastChild;
+    expect(data.firstChild.children[3]).toHaveTextContent('Already Applied');
   });
 
   it('displays the range detail', () => {
-    const content = wrapper1.find('.col-md-3');
-    expect(content).toHaveLength(5);
-    expect(content.at(0).text()).toEqual("B'nai Mitzvah");
-    expect(content.at(1).text()).toEqual('Friday, March 04, 2022');
-    expect(content.at(2).text()).toEqual('2 to 3 hours');
-    expect(content.at(3).text()).toEqual('Submit For Job');
-    expect(content.at(4).text()).toEqual('$200 per hour');
-    expect(wrapper1.find('.col-md-1').at(0).text()).toEqual('MS');
-    expect(wrapper1.find('.col-md-6').at(0).text()).toEqual('Fairfax, VA');
-    expect(wrapper1.find('.mt-3').at(1).text()).toEqual('Some details');
+    jobService.jobService.getHireRequest.mockResolvedValue({});
+    const { container } = render(
+      <RequestToHire
+        hireRequest={hireRequestDuration}
+        currentUser={otherUser}
+      />
+    );
+    expect(container.children).toHaveLength(1);
+    expect(container.firstChild.children).toHaveLength(1);
+    expect(container.firstChild.firstChild.children).toHaveLength(1);
+    expect(container.firstChild.firstChild.firstChild.children).toHaveLength(1);
+
+    const cardContainer = container.firstChild.firstChild.firstChild.firstChild;
+    expect(cardContainer.children).toHaveLength(1);
+    expect(cardContainer.firstChild.children).toHaveLength(2);
+
+    expect(cardContainer.firstChild.firstChild.children).toHaveLength(2);
+    expect(
+      cardContainer.firstChild.firstChild.firstChild.children
+    ).toHaveLength(2);
+    expect(
+      cardContainer.firstChild.firstChild.firstChild.firstChild
+    ).toHaveClass('rounded-circle');
+    expect(cardContainer.firstChild.firstChild.lastChild.children).toHaveLength(
+      2
+    );
+
+    const data = cardContainer.firstChild.firstChild.lastChild;
+    expect(data.firstChild.children).toHaveLength(4);
+    expect(data.firstChild.children[0]).toHaveTextContent("B'nai Mitzvah");
+    expect(data.firstChild.children[1]).toHaveTextContent(
+      'Friday, March 04, 2022'
+    );
+    expect(data.firstChild.children[2]).toHaveTextContent('2 to 3 hours');
+    expect(data.firstChild.children[3]).toHaveTextContent('Submit For Job');
+    expect(data.lastChild.children).toHaveLength(2);
+    expect(data.lastChild.children[0]).toHaveTextContent('Fairfax, VA');
+    expect(data.lastChild.children[1]).toHaveTextContent('$200 per hour');
+
+    expect(cardContainer.firstChild.lastChild).toHaveTextContent(
+      'Some details'
+    );
   });
 
   it('takes me to the profile when clicked', () => {
-    wrapper1.find('.col-md-1').at(0).simulate('click');
+    wrapper.find('.col-md-1').at(0).simulate('click');
     expect(x).toBeUndefined();
   });
 });

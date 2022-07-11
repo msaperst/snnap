@@ -27,7 +27,7 @@ function RequestToHire(props) {
   if (hireRequest.user === currentUser.id) {
     button = <Button>Show Applications</Button>;
   } else if (applications.some((e) => e.user_id === currentUser.id)) {
-    button = <Button disabled>Applied For</Button>;
+    button = <Button disabled>Already Applied</Button>;
   } else {
     button = (
       <ApplyToRequestToHire

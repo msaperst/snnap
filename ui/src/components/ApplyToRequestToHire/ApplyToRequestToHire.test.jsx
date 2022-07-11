@@ -56,9 +56,8 @@ describe('apply to request to hire form', () => {
     user = {
       id: 3,
       username: 'msaperst',
-      first_name: 'Max',
-      last_name: 'Saperstone',
-      avatar: null,
+      firstName: 'Max',
+      lastName: 'Saperstone',
     };
     company = {
       id: 1,
