@@ -79,6 +79,7 @@ describe('request to hire', () => {
   });
 
   it('displays the basic detail', async () => {
+    jobService.jobService.getHireRequestApplications.mockResolvedValue([]);
     const { container } = render(
       <RequestToHire hireRequest={hireRequest} currentUser={createUser} />
     );
@@ -137,8 +138,12 @@ describe('request to hire', () => {
     expect(data.firstChild.children[3]).toHaveTextContent('Already Applied');
   });
 
-  it('displays the range detail', () => {
-    jobService.jobService.getHireRequest.mockResolvedValue({});
+  it('displays the range detail', async () => {
+    jobService.jobService.getHireRequestApplications.mockResolvedValue([]);
+    jobService.jobService.getHireRequest.mockResolvedValue({
+      date_time: '2023-10-13 00:00:00',
+      location: 'paris',
+    });
     const { container } = render(
       <RequestToHire
         hireRequest={hireRequestDuration}
