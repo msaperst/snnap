@@ -17,7 +17,8 @@ describe('apply to request to hire', () => {
     user = await test.loginUser('newApplyToRequestToHireUser');
     requestToHires.push(await Test.addRequestToHire(0, 1, '2023-03-12'));
     await driver.get(Test.getApp());
-    driver.wait(until.elementLocated(By.id(`openApplyToRequestToHireButton-${await requestToHires[0].getId()}`))).click();
+    const button = driver.wait(until.elementLocated(By.id(`openApplyToRequestToHireButton-${await requestToHires[0].getId()}`)));
+    button.click();
     form = driver.wait(until.elementLocated(By.id('applyToRequestToHireForm')));
   }, 10000);
 
@@ -174,16 +175,16 @@ describe('apply to request to hire', () => {
     expect(await galleryLink.getAttribute('value')).toEqual('');
   });
 
-  // it('can be submitted with profile information', () => {
-  //   // TODO
-  // });
-  // it('can be submitted with updated information', () => {
-  //   // TODO
-  // });
-  // it('can not be submitted if name is missing', () => {
-  //   // TODO
-  // });
-  // it('gets rejected with bad values', () => {
-  //   // TODO - expand for all the bad values
-  // });
+  it('can be submitted with profile information', () => {
+    // TODO
+  });
+  it('can be submitted with updated information', () => {
+    // TODO
+  });
+  it('can not be submitted if name is missing', () => {
+    // TODO
+  });
+  it('gets rejected with bad values', () => {
+    // TODO - expand for all the bad values
+  });
 });

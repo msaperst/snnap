@@ -27,7 +27,6 @@ class Test {
       .build();
     await driver.get(Test.getApp() + url);
     await driver.manage().window().setSize(1200, 1800);
-    await driver.manage().window().maximize();
     this.driver = driver;
     return driver;
   }
