@@ -321,12 +321,71 @@ describe('apply to request to hire', () => {
     await applyForJob();
   });
 
-  // it('can not be submitted if name is missing', () => {
-  // TODO
-  // });
-  // it('gets rejected with bad values', () => {
-  // TODO - expand for all the bad values
-  // });
+  it('can not be submitted if name is missing', async() => {
+    const name = await driver.findElement(By.id('formName'));
+    await name.clear();
+    const applyLink = await driver.findElement(
+      By.id('applyToRequestToHireButton')
+    );
+    await applyLink.click();
+    // TODO - shows validation error
+  });
+
+  it('gets rejected with bad website value', async () => {
+    const website = await driver.findElement(By.id('formWebsite'));
+    await website.sendKeys('somebadurl');
+    const applyLink = await driver.findElement(
+      By.id('applyToRequestToHireButton')
+    );
+    await applyLink.click();
+    const alert = await driver.wait(
+      until.elementLocated(By.className('alert-danger'))
+    );
+    expect(await alert.getText()).toEqual('Website must be a valid URL');
+  });
+
+  it('gets rejected with bad insta value', async () => {
+    const insta = await driver.findElement(By.id('formInstagramLink'));
+    await insta.sendKeys('somebadurl');
+    const applyLink = await driver.findElement(
+      By.id('applyToRequestToHireButton')
+    );
+    await applyLink.click();
+    const alert = await driver.wait(
+      until.elementLocated(By.className('alert-danger'))
+    );
+    expect(await alert.getText()).toEqual('Instagram Link must be a valid URL');
+  });
+
+  it('gets rejected with bad fb value', async () => {
+    const fb = await driver.findElement(By.id('formFacebookLink'));
+    await fb.sendKeys('somebadurl');
+    const applyLink = await driver.findElement(
+      By.id('applyToRequestToHireButton')
+    );
+    await applyLink.click();
+    const alert = await driver.wait(
+      until.elementLocated(By.className('alert-danger'))
+    );
+    expect(await alert.getText()).toEqual('Facebook Link must be a valid URL');
+  });
+
+  it('gets rejected with bad portfolio value', async () => {
+    const galleryDescription = await driver.findElement(
+      By.id('galleryDescription-0')
+    );
+    await galleryDescription.sendKeys('a new description');
+    const galleryLink = await driver.findElement(By.id('galleryLink-0'));
+    await galleryLink.sendKeys('somebadurl');
+    const applyLink = await driver.findElement(
+      By.id('applyToRequestToHireButton')
+    );
+    await applyLink.click();
+    const alert = await driver.wait(
+      until.elementLocated(By.className('alert-danger'))
+    );
+    expect(await alert.getText()).toEqual('Portfolio Link must be a valid URL');
+  });
 
   async function getButton(hireRequestId) {
     await driver.wait(
