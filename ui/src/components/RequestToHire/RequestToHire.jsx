@@ -1,26 +1,47 @@
-import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './RequestToHire.css';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '../Avatar/Avatar';
 import { userService } from '../../services/user.service';
 import ApplyToRequestToHire from '../ApplyToRequestToHire/ApplyToRequestToHire';
+import { jobService } from '../../services/job.service';
 
 function RequestToHire(props) {
-  const { hireRequest, equipment, skills } = props;
+  const { hireRequest, equipment, skills, currentUser } = props;
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
+  const [applications, setApplications] = useState([]);
   useEffect(() => {
     userService.get(hireRequest.user).then((user) => {
       setUser(user);
     });
-  }, [hireRequest.user]);
+    jobService.getHireRequestApplications(hireRequest.id).then((apps) => {
+      setApplications(apps);
+    });
+  }, [hireRequest.user, hireRequest.id]);
 
+  // determine which button we want (if mine, show applications; if applied for, disabled; else, apply for)
+  let button;
+  if (hireRequest.user === currentUser.id) {
+    button = <Button>Show Applications</Button>;
+  } else if (applications.some((e) => e.user_id === currentUser.id)) {
+    button = <Button disabled>Already Applied</Button>;
+  } else {
+    button = (
+      <ApplyToRequestToHire
+        hireRequest={hireRequest}
+        user={currentUser}
+        equipment={equipment}
+        skills={skills}
+      />
+    );
+  }
   return (
     <Row>
       <Col>
-        <Card>
+        <Card data-testid={`requestToHire-${hireRequest.id}`}>
           <Card.Body>
             <Container>
               <Row>
@@ -52,14 +73,7 @@ function RequestToHire(props) {
                         : ''}{' '}
                       hours
                     </Col>
-                    <Col md={3}>
-                      <ApplyToRequestToHire
-                        hireRequest={hireRequest}
-                        user={user}
-                        equipment={equipment}
-                        skills={skills}
-                      />
-                    </Col>
+                    <Col md={3}>{button}</Col>
                   </Row>
                   <Row>
                     <Col md={6}>

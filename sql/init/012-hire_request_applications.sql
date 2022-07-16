@@ -15,3 +15,5 @@ CREATE TABLE IF NOT EXISTS hire_request_applications
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
+
+ALTER TABLE hire_request_applications MODIFY company_name varchar(200) COLLATE utf8mb4_unicode_ci;

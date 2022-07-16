@@ -4,6 +4,7 @@ const { Options } = require('selenium-webdriver/chrome');
 const User = require('../../api/components/user/User');
 const Mysql = require("../../api/services/Mysql");
 const RequestToHire = require("../../api/components/requestToHire/RequestToHire");
+const ApplicationForRequestToHire = require("../../api/components/applicationForRequestToHire/ApplicationForRequestToHire");
 
 class Test {
   constructor() {
@@ -69,12 +70,36 @@ class Test {
     }
   }
 
-  static async addRequestToHire(type, date) {
-    return RequestToHire.create(1, type, 'Chantilly, VA, United States of America', 'Some details', 200, 4, null, date, [], []);
+  static async addRequestToHire(user, type, date) {
+    return RequestToHire.create(user, type, 'Chantilly, VA, United States of America', 'Some details', 200, 4, null, date, [], []);
   }
 
   static async removeRequestToHire(id) {
     await Mysql.query(`DELETE FROM hire_requests WHERE id = ${id}`);
+    await Mysql.query(`DELETE FROM hire_requests_equipment WHERE hire_request = ${id}`);
+    await Mysql.query(`DELETE FROM hire_requests_skills WHERE hire_request = ${id}`);
+  }
+
+  static async addApplicationForRequestToHire(hireRequestId, userId, companyId) {
+    return ApplicationForRequestToHire.create(hireRequestId,
+      userId,
+      companyId,
+      'Test User',
+      null,
+      null,
+      null,
+      null,
+      null,
+      [],
+      [],
+      []);
+  }
+
+  static async removeApplicationForRequestToHire(id) {
+    await Mysql.query(`DELETE FROM hire_request_applications WHERE id = ${id}`);
+    await Mysql.query(`DELETE FROM hire_request_applications_equipment WHERE hire_request_application = ${id}`);
+    await Mysql.query(`DELETE FROM hire_request_applications_skills WHERE hire_request_application = ${id}`);
+    await Mysql.query(`DELETE FROM hire_request_applications_portfolios WHERE hire_request_application = ${id}`);
   }
 
   waitUntilNotPresent(locator) {

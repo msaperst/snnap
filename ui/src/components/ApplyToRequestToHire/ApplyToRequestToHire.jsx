@@ -57,7 +57,7 @@ class ApplyToRequestToHire extends React.Component {
           hireRequest.id, // hire request id
           formData.user, // user id
           formData.id, // company id
-          formData.Name || `${user.first_name} ${user.last_name}`,
+          formData.Name || `${user.firstName} ${user.lastName}`,
           formData.Company || formData.name,
           !website || website === '' ? undefined : website,
           !insta || insta === '' ? undefined : insta,
@@ -80,6 +80,7 @@ class ApplyToRequestToHire extends React.Component {
                 update: null,
                 validated: false,
               });
+              window.location.reload(); // TODO - figure out how to redraw
             }, 5000);
           },
           (error) => {
@@ -248,7 +249,7 @@ class ApplyToRequestToHire extends React.Component {
                   <SnnapFormInput
                     size={6}
                     name="Name"
-                    value={`${user.first_name} ${user.last_name}`}
+                    value={`${user.firstName} ${user.lastName}`}
                     onChange={this.updateForm}
                   />
                   <SnnapFormInput

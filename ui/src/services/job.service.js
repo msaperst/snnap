@@ -9,6 +9,7 @@ export const jobService = {
   getHireRequest,
   getHireRequests,
   applyToHireRequest,
+  getHireRequestApplications,
 };
 
 function getJobTypes() {
@@ -72,6 +73,14 @@ function getHireRequest(id) {
 function getHireRequests() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/jobs/hire-requests`, requestOptions).then(handleResponse);
+}
+
+function getHireRequestApplications(id) {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(
+    `/api/jobs/hire-request-applications/${id}`,
+    requestOptions
+  ).then(handleResponse);
 }
 
 function applyToHireRequest(

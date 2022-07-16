@@ -13,8 +13,8 @@ describe('home page', () => {
     // load the default page
     driver = await test.getDriver();
     // login as a user
-    requestToHires.push(await Test.addRequestToHire(2, '2023-03-12'));
-    requestToHires.push(await Test.addRequestToHire(2, '2023-03-10'));
+    requestToHires.push(await Test.addRequestToHire(0, 2, '2023-03-12'));
+    requestToHires.push(await Test.addRequestToHire(0, 2, '2023-03-10'));
 
     user = await test.loginUser('homeUser');
     await driver.get(Test.getApp());
