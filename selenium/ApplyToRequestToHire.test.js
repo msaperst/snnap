@@ -163,9 +163,9 @@ describe('apply to request to hire', () => {
     expect(await name.getAttribute('readonly')).toBeFalsy();
     expect(await name.getAttribute('value')).toEqual('Test User');
 
-    const company = await driver.findElement(By.id('formCompany'));
-    expect(await company.getAttribute('readonly')).toBeFalsy();
-    expect(await company.getAttribute('value')).toEqual('');
+    const companyName = await driver.findElement(By.id('formCompany'));
+    expect(await companyName.getAttribute('readonly')).toBeFalsy();
+    expect(await companyName.getAttribute('value')).toEqual('');
 
     const website = await driver.findElement(By.id('formWebsite'));
     expect(await website.getAttribute('readonly')).toBeFalsy();
@@ -290,8 +290,8 @@ describe('apply to request to hire', () => {
   it('can be submitted with updated information', async () => {
     const name = await driver.findElement(By.id('formName'));
     await name.sendKeys('New Name');
-    const company = await driver.findElement(By.id('formCompany'));
-    await company.sendKeys('New Company');
+    const companyName = await driver.findElement(By.id('formCompany'));
+    await companyName.sendKeys('New Company');
     const website = await driver.findElement(By.id('formWebsite'));
     await website.sendKeys('https://new.website');
     const insta = await driver.findElement(By.id('formInstagramLink'));
