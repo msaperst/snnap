@@ -328,7 +328,19 @@ describe('apply to request to hire', () => {
       By.id('applyToRequestToHireButton')
     );
     await applyLink.click();
-    // TODO - shows validation error
+    const feedbacks = await form.findElements(By.css('.invalid-feedback'));
+    expect(feedbacks).toHaveLength(16);
+    for(let i = 0; i < feedbacks.length; i++) {
+      if(i === 8) {
+        expect(await feedbacks[i].isDisplayed()).toBeTruthy();
+        expect(await feedbacks[i].getText()).toEqual('Please provide a valid name.');
+      } else {
+        expect(await feedbacks[i].isDisplayed()).toBeFalsy();
+        expect(await feedbacks[i].getText()).toEqual('');
+      }
+    }
+    const alerts = await form.findElements(By.className('alert-danger'));
+    expect(alerts).toHaveLength(0);
   });
 
   it('gets rejected with bad website value', async () => {
