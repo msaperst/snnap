@@ -130,6 +130,7 @@ class ApplyToRequestToHire extends React.Component {
       <>
         <Button
           id={`openApplyToRequestToHireButton-${hireRequest.id}`}
+          hire-request={hireRequest.id}
           onClick={() => this.setState({ show: true })}
         >
           Submit For Job
