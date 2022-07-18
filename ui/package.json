@@ -85,7 +85,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "jest-html-reporter": "^3.5.0",
+    "jest-html-reporter": "^3.6.0",
     "jest-junit": "^14.0.0",
     "prettier": "^2.7.1"
   }
