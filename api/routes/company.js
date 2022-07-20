@@ -91,14 +91,7 @@ router.post(
     }
     try {
       const user = User.auth(token);
-      let equipment = [];
-      if (req.body.equipment) {
-        equipment = req.body.equipment;
-      }
-      let skills = [];
-      if (req.body.skills) {
-        skills = req.body.skills;
-      }
+      const { equipment, skills } = Common.getEquipmentAndSkills(req);
       const company = new Company(await user.getId());
       await company.setCompanyInformation(
         req.body.name,

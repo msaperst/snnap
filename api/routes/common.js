@@ -21,11 +21,11 @@ const Common = class {
   static getEquipmentAndSkills(req) {
     let equipment = [];
     if (req.body.equipment) {
-      equipment = req.body.equipment.map((option) => option.value);
+      equipment = req.body.equipment;
     }
     let skills = [];
     if (req.body.skills) {
-      skills = req.body.skills.map((option) => option.value);
+      skills = req.body.skills;
     }
     return { equipment, skills };
   }
