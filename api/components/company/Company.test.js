@@ -39,7 +39,7 @@ describe('Company', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'SELECT equipment.id as value, equipment.name FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;'
+      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;'
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
@@ -86,7 +86,7 @@ describe('Company', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'SELECT equipment.id as value, equipment.name FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;'
+      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;'
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
@@ -130,7 +130,7 @@ describe('Company', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      'SELECT equipment.id as value, equipment.name FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 2;'
+      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 2;'
     );
     expect(spy).toHaveBeenNthCalledWith(
       6,
@@ -206,7 +206,14 @@ describe('Company', () => {
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValueOnce([{ id: 2 }]);
     const company = new Company(2);
-    await company.setCompanyInformation('name', 'site', 'insta', 'fb', [1], []);
+    await company.setCompanyInformation(
+      'name',
+      'site',
+      'insta',
+      'fb',
+      [{ value: 1, label: 'Flash', what: 'flash machine' }],
+      []
+    );
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
       1,
@@ -222,7 +229,7 @@ describe('Company', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'INSERT INTO company_equipment (company, equipment) VALUES (2, 1);'
+      "INSERT INTO company_equipment (company, equipment, what) VALUES (2, 1, 'flash machine');"
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
@@ -240,7 +247,10 @@ describe('Company', () => {
       'insta',
       'fb',
       [],
-      [1, 4]
+      [
+        { value: 1, label: 'Flash' },
+        { value: 4, label: 'Flashy' },
+      ]
     );
     expect(spy).toHaveBeenCalledTimes(6);
     expect(spy).toHaveBeenNthCalledWith(

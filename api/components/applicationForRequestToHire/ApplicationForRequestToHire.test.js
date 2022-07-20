@@ -47,8 +47,11 @@ describe('application for request to hire', () => {
       null,
       'fb',
       null,
-      [3, 4],
-      [2],
+      [
+        { value: 3, label: 'Flash', what: 'Flashy Thang' },
+        { value: 4, label: 'Camera', what: 'Camera Thingy' },
+      ],
+      [{ value: 2, label: 'Posing', what: 'babies' }],
       [
         { description: 'description1', link: 'link1' },
         {},
@@ -66,11 +69,11 @@ describe('application for request to hire', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      'INSERT INTO hire_request_applications_equipment (hire_request_application, equipment) VALUES (15, 3);'
+      "INSERT INTO hire_request_applications_equipment (hire_request_application, equipment, what) VALUES (15, 3, 'Flashy Thang');"
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'INSERT INTO hire_request_applications_equipment (hire_request_application, equipment) VALUES (15, 4);'
+      "INSERT INTO hire_request_applications_equipment (hire_request_application, equipment, what) VALUES (15, 4, 'Camera Thingy');"
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
@@ -130,7 +133,7 @@ describe('application for request to hire', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      'SELECT equipment.id as value, equipment.name FROM hire_request_applications_equipment INNER JOIN equipment ON equipment.id = hire_request_applications_equipment.equipment WHERE hire_request_application = 5;'
+      'SELECT equipment.id as value, equipment.name, hire_request_applications_equipment.what FROM hire_request_applications_equipment INNER JOIN equipment ON equipment.id = hire_request_applications_equipment.equipment WHERE hire_request_application = 5;'
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,

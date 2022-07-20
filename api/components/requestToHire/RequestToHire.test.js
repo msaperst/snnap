@@ -48,8 +48,11 @@ describe('request to hire', () => {
       5,
       null,
       '2022-02-16',
-      [3, 4],
-      [2]
+      [
+        { value: 3, label: 'Flash' },
+        { value: 4, label: 'Camera' },
+      ],
+      [{ value: 2, label: 'Posing' }]
     );
     await expect(requestToHire.getId()).resolves.toEqual(15);
     await expect(requestToHire.getType()).resolves.toEqual(5);
