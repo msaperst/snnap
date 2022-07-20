@@ -7,6 +7,7 @@ import Submit from '../../Submit/Submit';
 import { companyService } from '../../../services/company.service';
 import { jobService } from '../../../services/job.service';
 import './CompanyInformation.css';
+import EquipmentSelect from './EquipmentSelect/EquipmentSelect';
 
 function CompanyInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -14,14 +15,10 @@ function CompanyInformation(props) {
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
   const [formData, setFormData] = useState(null);
-  const [equipment, setEquipment] = useState([]);
   const [skills, setSkills] = useState([]);
   const { company } = props;
 
   useEffect(() => {
-    jobService.getEquipment().then((equipment) => {
-      setEquipment(equipment);
-    });
     jobService.getSkills().then((skills) => {
       setSkills(skills);
     });
@@ -45,37 +42,40 @@ function CompanyInformation(props) {
     event.preventDefault();
     event.stopPropagation();
     setValidated(true);
-    setIsSubmitting(true);
-    companyService
-      .updateCompanyInformation(
-        formData['Company Name'],
-        !formData.Website || formData.Website === ''
-          ? undefined
-          : formData.Website,
-        !formData['Instagram Link'] || formData['Instagram Link'] === ''
-          ? undefined
-          : formData['Instagram Link'],
-        !formData['Facebook Link'] || formData['Facebook Link'] === ''
-          ? undefined
-          : formData['Facebook Link'],
-        formData.Equipment,
-        formData.Skills
-      )
-      .then(
-        () => {
-          setIsSubmitting(false);
-          setStatus(null);
-          setUpdate('Company Information Updated');
-          setTimeout(() => {
-            setUpdate(null);
-            setValidated(false);
-          }, 5000);
-        },
-        (error) => {
-          setIsSubmitting(false);
-          setStatus(error.toString());
-        }
-      );
+    const form = event.currentTarget;
+    if (form.checkValidity() === true) {
+      setIsSubmitting(true);
+      companyService
+        .updateCompanyInformation(
+          formData['Company Name'],
+          !formData.Website || formData.Website === ''
+            ? undefined
+            : formData.Website,
+          !formData['Instagram Link'] || formData['Instagram Link'] === ''
+            ? undefined
+            : formData['Instagram Link'],
+          !formData['Facebook Link'] || formData['Facebook Link'] === ''
+            ? undefined
+            : formData['Facebook Link'],
+          formData.Equipment,
+          formData.Skills
+        )
+        .then(
+          () => {
+            setIsSubmitting(false);
+            setStatus(null);
+            setUpdate('Company Information Updated');
+            setTimeout(() => {
+              setUpdate(null);
+              setValidated(false);
+            }, 5000);
+          },
+          (error) => {
+            setIsSubmitting(false);
+            setStatus(error.toString());
+          }
+        );
+    }
   };
 
   const updateForm = (key, value) => {
@@ -130,12 +130,7 @@ function CompanyInformation(props) {
         />
       </Row>
       <Row className="mb-3">
-        <SnnapFormMultiSelect
-          name="Equipment"
-          values={company.equipment}
-          onChange={updateForm}
-          options={equipment}
-        />
+        <EquipmentSelect onChange={updateForm} company={company} />
       </Row>
       <Row className="mb-3">
         <SnnapFormMultiSelect
