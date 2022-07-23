@@ -10,8 +10,8 @@ function EquipmentSelect(props) {
   const [equipmentItems, setEquipmentItems] = useState([]);
 
   useEffect(() => {
-    jobService.getEquipment().then((equipment) => {
-      setEquipment(equipment);
+    jobService.getEquipment().then((equip) => {
+      setEquipment(equip);
     });
     if (company && company.equipment) {
       setEquipmentItems(company.equipment);
@@ -23,7 +23,7 @@ function EquipmentSelect(props) {
     return null;
   }
 
-  const addInput = (key, value) => {
+  const addInput = (_key, value) => {
     const data = [];
     // eslint-disable-next-line array-callback-return
     value.map((obj) => {

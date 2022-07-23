@@ -83,7 +83,7 @@ describe('Company information', () => {
 
   it('sets equipment value when added', async () => {
     let x = 0;
-    const updateX = (key, value) => {
+    const updateX = (_key, value) => {
       x = value;
     };
     let equipmentSelect;
@@ -111,7 +111,7 @@ describe('Company information', () => {
 
   it('sets equipment value when multiple are added', async () => {
     let x = 0;
-    const updateX = (key, value) => {
+    const updateX = (_key, value) => {
       x = value;
     };
     let equipmentSelect;
@@ -145,7 +145,7 @@ describe('Company information', () => {
 
   it('adds equipment when added', async () => {
     let x = 0;
-    const updateX = (key, value) => {
+    const updateX = (_key, value) => {
       x = value;
     };
     let equipmentSelect;
@@ -156,11 +156,11 @@ describe('Company information', () => {
       const { container } = equipmentSelect;
       await waitFor(() => container.firstChild);
     });
-    const { container, getByLabelText, getByText, getByRole } = equipmentSelect;
-    const selectItem = getSelectItem(getByLabelText, getByText, getByRole);
+    const { container, getByText, getByRole } = equipmentSelect;
+    const selectItem = getSelectItem(getByText, getByRole);
 
     expect(container.children).toHaveLength(1);
-    await selectItem('Equipment', 'Camera');
+    await selectItem('Camera');
     expect(x).toEqual([{ name: 'Camera', value: 1, what: '' }]);
     expect(container.children).toHaveLength(2);
     const input = verifyInputField(equipmentSelect);
@@ -169,7 +169,7 @@ describe('Company information', () => {
 
   it('adds equipment when added, and one already exists', async () => {
     let x = 0;
-    const updateX = (key, value) => {
+    const updateX = (_key, value) => {
       x = value;
     };
     let equipmentSelect;
@@ -188,10 +188,10 @@ describe('Company information', () => {
       const { container } = equipmentSelect;
       await waitFor(() => container.firstChild);
     });
-    const { container, getByLabelText, getByText, getByRole } = equipmentSelect;
-    const selectItem = getSelectItem(getByLabelText, getByText, getByRole);
+    const { container, getByText, getByRole } = equipmentSelect;
+    const selectItem = getSelectItem(getByText, getByRole);
     expect(container.children).toHaveLength(3);
-    await selectItem('Equipment', 'Camera');
+    await selectItem('Camera');
     expect(x).toEqual([
       {
         name: 'Lights',
@@ -210,7 +210,7 @@ describe('Company information', () => {
 
   it('removes equipment when removed', async () => {
     let x = 0;
-    const updateX = (key, value) => {
+    const updateX = (_key, value) => {
       x = value;
     };
     let equipmentSelect;
@@ -239,12 +239,11 @@ describe('Company information', () => {
     expect(x).toEqual([]);
   });
 
-  const getSelectItem =
-    (getByLabelText, getByText, getByRole) => async (selectLabel, itemText) => {
-      fireEvent.keyDown(getByRole('combobox'), DOWN_ARROW);
-      await waitFor(() => getByText(itemText));
-      fireEvent.click(getByText(itemText));
-    };
+  const getSelectItem = (getByText, getByRole) => async (itemText) => {
+    fireEvent.keyDown(getByRole('combobox'), DOWN_ARROW);
+    await waitFor(() => getByText(itemText));
+    fireEvent.click(getByText(itemText));
+  };
 
   function verifyInputField(equipmentSelect) {
     const { container } = equipmentSelect;

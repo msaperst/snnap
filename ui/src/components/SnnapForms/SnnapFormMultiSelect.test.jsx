@@ -57,19 +57,18 @@ describe('snnap form input', () => {
   });
 
   // https://stackoverflow.com/questions/55575843/how-to-test-react-select-with-react-testing-library
-  const getSelectItem =
-    (getByLabelText, getByText) => async (selectLabel, itemText) => {
-      fireEvent.keyDown(getByText(selectLabel), { keyCode: 40 });
-      await waitFor(() => getByText(itemText));
-      fireEvent.click(getByText(itemText));
-    };
+  const getSelectItem = (getByText) => async (selectLabel, itemText) => {
+    fireEvent.keyDown(getByText(selectLabel), { keyCode: 40 });
+    await waitFor(() => getByText(itemText));
+    fireEvent.click(getByText(itemText));
+  };
 
   it('adds value when onchange is provided', async () => {
     let x = 0;
     const updateX = () => {
       x = 1;
     };
-    const { container, getByLabelText, getByText } = render(
+    const { container, getByText } = render(
       <SnnapFormMultiSelect
         name="MyForm"
         options={[
@@ -81,7 +80,7 @@ describe('snnap form input', () => {
         onChange={updateX}
       />
     );
-    const selectItem = getSelectItem(getByLabelText, getByText);
+    const selectItem = getSelectItem(getByText);
     await selectItem('MyForm', 'Lights');
     expect(x).toEqual(1);
     expect(
@@ -93,7 +92,7 @@ describe('snnap form input', () => {
   });
 
   it('adds value when onchange is not provided', async () => {
-    const { container, getByLabelText, getByText } = render(
+    const { container, getByText } = render(
       <SnnapFormMultiSelect
         name="MyForm"
         options={[
@@ -104,7 +103,7 @@ describe('snnap form input', () => {
         ]}
       />
     );
-    const selectItem = getSelectItem(getByLabelText, getByText);
+    const selectItem = getSelectItem(getByText);
     await selectItem('MyForm', 'Action');
     expect(
       container.firstChild.firstChild.lastChild.firstChild.firstChild.children

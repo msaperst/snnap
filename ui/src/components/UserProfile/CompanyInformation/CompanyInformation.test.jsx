@@ -435,6 +435,4 @@ describe('Company information', () => {
       []
     );
   });
-
-  // TODO - add test where flash what is removed and error is thrown
 });
