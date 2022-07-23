@@ -1,22 +1,13 @@
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormMultiSelect from './SnnapFormMultiSelect';
 
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap form input', () => {
-  let child;
-
-  beforeEach(async () => {
-    const { container } = render(
-      <SnnapFormMultiSelect name="123" options={['Option 1', 'Option 2']} />
-    );
-    child = await waitFor(() => container.firstChild);
-  });
-
   it('displays nothing when no name is provided', () => {
     const { container } = render(<SnnapFormMultiSelect />);
     expect(container.firstChild).toBeNull();
@@ -34,7 +25,11 @@ describe('snnap form input', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('defaults to a 12 column field with 1 child', () => {
+  it('defaults to a 12 column field with 1 child', async () => {
+    const { container } = render(
+      <SnnapFormMultiSelect name="123" options={['Option 1', 'Option 2']} />
+    );
+    const child = await waitFor(() => container.firstChild);
     expect(child).toHaveClass('col-md-12');
     expect(child.children).toHaveLength(1);
   });
@@ -61,73 +56,133 @@ describe('snnap form input', () => {
     expect(container.firstChild).toHaveClass('col-md-5');
   });
 
-  // it('uses an onchange when provided', async () => {
-  //   let x = 0;
-  //   const updateX = () => {
-  //     x = 1;
-  //   };
-  //   const { container } = render(
-  //     <SnnapFormMultiSelect
-  //       name="123"
-  //       options={[
-  //         { id: 1, name: 'Camera' },
-  //         { id: 2, name: 'Lights' },
-  //         { id: 3, name: 'Action' },
-  //         { id: 4, name: 'More' },
-  //       ]}
-  //       onChange={updateX}
-  //     />
-  //   );
-  //   const child = await waitFor(() => container.firstChild);
-  //   await fireEvent.change(
-  //     child.firstChild.lastChild.firstChild.lastChild.firstChild,
-  //     {
-  //       target: { value: '1', label: 'Camera' },
-  //     }
-  //   );
-  //   expect(x).toEqual(1);
-  // });
+  // https://stackoverflow.com/questions/55575843/how-to-test-react-select-with-react-testing-library
+  const getSelectItem =
+    (getByLabelText, getByText) => async (selectLabel, itemText) => {
+      fireEvent.keyDown(getByText(selectLabel), { keyCode: 40 });
+      await waitFor(() => getByText(itemText));
+      fireEvent.click(getByText(itemText));
+    };
 
-  // it('uses an onchange when provided', async () => {
-  //   const DOWN_ARROW = { keyCode: 40 };
-  //   let x = 0;
-  //   const updateX = () => {
-  //     x = 1;
-  //   };
-  //   const { container, getByLabelText, getByText } = render(
-  //     <SnnapFormMultiSelect
-  //       name="123"
-  //       options={[
-  //         { id: 1, name: 'Camera' },
-  //         { id: 2, name: 'Lights' },
-  //         { id: 3, name: 'Action' },
-  //         { id: 4, name: 'More' },
-  //       ]}
-  //       onChange={updateX}
-  //     />
-  //   );
-  //   const child = await waitFor(() => container.firstChild);
-  //   // the function
-  //   const getSelectItem =
-  //     (getByLabelText, getByText) => async (selectLabel, itemText) => {
-  //       fireEvent.keyDown(child, DOWN_ARROW);
-  //       await waitFor(() => getByText(itemText));
-  //       fireEvent.click(getByText(itemText));
-  //     };
-  //
-  //   // usage
-  //   const selectItem = getSelectItem(getByLabelText, getByText);
-  //
-  //   await selectItem('123', 'Camera');
-  //
-  //   expect(x).toEqual(1);
-  // });
+  it('adds value when onchange is provided', async () => {
+    let x = 0;
+    const updateX = () => {
+      x = 1;
+    };
+    const { container, getByLabelText, getByText } = render(
+      <SnnapFormMultiSelect
+        name="MyForm"
+        options={[
+          { id: 1, name: 'Camera' },
+          { id: 2, name: 'Lights' },
+          { id: 3, name: 'Action' },
+          { id: 4, name: 'More' },
+        ]}
+        onChange={updateX}
+      />
+    );
+    const selectItem = getSelectItem(getByLabelText, getByText);
+    await selectItem('MyForm', 'Lights');
+    expect(x).toEqual(1);
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.children
+    ).toHaveLength(1);
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
+    ).toHaveTextContent('Lights');
+  });
 
-  it('is wrapped in a container group', () => {
+  it('adds value when onchange is not provided', async () => {
+    const { container, getByLabelText, getByText } = render(
+      <SnnapFormMultiSelect
+        name="MyForm"
+        options={[
+          { id: 1, name: 'Camera' },
+          { id: 2, name: 'Lights' },
+          { id: 3, name: 'Action' },
+          { id: 4, name: 'More' },
+        ]}
+      />
+    );
+    const selectItem = getSelectItem(getByLabelText, getByText);
+    await selectItem('MyForm', 'Action');
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.children
+    ).toHaveLength(1);
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
+    ).toHaveTextContent('Action');
+  });
+
+  it('removes value when onchange is provided', async () => {
+    let x = 0;
+    const updateX = () => {
+      x = 1;
+    };
+    const { container, getByLabelText } = render(
+      <SnnapFormMultiSelect
+        name="MyForm"
+        options={[
+          { id: 1, name: 'Camera' },
+          { id: 2, name: 'Lights' },
+          { id: 3, name: 'Action' },
+          { id: 4, name: 'More' },
+        ]}
+        onChange={updateX}
+        values={[{ value: 2 }]}
+      />
+    );
+    const input =
+      container.firstChild.firstChild.lastChild.firstChild.firstChild;
+    expect(input.children).toHaveLength(1);
+    expect(input.firstChild).toHaveTextContent('Lights');
+    fireEvent.click(getByLabelText('Remove Lights'));
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((r) => setTimeout(r, 500));
+    expect(x).toEqual(1);
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.children
+    ).toHaveLength(0);
+  });
+
+  it('removes value when onchange is not provided', async () => {
+    const { container, getByLabelText } = render(
+      <SnnapFormMultiSelect
+        name="MyForm"
+        options={[
+          { id: 1, name: 'Camera' },
+          { id: 2, name: 'Lights' },
+          { id: 3, name: 'Action' },
+          { id: 4, name: 'More' },
+        ]}
+        values={[{ value: 2 }]}
+      />
+    );
+    const input =
+      container.firstChild.firstChild.lastChild.firstChild.firstChild;
+    expect(input.children).toHaveLength(1);
+    expect(input.firstChild).toHaveTextContent('Lights');
+    fireEvent.click(getByLabelText('Remove Lights'));
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((r) => setTimeout(r, 500));
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.children
+    ).toHaveLength(0);
+  });
+
+  it('is wrapped in a container group', async () => {
+    const { container } = render(
+      <SnnapFormMultiSelect name="123" options={['Option 1', 'Option 2']} />
+    );
+    const child = await waitFor(() => container.firstChild);
     expect(child.firstChild.getAttribute('class')).toContain('-container');
   });
 
-  it('has our placeholder', () => {
+  it('has our placeholder', async () => {
+    const { container } = render(
+      <SnnapFormMultiSelect name="123" options={['Option 1', 'Option 2']} />
+    );
+    const child = await waitFor(() => container.firstChild);
     expect(
       child.firstChild.children[2].firstChild.firstChild
     ).toHaveTextContent('123');
@@ -191,6 +246,4 @@ describe('snnap form input', () => {
       '123'
     );
   });
-
-  // TODO test out options are displayed, and that when clicked, they are added to the element
 });

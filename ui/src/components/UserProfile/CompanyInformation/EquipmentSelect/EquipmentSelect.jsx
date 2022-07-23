@@ -19,6 +19,10 @@ function EquipmentSelect(props) {
     }
   }, [company]);
 
+  if (company === undefined) {
+    return null;
+  }
+
   const addInput = (key, value) => {
     const data = [];
     // eslint-disable-next-line array-callback-return
@@ -37,7 +41,7 @@ function EquipmentSelect(props) {
 
   const updateEquipment = (key, value) => {
     const data = formData.map((p) =>
-      p.name === key ? { ...p, what: value } : p
+      `${p.name} Equipment List` === key ? { ...p, what: value } : p
     );
     setFormData(data);
     onChange('Equipment', data);
@@ -54,7 +58,7 @@ function EquipmentSelect(props) {
       {equipmentItems.map((obj) => (
         <SnnapFormInput
           key={obj.value}
-          name={obj.name}
+          name={`${obj.name} Equipment List`}
           value={obj.what}
           onChange={updateEquipment}
         />

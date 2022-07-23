@@ -79,6 +79,7 @@ describe('apply to request to hire form', () => {
         {
           value: 2,
           name: 'Flash',
+          what: 'strobe',
         },
       ],
       skills: [
@@ -94,6 +95,10 @@ describe('apply to request to hire form', () => {
     };
     companyService.companyService.get.mockResolvedValue(company);
     jobService.jobService.getHireRequest.mockResolvedValue(hireRequest);
+    jobService.jobService.getEquipment.mockResolvedValue([
+      { id: 4, name: 'Camera' },
+      { id: 6, name: 'Lights' },
+    ]);
   });
 
   it('is a button', () => {
@@ -521,6 +526,31 @@ describe('apply to request to hire form', () => {
     expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
+  it('does not submit if camera value is not present/valid', async () => {
+    const { container } = render(
+      <ApplyToRequestToHire
+        hireRequest={hireRequest}
+        user={user}
+        company={company}
+      />
+    );
+    await waitFor(() => container.firstChild);
+    const button = getByText(container, 'Submit For Job');
+    fireEvent.click(button);
+
+    const modal = await waitFor(() =>
+      screen.getByTestId('applyToRequestToHireModal-5')
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fireEvent.change(modalForm.children[9].children[1].firstChild.firstChild, {
+      target: { value: '' },
+    });
+    const saveRow = modalForm.lastChild;
+    fireEvent.click(saveRow.firstChild.firstChild);
+    expect(saveRow.lastChild).toHaveClass('col');
+    expect(saveRow.lastChild.children).toHaveLength(0);
+  });
+
   it('has an alert on failure of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     jobService.jobService.applyToHireRequest.mockRejectedValue('Some Error');
@@ -552,12 +582,26 @@ describe('apply to request to hire form', () => {
       undefined,
       undefined,
       "None really, but somebody's gotta work this bitch",
-      [{ name: 'Flash', value: 2 }],
+      [
+        {
+          name: 'Flash',
+          value: 2,
+          what: 'strobe',
+        },
+      ],
       [
         { name: 'Photography', value: 1 },
         { name: 'Boogers', value: 2 },
       ],
-      [{ company: 1, description: 'Gallery 1', id: 1, link: 'link1.com' }, {}]
+      [
+        {
+          company: 1,
+          description: 'Gallery 1',
+          id: 1,
+          link: 'link1.com',
+        },
+        {},
+      ]
     );
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
@@ -632,12 +676,26 @@ describe('apply to request to hire form', () => {
       undefined,
       undefined,
       "None really, but somebody's gotta work this bitch",
-      [{ name: 'Flash', value: 2 }],
+      [
+        {
+          name: 'Flash',
+          value: 2,
+          what: 'strobe',
+        },
+      ],
       [
         { name: 'Photography', value: 1 },
         { name: 'Boogers', value: 2 },
       ],
-      [{ company: 1, description: 'Gallery 1', id: 1, link: 'link1.com' }, {}]
+      [
+        {
+          company: 1,
+          description: 'Gallery 1',
+          id: 1,
+          link: 'link1.com',
+        },
+        {},
+      ]
     );
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
@@ -770,7 +828,13 @@ describe('apply to request to hire form', () => {
       'https://insta.com',
       'https://fb.com',
       'new experience',
-      [{ name: 'Flash', value: 2 }],
+      [
+        {
+          name: 'Flash',
+          value: 2,
+          what: 'strobe',
+        },
+      ],
       [
         { name: 'Photography', value: 1 },
         { name: 'Boogers', value: 2 },
