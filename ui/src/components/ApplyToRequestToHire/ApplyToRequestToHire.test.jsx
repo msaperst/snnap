@@ -21,6 +21,10 @@ describe('apply to request to hire form', () => {
   let hireRequest;
   let user;
   let company;
+  const assignMock = jest.fn();
+
+  delete window.location;
+  window.location = { reload: assignMock };
 
   beforeEach(() => {
     jest.clearAllMocks();

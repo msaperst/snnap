@@ -15,6 +15,10 @@ const jobService = require('../../services/job.service');
 
 describe('new request to hire form', () => {
   jest.setTimeout(10000);
+  const assignMock = jest.fn();
+
+  delete window.location;
+  window.location = { reload: assignMock };
 
   beforeEach(() => {
     jest.clearAllMocks();
