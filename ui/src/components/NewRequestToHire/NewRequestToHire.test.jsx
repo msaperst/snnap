@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-export */
 import React from 'react';
 import {
   fireEvent,
@@ -13,14 +14,32 @@ import NewRequestToHire from './NewRequestToHire';
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
+export async function openModal(container, buttonText, modalId) {
+  await waitFor(() => container.firstChild);
+  const button = getByText(container, buttonText);
+  fireEvent.click(button);
+
+  return waitFor(() => screen.getByTestId(modalId));
+}
+
+export async function closeModal(modal) {
+  fireEvent.click(modal.firstChild.firstChild.lastChild);
+  await act(async () => {
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((r) => setTimeout(r, 2000));
+  });
+  expect(modal).not.toBeVisible();
+}
+
 describe('new request to hire form', () => {
   jest.setTimeout(10000);
+  let modal;
   const assignMock = jest.fn();
 
   delete window.location;
   window.location = { reload: assignMock };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
     jobService.jobService.getJobTypes.mockResolvedValue([
@@ -35,6 +54,13 @@ describe('new request to hire form', () => {
       { id: 9, name: 'Children' },
       { id: 5, name: 'Retouch' },
     ]);
+
+    const { container } = render(<NewRequestToHire />);
+    modal = await openModal(
+      container,
+      'New Request to Hire',
+      'newRequestToHireModal'
+    );
   });
 
   it('is a drop down item', () => {
@@ -47,43 +73,16 @@ describe('new request to hire form', () => {
   });
 
   it('opens a modal when button is clicked', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     expect(modal).toBeVisible();
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('closes the modal when button is clicked', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
-    fireEvent.click(modal.firstChild.firstChild.lastChild);
-    await act(async () => {
-      // eslint-disable-next-line no-promise-executor-return
-      await new Promise((r) => setTimeout(r, 2000));
-    });
-    expect(modal).not.toBeVisible();
+    await closeModal(modal);
   });
 
   it('has the correct modal header', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     expect(modal.firstChild.children).toHaveLength(2);
     expect(modal.firstChild.firstChild).toHaveTextContent(
       'Create a new request to hire'
@@ -91,28 +90,12 @@ describe('new request to hire form', () => {
   });
 
   it('has the correct layout for the form', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children).toHaveLength(6);
     expect(modalForm.getAttribute('noValidate')).toEqual('');
   });
 
   it('first row has the job type selection', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
 
     expect(modalForm.firstChild).toHaveClass('mb-3 row');
@@ -133,14 +116,6 @@ describe('new request to hire form', () => {
   });
 
   it('second row has the location and date', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children[1]).toHaveClass('mb-3 row');
     expect(modalForm.children[1].children).toHaveLength(2);
@@ -167,14 +142,6 @@ describe('new request to hire form', () => {
   });
 
   it('third row has the details', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children[2]).toHaveClass('mb-3 row');
     expect(modalForm.children[2].children).toHaveLength(1);
@@ -190,14 +157,6 @@ describe('new request to hire form', () => {
   });
 
   it('fourth row has the duration and pay', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children[3]).toHaveClass('mb-3 row');
     expect(modalForm.children[3].children).toHaveLength(2);
@@ -227,14 +186,6 @@ describe('new request to hire form', () => {
   });
 
   it('fifth row has the equipment and skills', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children[4]).toHaveClass('mb-3 row');
     expect(modalForm.children[4].children).toHaveLength(2);
@@ -255,14 +206,6 @@ describe('new request to hire form', () => {
   });
 
   it('has save information button in the last row', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     const saveRow = modalForm.lastChild;
     expect(saveRow).toHaveClass('mb-3 row');
@@ -280,28 +223,12 @@ describe('new request to hire form', () => {
   });
 
   it('has no alert or update present in the last row', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
   it('does not submit if values are not present/valid', async () => {
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     fireEvent.click(saveRow.firstChild.firstChild);
     expect(saveRow.lastChild).toHaveClass('col');
@@ -311,14 +238,6 @@ describe('new request to hire form', () => {
   it('has an alert on failure of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
     jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
@@ -375,14 +294,6 @@ describe('new request to hire form', () => {
 
   it('is able to close an alert after failure', async () => {
     jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
@@ -416,14 +327,6 @@ describe('new request to hire form', () => {
   it('has an alert on success of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
@@ -482,14 +385,6 @@ describe('new request to hire form', () => {
 
   it('is able to close an alert after success', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
@@ -522,14 +417,6 @@ describe('new request to hire form', () => {
 
   it('removes the success alert after 5 seconds', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
-    const { container } = render(<NewRequestToHire />);
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'New Request to Hire');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('newRequestToHireModal')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
