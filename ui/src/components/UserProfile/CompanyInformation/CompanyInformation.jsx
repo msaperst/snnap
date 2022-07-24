@@ -8,6 +8,7 @@ import { companyService } from '../../../services/company.service';
 import { jobService } from '../../../services/job.service';
 import './CompanyInformation.css';
 import EquipmentSelect from './EquipmentSelect/EquipmentSelect';
+import { common } from '../Common';
 
 function CompanyInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,13 +63,13 @@ function CompanyInformation(props) {
         )
         .then(
           () => {
-            setIsSubmitting(false);
-            setStatus(null);
-            setUpdate('Company Information Updated');
-            setTimeout(() => {
-              setUpdate(null);
-              setValidated(false);
-            }, 5000);
+            common.setSuccess(
+              setIsSubmitting,
+              setStatus,
+              setUpdate,
+              setValidated,
+              'Company Information Updated'
+            );
           },
           (error) => {
             setIsSubmitting(false);
