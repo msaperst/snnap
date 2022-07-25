@@ -85,7 +85,7 @@ describe('profile page', () => {
     expect(await feedbacks[3].getText()).toEqual('Please provide a valid state.');
     expect(await feedbacks[4].getText()).toEqual('Please provide a valid zip.');
     for (let feedback of feedbacks) {
-      expect(await feedbacks[i].isDisplayed()).toBeTruthy();
+      expect(await feedback.isDisplayed()).toBeTruthy();
     }
   });
 
