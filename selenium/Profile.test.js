@@ -7,13 +7,12 @@ describe('profile page', () => {
 
   let test;
   let driver;
-  let user;
 
   beforeEach(async () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    user = await test.loginUser('profileUser');
+    await test.loginUser('profileUser');
     await driver.get(Test.getApp() + '/profile');
   }, 10000);
 

@@ -1,4 +1,4 @@
-const { By, until } = require('selenium-webdriver');
+const { By, until, Key } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
@@ -7,13 +7,12 @@ describe('profile page', () => {
 
   let test;
   let driver;
-  let user;
 
   beforeEach(async () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    user = await test.loginUser('profilePortfolioUser');
+    await test.loginUser('profilePortfolioUser');
     await driver.get(Test.getApp() + '/profile');
   }, 10000);
 
@@ -40,14 +39,14 @@ describe('profile page', () => {
     driver.wait(until.elementLocated(By.css('h2')));
     const portfolio = (await driver.findElements(By.css('form')))[4];
     driver.wait(until.elementLocated(By.id('galleryDescription-0')));
-    const feedback = (await portfolio.findElements(By.className('invalid-feedback')));
-    expect(feedback.length).toEqual(3);
-    for (let i = 0; i < feedback.length; i++) {
-      expect(await feedback[i].getText()).toEqual('');
-      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    const feedbacks = (await portfolio.findElements(By.className('invalid-feedback')));
+    expect(feedbacks.length).toEqual(3);
+    for (let feedback of feedbacks) {
+      expect(await feedback.getText()).toEqual('');
+      expect(await feedback.isDisplayed()).toBeFalsy();
     }
     let experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    return { feedback, experience };
+    return { feedback: feedbacks, experience };
   }
 
   it('throws an error if you try to submit with only a description filled out', async () => {
@@ -108,19 +107,32 @@ describe('profile page', () => {
   });
 
   it('adds a new row when you fill out both description and link', async () => {
-    let experience = driver.wait(until.elementLocated(By.id('formExperience')));
     let description = driver.wait(until.elementLocated(By.id('galleryDescription-0')));
     let link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
     expect(await driver.findElements(By.id('galleryDescription-1'))).toHaveLength(0);
     expect(await driver.findElements(By.id('galleryLink-1'))).toHaveLength(0);
-    experience.sendKeys('Some Experience');
-    description.sendKeys('Description')
-    link.sendKeys('Link')
+    await  description.sendKeys('Description')
+    await  link.sendKeys('Link')
     expect(await driver.findElements(By.id('galleryDescription-1'))).toHaveLength(1);
     expect(await driver.findElements(By.id('galleryLink-1'))).toHaveLength(1);
   });
 
-  //TODO removes a row
+  it('removes a row when you remove both description and link', async () => {
+    let description = driver.wait(until.elementLocated(By.id('galleryDescription-0')));
+    let link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
+    await description.sendKeys('Description')
+    await link.sendKeys('Link')
+    expect(await driver.findElements(By.id('galleryDescription-1'))).toHaveLength(1);
+    expect(await driver.findElements(By.id('galleryLink-1'))).toHaveLength(1);
+    for(let i = 0; i < 11; i++) {
+      await description.sendKeys(Key.BACK_SPACE);
+    }
+    for(let i = 0; i < 4; i++) {
+      await link.sendKeys(Key.BACK_SPACE);
+    }
+    expect(await driver.findElements(By.id('galleryDescription-1'))).toHaveLength(0);
+    expect(await driver.findElements(By.id('galleryLink-1'))).toHaveLength(0);
+  });
 
   it('requires a valid link when updating the portfolio values', async () => {
     let { experience, description, link } = fillOutPortfilio();

@@ -7,13 +7,12 @@ describe('profile page', () => {
 
   let test;
   let driver;
-  let user;
 
   beforeEach(async () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    user = await test.loginUser('profilePersonalUser');
+    await test.loginUser('profilePersonalUser');
     await driver.get(Test.getApp() + '/profile');
   }, 10000);
 
@@ -68,11 +67,11 @@ describe('profile page', () => {
   it('shows error when you update profile blank information', async () => {
     driver.wait(until.elementLocated(By.css('h2')));
     const profile = (await driver.findElements(By.css('form')))[1];
-    const feedback = (await profile.findElements(By.className('invalid-feedback')));
-    expect(feedback.length).toEqual(5);
-    for (let i = 0; i < feedback.length; i++) {
-      expect(await feedback[i].getText()).toEqual('');
-      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    const feedbacks = (await profile.findElements(By.className('invalid-feedback')));
+    expect(feedbacks.length).toEqual(5);
+    for (let feedback of feedbacks) {
+      expect(await feedback.getText()).toEqual('');
+      expect(await feedback.isDisplayed()).toBeFalsy();
     }
     driver.findElement(By.id('formFirstName')).clear();
     driver.findElement(By.id('formLastName')).clear();
@@ -80,13 +79,13 @@ describe('profile page', () => {
     driver.findElement(By.id('formState')).clear();
     driver.findElement(By.id('formZip')).clear();
     driver.findElement(By.id('savePersonalInformationButton')).click();
-    expect(await feedback[0].getText()).toEqual('Please provide a valid first name.');
-    expect(await feedback[1].getText()).toEqual('Please provide a valid last name.');
-    expect(await feedback[2].getText()).toEqual('Please provide a valid city.');
-    expect(await feedback[3].getText()).toEqual('Please provide a valid state.');
-    expect(await feedback[4].getText()).toEqual('Please provide a valid zip.');
-    for (let i = 0; i < feedback.length; i++) {
-      expect(await feedback[i].isDisplayed()).toBeTruthy();
+    expect(await feedbacks[0].getText()).toEqual('Please provide a valid first name.');
+    expect(await feedbacks[1].getText()).toEqual('Please provide a valid last name.');
+    expect(await feedbacks[2].getText()).toEqual('Please provide a valid city.');
+    expect(await feedbacks[3].getText()).toEqual('Please provide a valid state.');
+    expect(await feedbacks[4].getText()).toEqual('Please provide a valid zip.');
+    for (let feedback of feedbacks) {
+      expect(await feedbacks[i].isDisplayed()).toBeTruthy();
     }
   });
 

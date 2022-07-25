@@ -7,13 +7,12 @@ describe('profile page', () => {
 
   let test;
   let driver;
-  let user;
 
   beforeEach(async () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    user = await test.loginUser('profilePasswordUser');
+    await test.loginUser('profilePasswordUser');
     await driver.get(Test.getApp() + '/profile');
   }, 10000);
 
@@ -45,17 +44,17 @@ describe('profile page', () => {
   it('shows error when you update password blank information', async () => {
     driver.wait(until.elementLocated(By.css('h2')));
     const profile = (await driver.findElements(By.css('form')))[2];
-    const feedback = (await profile.findElements(By.className('invalid-feedback')));
-    expect(feedback.length).toEqual(2);
-    for (let i = 0; i < feedback.length; i++) {
-      expect(await feedback[i].getText()).toEqual('');
-      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    const feedbacks = (await profile.findElements(By.className('invalid-feedback')));
+    expect(feedbacks.length).toEqual(2);
+    for (let feedback of feedbacks) {
+      expect(await feedback.getText()).toEqual('');
+      expect(await feedback.isDisplayed()).toBeFalsy();
     }
     driver.findElement(By.id('updatePasswordButton')).click();
-    expect(await feedback[0].getText()).toEqual('Please provide a valid current password.');
-    expect(await feedback[1].getText()).toEqual('Please provide a valid new password.');
-    for (let i = 0; i < feedback.length; i++) {
-      expect(await feedback[i].isDisplayed()).toBeTruthy();
+    expect(await feedbacks[0].getText()).toEqual('Please provide a valid current password.');
+    expect(await feedbacks[1].getText()).toEqual('Please provide a valid new password.');
+    for (let feedback of feedbacks) {
+      expect(await feedback.isDisplayed()).toBeTruthy();
     }
   });
 

@@ -161,26 +161,21 @@ describe('profile page', () => {
     return (await driver.findElements(By.css('form')))[3];
   }
 
-  async function checkNextDivs(nextDivs, firstDiv) {
-    nextDivs = await firstDiv.findElement(By.css('div'));
-    driver.wait(function () {
-      return nextDivs.findElements(By.css('div')).then(function (elements) {
-        return elements.length === 5;
-      });
-    });
+  async function checkNextDivs(firstDiv) {
+    const nextDivs = await firstDiv.findElement(By.css('div'));
+    waitForNumber(nextDivs, 5);
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(5);
     return nextDivs;
   }
 
   it('does not allow adding and saving when no equipment list is provided', async () => {
     let { companyInformation, multiSelects, nextDivs } = await getCompanyFields();
-    let feedback = (await companyInformation.findElements(By.className('invalid-feedback')));
-    expect(feedback.length).toEqual(4);
-    for (let i = 0; i < feedback.length; i++) {
-      expect(await feedback[i].getText()).toEqual('');
-      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    let feedbacks = (await companyInformation.findElements(By.className('invalid-feedback')));
+    expect(feedbacks.length).toEqual(4);
+    for (let feedback of feedbacks) {
+      expect(await feedback.getText()).toEqual('');
+      expect(await feedback.isDisplayed()).toBeFalsy();
     }
-
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(2);
     const equipmentMultiSelectInput = multiSelects[0].findElement(By.css('[role="combobox"]'));
     const id = await equipmentMultiSelectInput.getAttribute('id');
@@ -189,14 +184,14 @@ describe('profile page', () => {
     driver.wait(until.elementLocated(option1));
     driver.findElement(option1).click();
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
-    feedback = (await companyInformation.findElements(By.className('invalid-feedback')));
-    expect(feedback.length).toEqual(5);
-    for (let i = 1; i < feedback.length - 1; i++) {
-      expect(await feedback[i].getText()).toEqual('');
-      expect(await feedback[i].isDisplayed()).toBeFalsy();
+    feedbacks = (await companyInformation.findElements(By.className('invalid-feedback')));
+    expect(feedbacks.length).toEqual(5);
+    for (let i = 1; i < feedbacks.length - 1; i++) {
+      expect(await feedbacks[i].getText()).toEqual('');
+      expect(await feedbacks[i].isDisplayed()).toBeFalsy();
     }
-    expect(await feedback[4].getText()).toEqual('Please provide a valid flash equipment list.');
-    expect(await feedback[4].isDisplayed()).toBeTruthy();
+    expect(await feedbacks[4].getText()).toEqual('Please provide a valid flash equipment list.');
+    expect(await feedbacks[4].isDisplayed()).toBeTruthy();
   });
 
   it('allows adding and saving equipment', async () => {
@@ -211,22 +206,28 @@ describe('profile page', () => {
     let companyInformation = await saveAndRefresh();
     multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     let firstDiv = await multiSelects[0].findElement(By.css('div'));
-    await checkNextDivs(nextDivs, firstDiv);
+    await checkNextDivs(firstDiv);
     equipmentList = await driver.wait(until.elementLocated(By.id('formFlashEquipmentList')));
     await test.waitUntilInputFilled(By.id('formFlashEquipmentList'));
     expect(await equipmentList.getAttribute('value')).toEqual('Some Flashy Stuffs');
   });
 
-  it('allows removing a piece of equipment', async () => {
-    const company = new Company(await user.getId());
-    await company.setCompanyInformation('Test', '123.org', 'instagram.com/snnap', '', [{ value: 1, label: 'Flash', what: 'flash machine' }], []);
-    driver.navigate().refresh();
-    let { nextDivs } = await getCompanyFields();
+  function waitForNumber(nextDivs, howMany) {
     driver.wait(function () {
       return nextDivs.findElements(By.css('div')).then(function (elements) {
-        return elements.length === 5;
+        return elements.length === howMany;
       });
     });
+  }
+
+  it('allows removing a piece of equipment', async () => {
+    const company = new Company(await user.getId());
+    await company.setCompanyInformation('Test', '123.org', 'instagram.com/snnap', '', [{
+      value: 1, label: 'Flash', what: 'flash machine'
+    }], []);
+    driver.navigate().refresh();
+    let { nextDivs } = await getCompanyFields();
+    waitForNumber(nextDivs, 5);
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(5);
     await driver.findElement(By.css('[aria-label="Remove Camera"]')).click();
     let companyInformation = await saveAndRefresh();
@@ -253,36 +254,28 @@ describe('profile page', () => {
     multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     let firstDiv = await multiSelects[1].findElement(By.css('div'));
     nextDivs = await firstDiv.findElement(By.css('div'));
-    driver.wait(function () {
-      return nextDivs.findElements(By.css('div')).then(function (elements) {
-        return elements.length === 9;
-      });
-    });
+    waitForNumber(nextDivs, 9);
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(9);
   });
 
   it('allows removing a skill', async () => {
     const company = new Company(await user.getId());
-    await company.setCompanyInformation('Test', '', '', '', [], [
-      { value: 1, label: 'Flash' },
-      { value: 2, label: 'Flashy' },
-    ]);
+    await company.setCompanyInformation('Test', '', '', '', [], [{ value: 1, label: 'Flash' }, {
+      value: 2,
+      label: 'Flashy'
+    },]);
     driver.navigate().refresh();
     await driver.wait(until.elementLocated(By.css('h2')));
     let companyInformation = (await driver.findElements(By.css('form')))[3];
     let multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     let firstDiv = await multiSelects[1].findElement(By.css('div'));
     let nextDivs = await firstDiv.findElement(By.css('div'));
-    driver.wait(function () {
-      return nextDivs.findElements(By.css('div')).then(function (elements) {
-        return elements.length === 9;
-      });
-    });
+    waitForNumber(nextDivs, 9);
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(9);
     await driver.findElement(By.css('[aria-label="Remove Photography"]')).click();
     companyInformation = await saveAndRefresh();
     multiSelects = await companyInformation.findElements(By.className('multi-select-form'));
     firstDiv = await multiSelects[1].findElement(By.css('div'));
-    await checkNextDivs(nextDivs, firstDiv);
+    await checkNextDivs(firstDiv);
   });
 });
