@@ -23,7 +23,7 @@ describe('log in page', () => {
 
   it('takes you to the login page when not authenticated', async () => {
     expect(await driver.getCurrentUrl()).toEqual(Test.getApp() + '/login');
-    expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Login');
+    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Login');
   });
 
   it('shows error when you login with blank credentials', async () => {
@@ -67,7 +67,7 @@ describe('log in page', () => {
   it('allows you to navigate to the register page', async () => {
     driver.findElement(By.id('registerButton')).click();
     driver.wait(until.elementLocated(By.id('formFirstname')));
-    expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Register');
+    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Register');
   });
 
   //TODO - able to navigate to forgot password
