@@ -30,7 +30,7 @@ class Company {
       `SELECT * FROM portfolio WHERE company = ${company.id};`
     );
     company.equipment = await Mysql.query(
-      `SELECT equipment.id as value, equipment.name FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = ${company.id};`
+      `SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = ${company.id};`
     );
     company.skills = await Mysql.query(
       `SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = ${company.id};`
@@ -83,9 +83,9 @@ class Company {
     // set new equipment
     equipment.map(async (equip) => {
       await Mysql.query(
-        `INSERT INTO company_equipment (company, equipment) VALUES (${
+        `INSERT INTO company_equipment (company, equipment, what) VALUES (${
           this.companyId
-        }, ${db.escape(equip)});`
+        }, ${db.escape(equip.value)}, ${db.escape(equip.what)});`
       );
     });
     // wipe out all old skills
@@ -97,7 +97,7 @@ class Company {
       await Mysql.query(
         `INSERT INTO company_skills (company, skill) VALUES (${
           this.companyId
-        }, ${db.escape(skill)});`
+        }, ${db.escape(skill.value)});`
       );
     });
   }

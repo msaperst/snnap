@@ -26,7 +26,7 @@ describe('user page', () => {
 
   it('allows us to navigate to the user profile', async () => {
     expect(await driver.getCurrentUrl()).toEqual(Test.getApp() + '/profile/userUser');
-    expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Test User');
+    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Test User');
   });
 
   // TODO

@@ -4,6 +4,7 @@ import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import EditAvatar from '../EditAvatar/EditAvatar';
 import { userService } from '../../../services/user.service';
 import Submit from '../../Submit/Submit';
+import { common } from '../Common';
 
 function AccountInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,13 +35,13 @@ function AccountInformation(props) {
         .updateAccountInformation(formData.Email, formData.Number)
         .then(
           () => {
-            setIsSubmitting(false);
-            setStatus(null);
-            setUpdate('Account Information Updated');
-            setTimeout(() => {
-              setUpdate(null);
-              setValidated(false);
-            }, 5000);
+            common.setSuccess(
+              setIsSubmitting,
+              setStatus,
+              setUpdate,
+              setValidated,
+              'Account Information Updated'
+            );
           },
           (error) => {
             setIsSubmitting(false);

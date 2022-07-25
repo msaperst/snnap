@@ -33,16 +33,16 @@ const ApplicationForRequestToHire = class {
       );
       equipment.map(async (equip) => {
         await Mysql.query(
-          `INSERT INTO hire_request_applications_equipment (hire_request_application, equipment) VALUES (${
+          `INSERT INTO hire_request_applications_equipment (hire_request_application, equipment, what) VALUES (${
             result.insertId
-          }, ${db.escape(equip)});`
+          }, ${db.escape(equip.value)}, ${db.escape(equip.what)});`
         );
       });
       skills.map(async (skill) => {
         await Mysql.query(
           `INSERT INTO hire_request_applications_skills (hire_request_application, skill) VALUES (${
             result.insertId
-          }, ${db.escape(skill)});`
+          }, ${db.escape(skill.value)});`
         );
       });
       portfolio.map(async (portfolioItem) => {
@@ -83,7 +83,7 @@ const ApplicationForRequestToHire = class {
       )
     )[0];
     hireRequestApplication.equipment = await Mysql.query(
-      `SELECT equipment.id as value, equipment.name FROM hire_request_applications_equipment INNER JOIN equipment ON equipment.id = hire_request_applications_equipment.equipment WHERE hire_request_application = ${this.id};`
+      `SELECT equipment.id as value, equipment.name, hire_request_applications_equipment.what FROM hire_request_applications_equipment INNER JOIN equipment ON equipment.id = hire_request_applications_equipment.equipment WHERE hire_request_application = ${this.id};`
     );
     hireRequestApplication.skills = await Mysql.query(
       `SELECT skills.id as value, skills.name FROM hire_request_applications_skills INNER JOIN skills ON skills.id = hire_request_applications_skills.skill WHERE hire_request_application = ${this.id};`
