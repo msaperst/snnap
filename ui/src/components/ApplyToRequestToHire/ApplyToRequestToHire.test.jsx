@@ -1,14 +1,12 @@
 import React from 'react';
-import {
-  fireEvent,
-  getByText,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import ApplyToRequestToHire from './ApplyToRequestToHire';
+import {
+  openModal,
+  closeModal,
+} from '../NewRequestToHire/NewRequestToHire.test';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
@@ -21,8 +19,13 @@ describe('apply to request to hire form', () => {
   let hireRequest;
   let user;
   let company;
+  let modal;
+  const assignMock = jest.fn();
 
-  beforeEach(() => {
+  delete window.location;
+  window.location = { reload: assignMock };
+
+  beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
     hireRequest = {
@@ -79,6 +82,7 @@ describe('apply to request to hire form', () => {
         {
           value: 2,
           name: 'Flash',
+          what: 'strobe',
         },
       ],
       skills: [
@@ -94,6 +98,23 @@ describe('apply to request to hire form', () => {
     };
     companyService.companyService.get.mockResolvedValue(company);
     jobService.jobService.getHireRequest.mockResolvedValue(hireRequest);
+    jobService.jobService.getEquipment.mockResolvedValue([
+      { id: 4, name: 'Camera' },
+      { id: 6, name: 'Lights' },
+    ]);
+
+    const { container } = render(
+      <ApplyToRequestToHire
+        hireRequest={hireRequest}
+        user={user}
+        company={company}
+      />
+    );
+    modal = await openModal(
+      container,
+      'Submit For Job',
+      'applyToRequestToHireModal-5'
+    );
   });
 
   it('is a button', () => {
@@ -112,61 +133,16 @@ describe('apply to request to hire form', () => {
   });
 
   it('opens a modal when button is clicked', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     expect(modal).toBeVisible();
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('closes the modal when button is clicked', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
-    fireEvent.click(modal.firstChild.firstChild.lastChild);
-    await act(async () => {
-      // eslint-disable-next-line no-promise-executor-return
-      await new Promise((r) => setTimeout(r, 2000));
-    });
-    expect(modal).not.toBeVisible();
+    await closeModal(modal);
   });
 
   it('has the correct header', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     expect(modal.firstChild.children).toHaveLength(2);
     expect(modal.firstChild.firstChild).toHaveTextContent(
       'Submit to work the Event Session'
@@ -174,41 +150,23 @@ describe('apply to request to hire form', () => {
   });
 
   it('has the correct layout for the form', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children).toHaveLength(13);
     expect(modalForm.getAttribute('noValidate')).toEqual('');
   });
 
+  function checkInput(inputRow, mdSize, id, placeHolder, value) {
+    expect(inputRow).toHaveClass(`col-md-${mdSize}`);
+    const input = inputRow.firstChild.firstChild;
+    expect(input.getAttribute('id')).toEqual(id);
+    expect(input.getAttribute('placeholder')).toEqual(placeHolder);
+    expect(input.getAttribute('readonly')).toEqual('');
+    expect(input.getAttribute('type')).toEqual('text');
+    expect(input.getAttribute('value')).toEqual(value);
+  }
+
   // TODO - split into smaller tests
   it('has the correct job information', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
 
     // job info header
@@ -217,53 +175,46 @@ describe('apply to request to hire form', () => {
 
     // job info first row
     expect(modalForm.children[1].children).toHaveLength(3);
-    expect(modalForm.children[1].children[0]).toHaveClass('col-md-4');
-    const jobTypeInput =
-      modalForm.children[1].children[0].firstChild.firstChild;
-    expect(jobTypeInput.getAttribute('id')).toEqual('formJobType');
-    expect(jobTypeInput.getAttribute('placeholder')).toEqual('Job Type');
-    expect(jobTypeInput.getAttribute('readonly')).toEqual('');
-    expect(jobTypeInput.getAttribute('type')).toEqual('text');
-    expect(jobTypeInput.getAttribute('value')).toEqual('Event');
-
-    expect(modalForm.children[1].children[1]).toHaveClass('col-md-4');
-    const dateInput = modalForm.children[1].children[1].firstChild.firstChild;
-    expect(dateInput.getAttribute('id')).toEqual('formDate');
-    expect(dateInput.getAttribute('placeholder')).toEqual('Date');
-    expect(dateInput.getAttribute('readonly')).toEqual('');
-    expect(dateInput.getAttribute('type')).toEqual('text');
-    expect(dateInput.getAttribute('value')).toEqual('Friday, October 13, 2023');
-
-    expect(modalForm.children[1].children[2]).toHaveClass('col-md-4');
-    const durationInput =
-      modalForm.children[1].children[2].firstChild.firstChild;
-    expect(durationInput.getAttribute('id')).toEqual('formDuration');
-    expect(durationInput.getAttribute('placeholder')).toEqual('Duration');
-    expect(durationInput.getAttribute('readonly')).toEqual('');
-    expect(durationInput.getAttribute('type')).toEqual('text');
-    expect(durationInput.getAttribute('value')).toEqual('8 hours');
+    checkInput(
+      modalForm.children[1].children[0],
+      4,
+      'formJobType',
+      'Job Type',
+      'Event'
+    );
+    checkInput(
+      modalForm.children[1].children[1],
+      4,
+      'formDate',
+      'Date',
+      'Friday, October 13, 2023'
+    );
+    checkInput(
+      modalForm.children[1].children[2],
+      4,
+      'formDuration',
+      'Duration',
+      '8 hours'
+    );
 
     // job info second row
     expect(modalForm.children[2].children).toHaveLength(2);
-    expect(modalForm.children[2].children[0]).toHaveClass('col-md-8');
-    const locationInput =
-      modalForm.children[2].children[0].firstChild.firstChild;
-    expect(locationInput.getAttribute('id')).toEqual('formLocation');
-    expect(locationInput.getAttribute('placeholder')).toEqual('Location');
-    expect(locationInput.getAttribute('readonly')).toEqual('');
-    expect(locationInput.getAttribute('type')).toEqual('text');
-    expect(locationInput.getAttribute('value')).toEqual('Fairfax, VA');
-
-    expect(modalForm.children[2].children[1]).toHaveClass('col-md-4');
-    const payInput = modalForm.children[2].children[1].firstChild.firstChild;
-    expect(payInput.getAttribute('id')).toEqual('formPay');
-    expect(payInput.getAttribute('placeholder')).toEqual('Pay');
-    expect(payInput.getAttribute('readonly')).toEqual('');
-    expect(payInput.getAttribute('type')).toEqual('text');
-    expect(payInput.getAttribute('value')).toEqual('$0.5 per hour');
+    checkInput(
+      modalForm.children[2].children[0],
+      8,
+      'formLocation',
+      'Location',
+      'Fairfax, VA'
+    );
+    checkInput(
+      modalForm.children[2].children[1],
+      4,
+      'formPay',
+      'Pay',
+      '$0.5 per hour'
+    );
 
     // job info third row
-    expect(modalForm.children[3].children).toHaveLength(1);
     expect(modalForm.children[3].children[0]).toHaveClass('col-md-12');
     const detailsInput =
       modalForm.children[3].children[0].firstChild.firstChild;
@@ -275,40 +226,24 @@ describe('apply to request to hire form', () => {
 
     // job info fourth row
     expect(modalForm.children[4].children).toHaveLength(2);
-    expect(modalForm.children[4].children[0]).toHaveClass('col-md-6');
-    const equipmentInput =
-      modalForm.children[4].children[0].firstChild.firstChild;
-    expect(equipmentInput.getAttribute('id')).toEqual('formEquipment');
-    expect(equipmentInput.getAttribute('placeholder')).toEqual('Equipment');
-    expect(equipmentInput.getAttribute('readonly')).toEqual('');
-    expect(equipmentInput.getAttribute('type')).toEqual('text');
-    expect(equipmentInput.getAttribute('value')).toEqual('Camera');
-
-    expect(modalForm.children[4].children[1]).toHaveClass('col-md-6');
-    const skillsInput = modalForm.children[4].children[1].firstChild.firstChild;
-    expect(skillsInput.getAttribute('id')).toEqual('formSkills');
-    expect(skillsInput.getAttribute('placeholder')).toEqual('Skills');
-    expect(skillsInput.getAttribute('readonly')).toEqual('');
-    expect(skillsInput.getAttribute('type')).toEqual('text');
-    expect(skillsInput.getAttribute('value')).toEqual('Posing,Something');
+    checkInput(
+      modalForm.children[4].children[0],
+      6,
+      'formEquipment',
+      'Equipment',
+      'Camera'
+    );
+    checkInput(
+      modalForm.children[4].children[1],
+      6,
+      'formSkills',
+      'Skills',
+      'Posing,Something'
+    );
   });
 
   // TODO - split into smaller tests
   it('has the correct initial user information', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
 
     // your info header
@@ -446,20 +381,6 @@ describe('apply to request to hire form', () => {
   });
 
   it('has save information button in the last row', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     const saveRow = modalForm.lastChild;
     expect(saveRow).toHaveClass('mb-3 row');
@@ -477,42 +398,25 @@ describe('apply to request to hire form', () => {
   });
 
   it('has no alert or update present in the last row', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
   });
 
   it('does not submit if values are not present/valid', async () => {
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.children[6].firstChild.firstChild.firstChild, {
+      target: { value: '' },
+    });
+    const saveRow = modalForm.lastChild;
+    fireEvent.click(saveRow.firstChild.firstChild);
+    expect(saveRow.lastChild).toHaveClass('col');
+    expect(saveRow.lastChild.children).toHaveLength(0);
+  });
+
+  it('does not submit if camera value is not present/valid', async () => {
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fireEvent.change(modalForm.children[9].children[1].firstChild.firstChild, {
       target: { value: '' },
     });
     const saveRow = modalForm.lastChild;
@@ -524,20 +428,6 @@ describe('apply to request to hire form', () => {
   it('has an alert on failure of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     jobService.jobService.applyToHireRequest.mockRejectedValue('Some Error');
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     await act(async () => {
       fireEvent.click(saveRow.firstChild.firstChild);
@@ -552,12 +442,26 @@ describe('apply to request to hire form', () => {
       undefined,
       undefined,
       "None really, but somebody's gotta work this bitch",
-      [{ name: 'Flash', value: 2 }],
+      [
+        {
+          name: 'Flash',
+          value: 2,
+          what: 'strobe',
+        },
+      ],
       [
         { name: 'Photography', value: 1 },
         { name: 'Boogers', value: 2 },
       ],
-      [{ company: 1, description: 'Gallery 1', id: 1, link: 'link1.com' }, {}]
+      [
+        {
+          company: 1,
+          description: 'Gallery 1',
+          id: 1,
+          link: 'link1.com',
+        },
+        {},
+      ]
     );
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
@@ -578,20 +482,6 @@ describe('apply to request to hire form', () => {
 
   it('is able to close an alert after failure', async () => {
     jobService.jobService.applyToHireRequest.mockRejectedValue('Some Error');
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     await act(async () => {
       fireEvent.click(saveRow.firstChild.firstChild);
@@ -604,20 +494,6 @@ describe('apply to request to hire form', () => {
   it('has an alert on success of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     await act(async () => {
       fireEvent.click(saveRow.firstChild.firstChild);
@@ -632,12 +508,26 @@ describe('apply to request to hire form', () => {
       undefined,
       undefined,
       "None really, but somebody's gotta work this bitch",
-      [{ name: 'Flash', value: 2 }],
+      [
+        {
+          name: 'Flash',
+          value: 2,
+          what: 'strobe',
+        },
+      ],
       [
         { name: 'Photography', value: 1 },
         { name: 'Boogers', value: 2 },
       ],
-      [{ company: 1, description: 'Gallery 1', id: 1, link: 'link1.com' }, {}]
+      [
+        {
+          company: 1,
+          description: 'Gallery 1',
+          id: 1,
+          link: 'link1.com',
+        },
+        {},
+      ]
     );
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(1);
@@ -660,20 +550,6 @@ describe('apply to request to hire form', () => {
 
   it('is able to close an alert after success', async () => {
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     await act(async () => {
       fireEvent.click(saveRow.firstChild.firstChild);
@@ -685,20 +561,6 @@ describe('apply to request to hire form', () => {
 
   it('removes the success alert after 5 seconds', async () => {
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     await act(async () => {
       fireEvent.click(saveRow.firstChild.firstChild);
@@ -716,20 +578,6 @@ describe('apply to request to hire form', () => {
   it('can handle changing of values', async () => {
     const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    const { container } = render(
-      <ApplyToRequestToHire
-        hireRequest={hireRequest}
-        user={user}
-        company={company}
-      />
-    );
-    await waitFor(() => container.firstChild);
-    const button = getByText(container, 'Submit For Job');
-    fireEvent.click(button);
-
-    const modal = await waitFor(() =>
-      screen.getByTestId('applyToRequestToHireModal-5')
-    );
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.children[6].firstChild.firstChild.firstChild, {
       target: { value: 'New Person' },
@@ -770,7 +618,13 @@ describe('apply to request to hire form', () => {
       'https://insta.com',
       'https://fb.com',
       'new experience',
-      [{ name: 'Flash', value: 2 }],
+      [
+        {
+          name: 'Flash',
+          value: 2,
+          what: 'strobe',
+        },
+      ],
       [
         { name: 'Photography', value: 1 },
         { name: 'Boogers', value: 2 },

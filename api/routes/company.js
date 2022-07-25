@@ -78,6 +78,7 @@ const updateCompanyInformationValidation = [
   check('website', 'Website must be a valid URL').optional().isURL(),
   check('insta', 'Instagram Link must be a valid URL').optional().isURL(),
   check('fb', 'Facebook Link must be a valid URL').optional().isURL(),
+  check('equipment.*.what', 'Equipment information must be provided'),
 ];
 
 router.post(
@@ -90,22 +91,7 @@ router.post(
     }
     try {
       const user = User.auth(token);
-      let equipment = [];
-      if (req.body.equipment) {
-        equipment = req.body.equipment.map((option) => option.value);
-        // if value is not set, just use the basic array value
-        if (equipment.some((item) => item === undefined)) {
-          equipment = req.body.equipment;
-        }
-      }
-      let skills = [];
-      if (req.body.skills) {
-        skills = req.body.skills.map((option) => option.value);
-        // if value is not set, just use the basic array value
-        if (skills.some((item) => item === undefined)) {
-          skills = req.body.skills;
-        }
-      }
+      const { equipment, skills } = Common.getEquipmentAndSkills(req);
       const company = new Company(await user.getId());
       await company.setCompanyInformation(
         req.body.name,

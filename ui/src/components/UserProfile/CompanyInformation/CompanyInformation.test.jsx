@@ -200,6 +200,24 @@ describe('Company information', () => {
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
+  it('does not submit if camera is selected but no information is present', async () => {
+    const company = {
+      experience: 'Max',
+      equipment: [
+        {
+          value: 2,
+          name: 'Flash',
+        },
+      ],
+    };
+    const { container } = render(<CompanyInformation company={company} />);
+    await act(async () => {
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    });
+    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
+    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
+  });
+
   it('has an alert on failure of a submission', async () => {
     const spy = jest.spyOn(
       companyService.companyService,

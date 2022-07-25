@@ -144,13 +144,15 @@ function UserPage() {
           )}
         </Row>
         <Row className="mb-3">
-          <Col>
+          <Col md={8}>
             <h4>Equipment</h4>
             {equipmentItems.map((option) => (
-              <div key={option.value}>{option.name}</div>
+              <div key={option.value}>
+                <b>{option.name}</b>: {option.what}
+              </div>
             ))}
           </Col>
-          <Col>
+          <Col md={4}>
             <h4>Skills</h4>
             {skillItems.map((option) => (
               <div key={option.value}>{option.name}</div>

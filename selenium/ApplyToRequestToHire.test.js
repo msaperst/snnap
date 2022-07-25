@@ -204,8 +204,10 @@ describe('apply to request to hire', () => {
       'https://instagram.com',
       'https://facebook.com',
       'Experience',
-      [1, 3],
-      [5],
+      [
+        { name: 'Camera', value: 1, what: 'some camera' },
+        { value: 3, name: 'Lights', what: 'Some lights' }],
+      [{value: 5}],
       [{ description: 'some link', link: 'https://link.com' }]
     );
     await driver.navigate().refresh();

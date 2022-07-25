@@ -99,7 +99,7 @@ describe('new request to hire', () => {
   async function enterData(option, location, details, pay, duration, date) {
     const select = driver.wait(until.elementLocated(By.id('formJobType')));
     driver.wait(until.elementIsEnabled(select));
-    (await select.findElements(By.tagName('option')))[option].click();
+    (await select.findElements(By.css('option')))[option].click();
     (await modal.findElement(By.css('[placeholder="Location"]'))).sendKeys(location);
     (driver.wait(until.elementLocated(By.className('geoapify-autocomplete-item')))).click();
     (await modal.findElement(By.id('formJobDetails'))).sendKeys(details);

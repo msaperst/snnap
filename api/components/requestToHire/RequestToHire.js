@@ -34,14 +34,14 @@ const RequestToHire = class {
         await Mysql.query(
           `INSERT INTO hire_requests_equipment (hire_request, equipment) VALUES (${
             result.insertId
-          }, ${db.escape(equip)});`
+          }, ${db.escape(equip.value)});`
         );
       });
       skills.map(async (skill) => {
         await Mysql.query(
           `INSERT INTO hire_requests_skills (hire_request, skill) VALUES (${
             result.insertId
-          }, ${db.escape(skill)});`
+          }, ${db.escape(skill.value)});`
         );
       });
       newRequestToHire.id = result.insertId;

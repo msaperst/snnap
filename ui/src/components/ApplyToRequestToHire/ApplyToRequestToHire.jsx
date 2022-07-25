@@ -8,6 +8,7 @@ import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
 import Gallery from '../UserProfile/Portfolio/Gallery/Gallery';
 import './ApplyToRequestToHire.css';
 import Submit from '../Submit/Submit';
+import EquipmentSelect from '../UserProfile/CompanyInformation/EquipmentSelect/EquipmentSelect';
 
 class ApplyToRequestToHire extends React.Component {
   constructor(props) {
@@ -125,7 +126,7 @@ class ApplyToRequestToHire extends React.Component {
       isSubmitting,
       company,
     } = this.state;
-    const { user, equipment, skills } = this.props;
+    const { user, skills } = this.props;
     return (
       <>
         <Button
@@ -303,15 +304,11 @@ class ApplyToRequestToHire extends React.Component {
                   />
                 </Row>
                 <Row className="mb-3">
-                  <SnnapFormMultiSelect
-                    size={6}
-                    name="Equipment"
-                    values={company.equipment}
+                  <EquipmentSelect
+                    company={company}
                     onChange={this.updateForm}
-                    options={equipment}
                   />
                   <SnnapFormMultiSelect
-                    size={6}
                     name="Skills"
                     values={company.skills}
                     onChange={this.updateForm}

@@ -42,7 +42,7 @@ describe('home page', () => {
     driver.wait(until.elementIsVisible(logoutButton));
     await logoutButton.click();
     expect(await driver.getCurrentUrl()).toEqual(Test.getApp() + '/login');
-    expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Login');
+    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Login');
   });
 
   it('shows the tagline', async () => {
@@ -117,7 +117,7 @@ describe('home page', () => {
     // resort
     const firstDate = await getCardDate(0);
     const select = await driver.findElement(By.className('form-select'));
-    (await select.findElements(By.tagName('option')))[1].click();
+    (await select.findElements(By.css('option')))[1].click();
     driver.wait(function () {
       return getCardDate(0).then(function (date) {
         return date !== firstDate;
@@ -138,14 +138,14 @@ describe('home page', () => {
     // resort
     const firstDate = await getCardDate(0);
     const select = await driver.findElement(By.className('form-select'));
-    (await select.findElements(By.tagName('option')))[1].click();
+    (await select.findElements(By.css('option')))[1].click();
     driver.wait(function () {
       return getCardDate(0).then(function (date) {
         return date !== firstDate;
       })
     });
     // resort
-    (await select.findElements(By.tagName('option')))[0].click();
+    (await select.findElements(By.css('option')))[0].click();
     driver.wait(function () {
       return getCardDate(0).then(function (date) {
         return date === firstDate;
@@ -167,7 +167,7 @@ describe('home page', () => {
   async function getFoundText(waitUntilNot) {
     let foundText = `Found ${waitUntilNot} results`;
     while (parseInt(foundText.replace(/\D/g, '')) === waitUntilNot) {
-      const found = driver.wait(until.elementLocated(By.tagName('h3')));
+      const found = driver.wait(until.elementLocated(By.css('h3')));
       foundText = await found.getText();
     }
     return foundText;

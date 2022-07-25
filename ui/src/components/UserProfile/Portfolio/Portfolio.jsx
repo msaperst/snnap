@@ -4,6 +4,7 @@ import { companyService } from '../../../services/company.service';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import Gallery from './Gallery/Gallery';
 import Submit from '../../Submit/Submit';
+import { common } from '../Common';
 
 function Portfolio(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,13 +35,13 @@ function Portfolio(props) {
       setIsSubmitting(true);
       companyService.updatePortfolio(experience, portfolioItems).then(
         () => {
-          setIsSubmitting(false);
-          setStatus(null);
-          setUpdate('Portfolio Updated');
-          setTimeout(() => {
-            setUpdate(null);
-            setValidated(false);
-          }, 5000);
+          common.setSuccess(
+            setIsSubmitting,
+            setStatus,
+            setUpdate,
+            setValidated,
+            'Portfolio Updated'
+          );
         },
         (error) => {
           setIsSubmitting(false);

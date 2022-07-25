@@ -26,7 +26,7 @@ describe('register page', () => {
 
   it('shows the register header', async () => {
     driver.wait(until.elementLocated(By.id('formFirstname')));
-    expect(await driver.findElement(By.tagName('h2')).getText()).toEqual('Register');
+    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Register');
   });
 
   it('shows error when you register with blank information', async () => {
