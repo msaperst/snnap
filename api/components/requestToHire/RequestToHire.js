@@ -76,7 +76,7 @@ const RequestToHire = class {
     return Mysql.query(
       `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = ${db.escape(
         user
-      )}`
+      )};`
     );
   }
 

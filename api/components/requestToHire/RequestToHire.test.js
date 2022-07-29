@@ -190,4 +190,80 @@ describe('request to hire', () => {
       'SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.date_time > NOW();'
     );
   });
+
+  it("gets all of a user's hire requests", async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValue([
+      {
+        id: 1,
+        location: 'Fairfax, VA, United States of America',
+        details: "Max's 40th Birthday, woot!!!",
+        pay: 0.5,
+        duration: 8,
+        date_time: '2023-10-13 00:00:00',
+        user: 1,
+        durationMax: null,
+        typeId: 2,
+        type: "B'nai Mitzvah",
+      },
+      {
+        id: 2,
+        location: 'Fairfax, VA, United States of America',
+        details: "Max's 50th Birthday, woot!!!",
+        pay: 50,
+        duration: 1,
+        date_time: '2033-10-13 00:00:00',
+        user: 1,
+        durationMax: null,
+        typeId: 2,
+        type: 'Event',
+      },
+    ]);
+    await expect(RequestToHire.getUserHireRequests(1)).resolves.toEqual([
+      {
+        date_time: '2023-10-13 00:00:00',
+        details: "Max's 40th Birthday, woot!!!",
+        duration: 8,
+        durationMax: null,
+        id: 1,
+        location: 'Fairfax, VA, United States of America',
+        pay: 0.5,
+        type: "B'nai Mitzvah",
+        typeId: 2,
+        user: 1,
+      },
+      {
+        date_time: '2033-10-13 00:00:00',
+        details: "Max's 50th Birthday, woot!!!",
+        duration: 1,
+        durationMax: null,
+        id: 2,
+        location: 'Fairfax, VA, United States of America',
+        pay: 50,
+        type: 'Event',
+        typeId: 2,
+        user: 1,
+      },
+    ]);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = 1;'
+    );
+  });
+
+  it("gets all of a user's hire requests escaped", async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValue([]);
+    await expect(
+      RequestToHire.getUserHireRequests('max;\' "SELECT * WHERE 1=1;"')
+    ).resolves.toEqual([]);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = 'max;\\' \\\"SELECT * WHERE 1=1;\\\"';"
+    );
+  });
 });
