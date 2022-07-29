@@ -3,6 +3,7 @@ import { handleResponse } from '../helpers/handle-response';
 
 export const userService = {
   get,
+  getHireRequests,
   updateAccountInformation,
   updatePersonalInformation,
   uploadAvatar,
@@ -16,6 +17,11 @@ function get(id) {
   }
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(url, requestOptions).then(handleResponse);
+}
+
+function getHireRequests() {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/user/hire-requests`, requestOptions).then(handleResponse);
 }
 
 function updateAccountInformation(email, number) {

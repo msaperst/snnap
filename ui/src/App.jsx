@@ -13,6 +13,7 @@ const RegisterPage = lazy(() => import('./pages/Register/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
 const UserPage = lazy(() => import('./pages/User/UserPage'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
+const HireRequests = lazy(() => import('./pages/HireRequests/HireRequests'));
 
 function App() {
   const navigate = useNavigate();
@@ -60,6 +61,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <UserPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/hire-requests"
+              element={
+                <PrivateRoute>
+                  <HireRequests />
                 </PrivateRoute>
               }
             />
