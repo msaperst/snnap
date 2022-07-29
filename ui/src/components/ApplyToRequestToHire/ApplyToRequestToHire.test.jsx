@@ -14,6 +14,36 @@ const jobService = require('../../services/job.service');
 jest.mock('../../services/company.service');
 const companyService = require('../../services/company.service');
 
+// eslint-disable-next-line jest/no-export
+export const hr = {
+  id: 5,
+  type: 'Event',
+  location: 'Fairfax, VA, United States of America',
+  details: "Max's 40th Birthday, woot!!!",
+  pay: 0.5,
+  duration: 8,
+  date_time: '2023-10-13T04:00:00.000Z',
+  user: 1,
+  durationMax: null,
+  typeId: 2,
+  equipment: [
+    {
+      value: 1,
+      name: 'Camera',
+    },
+  ],
+  skills: [
+    {
+      value: 4,
+      name: 'Posing',
+    },
+    {
+      value: 3,
+      name: 'Something',
+    },
+  ],
+};
+
 describe('apply to request to hire form', () => {
   jest.setTimeout(10000);
   let hireRequest;
@@ -28,34 +58,7 @@ describe('apply to request to hire form', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
-    hireRequest = {
-      id: 5,
-      type: 'Event',
-      location: 'Fairfax, VA, United States of America',
-      details: "Max's 40th Birthday, woot!!!",
-      pay: 0.5,
-      duration: 8,
-      date_time: '2023-10-13T04:00:00.000Z',
-      user: 1,
-      durationMax: null,
-      typeId: 2,
-      equipment: [
-        {
-          value: 1,
-          name: 'Camera',
-        },
-      ],
-      skills: [
-        {
-          value: 4,
-          name: 'Posing',
-        },
-        {
-          value: 3,
-          name: 'Something',
-        },
-      ],
-    };
+    hireRequest = hr;
     user = {
       id: 3,
       username: 'msaperst',
@@ -155,101 +158,15 @@ describe('apply to request to hire form', () => {
     expect(modalForm.getAttribute('noValidate')).toEqual('');
   });
 
-  function checkInput(inputRow, mdSize, id, placeHolder, value) {
-    expect(inputRow).toHaveClass(`col-md-${mdSize}`);
-    const input = inputRow.firstChild.firstChild;
-    expect(input.getAttribute('id')).toEqual(id);
-    expect(input.getAttribute('placeholder')).toEqual(placeHolder);
-    expect(input.getAttribute('readonly')).toEqual('');
-    expect(input.getAttribute('type')).toEqual('text');
-    expect(input.getAttribute('value')).toEqual(value);
-  }
-
-  // TODO - split into smaller tests
-  it('has the correct job information', async () => {
+  it('has the correct user information header', async () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
-
-    // job info header
-    expect(modalForm.firstChild).toHaveClass('mb-3 row');
-    expect(modalForm.firstChild).toHaveTextContent('Job Information');
-
-    // job info first row
-    expect(modalForm.children[1].children).toHaveLength(3);
-    checkInput(
-      modalForm.children[1].children[0],
-      4,
-      'formJobType',
-      'Job Type',
-      'Event'
-    );
-    checkInput(
-      modalForm.children[1].children[1],
-      4,
-      'formDate',
-      'Date',
-      'Friday, October 13, 2023'
-    );
-    checkInput(
-      modalForm.children[1].children[2],
-      4,
-      'formDuration',
-      'Duration',
-      '8 hours'
-    );
-
-    // job info second row
-    expect(modalForm.children[2].children).toHaveLength(2);
-    checkInput(
-      modalForm.children[2].children[0],
-      8,
-      'formLocation',
-      'Location',
-      'Fairfax, VA'
-    );
-    checkInput(
-      modalForm.children[2].children[1],
-      4,
-      'formPay',
-      'Pay',
-      '$0.5 per hour'
-    );
-
-    // job info third row
-    expect(modalForm.children[3].children[0]).toHaveClass('col-md-12');
-    const detailsInput =
-      modalForm.children[3].children[0].firstChild.firstChild;
-    expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
-    expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
-    expect(detailsInput.getAttribute('readonly')).toEqual('');
-    expect(detailsInput.getAttribute('type')).toEqual('textarea');
-    expect(detailsInput).toHaveTextContent("Max's 40th Birthday, woot!!!");
-
-    // job info fourth row
-    expect(modalForm.children[4].children).toHaveLength(2);
-    checkInput(
-      modalForm.children[4].children[0],
-      6,
-      'formEquipment',
-      'Equipment',
-      'Camera'
-    );
-    checkInput(
-      modalForm.children[4].children[1],
-      6,
-      'formSkills',
-      'Skills',
-      'Posing,Something'
-    );
-  });
-
-  // TODO - split into smaller tests
-  it('has the correct initial user information', async () => {
-    const modalForm = modal.firstChild.lastChild.firstChild;
-
     // your info header
     expect(modalForm.children[5]).toHaveClass('mb-3 row');
     expect(modalForm.children[5]).toHaveTextContent('Your Information');
+  });
 
+  it('has the correct user information', async () => {
+    const modalForm = modal.firstChild.lastChild.firstChild;
     // your info first row
     expect(modalForm.children[6].children).toHaveLength(2);
     expect(modalForm.children[6].children[0]).toHaveClass('col-md-6');
@@ -268,7 +185,10 @@ describe('apply to request to hire form', () => {
     expect(companyInput.getAttribute('readonly')).toBeNull();
     expect(companyInput.getAttribute('type')).toEqual('text');
     expect(companyInput.getAttribute('value')).toEqual('Butts R Us');
+  });
 
+  it('has the correct links', async () => {
+    const modalForm = modal.firstChild.lastChild.firstChild;
     // your info second row
     expect(modalForm.children[7].children).toHaveLength(6);
     expect(modalForm.children[7].children[0]).toHaveClass('col-md-1');
@@ -301,7 +221,10 @@ describe('apply to request to hire form', () => {
     expect(fbInput.getAttribute('readonly')).toBeNull();
     expect(fbInput.getAttribute('type')).toEqual('text');
     expect(fbInput.getAttribute('value')).toEqual('');
+  });
 
+  it('has the correct experience', async () => {
+    const modalForm = modal.firstChild.lastChild.firstChild;
     // your info third row
     expect(modalForm.children[8].children).toHaveLength(1);
     expect(modalForm.children[8].children[0]).toHaveClass('col-md-12');
@@ -314,20 +237,12 @@ describe('apply to request to hire form', () => {
     expect(detailsInput).toHaveTextContent(
       "None really, but somebody's gotta work this bitch"
     );
+  });
 
-    // your info fourth row
-    // TODO - multi-selects (see company info)
-    // expect(modalForm.children[9].children).toHaveLength(2);
-    // expect(modalForm.children[9].children[0]).toHaveClass('col-md-6');
-    // const equipmentInput = modalForm.children[9].children[0].firstChild;
-    // expect(equipmentInput.getAttribute('class')).toEqual('multi-select-form');
-    // expect(equipmentInput).toHaveTextContent('Flash');
-    //
-    // expect(modalForm.children[9].children[1]).toHaveClass('col-md-6');
-    // const skillsInput = modalForm.children[9].children[1].firstChild;
-    // expect(skillsInput.getAttribute('class')).toEqual('multi-select-form');
-    // expect(equipmentInput).toHaveTextContent('Flash');
+  // TODO - multi-selects (see company info)
 
+  it('has the correct portfolio information', async () => {
+    const modalForm = modal.firstChild.lastChild.firstChild;
     // your info last row(s)
     expect(modalForm.children[10].children).toHaveLength(2);
     expect(modalForm.children[10].children[0]).toHaveClass('col-md-12');

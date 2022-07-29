@@ -9,6 +9,7 @@ import Gallery from '../UserProfile/Portfolio/Gallery/Gallery';
 import './ApplyToRequestToHire.css';
 import Submit from '../Submit/Submit';
 import EquipmentSelect from '../UserProfile/CompanyInformation/EquipmentSelect/EquipmentSelect';
+import RequestToHireDetail from '../RequestToHire/RequestToHireDetail';
 
 class ApplyToRequestToHire extends React.Component {
   constructor(props) {
@@ -161,89 +162,7 @@ class ApplyToRequestToHire extends React.Component {
                 validated={validated}
                 onSubmit={this.handleSubmit}
               >
-                <Row className="mb-3">
-                  <h3>Job Information</h3>
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormInput
-                    size={4}
-                    name="Job Type"
-                    value={hireRequest.type}
-                    readOnly
-                  />
-                  <SnnapFormInput
-                    size={4}
-                    name="Date"
-                    value={new Intl.DateTimeFormat('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: '2-digit',
-                    }).format(new Date(hireRequest.date_time))}
-                    readOnly
-                  />
-                  <SnnapFormInput
-                    size={4}
-                    name="Duration"
-                    value={`${hireRequest.duration}${
-                      hireRequest.durationMax
-                        ? ` to ${hireRequest.durationMax}`
-                        : ''
-                    } hours`}
-                    readOnly
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormInput
-                    size={8}
-                    name="Location"
-                    value={hireRequest.location.replace(
-                      ', United States of America',
-                      ''
-                    )}
-                    readOnly
-                  />
-                  <SnnapFormInput
-                    size={4}
-                    name="Pay"
-                    value={`$${hireRequest.pay} per hour`}
-                    readOnly
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormInput
-                    name="Job Details"
-                    value={hireRequest.details}
-                    type="textarea"
-                    readOnly
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormInput
-                    size={6}
-                    name="Equipment"
-                    value={
-                      hireRequest.equipment
-                        ? hireRequest.equipment
-                            .map((option) => option.name)
-                            .toString()
-                        : ''
-                    }
-                    readOnly
-                  />
-                  <SnnapFormInput
-                    size={6}
-                    name="Skills"
-                    value={
-                      hireRequest.skills
-                        ? hireRequest.skills
-                            .map((option) => option.name)
-                            .toString()
-                        : ''
-                    }
-                    readOnly
-                  />
-                </Row>
+                <RequestToHireDetail hireRequest={hireRequest} />
                 <Row className="mb-3">
                   <h3>Your Information</h3>
                 </Row>

@@ -19,14 +19,20 @@ function Menu(props) {
         <Nav className="ml-auto">
           <NavDropdown title="Gigs" id="gig-dropdown">
             <NewRequestToHire />
-            <NavDropdown.Item href={`/hire-requests/${currentUser.username}`}>
+            <NavDropdown.Item href="/hire-requests">
               My Hire Requests
             </NavDropdown.Item>
-            <NavDropdown.Divider />
-            {/* <NewRequestToWork /> */}
-            <NavDropdown.Item href={`/work-requests/${currentUser.username}`}>
-              My Work Requests
+            <NavDropdown.Item href="/hire-request-applications">
+              My Hire Request Applications
             </NavDropdown.Item>
+            {/* <NavDropdown.Divider /> */}
+            {/* <NewRequestToWork /> */}
+            {/* <NavDropdown.Item href="/work-requests"> */}
+            {/*  My Work Requests */}
+            {/* </NavDropdown.Item> */}
+            {/* <NavDropdown.Item href="/work-request-applications"> */}
+            {/*  My Work Request Applications */}
+            {/* </NavDropdown.Item> */}
           </NavDropdown>
           <NavDropdown title={currentUser.username} id="user-dropdown">
             <NavDropdown.Item href="/notifications">

@@ -130,7 +130,7 @@ describe('snnap menu', () => {
     const gigMenu =
       container.firstChild.firstChild.lastChild.firstChild.children[0];
     expect(gigMenu.children).toHaveLength(2);
-    expect(gigMenu.lastChild.children).toHaveLength(5);
+    expect(gigMenu.lastChild.children).toHaveLength(4);
     expect(gigMenu.lastChild).toHaveClass('dropdown-menu show');
     expect(gigMenu.lastChild.getAttribute('aria-labelledby')).toEqual(
       'gig-dropdown'
@@ -158,24 +158,20 @@ describe('snnap menu', () => {
       gigMenu.lastChild.children[2].getAttribute('data-rr-ui-dropdown-item')
     ).toEqual('');
     expect(gigMenu.lastChild.children[2].getAttribute('href')).toEqual(
-      '/hire-requests/msaperst'
+      '/hire-requests'
     );
     expect(gigMenu.lastChild.children[2]).toHaveTextContent('My Hire Requests');
-
-    expect(gigMenu.lastChild.children[3]).toHaveClass('dropdown-divider');
-    expect(gigMenu.lastChild.children[3].getAttribute('role')).toEqual(
-      'separator'
-    );
-    expect(gigMenu.lastChild.children[3]).toHaveTextContent('');
 
     expect(gigMenu.lastChild.lastChild).toHaveClass('dropdown-item');
     expect(
       gigMenu.lastChild.lastChild.getAttribute('data-rr-ui-dropdown-item')
     ).toEqual('');
     expect(gigMenu.lastChild.lastChild.getAttribute('href')).toEqual(
-      '/work-requests/msaperst'
+      '/hire-request-applications'
     );
-    expect(gigMenu.lastChild.lastChild).toHaveTextContent('My Work Requests');
+    expect(gigMenu.lastChild.lastChild).toHaveTextContent(
+      'My Hire Request Applications'
+    );
   });
 
   it('has no user menu when not clicked', () => {

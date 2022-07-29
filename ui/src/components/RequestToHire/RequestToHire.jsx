@@ -13,6 +13,7 @@ function RequestToHire(props) {
 
   const [user, setUser] = useState({});
   const [applications, setApplications] = useState([]);
+
   useEffect(() => {
     userService.get(hireRequest.user).then((user) => {
       setUser(user);
