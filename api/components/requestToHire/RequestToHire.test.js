@@ -4,6 +4,31 @@ jest.mock('../../services/Mysql');
 const Mysql = require('../../services/Mysql');
 
 describe('request to hire', () => {
+  const item1 = {
+    id: 1,
+    location: 'Fairfax, VA, United States of America',
+    details: "Max's 40th Birthday, woot!!!",
+    pay: 0.5,
+    duration: 8,
+    date_time: '2023-10-13 00:00:00',
+    user: 1,
+    durationMax: null,
+    typeId: 2,
+    type: "B'nai Mitzvah",
+  };
+  const item2 = {
+    id: 2,
+    location: 'Fairfax, VA, United States of America',
+    details: "Max's 50th Birthday, woot!!!",
+    pay: 50,
+    duration: 1,
+    date_time: '2033-10-13 00:00:00',
+    user: 1,
+    durationMax: null,
+    typeId: 2,
+    type: 'Event',
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -82,20 +107,7 @@ describe('request to hire', () => {
   it('retrieves all of the info for the request', async () => {
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query
-      .mockResolvedValueOnce([
-        {
-          id: 1,
-          location: 'Fairfax, VA, United States of America',
-          details: "Max's 40th Birthday, woot!!!",
-          pay: 0.5,
-          duration: 8,
-          date_time: '2023-10-13 00:00:00',
-          user: 1,
-          durationMax: null,
-          typeId: 2,
-          type: "B'nai Mitzvah",
-        },
-      ])
+      .mockResolvedValueOnce([item1])
       .mockResolvedValueOnce([{ value: 1, name: 'Camera' }])
       .mockResolvedValue([]);
     const requestToHire = new RequestToHire(5);
@@ -131,57 +143,10 @@ describe('request to hire', () => {
 
   it('gets all of our hire requests', async () => {
     const spy = jest.spyOn(Mysql, 'query');
-    Mysql.query.mockResolvedValue([
-      {
-        id: 1,
-        location: 'Fairfax, VA, United States of America',
-        details: "Max's 40th Birthday, woot!!!",
-        pay: 0.5,
-        duration: 8,
-        date_time: '2023-10-13 00:00:00',
-        user: 1,
-        durationMax: null,
-        typeId: 2,
-        type: "B'nai Mitzvah",
-      },
-      {
-        id: 2,
-        location: 'Fairfax, VA, United States of America',
-        details: "Max's 50th Birthday, woot!!!",
-        pay: 50,
-        duration: 1,
-        date_time: '2033-10-13 00:00:00',
-        user: 1,
-        durationMax: null,
-        typeId: 2,
-        type: 'Event',
-      },
-    ]);
+    Mysql.query.mockResolvedValue([item1, item2]);
     await expect(RequestToHire.getHireRequests()).resolves.toEqual([
-      {
-        date_time: '2023-10-13 00:00:00',
-        details: "Max's 40th Birthday, woot!!!",
-        duration: 8,
-        durationMax: null,
-        id: 1,
-        location: 'Fairfax, VA, United States of America',
-        pay: 0.5,
-        type: "B'nai Mitzvah",
-        typeId: 2,
-        user: 1,
-      },
-      {
-        date_time: '2033-10-13 00:00:00',
-        details: "Max's 50th Birthday, woot!!!",
-        duration: 1,
-        durationMax: null,
-        id: 2,
-        location: 'Fairfax, VA, United States of America',
-        pay: 50,
-        type: 'Event',
-        typeId: 2,
-        user: 1,
-      },
+      item1,
+      item2,
     ]);
 
     expect(spy).toHaveBeenCalledTimes(1);
@@ -193,57 +158,10 @@ describe('request to hire', () => {
 
   it("gets all of a user's hire requests", async () => {
     const spy = jest.spyOn(Mysql, 'query');
-    Mysql.query.mockResolvedValue([
-      {
-        id: 1,
-        location: 'Fairfax, VA, United States of America',
-        details: "Max's 40th Birthday, woot!!!",
-        pay: 0.5,
-        duration: 8,
-        date_time: '2023-10-13 00:00:00',
-        user: 1,
-        durationMax: null,
-        typeId: 2,
-        type: "B'nai Mitzvah",
-      },
-      {
-        id: 2,
-        location: 'Fairfax, VA, United States of America',
-        details: "Max's 50th Birthday, woot!!!",
-        pay: 50,
-        duration: 1,
-        date_time: '2033-10-13 00:00:00',
-        user: 1,
-        durationMax: null,
-        typeId: 2,
-        type: 'Event',
-      },
-    ]);
+    Mysql.query.mockResolvedValue([item1, item2]);
     await expect(RequestToHire.getUserHireRequests(1)).resolves.toEqual([
-      {
-        date_time: '2023-10-13 00:00:00',
-        details: "Max's 40th Birthday, woot!!!",
-        duration: 8,
-        durationMax: null,
-        id: 1,
-        location: 'Fairfax, VA, United States of America',
-        pay: 0.5,
-        type: "B'nai Mitzvah",
-        typeId: 2,
-        user: 1,
-      },
-      {
-        date_time: '2033-10-13 00:00:00',
-        details: "Max's 50th Birthday, woot!!!",
-        duration: 1,
-        durationMax: null,
-        id: 2,
-        location: 'Fairfax, VA, United States of America',
-        pay: 50,
-        type: 'Event',
-        typeId: 2,
-        user: 1,
-      },
+      item1,
+      item2,
     ]);
 
     expect(spy).toHaveBeenCalledTimes(1);

@@ -14,6 +14,36 @@ const jobService = require('../../services/job.service');
 jest.mock('../../services/company.service');
 const companyService = require('../../services/company.service');
 
+// eslint-disable-next-line jest/no-export
+export const hr = {
+  id: 5,
+  type: 'Event',
+  location: 'Fairfax, VA, United States of America',
+  details: "Max's 40th Birthday, woot!!!",
+  pay: 0.5,
+  duration: 8,
+  date_time: '2023-10-13T04:00:00.000Z',
+  user: 1,
+  durationMax: null,
+  typeId: 2,
+  equipment: [
+    {
+      value: 1,
+      name: 'Camera',
+    },
+  ],
+  skills: [
+    {
+      value: 4,
+      name: 'Posing',
+    },
+    {
+      value: 3,
+      name: 'Something',
+    },
+  ],
+};
+
 describe('apply to request to hire form', () => {
   jest.setTimeout(10000);
   let hireRequest;
@@ -28,34 +58,7 @@ describe('apply to request to hire form', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
-    hireRequest = {
-      id: 5,
-      type: 'Event',
-      location: 'Fairfax, VA, United States of America',
-      details: "Max's 40th Birthday, woot!!!",
-      pay: 0.5,
-      duration: 8,
-      date_time: '2023-10-13T04:00:00.000Z',
-      user: 1,
-      durationMax: null,
-      typeId: 2,
-      equipment: [
-        {
-          value: 1,
-          name: 'Camera',
-        },
-      ],
-      skills: [
-        {
-          value: 4,
-          name: 'Posing',
-        },
-        {
-          value: 3,
-          name: 'Something',
-        },
-      ],
-    };
+    hireRequest = hr;
     user = {
       id: 3,
       username: 'msaperst',

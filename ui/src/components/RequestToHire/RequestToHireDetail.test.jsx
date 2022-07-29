@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import RequestToHireDetail from './RequestToHireDetail';
+import { hr } from '../ApplyToRequestToHire/ApplyToRequestToHire.test';
 
 describe('request to hire detail info', () => {
   jest.setTimeout(10000);
@@ -11,34 +12,7 @@ describe('request to hire detail info', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
-    hireRequest = {
-      id: 5,
-      type: 'Event',
-      location: 'Fairfax, VA, United States of America',
-      details: "Max's 40th Birthday, woot!!!",
-      pay: 0.5,
-      duration: 8,
-      date_time: '2023-10-13T04:00:00.000Z',
-      user: 1,
-      durationMax: null,
-      typeId: 2,
-      equipment: [
-        {
-          value: 1,
-          name: 'Camera',
-        },
-      ],
-      skills: [
-        {
-          value: 4,
-          name: 'Posing',
-        },
-        {
-          value: 3,
-          name: 'Something',
-        },
-      ],
-    };
+    hireRequest = hr;
     hireRequestAlt = {
       id: 5,
       type: 'Event',
