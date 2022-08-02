@@ -63,7 +63,7 @@ function CompanyInformation(props) {
         )
         .then(
           () => {
-            common.setSuccess(
+            common.setBasicSuccess(
               setIsSubmitting,
               setStatus,
               setUpdate,

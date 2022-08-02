@@ -10,6 +10,7 @@ import './ApplyToRequestToHire.css';
 import Submit from '../Submit/Submit';
 import EquipmentSelect from '../UserProfile/CompanyInformation/EquipmentSelect/EquipmentSelect';
 import RequestToHireDetail from '../RequestToHire/RequestToHireDetail';
+import { common } from '../UserProfile/Common';
 
 class ApplyToRequestToHire extends React.Component {
   constructor(props) {
@@ -69,19 +70,10 @@ class ApplyToRequestToHire extends React.Component {
         )
         .then(
           () => {
-            this.setState({
-              status: null,
-              update: 'Job Filing Submitted',
-            });
-            setTimeout(() => {
-              this.setState({
-                isSubmitting: false,
-                show: false,
-                update: null,
-                validated: false,
-              });
-              window.location.reload(); // TODO - figure out how to redraw
-            }, 5000);
+            common.setRedrawSuccess(
+              (state) => this.setState(state),
+              'Job Filing Submitted'
+            );
           },
           (error) => {
             this.setState({

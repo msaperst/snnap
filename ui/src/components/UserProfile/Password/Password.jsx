@@ -23,7 +23,7 @@ function Password() {
         .updatePassword(formData['Current Password'], formData['New Password'])
         .then(
           () => {
-            common.setSuccess(
+            common.setBasicSuccess(
               setIsSubmitting,
               setStatus,
               setUpdate,

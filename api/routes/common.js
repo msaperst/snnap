@@ -29,6 +29,24 @@ const Common = class {
     }
     return { equipment, skills };
   }
+
+  static async basicAuthExecuteAndReturn(req, res, callback) {
+    let token;
+    try {
+      token = await User.isAuth(req.headers.authorization);
+    } catch (error) {
+      return res.status(401).json({
+        message: error.message,
+      });
+    }
+    try {
+      return callback(token);
+    } catch (error) {
+      return res.status(422).send({
+        msg: error.message,
+      });
+    }
+  }
 };
 
 module.exports = Common;

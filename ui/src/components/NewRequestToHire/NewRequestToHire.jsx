@@ -9,6 +9,7 @@ import SnnapFormLocationInput from '../SnnapForms/SnnapFormLocationInput';
 import SnnapFormSelect from '../SnnapForms/SnnapFormSelect';
 import SnnapFormDuration from '../SnnapForms/SnnapFormDuration';
 import Submit from '../Submit/Submit';
+import { common } from '../UserProfile/Common';
 
 class NewRequestToHire extends React.Component {
   constructor(props) {
@@ -27,8 +28,6 @@ class NewRequestToHire extends React.Component {
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateForm = this.updateForm.bind(this);
-    this.clearUpdate = this.clearUpdate.bind(this);
-    this.clearStatus = this.clearStatus.bind(this);
   }
 
   componentDidMount() {
@@ -64,19 +63,10 @@ class NewRequestToHire extends React.Component {
         )
         .then(
           () => {
-            this.setState({
-              status: null,
-              update: 'New Request to Hire Submitted',
-            });
-            setTimeout(() => {
-              this.setState({
-                show: false,
-                update: null,
-                validated: false,
-                isSubmitting: false,
-              });
-              window.location.reload(); // TODO - figure out how to redraw
-            }, 5000);
+            common.setRedrawSuccess(
+              (state) => this.setState(state),
+              'New Request to Hire Submitted'
+            );
           },
           (error) => {
             this.setState({
@@ -94,14 +84,6 @@ class NewRequestToHire extends React.Component {
     const { formData } = this.state;
     formData[key] = value;
     this.setState({ formData });
-  }
-
-  clearStatus() {
-    this.setState({ status: null });
-  }
-
-  clearUpdate() {
-    this.setState({ update: null });
   }
 
   render() {
@@ -207,9 +189,9 @@ class NewRequestToHire extends React.Component {
                   buttonText="Create New Request"
                   isSubmitting={isSubmitting}
                   error={status}
-                  updateError={this.clearStatus}
+                  updateError={() => this.setState({ status: null })}
                   success={update}
-                  updateSuccess={this.clearUpdate}
+                  updateSuccess={() => this.setState({ update: null })}
                 />
               </Form>
             </Modal.Body>

@@ -35,7 +35,7 @@ function Portfolio(props) {
       setIsSubmitting(true);
       companyService.updatePortfolio(experience, portfolioItems).then(
         () => {
-          common.setSuccess(
+          common.setBasicSuccess(
             setIsSubmitting,
             setStatus,
             setUpdate,

@@ -35,7 +35,7 @@ function AccountInformation(props) {
         .updateAccountInformation(formData.Email, formData.Number)
         .then(
           () => {
-            common.setSuccess(
+            common.setBasicSuccess(
               setIsSubmitting,
               setStatus,
               setUpdate,

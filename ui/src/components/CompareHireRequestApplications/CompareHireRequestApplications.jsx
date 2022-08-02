@@ -5,6 +5,7 @@ import './CompareHireRequestApplications.css';
 import Submit from '../Submit/Submit';
 import RequestToHireDetail from '../RequestToHire/RequestToHireDetail';
 import HireRequestApplication from '../HireRequestApplication/HireRequestApplication';
+import { common } from '../UserProfile/Common';
 
 class CompareHireRequestApplications extends React.Component {
   constructor(props) {
@@ -47,19 +48,10 @@ class CompareHireRequestApplications extends React.Component {
         )
         .then(
           () => {
-            this.setState({
-              status: null,
-              update: 'Hire Request Application Chosen',
-            });
-            setTimeout(() => {
-              this.setState({
-                isSubmitting: false,
-                show: false,
-                update: null,
-                validated: false,
-              });
-              window.location.reload(); // TODO - figure out how to redraw
-            }, 5000);
+            common.setRedrawSuccess(
+              (state) => this.setState(state),
+              'Hire Request Application Chosen'
+            );
           },
           (error) => {
             this.setState({
@@ -107,7 +99,7 @@ class CompareHireRequestApplications extends React.Component {
           >
             <Modal.Header closeButton>
               <Modal.Title>
-                Submit to work the {hireRequest.type} Session
+                Applications for the {hireRequest.type} Session
               </Modal.Title>
             </Modal.Header>
             <Modal.Body className="show-grid">
