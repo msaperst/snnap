@@ -29,8 +29,6 @@ class ApplyToRequestToHire extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateForm = this.updateForm.bind(this);
     this.updatePortfolioItems = this.updatePortfolioItems.bind(this);
-    this.clearUpdate = this.clearUpdate.bind(this);
-    this.clearStatus = this.clearStatus.bind(this);
   }
 
   componentDidMount() {
@@ -107,14 +105,6 @@ class ApplyToRequestToHire extends React.Component {
     const { formData } = this.state;
     formData.portfolio = items;
     this.setState({ formData });
-  }
-
-  clearStatus() {
-    this.setState({ status: null });
-  }
-
-  clearUpdate() {
-    this.setState({ update: null });
   }
 
   render() {
@@ -242,9 +232,9 @@ class ApplyToRequestToHire extends React.Component {
                   buttonText="Apply to Request to Hire"
                   isSubmitting={isSubmitting}
                   error={status}
-                  updateError={this.clearStatus}
+                  updateError={() => this.setState({ status: null })}
                   success={update}
-                  updateSuccess={this.clearUpdate}
+                  updateSuccess={() => this.setState({ update: null })}
                 />
               </Form>
             </Modal.Body>
