@@ -99,104 +99,97 @@ class NewRequestToHire extends React.Component {
     } = this.state;
     return (
       <>
-        <NavDropdown.Item
-          id="openNewRequestToHireButton"
-          onClick={() => this.setState({ validated: false, show: true })}
-        >
-          New Request to Hire
-        </NavDropdown.Item>
-
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-        <div // adding in this div due to issue https://github.com/react-bootstrap/react-bootstrap/issues/3105
-          onKeyDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          onFocus={(e) => e.stopPropagation()}
-          onMouseOver={(e) => e.stopPropagation()}
-        >
-          <Modal
-            size="lg"
-            show={show}
-            onHide={() => this.setState({ show: false })}
-            data-testid="newRequestToHireModal"
+        <div>
+          <NavDropdown.Item
+            id="openNewRequestToHireButton"
+            onClick={() => this.setState({ validated: false, show: true })}
           >
-            <Modal.Header closeButton>
-              <Modal.Title>Create a new request to hire</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="show-grid">
-              <Form
-                id="newRequestToHireForm"
-                noValidate
-                validated={validated}
-                onSubmit={this.handleSubmit}
-              >
-                <Row className="mb-3">
-                  <SnnapFormSelect
-                    name="Job Type"
-                    onChange={this.updateForm}
-                    options={jobTypes}
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormLocationInput
-                    name="Location"
-                    type="text"
-                    size={8}
-                    onChange={this.updateForm}
-                  />
-                  <SnnapFormInput
-                    size={4}
-                    name="Date"
-                    type="date"
-                    onChange={this.updateForm}
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormInput
-                    name="Job Details"
-                    type="textarea"
-                    onChange={this.updateForm}
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormDuration
-                    size={6}
-                    type="number"
-                    name="Duration"
-                    options={['Minutes', 'Hours', 'Days']}
-                    onChange={this.updateForm}
-                  />
-                  <SnnapFormPrice
-                    size={6}
-                    name="Pay"
-                    onChange={this.updateForm}
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <SnnapFormMultiSelect
-                    size={6}
-                    name="Equipment Needed"
-                    onChange={this.updateForm}
-                    options={equipment}
-                  />
-                  <SnnapFormMultiSelect
-                    size={6}
-                    name="Skills Needed"
-                    onChange={this.updateForm}
-                    options={skills}
-                  />
-                </Row>
-                <Submit
-                  buttonText="Create New Request"
-                  isSubmitting={isSubmitting}
-                  error={status}
-                  updateError={() => this.setState({ status: null })}
-                  success={update}
-                  updateSuccess={() => this.setState({ update: null })}
-                />
-              </Form>
-            </Modal.Body>
-          </Modal>
+            New Request to Hire
+          </NavDropdown.Item>
         </div>
+        <Modal
+          size="lg"
+          show={show}
+          onHide={() => this.setState({ show: false })}
+          data-testid="newRequestToHireModal"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Create a new request to hire</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="show-grid">
+            <Form
+              id="newRequestToHireForm"
+              noValidate
+              validated={validated}
+              onSubmit={this.handleSubmit}
+            >
+              <Row className="mb-3">
+                <SnnapFormSelect
+                  name="Job Type"
+                  onChange={this.updateForm}
+                  options={jobTypes}
+                />
+              </Row>
+              <Row className="mb-3">
+                <SnnapFormLocationInput
+                  name="Location"
+                  type="text"
+                  size={8}
+                  onChange={this.updateForm}
+                />
+                <SnnapFormInput
+                  size={4}
+                  name="Date"
+                  type="date"
+                  onChange={this.updateForm}
+                />
+              </Row>
+              <Row className="mb-3">
+                <SnnapFormInput
+                  name="Job Details"
+                  type="textarea"
+                  onChange={this.updateForm}
+                />
+              </Row>
+              <Row className="mb-3">
+                <SnnapFormDuration
+                  size={6}
+                  type="number"
+                  name="Duration"
+                  options={['Minutes', 'Hours', 'Days']}
+                  onChange={this.updateForm}
+                />
+                <SnnapFormPrice
+                  size={6}
+                  name="Pay"
+                  onChange={this.updateForm}
+                />
+              </Row>
+              <Row className="mb-3">
+                <SnnapFormMultiSelect
+                  size={6}
+                  name="Equipment Needed"
+                  onChange={this.updateForm}
+                  options={equipment}
+                />
+                <SnnapFormMultiSelect
+                  size={6}
+                  name="Skills Needed"
+                  onChange={this.updateForm}
+                  options={skills}
+                />
+              </Row>
+              <Submit
+                buttonText="Create New Request"
+                isSubmitting={isSubmitting}
+                error={status}
+                updateError={() => this.setState({ status: null })}
+                success={update}
+                updateSuccess={() => this.setState({ update: null })}
+              />
+            </Form>
+          </Modal.Body>
+        </Modal>
       </>
     );
   }

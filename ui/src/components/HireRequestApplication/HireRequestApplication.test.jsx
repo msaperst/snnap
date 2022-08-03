@@ -18,8 +18,9 @@ jest.mock('react-router-dom', () => ({
 
 describe('hire request application', () => {
   let application;
+  let hireRequestApplication;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
 
@@ -43,10 +44,7 @@ describe('hire request application', () => {
       firstName: 'Max',
       lastName: 'Saperstone',
     });
-  });
 
-  it('is an accordion', async () => {
-    let hireRequestApplication;
     await act(async () => {
       hireRequestApplication = render(
         <HireRequestApplication hireRequestApplication={application} />
@@ -54,6 +52,9 @@ describe('hire request application', () => {
       const { container } = hireRequestApplication;
       await waitFor(() => container.firstChild);
     });
+  });
+
+  it('is an accordion', async () => {
     const { container } = hireRequestApplication;
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('accordion-item');
@@ -61,14 +62,6 @@ describe('hire request application', () => {
   });
 
   it('has user and company in header', async () => {
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
     const { container } = hireRequestApplication;
     expect(container.firstChild.firstChild).toHaveClass('accordion-header');
     expect(
@@ -80,14 +73,6 @@ describe('hire request application', () => {
   });
 
   it('has correct body content', async () => {
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
     const { container } = hireRequestApplication;
     expect(container.firstChild.lastChild).toHaveClass(
       'accordion-collapse collapse'
@@ -104,14 +89,6 @@ describe('hire request application', () => {
   });
 
   it('has avatar and links in first row', async () => {
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[0];
@@ -130,14 +107,6 @@ describe('hire request application', () => {
   });
 
   it('has experience in the next row', async () => {
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[1];
@@ -146,14 +115,6 @@ describe('hire request application', () => {
   });
 
   it('has no equipment/skill data when none provided', async () => {
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[2];
@@ -215,14 +176,6 @@ describe('hire request application', () => {
   });
 
   it('has no portfolio data when not provided', async () => {
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[3];

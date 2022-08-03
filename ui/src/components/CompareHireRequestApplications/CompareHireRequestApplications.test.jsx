@@ -43,11 +43,14 @@ describe('compare hire request applications form', () => {
     const { container } = render(
       <CompareHireRequestApplications hireRequest={hireRequest} />
     );
-    expect(container.children).toHaveLength(2); // button and div to hold modal
-    expect(container.firstChild).toHaveClass('btn btn-primary');
-    expect(container.firstChild.getAttribute('type')).toEqual('button');
-    expect(container.firstChild).toHaveTextContent('View Applications');
-    expect(container.lastChild.children).toHaveLength(0); // this should be empty as it's not shown
+    expect(container.children).toHaveLength(1); // button and div to hold modal
+    expect(container.firstChild.firstChild).toHaveClass('btn btn-primary');
+    expect(container.firstChild.firstChild.getAttribute('type')).toEqual(
+      'button'
+    );
+    expect(container.firstChild.firstChild).toHaveTextContent(
+      'View Applications'
+    );
   });
 
   it('opens a modal when button is clicked', () => {

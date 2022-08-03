@@ -128,11 +128,12 @@ describe('apply to request to hire form', () => {
         company={company}
       />
     );
-    expect(container.children).toHaveLength(2); // button and div to hold modal
-    expect(container.firstChild).toHaveClass('btn btn-primary');
-    expect(container.firstChild.getAttribute('type')).toEqual('button');
+    expect(container.children).toHaveLength(1);
+    expect(container.firstChild.firstChild).toHaveClass('btn btn-primary');
+    expect(container.firstChild.firstChild.getAttribute('type')).toEqual(
+      'button'
+    );
     expect(container.firstChild).toHaveTextContent('Submit For Job');
-    expect(container.lastChild.children).toHaveLength(0); // this should be empty as it's not shown
   });
 
   it('opens a modal when button is clicked', async () => {

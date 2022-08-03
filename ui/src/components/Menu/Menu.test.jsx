@@ -130,37 +130,45 @@ describe('snnap menu', () => {
     const gigMenu =
       container.firstChild.firstChild.lastChild.firstChild.children[0];
     expect(gigMenu.children).toHaveLength(2);
-    expect(gigMenu.lastChild.children).toHaveLength(4);
+    expect(gigMenu.lastChild.children).toHaveLength(3);
     expect(gigMenu.lastChild).toHaveClass('dropdown-menu show');
     expect(gigMenu.lastChild.getAttribute('aria-labelledby')).toEqual(
       'gig-dropdown'
     );
     expect(gigMenu.lastChild.getAttribute('data-bs-popper')).toEqual('static');
 
-    expect(gigMenu.lastChild.firstChild).toHaveClass('dropdown-item');
+    expect(gigMenu.lastChild.firstChild.firstChild).toHaveClass(
+      'dropdown-item'
+    );
     expect(
-      gigMenu.lastChild.firstChild.getAttribute('data-rr-ui-dropdown-item')
+      gigMenu.lastChild.firstChild.firstChild.getAttribute(
+        'data-rr-ui-dropdown-item'
+      )
     ).toEqual('');
-    expect(gigMenu.lastChild.firstChild.getAttribute('id')).toEqual(
+    expect(gigMenu.lastChild.firstChild.firstChild.getAttribute('id')).toEqual(
       'openNewRequestToHireButton'
     );
-    expect(gigMenu.lastChild.firstChild.getAttribute('href')).toEqual('#');
-    expect(gigMenu.lastChild.firstChild.getAttribute('role')).toEqual('button');
-    expect(gigMenu.lastChild.firstChild.getAttribute('tabIndex')).toEqual('0');
-    expect(gigMenu.lastChild.firstChild).toHaveTextContent(
+    expect(
+      gigMenu.lastChild.firstChild.firstChild.getAttribute('href')
+    ).toEqual('#');
+    expect(
+      gigMenu.lastChild.firstChild.firstChild.getAttribute('role')
+    ).toEqual('button');
+    expect(
+      gigMenu.lastChild.firstChild.firstChild.getAttribute('tabIndex')
+    ).toEqual('0');
+    expect(gigMenu.lastChild.firstChild.firstChild).toHaveTextContent(
       'New Request to Hire'
     );
 
-    expect(gigMenu.lastChild.children[1].children).toHaveLength(0);
-
-    expect(gigMenu.lastChild.children[2]).toHaveClass('dropdown-item');
+    expect(gigMenu.lastChild.children[1]).toHaveClass('dropdown-item');
     expect(
-      gigMenu.lastChild.children[2].getAttribute('data-rr-ui-dropdown-item')
+      gigMenu.lastChild.children[1].getAttribute('data-rr-ui-dropdown-item')
     ).toEqual('');
-    expect(gigMenu.lastChild.children[2].getAttribute('href')).toEqual(
+    expect(gigMenu.lastChild.children[1].getAttribute('href')).toEqual(
       '/hire-requests'
     );
-    expect(gigMenu.lastChild.children[2]).toHaveTextContent('My Hire Requests');
+    expect(gigMenu.lastChild.children[1]).toHaveTextContent('My Hire Requests');
 
     expect(gigMenu.lastChild.lastChild).toHaveClass('dropdown-item');
     expect(

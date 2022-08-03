@@ -77,61 +77,55 @@ class CompareHireRequestApplications extends React.Component {
     } = this.state;
     return (
       <>
-        <Button
-          id={`openCompareHireRequestApplicationsModal-${hireRequest.id}`}
-          hire-request={hireRequest.id}
-          onClick={() => this.setState({ show: true })}
-        >
-          View Applications
-        </Button>
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-        <div // adding in this div due to issue https://github.com/react-bootstrap/react-bootstrap/issues/3105
-          onKeyDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          onFocus={(e) => e.stopPropagation()}
-          onMouseOver={(e) => e.stopPropagation()}
-        >
-          <Modal
-            size="lg"
-            show={show}
-            onHide={() => this.setState({ show: false })}
-            data-testid={`compareHireRequestApplicationsModal-${hireRequest.id}`}
+        <div>
+          <Button
+            id={`openCompareHireRequestApplicationsModal-${hireRequest.id}`}
+            hire-request={hireRequest.id}
+            onClick={() => this.setState({ show: true })}
           >
-            <Modal.Header closeButton>
-              <Modal.Title>
-                Applications for the {hireRequest.type} Session
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="show-grid">
-              <Form
-                id="compareHireRequestApplicationsForm"
-                noValidate
-                validated={validated}
-                onSubmit={this.handleSubmit}
-              >
-                <RequestToHireDetail hireRequest={hireRequest} />
-                <Row className="mb-3">
-                  <Accordion>
-                    {hireRequestApplications.map((hireRequestApplication) => (
-                      <HireRequestApplication
-                        key={hireRequestApplication.id}
-                        hireRequestApplication={hireRequestApplication}
-                      />
-                    ))}
-                  </Accordion>
-                </Row>
-                <Submit
-                  buttonText="Select Request To Hire Application"
-                  isSubmitting={isSubmitting}
-                  error={status}
-                  updateError={() => this.setState({ status: null })}
-                  success={update}
-                  updateSuccess={() => this.setState({ update: null })}
-                />
-              </Form>
-            </Modal.Body>
-          </Modal>
+            View Applications
+          </Button>
         </div>
+        <Modal
+          size="lg"
+          show={show}
+          onHide={() => this.setState({ show: false })}
+          data-testid={`compareHireRequestApplicationsModal-${hireRequest.id}`}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Applications for the {hireRequest.type} Session
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="show-grid">
+            <Form
+              id="compareHireRequestApplicationsForm"
+              noValidate
+              validated={validated}
+              onSubmit={this.handleSubmit}
+            >
+              <RequestToHireDetail hireRequest={hireRequest} />
+              <Row className="mb-3">
+                <Accordion>
+                  {hireRequestApplications.map((hireRequestApplication) => (
+                    <HireRequestApplication
+                      key={hireRequestApplication.id}
+                      hireRequestApplication={hireRequestApplication}
+                    />
+                  ))}
+                </Accordion>
+              </Row>
+              <Submit
+                buttonText="Select Request To Hire Application"
+                isSubmitting={isSubmitting}
+                error={status}
+                updateError={() => this.setState({ status: null })}
+                success={update}
+                updateSuccess={() => this.setState({ update: null })}
+              />
+            </Form>
+          </Modal.Body>
+        </Modal>
       </>
     );
   }

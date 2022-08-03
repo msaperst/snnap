@@ -65,11 +65,17 @@ describe('new request to hire form', () => {
 
   it('is a drop down item', () => {
     const { container } = render(<NewRequestToHire />);
-    expect(container.children).toHaveLength(2); // button and div to hold modal
-    expect(container.firstChild).toHaveClass('dropdown-item');
-    expect(container.firstChild.getAttribute('role')).toEqual('button');
-    expect(container.firstChild.getAttribute('tabindex')).toEqual('0');
-    expect(container.firstChild).toHaveTextContent('New Request to Hire');
+    expect(container.children).toHaveLength(1);
+    expect(container.firstChild.firstChild).toHaveClass('dropdown-item');
+    expect(container.firstChild.firstChild.getAttribute('role')).toEqual(
+      'button'
+    );
+    expect(container.firstChild.firstChild.getAttribute('tabindex')).toEqual(
+      '0'
+    );
+    expect(container.firstChild.firstChild).toHaveTextContent(
+      'New Request to Hire'
+    );
   });
 
   it('opens a modal when button is clicked', async () => {
