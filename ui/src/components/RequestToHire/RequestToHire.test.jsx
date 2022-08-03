@@ -96,6 +96,8 @@ describe('request to hire', () => {
     return { cardContainer, data };
   }
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('displays the basic detail', async () => {
     jobService.jobService.getHireRequestApplications.mockResolvedValue([]);
     await loadRequestToHire(hireRequest, createUser);
@@ -119,6 +121,8 @@ describe('request to hire', () => {
     expect(data.firstChild.children[3]).toHaveTextContent('Already Applied');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('displays the range detail', async () => {
     jobService.jobService.getHireRequestApplications.mockResolvedValue([]);
     jobService.jobService.getHireRequest.mockResolvedValue({

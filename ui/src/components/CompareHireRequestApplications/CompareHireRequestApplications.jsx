@@ -5,7 +5,7 @@ import './CompareHireRequestApplications.css';
 import Submit from '../Submit/Submit';
 import RequestToHireDetail from '../RequestToHire/RequestToHireDetail';
 import HireRequestApplication from '../HireRequestApplication/HireRequestApplication';
-import { common } from '../UserProfile/Common';
+import { commonFormComponents } from '../CommonFormComponents';
 
 class CompareHireRequestApplications extends React.Component {
   constructor(props) {
@@ -48,7 +48,7 @@ class CompareHireRequestApplications extends React.Component {
         )
         .then(
           () => {
-            common.setRedrawSuccess(
+            commonFormComponents.setRedrawSuccess(
               (state) => this.setState(state),
               'Hire Request Application Chosen'
             );

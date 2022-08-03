@@ -10,7 +10,7 @@ import './ApplyToRequestToHire.css';
 import Submit from '../Submit/Submit';
 import EquipmentSelect from '../UserProfile/CompanyInformation/EquipmentSelect/EquipmentSelect';
 import RequestToHireDetail from '../RequestToHire/RequestToHireDetail';
-import { common } from '../UserProfile/Common';
+import { commonFormComponents } from '../CommonFormComponents';
 
 class ApplyToRequestToHire extends React.Component {
   constructor(props) {
@@ -70,7 +70,7 @@ class ApplyToRequestToHire extends React.Component {
         )
         .then(
           () => {
-            common.setRedrawSuccess(
+            commonFormComponents.setRedrawSuccess(
               (state) => this.setState(state),
               'Job Filing Submitted'
             );

@@ -1,4 +1,4 @@
-export const common = {
+export const commonFormComponents = {
   setBasicSuccess,
   setRedrawSuccess,
 };

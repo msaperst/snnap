@@ -9,7 +9,7 @@ import SnnapFormLocationInput from '../SnnapForms/SnnapFormLocationInput';
 import SnnapFormSelect from '../SnnapForms/SnnapFormSelect';
 import SnnapFormDuration from '../SnnapForms/SnnapFormDuration';
 import Submit from '../Submit/Submit';
-import { common } from '../UserProfile/Common';
+import { commonFormComponents } from '../CommonFormComponents';
 
 class NewRequestToHire extends React.Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class NewRequestToHire extends React.Component {
         )
         .then(
           () => {
-            common.setRedrawSuccess(
+            commonFormComponents.setRedrawSuccess(
               (state) => this.setState(state),
               'New Request to Hire Submitted'
             );
