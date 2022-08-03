@@ -101,15 +101,7 @@ describe('request to hire', () => {
     await loadRequestToHire(hireRequest, createUser);
     const { container } = requestForHire;
     const { cardContainer, data } = checkTop(container);
-    expect(data.firstChild.children[2]).toHaveTextContent('2 hours');
-    expect(data.firstChild.children[3]).toHaveTextContent('View Applications');
-    expect(data.lastChild.children).toHaveLength(2);
-    expect(data.lastChild.children[0]).toHaveTextContent('Fairfax, VA');
-    expect(data.lastChild.children[1]).toHaveTextContent('$200 per hour');
-
-    expect(cardContainer.firstChild.lastChild).toHaveTextContent(
-      'Some details'
-    );
+    checkData(cardContainer, data, '2 hours', 'View Applications');
   });
 
   it('displays the already applied button', async () => {
@@ -137,15 +129,7 @@ describe('request to hire', () => {
 
     const { container } = requestForHire;
     const { cardContainer, data } = checkTop(container);
-    expect(data.firstChild.children[2]).toHaveTextContent('2 to 3 hours');
-    expect(data.firstChild.children[3]).toHaveTextContent('Submit For Job');
-    expect(data.lastChild.children).toHaveLength(2);
-    expect(data.lastChild.children[0]).toHaveTextContent('Fairfax, VA');
-    expect(data.lastChild.children[1]).toHaveTextContent('$200 per hour');
-
-    expect(cardContainer.firstChild.lastChild).toHaveTextContent(
-      'Some details'
-    );
+    checkData(cardContainer, data, '2 to 3 hours', 'Submit For Job');
   });
 
   async function loadRequestToHire(request, user) {
@@ -156,5 +140,16 @@ describe('request to hire', () => {
       const { container } = requestForHire;
       await waitFor(() => container.firstChild);
     });
+  }
+
+  function checkData(cardContainer, data, duration, buttonText) {
+    expect(data.firstChild.children[2]).toHaveTextContent(duration);
+    expect(data.firstChild.children[3]).toHaveTextContent(buttonText);
+    expect(data.lastChild.children).toHaveLength(2);
+    expect(data.lastChild.children[0]).toHaveTextContent('Fairfax, VA');
+    expect(data.lastChild.children[1]).toHaveTextContent('$200 per hour');
+    expect(cardContainer.firstChild.lastChild).toHaveTextContent(
+      'Some details'
+    );
   }
 });
