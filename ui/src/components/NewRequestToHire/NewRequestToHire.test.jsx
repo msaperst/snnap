@@ -219,10 +219,7 @@ describe('new request to hire form', () => {
     expect(spy).toBeCalledTimes(0);
   });
 
-  it('has an alert on failure of a submission', async () => {
-    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
-    jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
-    const modalForm = modal.firstChild.lastChild.firstChild;
+  function fillOutForm(modalForm) {
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
     });
@@ -241,6 +238,13 @@ describe('new request to hire form', () => {
     fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
       target: { value: '50' },
     });
+  }
+
+  it('has an alert on failure of a submission', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
+    jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await hasAnError(modal);
@@ -263,24 +267,7 @@ describe('new request to hire form', () => {
   it('is able to close an alert after failure', async () => {
     jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await closeAlert(modal);
@@ -290,24 +277,7 @@ describe('new request to hire form', () => {
     const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await hasASuccess(modal, 'New Request to Hire Submitted');
@@ -330,24 +300,7 @@ describe('new request to hire form', () => {
   it('is able to close an alert after success', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await closeAlert(modal);
@@ -358,24 +311,7 @@ describe('new request to hire form', () => {
   it('removes the success alert after 5 seconds', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await noModal(modal);
