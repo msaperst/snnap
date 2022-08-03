@@ -126,16 +126,7 @@ describe('hire request application', () => {
     const app = application;
     app.equipment = {};
     app.skills = {};
-    jobService.jobService.getHireRequestApplication.mockResolvedValue(app);
-
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
+    await loadHireRequestApplicationWithMock(app);
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[2];
@@ -150,16 +141,7 @@ describe('hire request application', () => {
       { value: 2, name: 'Flash', what: 'flashes!!!' },
     ];
     app.skills = [{ value: 3, name: 'Lighting' }];
-    jobService.jobService.getHireRequestApplication.mockResolvedValue(app);
-
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
+    await loadHireRequestApplicationWithMock(app);
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[2];
@@ -185,16 +167,7 @@ describe('hire request application', () => {
   it('has no portfolio data when not array', async () => {
     const app = application;
     app.portfolio = {};
-    jobService.jobService.getHireRequestApplication.mockResolvedValue(app);
-
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
+    await loadHireRequestApplicationWithMock(app);
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[3];
@@ -217,16 +190,8 @@ describe('hire request application', () => {
         description: 'link2',
       },
     ];
-    jobService.jobService.getHireRequestApplication.mockResolvedValue(app);
+    await loadHireRequestApplicationWithMock(app);
 
-    let hireRequestApplication;
-    await act(async () => {
-      hireRequestApplication = render(
-        <HireRequestApplication hireRequestApplication={application} />
-      );
-      const { container } = hireRequestApplication;
-      await waitFor(() => container.firstChild);
-    });
     const { container } = hireRequestApplication;
     const row =
       container.firstChild.lastChild.firstChild.firstChild.children[3];
@@ -244,4 +209,16 @@ describe('hire request application', () => {
     expect(row.lastChild.firstChild.getAttribute('target')).toEqual('_blank');
     expect(row.lastChild.firstChild.getAttribute('rel')).toEqual('noreferrer');
   });
+
+  async function loadHireRequestApplicationWithMock(app) {
+    jobService.jobService.getHireRequestApplication.mockResolvedValue(app);
+
+    await act(async () => {
+      hireRequestApplication = render(
+        <HireRequestApplication hireRequestApplication={application} />
+      );
+      const { container } = hireRequestApplication;
+      await waitFor(() => container.firstChild);
+    });
+  }
 });

@@ -21,6 +21,7 @@ describe('request to hire', () => {
   let hireRequestDuration;
   let createUser;
   let otherUser;
+  let requestForHire;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -97,14 +98,7 @@ describe('request to hire', () => {
 
   it('displays the basic detail', async () => {
     jobService.jobService.getHireRequestApplications.mockResolvedValue([]);
-    let requestForHire;
-    await act(async () => {
-      requestForHire = render(
-        <RequestToHire hireRequest={hireRequest} currentUser={createUser} />
-      );
-      const { container } = requestForHire;
-      await waitFor(() => container.firstChild);
-    });
+    await loadRequestToHire(hireRequest, createUser);
     const { container } = requestForHire;
     const { cardContainer, data } = checkTop(container);
     expect(data.firstChild.children[2]).toHaveTextContent('2 hours');
@@ -126,14 +120,7 @@ describe('request to hire', () => {
       date_time: '2023-10-13 00:00:00',
       location: 'paris',
     });
-    let requestForHire;
-    await act(async () => {
-      requestForHire = render(
-        <RequestToHire hireRequest={hireRequest} currentUser={otherUser} />
-      );
-      const { container } = requestForHire;
-      await waitFor(() => container.firstChild);
-    });
+    await loadRequestToHire(hireRequest, otherUser);
     const { container } = requestForHire;
     const cardContainer = container.firstChild.firstChild.firstChild.firstChild;
     const data = cardContainer.firstChild.firstChild.lastChild;
@@ -146,17 +133,8 @@ describe('request to hire', () => {
       date_time: '2023-10-13 00:00:00',
       location: 'paris',
     });
-    let requestForHire;
-    await act(async () => {
-      requestForHire = render(
-        <RequestToHire
-          hireRequest={hireRequestDuration}
-          currentUser={otherUser}
-        />
-      );
-      const { container } = requestForHire;
-      await waitFor(() => container.firstChild);
-    });
+    await loadRequestToHire(hireRequestDuration, otherUser);
+
     const { container } = requestForHire;
     const { cardContainer, data } = checkTop(container);
     expect(data.firstChild.children[2]).toHaveTextContent('2 to 3 hours');
@@ -169,4 +147,14 @@ describe('request to hire', () => {
       'Some details'
     );
   });
+
+  async function loadRequestToHire(request, user) {
+    await act(async () => {
+      requestForHire = render(
+        <RequestToHire hireRequest={request} currentUser={user} />
+      );
+      const { container } = requestForHire;
+      await waitFor(() => container.firstChild);
+    });
+  }
 });
