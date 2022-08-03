@@ -110,24 +110,24 @@ class CompareHireRequestApplications extends React.Component {
                 onSubmit={this.handleSubmit}
               >
                 <RequestToHireDetail hireRequest={hireRequest} />
-                <Accordion>
-                  {hireRequestApplications.map((hireRequestApplication) => (
-                    <HireRequestApplication
-                      key={hireRequestApplication.id}
-                      hireRequestApplication={hireRequestApplication}
-                    />
-                  ))}
-                </Accordion>
-                <Row className="mt-3">
-                  <Submit
-                    buttonText="Select Request To Hire Application"
-                    isSubmitting={isSubmitting}
-                    error={status}
-                    updateError={() => this.setState({ status: null })}
-                    success={update}
-                    updateSuccess={() => this.setState({ update: null })}
-                  />
+                <Row className="mb-3">
+                  <Accordion>
+                    {hireRequestApplications.map((hireRequestApplication) => (
+                      <HireRequestApplication
+                        key={hireRequestApplication.id}
+                        hireRequestApplication={hireRequestApplication}
+                      />
+                    ))}
+                  </Accordion>
                 </Row>
+                <Submit
+                  buttonText="Select Request To Hire Application"
+                  isSubmitting={isSubmitting}
+                  error={status}
+                  updateError={() => this.setState({ status: null })}
+                  success={update}
+                  updateSuccess={() => this.setState({ update: null })}
+                />
               </Form>
             </Modal.Body>
           </Modal>

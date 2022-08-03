@@ -88,13 +88,29 @@ function HireRequestApplication(props) {
             </Col>
             <Col md={4}>
               <h4>Skills</h4>
-              {fullHireRequestApplication.equipment &&
-              Array.isArray(fullHireRequestApplication.equipment)
-                ? fullHireRequestApplication.equipment.map((option) => (
+              {fullHireRequestApplication.skills &&
+              Array.isArray(fullHireRequestApplication.skills)
+                ? fullHireRequestApplication.skills.map((option) => (
                     <div key={option.value}>{option.name}</div>
                   ))
                 : ''}
             </Col>
+          </Row>
+          <Row className="mt-3">
+            {fullHireRequestApplication.portfolio &&
+            Array.isArray(fullHireRequestApplication.portfolio)
+              ? fullHireRequestApplication.portfolio.map((portfolioItem) => (
+                  <Col md={2} key={portfolioItem.id}>
+                    <a
+                      href={portfolioItem.link}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {portfolioItem.description}
+                    </a>
+                  </Col>
+                ))
+              : ''}
           </Row>
         </Container>
       </Accordion.Body>

@@ -67,14 +67,16 @@ function UserPage() {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col>
-            <p>{company.experience}</p>
-            {portfolioItems.map((portfolioItem) => (
-              <a key={portfolioItem.id} href={portfolioItem.link}>
+          <Col>{company.experience}</Col>
+        </Row>
+        <Row className="mb-3">
+          {portfolioItems.map((portfolioItem) => (
+            <Col md={2} key={portfolioItem.id}>
+              <a href={portfolioItem.link} target="_blank" rel="noreferrer">
                 {portfolioItem.description}
               </a>
-            ))}
-          </Col>
+            </Col>
+          ))}
         </Row>
       </Col>
       <Col>
