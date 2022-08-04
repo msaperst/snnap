@@ -64,7 +64,7 @@ export function hasNoAlert(modal) {
   expect(saveRow.lastChild.children).toHaveLength(0);
 }
 
-export async function hasAnError(modal, message = 'Some Error') {
+async function hasAnAlert(modal, type, message) {
   const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
   await act(async () => {
     fireEvent.click(saveRow.firstChild.firstChild);
@@ -72,7 +72,7 @@ export async function hasAnError(modal, message = 'Some Error') {
   expect(saveRow.lastChild).toHaveClass('col');
   expect(saveRow.lastChild.children).toHaveLength(1);
   expect(saveRow.lastChild.firstChild).toHaveClass(
-    'fade alert alert-danger alert-dismissible show'
+    `fade alert alert-${type} alert-dismissible show`
   );
   expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
   expect(saveRow.lastChild.firstChild).toHaveTextContent(message);
@@ -86,26 +86,12 @@ export async function hasAnError(modal, message = 'Some Error') {
   expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
 }
 
+export async function hasAnError(modal, message = 'Some Error') {
+  await hasAnAlert(modal, 'danger', message);
+}
+
 export async function hasASuccess(modal, message) {
-  const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-  await act(async () => {
-    fireEvent.click(saveRow.firstChild.firstChild);
-  });
-  expect(saveRow.lastChild).toHaveClass('col');
-  expect(saveRow.lastChild.children).toHaveLength(1);
-  expect(saveRow.lastChild.firstChild).toHaveClass(
-    'fade alert alert-success alert-dismissible show'
-  );
-  expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
-  expect(saveRow.lastChild.firstChild).toHaveTextContent(message);
-  expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
-  expect(
-    saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
-  ).toEqual('Close alert');
-  expect(saveRow.lastChild.firstChild.firstChild.getAttribute('type')).toEqual(
-    'button'
-  );
-  expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
+  await hasAnAlert(modal, 'success', message);
 }
 
 export async function closeAlert(modal) {
