@@ -4,45 +4,20 @@ import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import ApplyToRequestToHire from './ApplyToRequestToHire';
 import {
-  openModal,
-  closeModal,
-} from '../NewRequestToHire/NewRequestToHire.test';
+  closeAlert,
+  closeModal, hasAnError,
+  hasASuccess,
+  hasNoAlert,
+  hasSaveInformation,
+  hr, noModal,
+  openModal
+} from "../CommonTestComponents";
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
 jest.mock('../../services/company.service');
 const companyService = require('../../services/company.service');
-
-// eslint-disable-next-line jest/no-export
-export const hr = {
-  id: 5,
-  type: 'Event',
-  location: 'Fairfax, VA, United States of America',
-  details: "Max's 40th Birthday, woot!!!",
-  pay: 0.5,
-  duration: 8,
-  date_time: '2023-10-13T04:00:00.000Z',
-  user: 1,
-  durationMax: null,
-  typeId: 2,
-  equipment: [
-    {
-      value: 1,
-      name: 'Camera',
-    },
-  ],
-  skills: [
-    {
-      value: 4,
-      name: 'Posing',
-    },
-    {
-      value: 3,
-      name: 'Something',
-    },
-  ],
-};
 
 describe('apply to request to hire form', () => {
   jest.setTimeout(10000);
@@ -128,11 +103,12 @@ describe('apply to request to hire form', () => {
         company={company}
       />
     );
-    expect(container.children).toHaveLength(2); // button and div to hold modal
-    expect(container.firstChild).toHaveClass('btn btn-primary');
-    expect(container.firstChild.getAttribute('type')).toEqual('button');
+    expect(container.children).toHaveLength(1);
+    expect(container.firstChild.firstChild).toHaveClass('btn btn-primary');
+    expect(container.firstChild.firstChild.getAttribute('type')).toEqual(
+      'button'
+    );
     expect(container.firstChild).toHaveTextContent('Submit For Job');
-    expect(container.lastChild.children).toHaveLength(0); // this should be empty as it's not shown
   });
 
   it('opens a modal when button is clicked', async () => {
@@ -296,29 +272,17 @@ describe('apply to request to hire form', () => {
   });
 
   it('has save information button in the last row', async () => {
-    const modalForm = modal.firstChild.lastChild.firstChild;
-    const saveRow = modalForm.lastChild;
-    expect(saveRow).toHaveClass('mb-3 row');
-    expect(saveRow.firstChild).toHaveClass('col');
-    expect(saveRow.firstChild.firstChild).toHaveClass('btn btn-primary');
-    expect(saveRow.firstChild.firstChild.getAttribute('id')).toEqual(
-      'applyToRequestToHireButton'
-    );
-    expect(saveRow.firstChild.firstChild.getAttribute('type')).toEqual(
-      'submit'
-    );
-    expect(saveRow.firstChild.firstChild).toHaveTextContent(
-      'Apply to Request to Hire'
-    );
+    hasSaveInformation(modal, 'applyToRequestToHireButton', 'Apply to Request to Hire');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('has no alert or update present in the last row', async () => {
-    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    expect(saveRow.lastChild).toHaveClass('col');
-    expect(saveRow.lastChild.children).toHaveLength(0);
+    hasNoAlert(modal);
   });
 
   it('does not submit if values are not present/valid', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.children[6].firstChild.firstChild.firstChild, {
       target: { value: '' },
@@ -327,9 +291,11 @@ describe('apply to request to hire form', () => {
     fireEvent.click(saveRow.firstChild.firstChild);
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
+    expect(spy).toBeCalledTimes(0);
   });
 
   it('does not submit if camera value is not present/valid', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     const modalForm = modal.firstChild.lastChild.firstChild;
     fireEvent.change(modalForm.children[9].children[1].firstChild.firstChild, {
       target: { value: '' },
@@ -338,15 +304,13 @@ describe('apply to request to hire form', () => {
     fireEvent.click(saveRow.firstChild.firstChild);
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
+    expect(spy).toBeCalledTimes(0);
   });
 
   it('has an alert on failure of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     jobService.jobService.applyToHireRequest.mockRejectedValue('Some Error');
-    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
+    await hasAnError(modal);
     expect(spy).toHaveBeenCalledWith(
       5,
       1,
@@ -378,41 +342,19 @@ describe('apply to request to hire form', () => {
         {},
       ]
     );
-    expect(saveRow.lastChild).toHaveClass('col');
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    expect(saveRow.lastChild.firstChild).toHaveClass(
-      'fade alert alert-danger alert-dismissible show'
-    );
-    expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
-    expect(saveRow.lastChild.firstChild).toHaveTextContent('Some Error');
-    expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
-    ).toEqual('Close alert');
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('type')
-    ).toEqual('button');
-    expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('is able to close an alert after failure', async () => {
     jobService.jobService.applyToHireRequest.mockRejectedValue('Some Error');
-    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    fireEvent.click(saveRow.lastChild.firstChild.firstChild);
-    expect(saveRow.lastChild.children).toHaveLength(0);
+    await closeAlert(modal);
   });
 
   it('has an alert on success of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'applyToHireRequest');
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
+    await hasASuccess(modal, 'Job Filing Submitted');
     expect(spy).toHaveBeenCalledWith(
       5,
       1,
@@ -444,50 +386,20 @@ describe('apply to request to hire form', () => {
         {},
       ]
     );
-    expect(saveRow.lastChild).toHaveClass('col');
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    expect(saveRow.lastChild.firstChild).toHaveClass(
-      'fade alert alert-success alert-dismissible show'
-    );
-    expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
-    expect(saveRow.lastChild.firstChild).toHaveTextContent(
-      'Job Filing Submitted'
-    );
-    expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
-    ).toEqual('Close alert');
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('type')
-    ).toEqual('button');
-    expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('is able to close an alert after success', async () => {
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    fireEvent.click(saveRow.lastChild.firstChild.firstChild);
-    expect(saveRow.lastChild.children).toHaveLength(0);
+    await closeAlert(modal);
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('removes the success alert after 5 seconds', async () => {
     jobService.jobService.applyToHireRequest.mockResolvedValue('Some Success');
-    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    expect(modal).toBeVisible();
-    await act(async () => {
-      // eslint-disable-next-line no-promise-executor-return
-      await new Promise((r) => setTimeout(r, 7000));
-    });
-    expect(saveRow.lastChild.children).toHaveLength(0);
-    expect(modal).not.toBeVisible();
+    await noModal(modal);
   });
 
   it('can handle changing of values', async () => {

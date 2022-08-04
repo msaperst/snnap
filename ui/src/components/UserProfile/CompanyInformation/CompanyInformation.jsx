@@ -8,7 +8,7 @@ import { companyService } from '../../../services/company.service';
 import { jobService } from '../../../services/job.service';
 import './CompanyInformation.css';
 import EquipmentSelect from './EquipmentSelect/EquipmentSelect';
-import { common } from '../Common';
+import { commonFormComponents } from '../../CommonFormComponents';
 
 function CompanyInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,8 +20,8 @@ function CompanyInformation(props) {
   const { company } = props;
 
   useEffect(() => {
-    jobService.getSkills().then((skills) => {
-      setSkills(skills);
+    jobService.getSkills().then((s) => {
+      setSkills(s);
     });
     if (company) {
       setFormData({
@@ -63,7 +63,7 @@ function CompanyInformation(props) {
         )
         .then(
           () => {
-            common.setSuccess(
+            commonFormComponents.setBasicSuccess(
               setIsSubmitting,
               setStatus,
               setUpdate,

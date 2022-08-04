@@ -7,8 +7,7 @@ import { companyService } from '../../services/company.service';
 import NotFound from '../NotFound/NotFound';
 import './UserPage.css';
 import Avatar from '../../components/Avatar/Avatar';
-
-// import RequestToHire from '../../components/RequestToHire/RequestToHire';
+import IconLink from '../../components/IconLink/IconLink';
 
 function UserPage() {
   const { username } = useParams();
@@ -22,11 +21,11 @@ function UserPage() {
 
   useEffect(() => {
     userService.get(username).then(
-      (user) => {
-        setUser(user);
-        companyService.get(user.id).then((company) => {
-          setCompany(company);
-          let { portfolio, equipment, skills } = company;
+      (u) => {
+        setUser(u);
+        companyService.get(u.id).then((comp) => {
+          setCompany(comp);
+          let { portfolio, equipment, skills } = comp;
           if (!portfolio) {
             portfolio = [];
           }
@@ -68,14 +67,16 @@ function UserPage() {
           </Col>
         </Row>
         <Row className="mb-3">
-          <Col>
-            <p>{company.experience}</p>
-            {portfolioItems.map((portfolioItem) => (
-              <a key={portfolioItem.id} href={portfolioItem.link}>
+          <Col>{company.experience}</Col>
+        </Row>
+        <Row className="mb-3">
+          {portfolioItems.map((portfolioItem) => (
+            <Col md={2} key={portfolioItem.id}>
+              <a href={portfolioItem.link} target="_blank" rel="noreferrer">
                 {portfolioItem.description}
               </a>
-            ))}
-          </Col>
+            </Col>
+          ))}
         </Row>
       </Col>
       <Col>
@@ -85,63 +86,12 @@ function UserPage() {
           </Col>
         </Row>
         <Row className="mb-3">
-          {/* only display if this is set */}
-          {company.website ? (
-            <Col>
-              {/* if this doesn't start with an http, add one */}
-              <a
-                href={
-                  company.website.startsWith('http')
-                    ? company.website
-                    : `http://${company.website}`
-                }
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Globe className="icon" />
-              </a>
-            </Col>
-          ) : (
-            ''
-          )}
-          {/* only display if this is set */}
-          {company.insta ? (
-            <Col>
-              {/* if this doesn't start with an http, add one */}
-              <a
-                href={
-                  company.insta.startsWith('http')
-                    ? company.insta
-                    : `http://${company.insta}`
-                }
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Instagram className="icon" />
-              </a>
-            </Col>
-          ) : (
-            ''
-          )}
-          {/* only display if this is set */}
-          {company.fb ? (
-            <Col>
-              {/* if this doesn't start with an http, add one */}
-              <a
-                href={
-                  company.fb.startsWith('http')
-                    ? company.fb
-                    : `http://${company.fb}`
-                }
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Facebook className="icon" />
-              </a>
-            </Col>
-          ) : (
-            ''
-          )}
+          <IconLink link={company.website} icon={<Globe className="icon" />} />
+          <IconLink
+            link={company.insta}
+            icon={<Instagram className="icon" />}
+          />
+          <IconLink link={company.fb} icon={<Facebook className="icon" />} />
         </Row>
         <Row className="mb-3">
           <Col md={8}>

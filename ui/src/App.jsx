@@ -14,6 +14,9 @@ const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
 const UserPage = lazy(() => import('./pages/User/UserPage'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 const HireRequests = lazy(() => import('./pages/HireRequests/HireRequests'));
+const HireRequestApplications = lazy(() =>
+  import('./pages/HireRequestApplications/HireRequestApplications')
+);
 
 function App() {
   const navigate = useNavigate();
@@ -69,6 +72,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <HireRequests />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/hire-request-applications"
+              element={
+                <PrivateRoute>
+                  <HireRequestApplications />
                 </PrivateRoute>
               }
             />

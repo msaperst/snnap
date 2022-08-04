@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import { userService } from '../../../services/user.service';
 import Submit from '../../Submit/Submit';
-import { common } from '../Common';
+import { commonFormComponents } from '../../CommonFormComponents';
 
 function Password() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,7 +23,7 @@ function Password() {
         .updatePassword(formData['Current Password'], formData['New Password'])
         .then(
           () => {
-            common.setSuccess(
+            commonFormComponents.setBasicSuccess(
               setIsSubmitting,
               setStatus,
               setUpdate,

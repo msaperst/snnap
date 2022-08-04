@@ -97,122 +97,69 @@ router.post(
   }
 );
 
+router.get('/hire-request-application/:id', async (req, res) => {
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
+    const application = new ApplicationForRequestToHire(req.params.id);
+    const info = await application.getInfo();
+    if (info) {
+      return res.send(info);
+    }
+    return res.status(422).send({ msg: 'hire request applications not found' });
+  });
+});
+
 router.get('/hire-request-applications/:id', async (req, res) => {
-  try {
-    await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
-    const applications = ApplicationForRequestToHire.getApplications(
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
+    const applications = await ApplicationForRequestToHire.getApplications(
       req.params.id
     );
     if (applications) {
-      return res.send(await applications);
+      return res.send(applications);
     }
     return res.status(422).send({ msg: 'hire request applications not found' });
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
+  });
 });
 
 // information about our system
 router.get('/types', async (req, res) => {
-  try {
-    await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const jobTypes = await Mysql.query(`SELECT *
                                         FROM job_types;`);
     return res.send(jobTypes);
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
+  });
 });
+
 router.get('/equipment', async (req, res) => {
-  try {
-    await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const equipment = await Mysql.query(`SELECT *
                                          FROM equipment;`);
     return res.send(equipment);
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
+  });
 });
+
 router.get('/skills', async (req, res) => {
-  try {
-    await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const skills = await Mysql.query(`SELECT *
                                       FROM skills;`);
     return res.send(skills);
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
+  });
 });
 
 router.get('/hire-request/:id', async (req, res) => {
-  try {
-    await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const hireRequest = new RequestToHire(req.params.id);
     if (hireRequest) {
       return res.send(await hireRequest.getInfo());
     }
     return res.status(422).send({ msg: 'hire request not found' });
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
+  });
 });
 
 router.get('/hire-requests', async (req, res) => {
-  try {
-    await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const hireRequests = await RequestToHire.getHireRequests();
     return res.send(hireRequests);
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
+  });
 });
 
 module.exports = router;

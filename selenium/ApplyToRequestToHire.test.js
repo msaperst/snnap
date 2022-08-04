@@ -73,7 +73,7 @@ describe('apply to request to hire', () => {
     const button = await getButton(await requestToHires[1].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeTruthy();
-    expect(await button.getText()).toEqual('Show Applications');
+    expect(await button.getText()).toEqual('View Applications');
   });
 
   it('has the button disabled when you already applied to the request', async () => {

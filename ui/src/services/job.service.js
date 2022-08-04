@@ -9,7 +9,9 @@ export const jobService = {
   getHireRequest,
   getHireRequests,
   applyToHireRequest,
+  getHireRequestApplication,
   getHireRequestApplications,
+  chooseHireRequestApplication,
 };
 
 function getJobTypes() {
@@ -75,6 +77,13 @@ function getHireRequests() {
   return fetch(`/api/jobs/hire-requests`, requestOptions).then(handleResponse);
 }
 
+function getHireRequestApplication(id) {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/jobs/hire-request-application/${id}`, requestOptions).then(
+    handleResponse
+  );
+}
+
 function getHireRequestApplications(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(
@@ -121,4 +130,22 @@ function applyToHireRequest(
   return fetch(`/api/jobs/apply-to-hire-request`, requestOptions).then(
     handleResponse
   );
+}
+
+function chooseHireRequestApplication(hireRequest, hireRequestApplication) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      hireRequest,
+      hireRequestApplication,
+    }),
+  };
+
+  return fetch(
+    `/api/jobs/select-hire-request-application`,
+    requestOptions
+  ).then(handleResponse);
 }

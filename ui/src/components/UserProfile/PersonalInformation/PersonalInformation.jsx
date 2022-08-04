@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import { userService } from '../../../services/user.service';
 import Submit from '../../Submit/Submit';
-import { common } from '../Common';
+import { commonFormComponents } from '../../CommonFormComponents';
 
 function PersonalInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +46,7 @@ function PersonalInformation(props) {
         )
         .then(
           () => {
-            common.setSuccess(
+            commonFormComponents.setBasicSuccess(
               setIsSubmitting,
               setStatus,
               setUpdate,

@@ -2,10 +2,11 @@ import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './RequestToHire.css';
 import { useNavigate } from 'react-router-dom';
-import Avatar from '../Avatar/Avatar';
 import { userService } from '../../services/user.service';
-import ApplyToRequestToHire from '../ApplyToRequestToHire/ApplyToRequestToHire';
 import { jobService } from '../../services/job.service';
+import Avatar from '../Avatar/Avatar';
+import ApplyToRequestToHire from '../ApplyToRequestToHire/ApplyToRequestToHire';
+import CompareHireRequestApplications from '../CompareHireRequestApplications/CompareHireRequestApplications';
 
 function RequestToHire(props) {
   const { hireRequest, equipment, skills, currentUser } = props;
@@ -26,7 +27,7 @@ function RequestToHire(props) {
   // determine which button we want (if mine, show applications; if applied for, disabled; else, apply for)
   let button;
   if (hireRequest.user === currentUser.id) {
-    button = <Button hire-request={hireRequest.id}>Show Applications</Button>;
+    button = <CompareHireRequestApplications hireRequest={hireRequest} />;
   } else if (applications.some((e) => e.user_id === currentUser.id)) {
     button = (
       <Button hire-request={hireRequest.id} disabled>

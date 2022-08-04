@@ -1,0 +1,20 @@
+.accordion-button:not(.collapsed) {
+    color: black;
+    background-color: white;
+}
+
+.accordion-button::after {
+    visibility: hidden;
+}
+
+.accordion-button {
+    cursor: default !important;
+}
+
+.accordion {
+    margin-bottom: 20px;
+}
+
+.accordion-body {
+    border: none;
+}

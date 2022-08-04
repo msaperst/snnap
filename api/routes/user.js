@@ -8,33 +8,15 @@ const Common = require('./common');
 const RequestToHire = require('../components/requestToHire/RequestToHire');
 const ApplicationForRequestToHire = require('../components/applicationForRequestToHire/ApplicationForRequestToHire');
 
-async function basicAuthExecuteAndReturn(req, res, callback) {
-  let token;
-  try {
-    token = await User.isAuth(req.headers.authorization);
-  } catch (error) {
-    return res.status(401).json({
-      message: error.message,
-    });
-  }
-  try {
-    return callback(token);
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
-}
-
 router.get('/get', async (req, res) => {
-  await basicAuthExecuteAndReturn(req, res, async (token) => {
+  await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
     return res.send(await user.getInfo());
   });
 });
 
 router.get('/get/:user', async (req, res) => {
-  await basicAuthExecuteAndReturn(req, res, async () => {
+  await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const userInfo =
       await Mysql.query(`SELECT id, username, first_name, last_name, avatar
                                          FROM users WHERE id = '${req.params.user}' OR username = '${req.params.user}';`);
@@ -46,7 +28,7 @@ router.get('/get/:user', async (req, res) => {
 });
 
 router.get('/hire-requests', async (req, res) => {
-  await basicAuthExecuteAndReturn(req, res, async (token) => {
+  await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
     const hireRequests = await RequestToHire.getUserHireRequests(
       await user.getId()
@@ -56,7 +38,7 @@ router.get('/hire-requests', async (req, res) => {
 });
 
 router.get('/hire-request-applications', async (req, res) => {
-  await basicAuthExecuteAndReturn(req, res, async (token) => {
+  await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
     const applications = ApplicationForRequestToHire.getUserApplications(
       await user.getId()

@@ -1,35 +1,22 @@
-/* eslint-disable jest/no-export */
 import React from 'react';
 import {
   fireEvent,
-  getByText,
   render,
-  screen,
-  waitFor,
 } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { act } from 'react-dom/test-utils';
 import NewRequestToHire from './NewRequestToHire';
+import {
+  closeAlert,
+  closeModal,
+  hasAnError,
+  hasASuccess,
+  hasNoAlert,
+  hasSaveInformation, noModal,
+  openModal
+} from "../CommonTestComponents";
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
-
-export async function openModal(container, buttonText, modalId) {
-  await waitFor(() => container.firstChild);
-  const button = getByText(container, buttonText);
-  fireEvent.click(button);
-
-  return waitFor(() => screen.getByTestId(modalId));
-}
-
-export async function closeModal(modal) {
-  fireEvent.click(modal.firstChild.firstChild.lastChild);
-  await act(async () => {
-    // eslint-disable-next-line no-promise-executor-return
-    await new Promise((r) => setTimeout(r, 2000));
-  });
-  expect(modal).not.toBeVisible();
-}
 
 describe('new request to hire form', () => {
   jest.setTimeout(10000);
@@ -65,11 +52,17 @@ describe('new request to hire form', () => {
 
   it('is a drop down item', () => {
     const { container } = render(<NewRequestToHire />);
-    expect(container.children).toHaveLength(2); // button and div to hold modal
-    expect(container.firstChild).toHaveClass('dropdown-item');
-    expect(container.firstChild.getAttribute('role')).toEqual('button');
-    expect(container.firstChild.getAttribute('tabindex')).toEqual('0');
-    expect(container.firstChild).toHaveTextContent('New Request to Hire');
+    expect(container.children).toHaveLength(1);
+    expect(container.firstChild.firstChild).toHaveClass('dropdown-item');
+    expect(container.firstChild.firstChild.getAttribute('role')).toEqual(
+      'button'
+    );
+    expect(container.firstChild.firstChild.getAttribute('tabindex')).toEqual(
+      '0'
+    );
+    expect(container.firstChild.firstChild).toHaveTextContent(
+      'New Request to Hire'
+    );
   });
 
   it('opens a modal when button is clicked', async () => {
@@ -205,40 +198,28 @@ describe('new request to hire form', () => {
     // TODO - verify correct options, and that none are selected
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('has save information button in the last row', async () => {
-    const modalForm = modal.firstChild.lastChild.firstChild;
-    const saveRow = modalForm.lastChild;
-    expect(saveRow).toHaveClass('mb-3 row');
-    expect(saveRow.firstChild).toHaveClass('col');
-    expect(saveRow.firstChild.firstChild).toHaveClass('btn btn-primary');
-    expect(saveRow.firstChild.firstChild.getAttribute('id')).toEqual(
-      'createNewRequestButton'
-    );
-    expect(saveRow.firstChild.firstChild.getAttribute('type')).toEqual(
-      'submit'
-    );
-    expect(saveRow.firstChild.firstChild).toHaveTextContent(
-      'Create New Request'
-    );
+    hasSaveInformation(modal, 'createNewRequestButton', 'Create New Request');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('has no alert or update present in the last row', async () => {
-    const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-    expect(saveRow.lastChild).toHaveClass('col');
-    expect(saveRow.lastChild.children).toHaveLength(0);
+    hasNoAlert(modal);
   });
 
   it('does not submit if values are not present/valid', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
     const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
     fireEvent.click(saveRow.firstChild.firstChild);
     expect(saveRow.lastChild).toHaveClass('col');
     expect(saveRow.lastChild.children).toHaveLength(0);
+    expect(spy).toBeCalledTimes(0);
   });
 
-  it('has an alert on failure of a submission', async () => {
-    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
-    jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
-    const modalForm = modal.firstChild.lastChild.firstChild;
+  function fillOutForm(modalForm) {
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
     });
@@ -257,12 +238,16 @@ describe('new request to hire form', () => {
     fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
       target: { value: '50' },
     });
+  }
+
+  it('has an alert on failure of a submission', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
+    jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
-    const saveRow = modalForm.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
+    await hasAnError(modal);
     expect(spy).toHaveBeenCalledWith(
       '7',
       undefined,
@@ -275,83 +260,27 @@ describe('new request to hire form', () => {
       undefined,
       undefined
     );
-    expect(saveRow.lastChild).toHaveClass('col');
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    expect(saveRow.lastChild.firstChild).toHaveClass(
-      'fade alert alert-danger alert-dismissible show'
-    );
-    expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
-    expect(saveRow.lastChild.firstChild).toHaveTextContent('Some Error');
-    expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
-    ).toEqual('Close alert');
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('type')
-    ).toEqual('button');
-    expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('is able to close an alert after failure', async () => {
     jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
-    const saveRow = modalForm.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    fireEvent.click(saveRow.lastChild.firstChild.firstChild);
-    expect(saveRow.lastChild.children).toHaveLength(0);
+    await closeAlert(modal);
   });
 
   it('has an alert on success of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
-    const saveRow = modalForm.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
+    await hasASuccess(modal, 'New Request to Hire Submitted');
     expect(spy).toHaveBeenCalledWith(
       '7',
       undefined,
@@ -364,91 +293,27 @@ describe('new request to hire form', () => {
       undefined,
       undefined
     );
-    expect(saveRow.lastChild).toHaveClass('col');
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    expect(saveRow.lastChild.firstChild).toHaveClass(
-      'fade alert alert-success alert-dismissible show'
-    );
-    expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
-    expect(saveRow.lastChild.firstChild).toHaveTextContent(
-      'New Request to Hire Submitted'
-    );
-    expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
-    ).toEqual('Close alert');
-    expect(
-      saveRow.lastChild.firstChild.firstChild.getAttribute('type')
-    ).toEqual('button');
-    expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('is able to close an alert after success', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
-    const saveRow = modalForm.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    fireEvent.click(saveRow.lastChild.firstChild.firstChild);
-    expect(saveRow.lastChild.children).toHaveLength(0);
+    await closeAlert(modal);
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('removes the success alert after 5 seconds', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
-      target: { value: '7' },
-    });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
-    fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
-    });
-    fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
-      target: { value: 'Some Deets' },
-    });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
-      target: { value: '8' },
-    });
-    fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
-      target: { value: '50' },
-    });
+    fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
-    const saveRow = modalForm.lastChild;
-    await act(async () => {
-      fireEvent.click(saveRow.firstChild.firstChild);
-    });
-    expect(saveRow.lastChild.children).toHaveLength(1);
-    expect(modal).toBeVisible();
-    await act(async () => {
-      // eslint-disable-next-line no-promise-executor-return
-      await new Promise((r) => setTimeout(r, 7000));
-    });
-    expect(saveRow.lastChild.children).toHaveLength(0);
-    expect(modal).not.toBeVisible();
+    await noModal(modal);
   });
 });

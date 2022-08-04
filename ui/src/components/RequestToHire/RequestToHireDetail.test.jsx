@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import RequestToHireDetail from './RequestToHireDetail';
-import { hr } from '../ApplyToRequestToHire/ApplyToRequestToHire.test';
+import { hr } from "../CommonTestComponents";
 
 describe('request to hire detail info', () => {
   jest.setTimeout(10000);

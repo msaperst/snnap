@@ -4,7 +4,7 @@ import { companyService } from '../../../services/company.service';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import Gallery from './Gallery/Gallery';
 import Submit from '../../Submit/Submit';
-import { common } from '../Common';
+import { commonFormComponents } from '../../CommonFormComponents';
 
 function Portfolio(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,7 +35,7 @@ function Portfolio(props) {
       setIsSubmitting(true);
       companyService.updatePortfolio(experience, portfolioItems).then(
         () => {
-          common.setSuccess(
+          commonFormComponents.setBasicSuccess(
             setIsSubmitting,
             setStatus,
             setUpdate,
@@ -51,7 +51,7 @@ function Portfolio(props) {
     }
   };
 
-  const updateExperience = (key, value) => {
+  const updateExperience = (_key, value) => {
     setExperience(value);
   };
 

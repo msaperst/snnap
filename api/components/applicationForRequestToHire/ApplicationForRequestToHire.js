@@ -75,6 +75,14 @@ const ApplicationForRequestToHire = class {
     );
   }
 
+  static async getUserApplications(user) {
+    return Mysql.query(
+      `SELECT * FROM hire_request_applications WHERE hire_request_applications.user_id = ${db.escape(
+        user
+      )};`
+    );
+  }
+
   async getInfo() {
     await this.instancePromise;
     const hireRequestApplication = (
