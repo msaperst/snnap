@@ -23,3 +23,6 @@ ALTER TABLE hire_requests MODIFY location varchar(256);
 ALTER TABLE hire_requests MODIFY details longtext;
 ALTER TABLE hire_requests DROP COLUMN equipment;
 ALTER TABLE hire_requests DROP COLUMN skills;
+ALTER TABLE hire_requests ADD COLUMN date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE hire_requests ADD COLUMN application_selected int(11);
+ALTER TABLE hire_requests ADD COLUMN date_application_selected TIMESTAMP;

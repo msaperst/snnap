@@ -97,6 +97,38 @@ router.post(
   }
 );
 
+const selectHireRequestApplicationValidation = [
+  check('hireRequest', 'Please provide a valid hire request id.')
+    .not()
+    .isEmpty(),
+  check(
+    'hireRequestApplication',
+    'Please provide a valid hire request application id'
+  )
+    .not()
+    .isEmpty(),
+];
+
+router.post(
+  '/select-hire-request-application',
+  selectHireRequestApplicationValidation,
+  async (req, res) => {
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
+    }
+    try {
+      const hireRequest = new RequestToHire(req.body.hireRequest);
+      await hireRequest.selectApplication(req.body.hireRequestApplication);
+      return res.status(200).send();
+    } catch (error) {
+      return res.status(422).send({
+        msg: error.message,
+      });
+    }
+  }
+);
+
 router.get('/hire-request-application/:id', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const application = new ApplicationForRequestToHire(req.params.id);

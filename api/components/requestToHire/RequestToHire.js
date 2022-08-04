@@ -95,6 +95,17 @@ const RequestToHire = class {
     );
     return hireRequest;
   }
+
+  async selectApplication(hireRequestApplication) {
+    await this.instancePromise;
+    await Mysql.query(
+      `UPDATE hire_requests SET hire_requests.application_selected = ${db.escape(
+        hireRequestApplication
+      )}, hire_requests.date_application_selected = CURRENT_TIMESTAMP WHERE hire_requests.id = ${
+        this.id
+      };`
+    );
+  }
 };
 
 module.exports = RequestToHire;
