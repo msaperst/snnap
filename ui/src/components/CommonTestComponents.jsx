@@ -1,5 +1,5 @@
-import { fireEvent, getByText, screen, waitFor } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
+import { fireEvent, getByText, screen, waitFor } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 
 export const hr = {
   id: 5,
@@ -53,15 +53,9 @@ export function hasSaveInformation(modal, id, text) {
   expect(saveRow).toHaveClass('mb-3 row');
   expect(saveRow.firstChild).toHaveClass('col');
   expect(saveRow.firstChild.firstChild).toHaveClass('btn btn-primary');
-  expect(saveRow.firstChild.firstChild.getAttribute('id')).toEqual(
-    id
-  );
-  expect(saveRow.firstChild.firstChild.getAttribute('type')).toEqual(
-    'submit'
-  );
-  expect(saveRow.firstChild.firstChild).toHaveTextContent(
-    text
-  );
+  expect(saveRow.firstChild.firstChild.getAttribute('id')).toEqual(id);
+  expect(saveRow.firstChild.firstChild.getAttribute('type')).toEqual('submit');
+  expect(saveRow.firstChild.firstChild).toHaveTextContent(text);
 }
 
 export function hasNoAlert(modal) {
@@ -70,7 +64,7 @@ export function hasNoAlert(modal) {
   expect(saveRow.lastChild.children).toHaveLength(0);
 }
 
-export async function hasAnError(modal) {
+async function hasAnAlert(modal, type, message) {
   const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
   await act(async () => {
     fireEvent.click(saveRow.firstChild.firstChild);
@@ -78,29 +72,7 @@ export async function hasAnError(modal) {
   expect(saveRow.lastChild).toHaveClass('col');
   expect(saveRow.lastChild.children).toHaveLength(1);
   expect(saveRow.lastChild.firstChild).toHaveClass(
-    'fade alert alert-danger alert-dismissible show'
-  );
-  expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
-  expect(saveRow.lastChild.firstChild).toHaveTextContent('Some Error');
-  expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
-  expect(
-    saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
-  ).toEqual('Close alert');
-  expect(
-    saveRow.lastChild.firstChild.firstChild.getAttribute('type')
-  ).toEqual('button');
-  expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
-}
-
-export async function hasASuccess(modal, message) {
-  const saveRow = modal.firstChild.lastChild.firstChild.lastChild;
-  await act(async () => {
-    fireEvent.click(saveRow.firstChild.firstChild);
-  });
-  expect(saveRow.lastChild).toHaveClass('col');
-  expect(saveRow.lastChild.children).toHaveLength(1);
-  expect(saveRow.lastChild.firstChild).toHaveClass(
-    'fade alert alert-success alert-dismissible show'
+    `fade alert alert-${type} alert-dismissible show`
   );
   expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
   expect(saveRow.lastChild.firstChild).toHaveTextContent(message);
@@ -108,10 +80,18 @@ export async function hasASuccess(modal, message) {
   expect(
     saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
   ).toEqual('Close alert');
-  expect(
-    saveRow.lastChild.firstChild.firstChild.getAttribute('type')
-  ).toEqual('button');
+  expect(saveRow.lastChild.firstChild.firstChild.getAttribute('type')).toEqual(
+    'button'
+  );
   expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
+}
+
+export async function hasAnError(modal, message = 'Some Error') {
+  await hasAnAlert(modal, 'danger', message);
+}
+
+export async function hasASuccess(modal, message) {
+  await hasAnAlert(modal, 'success', message);
 }
 
 export async function closeAlert(modal) {

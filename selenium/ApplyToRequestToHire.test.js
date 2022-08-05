@@ -1,6 +1,7 @@
-/* eslint-disable no-await-in-loop */
+/* eslint-disable no-await-in-loop,no-restricted-syntax */
 const { until, By } = require('selenium-webdriver');
 const Test = require('./common/Test');
+const Home = require('./common/Home');
 
 describe('apply to request to hire', () => {
   jest.setTimeout(15000);
@@ -11,16 +12,18 @@ describe('apply to request to hire', () => {
   let requestToHires = [];
   let applicationsForRequestToHires = [];
   let form;
+  let home;
 
   beforeEach(async () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
+    home = new Home(driver);
     // login as a user
     requestToHires.push(await Test.addRequestToHire(0, 1, '2023-03-12'));
     user = await test.loginUser('newApplyToRequestToHireUser');
     await driver.get(Test.getApp());
-    const button = await getButton(await requestToHires[0].getId());
+    const button = await home.getButton(await requestToHires[0].getId());
     await button.click();
     form = await driver.wait(
       until.elementLocated(By.id('applyToRequestToHireForm'))
@@ -52,14 +55,14 @@ describe('apply to request to hire', () => {
     requestToHires.push(await Test.addRequestToHire(1, 4, '2023-03-10'));
     await driver.navigate().refresh();
     for (const requestToHire of requestToHires) {
-      const button = await getButton(await requestToHire.getId());
+      const button = await home.getButton(await requestToHire.getId());
       expect(await button.isDisplayed()).toBeTruthy();
     }
   });
 
   it('has the submit button when someone else created the request', async () => {
     await driver.navigate().refresh();
-    const button = await getButton(await requestToHires[0].getId());
+    const button = await home.getButton(await requestToHires[0].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeTruthy();
     expect(await button.getText()).toEqual('Submit For Job');
@@ -70,12 +73,14 @@ describe('apply to request to hire', () => {
       await Test.addRequestToHire(await user.getId(), 4, '2023-03-10')
     );
     await driver.navigate().refresh();
-    const button = await getButton(await requestToHires[1].getId());
+    const button = await home.getButton(await requestToHires[1].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeTruthy();
     expect(await button.getText()).toEqual('View Applications');
   });
 
+  // checks are in the methods
+  // eslint-disable-next-line jest/expect-expect
   it('has the button disabled when you already applied to the request', async () => {
     applicationsForRequestToHires.push(
       await Test.addApplicationForRequestToHire(
@@ -116,42 +121,10 @@ describe('apply to request to hire', () => {
     }
   });
 
+  // checks are in the method
+  // eslint-disable-next-line jest/expect-expect
   it('displays hire request information', async () => {
-    expect(
-      await (await form.findElements(By.className('mb-3 row')))[0].getText()
-    ).toEqual('Job Information');
-
-    const jobType = await driver.findElement(By.id('formJobType'));
-    expect(await jobType.getAttribute('readonly')).toBeTruthy();
-    expect(await jobType.getAttribute('value')).toEqual('Wedding');
-
-    const date = await driver.findElement(By.id('formDate'));
-    expect(await date.getAttribute('readonly')).toBeTruthy();
-    expect(await date.getAttribute('value')).toEqual('Sunday, March 12, 2023');
-
-    const duration = await driver.findElement(By.id('formDuration'));
-    expect(await duration.getAttribute('readonly')).toBeTruthy();
-    expect(await duration.getAttribute('value')).toEqual('4 hours');
-
-    const location = await driver.findElement(By.id('formLocation'));
-    expect(await location.getAttribute('readonly')).toBeTruthy();
-    expect(await location.getAttribute('value')).toEqual('Chantilly, VA');
-
-    const pay = await driver.findElement(By.id('formPay'));
-    expect(await pay.getAttribute('readonly')).toBeTruthy();
-    expect(await pay.getAttribute('value')).toEqual('$200 per hour');
-
-    const details = await driver.findElement(By.id('formJobDetails'));
-    expect(await details.getAttribute('readonly')).toBeTruthy();
-    expect(await details.getAttribute('value')).toEqual('Some details');
-
-    const equipment = await driver.findElement(By.id('formEquipment'));
-    expect(await equipment.getAttribute('readonly')).toBeTruthy();
-    expect(await equipment.getAttribute('value')).toEqual('');
-
-    const skills = await driver.findElement(By.id('formSkills'));
-    expect(await skills.getAttribute('readonly')).toBeTruthy();
-    expect(await skills.getAttribute('value')).toEqual('');
+    await home.hasHireRequestInfo(form);
   });
 
   it('displays profile information', async () => {
@@ -206,8 +179,9 @@ describe('apply to request to hire', () => {
       'Experience',
       [
         { name: 'Camera', value: 1, what: 'some camera' },
-        { value: 3, name: 'Lights', what: 'Some lights' }],
-      [{value: 5}],
+        { value: 3, name: 'Lights', what: 'Some lights' },
+      ],
+      [{ value: 5 }],
       [{ description: 'some link', link: 'https://link.com' }]
     );
     await driver.navigate().refresh();
@@ -323,7 +297,7 @@ describe('apply to request to hire', () => {
     await applyForJob();
   });
 
-  it('can not be submitted if name is missing', async() => {
+  it('can not be submitted if name is missing', async () => {
     const name = await driver.findElement(By.id('formName'));
     await name.clear();
     const applyLink = await driver.findElement(
@@ -332,10 +306,12 @@ describe('apply to request to hire', () => {
     await applyLink.click();
     const feedbacks = await form.findElements(By.css('.invalid-feedback'));
     expect(feedbacks).toHaveLength(16);
-    for(let i = 0; i < feedbacks.length; i++) {
-      if(i === 8) {
+    for (let i = 0; i < feedbacks.length; i++) {
+      if (i === 8) {
         expect(await feedbacks[i].isDisplayed()).toBeTruthy();
-        expect(await feedbacks[i].getText()).toEqual('Please provide a valid name.');
+        expect(await feedbacks[i].getText()).toEqual(
+          'Please provide a valid name.'
+        );
       } else {
         expect(await feedbacks[i].isDisplayed()).toBeFalsy();
         expect(await feedbacks[i].getText()).toEqual('');
@@ -401,15 +377,6 @@ describe('apply to request to hire', () => {
     expect(await alert.getText()).toEqual('Portfolio Link must be a valid URL');
   });
 
-  async function getButton(hireRequestId) {
-    await driver.wait(
-      until.elementLocated(By.css(`button[hire-request="${hireRequestId}"]`))
-    );
-    return driver.findElement(
-      By.css(`button[hire-request="${hireRequestId}"]`)
-    );
-  }
-
   async function applyForJob() {
     const applyLink = await driver.findElement(
       By.id('applyToRequestToHireButton')
@@ -426,12 +393,12 @@ describe('apply to request to hire', () => {
         .then((elements) => elements.length === 0)
     );
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
-    await checkAlreadyApplied()
+    await checkAlreadyApplied();
   }
 
   async function checkAlreadyApplied() {
     await Test.sleep(500); // TODO - fix me instead of waiting for the redraw
-    const button = await getButton(await requestToHires[0].getId());
+    const button = await home.getButton(await requestToHires[0].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeFalsy();
     expect(await button.getText()).toEqual('Already Applied');

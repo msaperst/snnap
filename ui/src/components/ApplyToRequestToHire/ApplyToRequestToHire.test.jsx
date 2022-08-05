@@ -5,13 +5,15 @@ import { act } from 'react-dom/test-utils';
 import ApplyToRequestToHire from './ApplyToRequestToHire';
 import {
   closeAlert,
-  closeModal, hasAnError,
+  closeModal,
+  hasAnError,
   hasASuccess,
   hasNoAlert,
   hasSaveInformation,
-  hr, noModal,
-  openModal
-} from "../CommonTestComponents";
+  hr,
+  noModal,
+  openModal,
+} from '../CommonTestComponents';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
@@ -271,8 +273,14 @@ describe('apply to request to hire form', () => {
     expect(galleryLink1Input.getAttribute('value')).toEqual('');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('has save information button in the last row', async () => {
-    hasSaveInformation(modal, 'applyToRequestToHireButton', 'Apply to Request to Hire');
+    hasSaveInformation(
+      modal,
+      'applyToRequestToHireButton',
+      'Apply to Request to Hire'
+    );
   });
 
   // expects in method

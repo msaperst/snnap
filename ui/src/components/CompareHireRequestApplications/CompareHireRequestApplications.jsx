@@ -37,9 +37,8 @@ class CompareHireRequestApplications extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const form = document.querySelector('#compareHireRequestApplicationsForm');
-    if (form.checkValidity() === true) {
-      const { hireRequest, hireRequestApplication } = this.state;
+    const { hireRequest, hireRequestApplication } = this.state;
+    if (hireRequestApplication) {
       this.setState({ isSubmitting: true });
       jobService
         .chooseHireRequestApplication(
@@ -61,6 +60,8 @@ class CompareHireRequestApplications extends React.Component {
             });
           }
         );
+    } else {
+      this.setState({ status: 'Please select an application' });
     }
     this.setState({ validated: true });
   }
@@ -111,6 +112,9 @@ class CompareHireRequestApplications extends React.Component {
                     <HireRequestApplication
                       key={hireRequestApplication.id}
                       hireRequestApplication={hireRequestApplication}
+                      radio={(id) =>
+                        this.setState({ hireRequestApplication: id })
+                      }
                     />
                   ))}
                 </Accordion>

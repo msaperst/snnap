@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import HireRequestApplication from './HireRequestApplication';
 
@@ -70,6 +70,62 @@ describe('hire request application', () => {
     expect(container.firstChild.firstChild).toHaveTextContent(
       'Max SaperstoneSome Company'
     );
+  });
+
+  it('has radio in header when provided', async () => {
+    await act(async () => {
+      hireRequestApplication = render(
+        <HireRequestApplication
+          hireRequestApplication={application}
+          radio="true"
+        />
+      );
+      const { container } = hireRequestApplication;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = hireRequestApplication;
+    expect(container.firstChild.firstChild).toHaveClass('accordion-header');
+    const headers =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+    expect(headers.children).toHaveLength(3);
+    expect(headers).toHaveTextContent('Max SaperstoneSome Company');
+    expect(headers.firstChild).toHaveClass('col-md-1');
+    expect(headers.firstChild.firstChild.firstChild).toHaveClass(
+      'form-check-input'
+    );
+    expect(
+      headers.firstChild.firstChild.firstChild.getAttribute('aria-label')
+    ).toEqual('hireRequestApplication-3');
+    expect(
+      headers.firstChild.firstChild.firstChild.getAttribute('name')
+    ).toEqual('hireRequestApplications-2');
+    expect(
+      headers.firstChild.firstChild.firstChild.getAttribute('type')
+    ).toEqual('radio');
+  });
+
+  it('executes the provided function in the radio when clicked', async () => {
+    let x = 0;
+    const updateX = () => {
+      x = 1;
+    };
+    await act(async () => {
+      hireRequestApplication = render(
+        <HireRequestApplication
+          hireRequestApplication={application}
+          radio={updateX}
+        />
+      );
+      const { container } = hireRequestApplication;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = hireRequestApplication;
+    expect(x).toEqual(0);
+    fireEvent.click(
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .firstChild.firstChild.firstChild
+    );
+    expect(x).toEqual(1);
   });
 
   it('has correct body content', async () => {

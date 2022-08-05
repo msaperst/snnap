@@ -21,3 +21,4 @@ ALTER TABLE users ADD COLUMN state varchar(50) COLLATE utf8mb4_unicode_ci NOT NU
 ALTER TABLE users ADD COLUMN zip varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL;
 ALTER TABLE users ADD COLUMN avatar varchar(60) COLLATE utf8mb4_unicode_ci;
 ALTER TABLE users MODIFY avatar LONGTEXT;
+ALTER TABLE users ADD COLUMN date_registered TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;

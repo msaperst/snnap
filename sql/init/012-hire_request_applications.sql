@@ -17,3 +17,4 @@ CREATE TABLE IF NOT EXISTS hire_request_applications
   COLLATE = utf8mb4_unicode_ci;
 
 ALTER TABLE hire_request_applications MODIFY company_name varchar(200) COLLATE utf8mb4_unicode_ci;
+ALTER TABLE hire_request_applications ADD COLUMN date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;

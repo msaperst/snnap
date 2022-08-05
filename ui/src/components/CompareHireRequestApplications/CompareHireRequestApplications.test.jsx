@@ -5,15 +5,32 @@ import CompareHireRequestApplications from './CompareHireRequestApplications';
 import {
   closeAlert,
   closeModal,
-  hasAnError, hasASuccess,
+  hasAnError,
+  hasASuccess,
   hasNoAlert,
   hasSaveInformation,
-  hr, noModal,
-  openModal
-} from "../CommonTestComponents";
+  hr,
+  noModal,
+  openModal,
+} from '../CommonTestComponents';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
+
+jest.mock(
+  '../HireRequestApplication/HireRequestApplication',
+  () =>
+    function (props) {
+      const { radio } = props;
+      return (
+        <input
+          onClick={() => {
+            radio(5);
+          }}
+        />
+      );
+    }
+);
 
 describe('compare hire request applications form', () => {
   jest.setTimeout(10000);
@@ -30,7 +47,9 @@ describe('compare hire request applications form', () => {
 
     hireRequest = hr;
     jobService.jobService.getHireRequest.mockResolvedValue(hireRequest);
-    jobService.jobService.getHireRequestApplications.mockResolvedValue([]);
+    jobService.jobService.getHireRequestApplications.mockResolvedValue([
+      { id: 5 },
+    ]);
 
     const { container } = render(
       <CompareHireRequestApplications hireRequest={hireRequest} />
@@ -79,17 +98,21 @@ describe('compare hire request applications form', () => {
     expect(modalForm.getAttribute('noValidate')).toEqual('');
   });
 
-  it('no applications are shown when none exist', async () => {
+  it('one application is shown when one exists', async () => {
     const applications =
       modal.firstChild.lastChild.firstChild.children[5].firstChild;
     expect(applications).toHaveClass('accordion');
-    expect(applications.children).toHaveLength(0);
+    expect(applications.children).toHaveLength(1);
   });
 
   // expects in method
   // eslint-disable-next-line jest/expect-expect
   it('has save information button in the last row', async () => {
-    hasSaveInformation(modal, 'selectRequestToHireApplicationButton', 'Select Request To Hire Application');
+    hasSaveInformation(
+      modal,
+      'selectRequestToHireApplicationButton',
+      'Select Request To Hire Application'
+    );
   });
 
   // expects in method
@@ -99,7 +122,12 @@ describe('compare hire request applications form', () => {
   });
 
   it('does not submit if values are not present/valid', async () => {
-    // TODO - right now no validity check
+    const spy = jest.spyOn(
+      jobService.jobService,
+      'chooseHireRequestApplication'
+    );
+    await hasAnError(modal, 'Please select an application');
+    expect(spy).toHaveBeenCalledTimes(0);
   });
 
   it('has an alert on failure of a submission', async () => {
@@ -110,8 +138,11 @@ describe('compare hire request applications form', () => {
     jobService.jobService.chooseHireRequestApplication.mockRejectedValue(
       'Some Error'
     );
+    const applications =
+      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+    fireEvent.click(applications.firstChild);
     await hasAnError(modal);
-    expect(spy).toHaveBeenCalledWith(5, null);
+    expect(spy).toHaveBeenCalledWith(5, 5);
   });
 
   // expects in method
@@ -120,6 +151,9 @@ describe('compare hire request applications form', () => {
     jobService.jobService.chooseHireRequestApplication.mockRejectedValue(
       'Some Error'
     );
+    const applications =
+      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+    fireEvent.click(applications.firstChild);
     await closeAlert(modal);
   });
 
@@ -131,8 +165,11 @@ describe('compare hire request applications form', () => {
     jobService.jobService.chooseHireRequestApplication.mockResolvedValue(
       'Some Success'
     );
+    const applications =
+      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+    fireEvent.click(applications.firstChild);
     await hasASuccess(modal, 'Hire Request Application Chosen');
-    expect(spy).toHaveBeenCalledWith(5, null);
+    expect(spy).toHaveBeenCalledWith(5, 5);
   });
 
   // expects in method
@@ -141,6 +178,9 @@ describe('compare hire request applications form', () => {
     jobService.jobService.chooseHireRequestApplication.mockResolvedValue(
       'Some Success'
     );
+    const applications =
+      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+    fireEvent.click(applications.firstChild);
     await closeAlert(modal);
   });
 
@@ -150,6 +190,9 @@ describe('compare hire request applications form', () => {
     jobService.jobService.chooseHireRequestApplication.mockResolvedValue(
       'Some Success'
     );
+    const applications =
+      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+    fireEvent.click(applications.firstChild);
     await noModal(modal);
   });
 });

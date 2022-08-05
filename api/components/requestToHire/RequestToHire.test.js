@@ -184,4 +184,16 @@ describe('request to hire', () => {
       "SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = 'max;\\' \\\"SELECT * WHERE 1=1;\\\"';"
     );
   });
+
+  it('adds a selected application', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValue([]);
+    const hireRequest = new RequestToHire(4);
+    await hireRequest.selectApplication(3);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'UPDATE hire_requests SET hire_requests.application_selected = 3, hire_requests.date_application_selected = CURRENT_TIMESTAMP WHERE hire_requests.id = 4;'
+    );
+  });
 });

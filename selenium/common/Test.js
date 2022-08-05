@@ -8,7 +8,9 @@ const ApplicationForRequestToHire = require('../../api/components/applicationFor
 const Company = require('../../api/components/company/Company');
 
 class Test {
-  constructor() {}
+  constructor() {
+    // do nothing
+  }
 
   static sleep(ms) {
     return new Promise((resolve) => {
@@ -146,7 +148,7 @@ class Test {
       userId,
       companyId,
       'Test User',
-      null,
+      'Company',
       null,
       null,
       null,
@@ -154,6 +156,34 @@ class Test {
       [],
       [],
       []
+    );
+  }
+
+  static async addFullApplicationForRequestToHire(
+    hireRequestId,
+    userId,
+    companyId
+  ) {
+    return ApplicationForRequestToHire.create(
+      hireRequestId,
+      userId,
+      companyId,
+      'Test User',
+      'Company',
+      'website.com',
+      'insta.com',
+      'facebook.com',
+      'some experience',
+      [
+        { value: 1, what: 'something' },
+        { value: 2, what: 'other things' },
+      ],
+      [{ value: 1 }, { value: 2 }],
+      [
+        { link: 'link1.com', description: 'description 1' },
+        { link: 'link2.com', description: 'description 2' },
+        { link: 'link3.com', description: 'description 3' },
+      ]
     );
   }
 

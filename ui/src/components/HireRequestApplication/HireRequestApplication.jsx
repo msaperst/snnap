@@ -1,4 +1,4 @@
-import { Accordion, Col, Container, Row } from 'react-bootstrap';
+import { Accordion, Col, Container, Row, Form } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AccordionHeader from 'react-bootstrap/AccordionHeader';
@@ -10,13 +10,36 @@ import IconLink from '../IconLink/IconLink';
 import './HireRequestApplication.css';
 
 function HireRequestApplication(props) {
-  const { hireRequestApplication } = props;
+  const { hireRequestApplication, radio } = props;
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
   const [fullHireRequestApplication, setFullHireRequestApplication] = useState(
     hireRequestApplication
   );
+
+  let name = (
+    <Col md={6}>
+      <h4>{fullHireRequestApplication.user_name}</h4>
+    </Col>
+  );
+  if (radio) {
+    name = (
+      <>
+        <Col md={1}>
+          <Form.Check
+            type="radio"
+            aria-label={`hireRequestApplication-${fullHireRequestApplication.id}`}
+            name={`hireRequestApplications-${fullHireRequestApplication.hire_request_id}`}
+            onClick={() => radio(fullHireRequestApplication.id)}
+          />
+        </Col>
+        <Col md={5}>
+          <h4>{fullHireRequestApplication.user_name}</h4>
+        </Col>
+      </>
+    );
+  }
 
   useEffect(() => {
     userService.get(hireRequestApplication.user).then((u) => {
@@ -37,9 +60,7 @@ function HireRequestApplication(props) {
       <AccordionHeader>
         <Container>
           <Row>
-            <Col md={6}>
-              <h4>{fullHireRequestApplication.user_name}</h4>
-            </Col>
+            {name}
             <Col md={6}>
               <h4>{fullHireRequestApplication.company_name}</h4>
             </Col>
