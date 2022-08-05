@@ -15,7 +15,7 @@ function RequestToHireDetail(props) {
           size={4}
           name="Job Type"
           value={hireRequest.type}
-          readOnly
+          disabled
         />
         <SnnapFormInput
           size={4}
@@ -26,7 +26,7 @@ function RequestToHireDetail(props) {
             month: 'long',
             day: '2-digit',
           }).format(new Date(hireRequest.date_time))}
-          readOnly
+          disabled
         />
         <SnnapFormInput
           size={4}
@@ -34,7 +34,7 @@ function RequestToHireDetail(props) {
           value={`${hireRequest.duration}${
             hireRequest.durationMax ? ` to ${hireRequest.durationMax}` : ''
           } hours`}
-          readOnly
+          disabled
         />
       </Row>
       <Row className="mb-3">
@@ -42,13 +42,13 @@ function RequestToHireDetail(props) {
           size={8}
           name="Location"
           value={hireRequest.location.replace(', United States of America', '')}
-          readOnly
+          disabled
         />
         <SnnapFormInput
           size={4}
           name="Pay"
           value={`$${hireRequest.pay} per hour`}
-          readOnly
+          disabled
         />
       </Row>
       <Row className="mb-3">
@@ -56,7 +56,7 @@ function RequestToHireDetail(props) {
           name="Job Details"
           value={hireRequest.details}
           type="textarea"
-          readOnly
+          disabled
         />
       </Row>
       <Row className="mb-3">
@@ -68,7 +68,7 @@ function RequestToHireDetail(props) {
               ? hireRequest.equipment.map((option) => option.name).toString()
               : ''
           }
-          readOnly
+          disabled
         />
         <SnnapFormInput
           size={6}
@@ -78,7 +78,7 @@ function RequestToHireDetail(props) {
               ? hireRequest.skills.map((option) => option.name).toString()
               : ''
           }
-          readOnly
+          disabled
         />
       </Row>
     </>

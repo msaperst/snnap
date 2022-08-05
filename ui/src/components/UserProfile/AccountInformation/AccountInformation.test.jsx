@@ -55,7 +55,7 @@ describe('account information', () => {
     // the rest is verified in Avatar.test.jsx
   });
 
-  it('has readonly empty username in the first row', () => {
+  it('has disabled empty username in the first row', () => {
     const { container } = render(<AccountInformation user={{}} />);
     expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-10');
     expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
@@ -69,7 +69,7 @@ describe('account information', () => {
     ).toEqual('formUsername');
     expect(
       container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'readOnly'
+        'disabled'
       )
     ).toEqual('');
     expect(
@@ -90,7 +90,7 @@ describe('account information', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has readonly username in the first row', () => {
+  it('has disabled username in the first row', () => {
     const { container } = render(
       <AccountInformation user={{ username: 'msaperst' }} />
     );
@@ -102,7 +102,7 @@ describe('account information', () => {
     const form =
       container.firstChild.children[1].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formUsername');
-    expect(form.getAttribute('readOnly')).toEqual('');
+    expect(form.getAttribute('disabled')).toEqual('');
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('msaperst');
     expect(form.getAttribute('required')).toEqual('');
@@ -129,7 +129,7 @@ describe('account information', () => {
     const form =
       container.firstChild.children[2].firstChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formEmail');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('msaperst@gmail.com');
     expect(form.getAttribute('required')).toEqual('');
@@ -148,7 +148,7 @@ describe('account information', () => {
     const form =
       container.firstChild.children[2].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formNumber');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('1234567890');
     expect(form.getAttribute('required')).toEqual('');
