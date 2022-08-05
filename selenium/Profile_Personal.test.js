@@ -13,11 +13,11 @@ describe('profile page', () => {
     // load the default page
     driver = await test.getDriver();
     await test.loginUser('profilePersonalUser');
-    await driver.get(Test.getApp() + '/profile');
+    await driver.get(`${Test.getApp()}/profile`);
   }, 10000);
 
   afterEach(async () => {
-    //delete the user
+    // delete the user
     await test.removeUser();
     // close the driver
     await test.cleanUp();
@@ -26,50 +26,54 @@ describe('profile page', () => {
   it('shows the personal information', async () => {
     driver.wait(until.elementLocated(By.css('h2')));
     const personalInfo = (await driver.findElements(By.css('form')))[1];
-    expect(await personalInfo.findElement(By.css('h3')).getText()).toEqual('Personal Information');
+    expect(await personalInfo.findElement(By.css('h3')).getText()).toEqual(
+      'Personal Information'
+    );
   });
 
   it('displays the first name', async () => {
     const firstName = driver.wait(until.elementLocated(By.id('formFirstName')));
     test.waitUntilInputFilled(By.id('formFirstName'));
     expect(await firstName.getAttribute('value')).toEqual('Test');
-    expect(await firstName.getAttribute('readonly')).toBeNull();
+    expect(await firstName.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the last name', async () => {
     const lastName = driver.wait(until.elementLocated(By.id('formLastName')));
     test.waitUntilInputFilled(By.id('formLastName'));
     expect(await lastName.getAttribute('value')).toEqual('User');
-    expect(await lastName.getAttribute('readonly')).toBeNull();
+    expect(await lastName.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the city', async () => {
     const city = driver.wait(until.elementLocated(By.id('formCity')));
     test.waitUntilInputFilled(By.id('formCity'));
     expect(await city.getAttribute('value')).toEqual('City');
-    expect(await city.getAttribute('readonly')).toBeNull();
+    expect(await city.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the state', async () => {
     const state = driver.wait(until.elementLocated(By.id('formState')));
     test.waitUntilInputFilled(By.id('formState'));
     expect(await state.getAttribute('value')).toEqual('State');
-    expect(await state.getAttribute('readonly')).toBeNull();
+    expect(await state.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the zip', async () => {
     const zip = driver.wait(until.elementLocated(By.id('formZip')));
     test.waitUntilInputFilled(By.id('formZip'));
     expect(await zip.getAttribute('value')).toEqual('Zip');
-    expect(await zip.getAttribute('readonly')).toBeNull();
+    expect(await zip.getAttribute('disabled')).toBeNull();
   });
 
   it('shows error when you update profile blank information', async () => {
     driver.wait(until.elementLocated(By.css('h2')));
     const profile = (await driver.findElements(By.css('form')))[1];
-    const feedbacks = (await profile.findElements(By.className('invalid-feedback')));
-    expect(feedbacks.length).toEqual(5);
-    for (let feedback of feedbacks) {
+    const feedbacks = await profile.findElements(
+      By.className('invalid-feedback')
+    );
+    expect(feedbacks).toHaveLength(5);
+    for (const feedback of feedbacks) {
       expect(await feedback.getText()).toEqual('');
       expect(await feedback.isDisplayed()).toBeFalsy();
     }
@@ -79,12 +83,20 @@ describe('profile page', () => {
     driver.findElement(By.id('formState')).clear();
     driver.findElement(By.id('formZip')).clear();
     driver.findElement(By.id('savePersonalInformationButton')).click();
-    expect(await feedbacks[0].getText()).toEqual('Please provide a valid first name.');
-    expect(await feedbacks[1].getText()).toEqual('Please provide a valid last name.');
-    expect(await feedbacks[2].getText()).toEqual('Please provide a valid city.');
-    expect(await feedbacks[3].getText()).toEqual('Please provide a valid state.');
+    expect(await feedbacks[0].getText()).toEqual(
+      'Please provide a valid first name.'
+    );
+    expect(await feedbacks[1].getText()).toEqual(
+      'Please provide a valid last name.'
+    );
+    expect(await feedbacks[2].getText()).toEqual(
+      'Please provide a valid city.'
+    );
+    expect(await feedbacks[3].getText()).toEqual(
+      'Please provide a valid state.'
+    );
     expect(await feedbacks[4].getText()).toEqual('Please provide a valid zip.');
-    for (let feedback of feedbacks) {
+    for (const feedback of feedbacks) {
       expect(await feedback.isDisplayed()).toBeTruthy();
     }
   });
@@ -105,16 +117,20 @@ describe('profile page', () => {
     let zip = driver.wait(until.elementLocated(By.id('formZip')));
     test.waitUntilInputFilled(By.id('formFirstName'));
     firstName.sendKeys('0');
-    lastName.sendKeys('0')
-    city.sendKeys('0')
-    state.sendKeys('0')
-    zip.sendKeys('0')
+    lastName.sendKeys('0');
+    city.sendKeys('0');
+    state.sendKeys('0');
+    zip.sendKeys('0');
     await checkFields(firstName, lastName, city, state, zip);
     await driver.findElement(By.id('savePersonalInformationButton')).click();
-    const success = driver.wait(until.elementLocated(By.className('alert-success')));
+    const success = driver.wait(
+      until.elementLocated(By.className('alert-success'))
+    );
     expect(await success.getText()).toEqual('Personal Information Updated');
     await Test.sleep(5000);
-    expect(await driver.findElements(By.className('alert-success'))).toHaveLength(0);
+    expect(
+      await driver.findElements(By.className('alert-success'))
+    ).toHaveLength(0);
     driver.navigate().refresh();
     firstName = driver.wait(until.elementLocated(By.id('formFirstName')));
     lastName = driver.wait(until.elementLocated(By.id('formLastName')));

@@ -133,27 +133,27 @@ describe('apply to request to hire', () => {
     ).toEqual('Your Information');
 
     const name = await driver.findElement(By.id('formName'));
-    expect(await name.getAttribute('readonly')).toBeFalsy();
+    expect(await name.getAttribute('disabled')).toBeFalsy();
     expect(await name.getAttribute('value')).toEqual('Test User');
 
     const companyName = await driver.findElement(By.id('formCompany'));
-    expect(await companyName.getAttribute('readonly')).toBeFalsy();
+    expect(await companyName.getAttribute('disabled')).toBeFalsy();
     expect(await companyName.getAttribute('value')).toEqual('');
 
     const website = await driver.findElement(By.id('formWebsite'));
-    expect(await website.getAttribute('readonly')).toBeFalsy();
+    expect(await website.getAttribute('disabled')).toBeFalsy();
     expect(await website.getAttribute('value')).toEqual('');
 
     const insta = await driver.findElement(By.id('formInstagramLink'));
-    expect(await insta.getAttribute('readonly')).toBeFalsy();
+    expect(await insta.getAttribute('disabled')).toBeFalsy();
     expect(await insta.getAttribute('value')).toEqual('');
 
     const fb = await driver.findElement(By.id('formFacebookLink'));
-    expect(await fb.getAttribute('readonly')).toBeFalsy();
+    expect(await fb.getAttribute('disabled')).toBeFalsy();
     expect(await fb.getAttribute('value')).toEqual('');
 
     const experience = await driver.findElement(By.id('formExperience'));
-    expect(await experience.getAttribute('readonly')).toBeFalsy();
+    expect(await experience.getAttribute('disabled')).toBeFalsy();
     expect(await experience.getAttribute('value')).toEqual('');
 
     // TODO - experience/skills - pull from profile
@@ -161,11 +161,11 @@ describe('apply to request to hire', () => {
     const galleryDescription = await driver.findElement(
       By.id('galleryDescription-0')
     );
-    expect(await galleryDescription.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryDescription.getAttribute('disabled')).toBeFalsy();
     expect(await galleryDescription.getAttribute('value')).toEqual('');
 
     const galleryLink = await driver.findElement(By.id('galleryLink-0'));
-    expect(await galleryLink.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryLink.getAttribute('disabled')).toBeFalsy();
     expect(await galleryLink.getAttribute('value')).toEqual('');
   });
 
@@ -207,27 +207,27 @@ describe('apply to request to hire', () => {
     ).toEqual('Your Information');
 
     const name = await driver.findElement(By.id('formName'));
-    expect(await name.getAttribute('readonly')).toBeFalsy();
+    expect(await name.getAttribute('disabled')).toBeFalsy();
     expect(await name.getAttribute('value')).toEqual('Test User');
 
     const companyName = await driver.findElement(By.id('formCompany'));
-    expect(await companyName.getAttribute('readonly')).toBeFalsy();
+    expect(await companyName.getAttribute('disabled')).toBeFalsy();
     expect(await companyName.getAttribute('value')).toEqual('Company');
 
     const website = await driver.findElement(By.id('formWebsite'));
-    expect(await website.getAttribute('readonly')).toBeFalsy();
+    expect(await website.getAttribute('disabled')).toBeFalsy();
     expect(await website.getAttribute('value')).toEqual('https://website.com');
 
     const insta = await driver.findElement(By.id('formInstagramLink'));
-    expect(await insta.getAttribute('readonly')).toBeFalsy();
+    expect(await insta.getAttribute('disabled')).toBeFalsy();
     expect(await insta.getAttribute('value')).toEqual('https://instagram.com');
 
     const fb = await driver.findElement(By.id('formFacebookLink'));
-    expect(await fb.getAttribute('readonly')).toBeFalsy();
+    expect(await fb.getAttribute('disabled')).toBeFalsy();
     expect(await fb.getAttribute('value')).toEqual('https://facebook.com');
 
     const experience = await driver.findElement(By.id('formExperience'));
-    expect(await experience.getAttribute('readonly')).toBeFalsy();
+    expect(await experience.getAttribute('disabled')).toBeFalsy();
     expect(await experience.getAttribute('value')).toEqual('Experience');
 
     // TODO - experience/skills - pull from profile
@@ -235,13 +235,13 @@ describe('apply to request to hire', () => {
     const galleryDescription0 = await driver.findElement(
       By.id('galleryDescription-0')
     );
-    expect(await galleryDescription0.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryDescription0.getAttribute('disabled')).toBeFalsy();
     expect(await galleryDescription0.getAttribute('value')).toEqual(
       'some link'
     );
 
     const galleryLink0 = await driver.findElement(By.id('galleryLink-0'));
-    expect(await galleryLink0.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryLink0.getAttribute('disabled')).toBeFalsy();
     expect(await galleryLink0.getAttribute('value')).toEqual(
       'https://link.com'
     );
@@ -249,11 +249,11 @@ describe('apply to request to hire', () => {
     const galleryDescription1 = await driver.findElement(
       By.id('galleryDescription-1')
     );
-    expect(await galleryDescription1.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryDescription1.getAttribute('disabled')).toBeFalsy();
     expect(await galleryDescription1.getAttribute('value')).toEqual('');
 
     const galleryLink1 = await driver.findElement(By.id('galleryLink-1'));
-    expect(await galleryLink1.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryLink1.getAttribute('disabled')).toBeFalsy();
     expect(await galleryLink1.getAttribute('value')).toEqual('');
   });
 
@@ -287,11 +287,11 @@ describe('apply to request to hire', () => {
     const galleryDescription1 = await driver.findElement(
       By.id('galleryDescription-1')
     );
-    expect(await galleryDescription1.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryDescription1.getAttribute('disabled')).toBeFalsy();
     expect(await galleryDescription1.getAttribute('value')).toEqual('');
 
     const galleryLink1 = await driver.findElement(By.id('galleryLink-1'));
-    expect(await galleryLink1.getAttribute('readonly')).toBeFalsy();
+    expect(await galleryLink1.getAttribute('disabled')).toBeFalsy();
     expect(await galleryLink1.getAttribute('value')).toEqual('');
 
     await applyForJob();
