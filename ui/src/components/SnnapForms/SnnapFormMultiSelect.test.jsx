@@ -201,6 +201,9 @@ describe('snnap form input', () => {
       />
     );
     const child = await waitFor(() => container.firstChild);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500);
+    });
     expect(child.firstChild.lastChild.firstChild.children).toHaveLength(2);
     expect(child.firstChild.lastChild.firstChild.firstChild).toHaveTextContent(
       'Lights'
