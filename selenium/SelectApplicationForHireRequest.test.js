@@ -182,7 +182,7 @@ describe('apply to request to hire', () => {
       expect(await icon.isDisplayed()).toBeTruthy();
     }
     expect(await rows[1].getText()).toEqual('some experience');
-    expect(await rows[2].getText()).toEqual('');
+    expect(await rows[2].getText()).toEqual('Equipment\nSkills');
     expect(await rows[3].getText()).toEqual('');
   });
 
