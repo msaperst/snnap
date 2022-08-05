@@ -151,7 +151,7 @@ describe('apply to request to hire form', () => {
     const nameInput = modalForm.children[6].children[0].firstChild.firstChild;
     expect(nameInput.getAttribute('id')).toEqual('formName');
     expect(nameInput.getAttribute('placeholder')).toEqual('Name');
-    expect(nameInput.getAttribute('readonly')).toBeNull();
+    expect(nameInput.getAttribute('disabled')).toBeNull();
     expect(nameInput.getAttribute('type')).toEqual('text');
     expect(nameInput.getAttribute('value')).toEqual('Max Saperstone');
 
@@ -160,7 +160,7 @@ describe('apply to request to hire form', () => {
       modalForm.children[6].children[1].firstChild.firstChild;
     expect(companyInput.getAttribute('id')).toEqual('formCompany');
     expect(companyInput.getAttribute('placeholder')).toEqual('Company');
-    expect(companyInput.getAttribute('readonly')).toBeNull();
+    expect(companyInput.getAttribute('disabled')).toBeNull();
     expect(companyInput.getAttribute('type')).toEqual('text');
     expect(companyInput.getAttribute('value')).toEqual('Butts R Us');
   });
@@ -176,7 +176,7 @@ describe('apply to request to hire form', () => {
       modalForm.children[7].children[1].firstChild.firstChild;
     expect(websiteInput.getAttribute('id')).toEqual('formWebsite');
     expect(websiteInput.getAttribute('placeholder')).toEqual('Website');
-    expect(websiteInput.getAttribute('readonly')).toBeNull();
+    expect(websiteInput.getAttribute('disabled')).toBeNull();
     expect(websiteInput.getAttribute('type')).toEqual('text');
     expect(websiteInput.getAttribute('value')).toEqual('butts.com');
 
@@ -186,7 +186,7 @@ describe('apply to request to hire form', () => {
     const instaInput = modalForm.children[7].children[3].firstChild.firstChild;
     expect(instaInput.getAttribute('id')).toEqual('formInstagramLink');
     expect(instaInput.getAttribute('placeholder')).toEqual('Instagram Link');
-    expect(instaInput.getAttribute('readonly')).toBeNull();
+    expect(instaInput.getAttribute('disabled')).toBeNull();
     expect(instaInput.getAttribute('type')).toEqual('text');
     expect(instaInput.getAttribute('value')).toEqual('');
 
@@ -196,7 +196,7 @@ describe('apply to request to hire form', () => {
     const fbInput = modalForm.children[7].children[5].firstChild.firstChild;
     expect(fbInput.getAttribute('id')).toEqual('formFacebookLink');
     expect(fbInput.getAttribute('placeholder')).toEqual('Facebook Link');
-    expect(fbInput.getAttribute('readonly')).toBeNull();
+    expect(fbInput.getAttribute('disabled')).toBeNull();
     expect(fbInput.getAttribute('type')).toEqual('text');
     expect(fbInput.getAttribute('value')).toEqual('');
   });
@@ -210,7 +210,7 @@ describe('apply to request to hire form', () => {
       modalForm.children[8].children[0].firstChild.firstChild;
     expect(detailsInput.getAttribute('id')).toEqual('formExperience');
     expect(detailsInput.getAttribute('placeholder')).toEqual('Experience');
-    expect(detailsInput.getAttribute('readonly')).toBeNull();
+    expect(detailsInput.getAttribute('disabled')).toBeNull();
     expect(detailsInput.getAttribute('type')).toEqual('textarea');
     expect(detailsInput).toHaveTextContent(
       "None really, but somebody's gotta work this bitch"
@@ -232,7 +232,7 @@ describe('apply to request to hire form', () => {
     expect(galleryDescription0Input.getAttribute('placeholder')).toEqual(
       'Gallery Description'
     );
-    expect(galleryDescription0Input.getAttribute('readonly')).toBeNull();
+    expect(galleryDescription0Input.getAttribute('disabled')).toBeNull();
     expect(galleryDescription0Input.getAttribute('type')).toEqual('textarea');
     expect(galleryDescription0Input).toHaveTextContent('Gallery 1');
 
@@ -243,7 +243,7 @@ describe('apply to request to hire form', () => {
     expect(galleryLink0Input.getAttribute('placeholder')).toEqual(
       'Gallery Link'
     );
-    expect(galleryLink0Input.getAttribute('readonly')).toBeNull();
+    expect(galleryLink0Input.getAttribute('disabled')).toBeNull();
     expect(galleryLink0Input.getAttribute('type')).toEqual('text');
     expect(galleryLink0Input.getAttribute('value')).toEqual('link1.com');
 
@@ -257,7 +257,7 @@ describe('apply to request to hire form', () => {
     expect(galleryDescription1Input.getAttribute('placeholder')).toEqual(
       'Gallery Description'
     );
-    expect(galleryDescription1Input.getAttribute('readonly')).toBeNull();
+    expect(galleryDescription1Input.getAttribute('disabled')).toBeNull();
     expect(galleryDescription1Input.getAttribute('type')).toEqual('textarea');
     expect(galleryDescription1Input).toHaveTextContent('');
 
@@ -268,7 +268,7 @@ describe('apply to request to hire form', () => {
     expect(galleryLink1Input.getAttribute('placeholder')).toEqual(
       'Gallery Link'
     );
-    expect(galleryLink1Input.getAttribute('readonly')).toBeNull();
+    expect(galleryLink1Input.getAttribute('disabled')).toBeNull();
     expect(galleryLink1Input.getAttribute('type')).toEqual('text');
     expect(galleryLink1Input.getAttribute('value')).toEqual('');
   });

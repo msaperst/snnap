@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import RequestToHireDetail from './RequestToHireDetail';
-import { hr } from "../CommonTestComponents";
+import { hr } from '../CommonTestComponents';
 
 describe('request to hire detail info', () => {
   jest.setTimeout(10000);
@@ -39,7 +39,7 @@ describe('request to hire detail info', () => {
     const input = inputRow.firstChild.firstChild;
     expect(input.getAttribute('id')).toEqual(id);
     expect(input.getAttribute('placeholder')).toEqual(placeHolder);
-    expect(input.getAttribute('readonly')).toEqual('');
+    expect(input.getAttribute('disabled')).toEqual('');
     expect(input.getAttribute('type')).toEqual('text');
     expect(input.getAttribute('value')).toEqual(value);
   }
@@ -130,7 +130,7 @@ describe('request to hire detail info', () => {
       container.children[3].children[0].firstChild.firstChild;
     expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
     expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
-    expect(detailsInput.getAttribute('readonly')).toEqual('');
+    expect(detailsInput.getAttribute('disabled')).toEqual('');
     expect(detailsInput.getAttribute('type')).toEqual('textarea');
     expect(detailsInput).toHaveTextContent("Max's 40th Birthday, woot!!!");
   });

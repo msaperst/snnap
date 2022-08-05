@@ -63,7 +63,7 @@ describe('Company information', () => {
     const form =
       container.firstChild.children[1].firstChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formCompanyName');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('');
     expect(form.getAttribute('required')).toBeNull();
@@ -112,7 +112,7 @@ describe('Company information', () => {
     const form =
       container.firstChild.children[2].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formWebsite');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('Saperstone');
     expect(form.getAttribute('required')).toBeNull();
@@ -137,7 +137,7 @@ describe('Company information', () => {
     const form =
       container.firstChild.children[3].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formInstagramLink');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('Fairfax');
     expect(form.getAttribute('required')).toBeNull();
@@ -162,7 +162,7 @@ describe('Company information', () => {
     const form =
       container.firstChild.children[4].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formFacebookLink');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('Fairfax');
     expect(form.getAttribute('required')).toBeNull();

@@ -52,7 +52,7 @@ describe('personal information', () => {
     const form =
       container.firstChild.children[1].firstChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formFirstName');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('');
     expect(form.getAttribute('required')).toEqual('');
@@ -117,7 +117,7 @@ describe('personal information', () => {
     const form =
       container.firstChild.children[2].firstChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formCity');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('Fairfax');
     expect(form.getAttribute('required')).toEqual('');

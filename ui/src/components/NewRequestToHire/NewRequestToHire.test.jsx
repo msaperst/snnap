@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  fireEvent,
-  render,
-} from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import NewRequestToHire from './NewRequestToHire';
 import {
@@ -11,9 +8,10 @@ import {
   hasAnError,
   hasASuccess,
   hasNoAlert,
-  hasSaveInformation, noModal,
-  openModal
-} from "../CommonTestComponents";
+  hasSaveInformation,
+  noModal,
+  openModal,
+} from '../CommonTestComponents';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
@@ -97,7 +95,7 @@ describe('new request to hire form', () => {
     const jobTypeInput = modalForm.firstChild.firstChild.firstChild.firstChild;
     expect(jobTypeInput.getAttribute('id')).toEqual('formJobType');
     expect(jobTypeInput.getAttribute('aria-label')).toEqual('Job Type');
-    expect(jobTypeInput.getAttribute('readonly')).toBeNull();
+    expect(jobTypeInput.getAttribute('disabled')).toBeNull();
 
     expect(jobTypeInput.children).toHaveLength(3);
     expect(jobTypeInput.firstChild).toHaveTextContent('Select an option');
@@ -121,7 +119,7 @@ describe('new request to hire form', () => {
     );
     expect(locationInput.getAttribute('id')).toBeNull();
     expect(locationInput.getAttribute('placeholder')).toEqual('Location');
-    expect(locationInput.getAttribute('readonly')).toBeNull();
+    expect(locationInput.getAttribute('disabled')).toBeNull();
     expect(locationInput.getAttribute('type')).toEqual('text');
     expect(locationInput.getAttribute('value')).toBeNull();
 
@@ -129,7 +127,7 @@ describe('new request to hire form', () => {
     const dateInput = modalForm.children[1].lastChild.firstChild.firstChild;
     expect(dateInput.getAttribute('id')).toEqual('formDate');
     expect(dateInput.getAttribute('placeholder')).toEqual('Date');
-    expect(dateInput.getAttribute('readonly')).toBeNull();
+    expect(dateInput.getAttribute('disabled')).toBeNull();
     expect(dateInput.getAttribute('type')).toEqual('date');
     expect(dateInput.getAttribute('value')).toEqual('');
   });
@@ -143,7 +141,7 @@ describe('new request to hire form', () => {
     const detailsInput = modalForm.children[2].firstChild.firstChild.firstChild;
     expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
     expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
-    expect(detailsInput.getAttribute('readonly')).toBeNull();
+    expect(detailsInput.getAttribute('disabled')).toBeNull();
     expect(detailsInput.getAttribute('type')).toEqual('textarea');
     expect(detailsInput.getAttribute('value')).toBeNull();
     expect(detailsInput).toHaveTextContent('');
@@ -159,7 +157,7 @@ describe('new request to hire form', () => {
       modalForm.children[3].firstChild.firstChild.firstChild;
     expect(durationInput.getAttribute('id')).toEqual('formDuration');
     expect(durationInput.getAttribute('placeholder')).toEqual('Duration');
-    expect(durationInput.getAttribute('readonly')).toBeNull();
+    expect(durationInput.getAttribute('disabled')).toBeNull();
     expect(durationInput.getAttribute('type')).toEqual('number');
     expect(durationInput.getAttribute('value')).toBeNull();
 
@@ -173,7 +171,7 @@ describe('new request to hire form', () => {
     const payInput = modalForm.children[3].lastChild.firstChild.children[1];
     expect(payInput.getAttribute('id')).toEqual('formPay');
     expect(payInput.getAttribute('placeholder')).toEqual('Pay');
-    expect(payInput.getAttribute('readonly')).toBeNull();
+    expect(payInput.getAttribute('disabled')).toBeNull();
     expect(payInput.getAttribute('type')).toEqual('number');
     expect(payInput.getAttribute('value')).toBeNull();
   });

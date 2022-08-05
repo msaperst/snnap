@@ -47,7 +47,7 @@ describe('personal information', () => {
     const form =
       container.firstChild.children[1].firstChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formCurrentPassword');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('password');
     expect(form.getAttribute('value')).toEqual('');
     expect(form.getAttribute('required')).toEqual('');
@@ -74,7 +74,7 @@ describe('personal information', () => {
     const form =
       container.firstChild.children[2].firstChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formNewPassword');
-    expect(form.getAttribute('readOnly')).toBeNull();
+    expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('password');
     expect(form.getAttribute('value')).toEqual('');
     expect(form.getAttribute('required')).toEqual('');

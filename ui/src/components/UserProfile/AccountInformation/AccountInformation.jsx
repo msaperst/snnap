@@ -63,7 +63,7 @@ function AccountInformation(props) {
         <SnnapFormInput
           name="Username"
           size={10}
-          readOnly
+          disabled
           value={user.username}
         />
       </Row>
