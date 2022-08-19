@@ -31,7 +31,7 @@
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.0",
-    "owasp-dependency-check": "^0.0.18",
+    "owasp-dependency-check": "^0.0.21",
     "react": "^17.0.2",
     "react-bootstrap": "^2.5.0",
     "react-bootstrap-icons": "^1.8.4",
