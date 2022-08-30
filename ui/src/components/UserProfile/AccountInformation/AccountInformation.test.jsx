@@ -44,14 +44,11 @@ describe('account information', () => {
     const { container } = render(<AccountInformation user={{}} />);
     expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-2');
     expect(container.firstChild.children[1].firstChild.children).toHaveLength(
-      3
+      2
     );
     expect(container.firstChild.children[1].firstChild.firstChild).toHaveClass(
-      'rounded-circle'
+      'circle'
     );
-    expect(
-      container.firstChild.children[1].firstChild.firstChild.getAttribute('id')
-    ).toEqual('avatar');
     // the rest is verified in Avatar.test.jsx
   });
 

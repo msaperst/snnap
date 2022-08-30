@@ -136,7 +136,7 @@ describe('apply to request to hire', () => {
     );
     const rows = await accordion.findElements(By.className('mt-3 row'));
     expect(rows).toHaveLength(4);
-    const avatar = accordion.findElement(By.id('avatar'));
+    const avatar = accordion.findElement(By.className('circle'));
     const icons = await accordion.findElements(By.className('icon'));
     expect(icons).toHaveLength(0);
     expect(await rows[1].getText()).toEqual('');
@@ -162,7 +162,7 @@ describe('apply to request to hire', () => {
     );
     const rows = await accordion.findElements(By.className('mt-3 row'));
     expect(rows).toHaveLength(4);
-    const avatar = accordion.findElement(By.id('avatar'));
+    const avatar = accordion.findElement(By.className('circle'));
     const icons = await accordion.findElements(By.className('icon'));
     expect(icons).toHaveLength(3);
     // all things initially are hidden
