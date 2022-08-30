@@ -10,14 +10,10 @@ Enzyme.configure({ adapter: new Adapter() });
 describe('avatar', () => {
   it('renders an empty circle without an user information', () => {
     const { container } = render(<Avatar />);
-    expect(container.children).toHaveLength(2);
+    expect(container.children).toHaveLength(1);
 
-    expect(container.firstChild.children).toHaveLength(0);
-    expect(container.firstChild).toHaveClass('rounded-circle');
-    expect(container.firstChild.getAttribute('id')).toEqual('avatar');
-
-    expect(container.lastChild.children).toHaveLength(0);
-    expect(container.lastChild.getAttribute('id')).toEqual('initials');
+    expect(container.lastChild.children).toHaveLength(1);
+    expect(container.lastChild).toHaveClass('circle initials');
     expect(container.lastChild).toHaveTextContent('');
   });
 
@@ -25,14 +21,10 @@ describe('avatar', () => {
     const { container } = render(
       <Avatar firstname="Max" lastname="Saperstone" />
     );
-    expect(container.children).toHaveLength(2);
+    expect(container.children).toHaveLength(1);
 
-    expect(container.firstChild.children).toHaveLength(0);
-    expect(container.firstChild).toHaveClass('rounded-circle');
-    expect(container.firstChild.getAttribute('id')).toEqual('avatar');
-
-    expect(container.lastChild.children).toHaveLength(0);
-    expect(container.lastChild.getAttribute('id')).toEqual('initials');
+    expect(container.lastChild.children).toHaveLength(1);
+    expect(container.lastChild).toHaveClass('circle initials');
     expect(container.lastChild).toHaveTextContent('MS');
   });
 
@@ -65,9 +57,8 @@ describe('avatar', () => {
     expect(container.children).toHaveLength(1);
 
     expect(container.firstChild.children).toHaveLength(0);
-    expect(container.firstChild).toHaveClass('rounded-circle');
-    expect(container.firstChild.getAttribute('id')).toEqual('avatar');
-    expect(container.firstChild.getAttribute('src')).toEqual('pic.jpg');
+    expect(container.firstChild).toHaveClass('circle');
+    expect(container.firstChild.getAttribute('style')).toEqual('background-image: url(pic.jpg);');
   });
 
   it('allows clicking on the image', () => {

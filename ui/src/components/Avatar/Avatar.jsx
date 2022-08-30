@@ -1,5 +1,4 @@
 import React from 'react';
-import { Image } from 'react-bootstrap';
 import './Avatar.css';
 
 function Avatar(props) {
@@ -13,24 +12,17 @@ function Avatar(props) {
   let avatarBlock;
   if (avatar) {
     avatarBlock = (
-      <Image
-        roundedCircle
-        id="avatar"
-        onClick={onClick}
-        style={style}
-        src={avatar}
-      />
+      <div className="circle" onClick={onClick} style={{backgroundImage: `url(${avatar})`}} />
     );
+    console.log(avatar)
   } else {
     let avatarText = '';
     if (firstname) {
       avatarText = `${firstname.charAt(0)}${lastname.charAt(0)}`;
     }
     avatarBlock = (
-      <>
-        <Image roundedCircle id="avatar" onClick={onClick} style={style} />
+      <div className="circle initials" onClick={onClick}>
         <span
-          id="initials"
           onClick={onClick}
           onKeyPress={onClick}
           style={style}
@@ -39,7 +31,7 @@ function Avatar(props) {
         >
           {avatarText}
         </span>
-      </>
+      </div>
     );
   }
 

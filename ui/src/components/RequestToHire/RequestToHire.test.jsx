@@ -79,10 +79,10 @@ describe('request to hire', () => {
     expect(cardContainer.firstChild.firstChild.children).toHaveLength(2);
     expect(
       cardContainer.firstChild.firstChild.firstChild.children
-    ).toHaveLength(2);
+    ).toHaveLength(1);
     expect(
       cardContainer.firstChild.firstChild.firstChild.firstChild
-    ).toHaveClass('rounded-circle');
+    ).toHaveClass('circle');
     expect(cardContainer.firstChild.firstChild.lastChild.children).toHaveLength(
       2
     );
