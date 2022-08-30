@@ -30,11 +30,7 @@ describe('avatar', () => {
     expect(container.firstChild).toHaveClass('col-md-2');
     expect(container.firstChild.children).toHaveLength(2);
 
-    expect(container.firstChild.firstChild.children).toHaveLength(1);
-    expect(container.firstChild.firstChild).toHaveClass(
-      'initials'
-    );
-    expect(container.firstChild.firstChild).toHaveTextContent('');
+    //avatar validated via avatar.test.jsx
 
     expect(container.firstChild.lastChild.children).toHaveLength(0);
     expect(container.firstChild.lastChild).toHaveClass('form-control');
@@ -50,11 +46,7 @@ describe('avatar', () => {
     expect(container.firstChild).toHaveClass('col-md-2');
     expect(container.firstChild.children).toHaveLength(2);
 
-    expect(container.firstChild.firstChild.children).toHaveLength(1);
-    expect(container.firstChild.firstChild).toHaveClass(
-      'initials'
-    );
-    expect(container.firstChild.firstChild).toHaveTextContent('MS');
+    //avatar validated via avatar.test.jsx
 
     expect(container.firstChild.lastChild.children).toHaveLength(0);
     expect(container.firstChild.lastChild).toHaveClass('form-control');
@@ -68,9 +60,7 @@ describe('avatar', () => {
     expect(container.firstChild).toHaveClass('col-md-2');
     expect(container.firstChild.children).toHaveLength(2);
 
-    expect(container.firstChild.firstChild.children).toHaveLength(0);
-    expect(container.firstChild.firstChild).toHaveClass('circle');
-    expect(container.firstChild.firstChild.getAttribute('style')).toEqual('background-image: url(pic.jpg);');
+    //avatar validated via avatar.test.jsx
 
     expect(container.firstChild.lastChild.children).toHaveLength(0);
     expect(container.firstChild.lastChild).toHaveClass('form-control');
