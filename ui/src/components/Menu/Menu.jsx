@@ -17,7 +17,7 @@ function Menu(props) {
     menu = (
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto">
-          <NavDropdown title="Gigs" id="gig-dropdown">
+          <NavDropdown title="My Jobs" id="gig-dropdown">
             <NewRequestToHire />
             <NavDropdown.Item href="/hire-requests">
               My Hire Requests

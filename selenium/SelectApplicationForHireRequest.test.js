@@ -181,9 +181,19 @@ describe('apply to request to hire', () => {
     for (const icon of icons) {
       expect(await icon.isDisplayed()).toBeTruthy();
     }
+    await Test.sleep(500);
     expect(await rows[1].getText()).toEqual('some experience');
-    expect(await rows[2].getText()).toEqual('Equipment\nSkills');
-    expect(await rows[3].getText()).toEqual('');
+    expect(await rows[2].getText()).toEqual(
+      'Equipment\n' +
+        'Flash: other things\n' +
+        'Camera: something\n' +
+        'Skills\n' +
+        'Retouch\n' +
+        'Photography'
+    );
+    expect(await rows[3].getText()).toEqual(
+      'description 3\ndescription 1\ndescription 2'
+    );
   });
 
   it('unable to submit without choosing an application', async () => {
@@ -222,7 +232,34 @@ describe('apply to request to hire', () => {
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
 
-  it("no longer shows the application once it's been applied to", () => {
-    // TODO - pending #393 implemented
+  it("no longer shows the application once it's been applied to", async () => {
+    await driver
+      .findElement(
+        By.css(
+          `input[aria-label="hireRequestApplication-${await applicationsForRequestToHires[0].getId()}"]`
+        )
+      )
+      .click();
+    const applyLink = await driver.findElement(
+      By.id('selectRequestToHireApplicationButton')
+    );
+    await applyLink.click();
+    await driver.wait(until.elementLocated(By.className('alert-success')));
+    await driver.wait(async () =>
+      driver
+        .findElements(
+          By.css(
+            `input[aria-label="hireRequestApplication-${await applicationsForRequestToHires[0].getId()}"]`
+          )
+        )
+        .then((elements) => elements.length === 0)
+    );
+    expect(
+      await driver.findElements(
+        By.css(
+          `input[aria-label="hireRequestApplication-${await applicationsForRequestToHires[0].getId()}"]`
+        )
+      )
+    ).toHaveLength(0);
   });
 });

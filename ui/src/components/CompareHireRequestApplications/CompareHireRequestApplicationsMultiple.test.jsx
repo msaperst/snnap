@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CompareHireRequestApplications from './CompareHireRequestApplications';
-import { hr, openModal } from "../CommonTestComponents";
+import { hr, openModal } from '../CommonTestComponents';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
@@ -42,7 +42,7 @@ describe('compare hire request applications form', () => {
     );
     modal = await openModal(
       container,
-      'View Applications',
+      'Select Application',
       'compareHireRequestApplicationsModal-5'
     );
   });

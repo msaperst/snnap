@@ -103,7 +103,7 @@ describe('request to hire', () => {
     await loadRequestToHire(hireRequest, createUser);
     const { container } = requestForHire;
     const { cardContainer, data } = checkTop(container);
-    checkData(cardContainer, data, '2 hours', 'View Applications');
+    checkData(cardContainer, data, '2 hours', 'Select Application');
   });
 
   it('displays the already applied button', async () => {

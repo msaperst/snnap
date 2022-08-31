@@ -76,7 +76,7 @@ describe('apply to request to hire', () => {
     const button = await home.getButton(await requestToHires[1].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeTruthy();
-    expect(await button.getText()).toEqual('View Applications');
+    expect(await button.getText()).toEqual('Select Application0');
   });
 
   // checks are in the methods
