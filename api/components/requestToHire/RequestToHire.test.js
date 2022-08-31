@@ -152,7 +152,7 @@ describe('request to hire', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.date_time > NOW();'
+      'SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.date_time > NOW() AND hire_requests.application_selected IS NULL ORDER BY hire_requests.date_time;'
     );
   });
 
@@ -167,7 +167,7 @@ describe('request to hire', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = 1;'
+      'SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = 1 ORDER BY hire_requests.date_time;'
     );
   });
 
@@ -181,7 +181,7 @@ describe('request to hire', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      "SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = 'max;\\' \\\"SELECT * WHERE 1=1;\\\"';"
+      "SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.user = 'max;\\' \\\"SELECT * WHERE 1=1;\\\"' ORDER BY hire_requests.date_time;"
     );
   });
 

@@ -51,8 +51,8 @@ class Company {
       `DELETE FROM portfolio WHERE company = ${this.companyId};`
     );
     // set new portfolio info
-    for (let i = 0; i < portfolioItems.length; i++) {
-      const portfolioItem = portfolioItems[i];
+    for (const element of portfolioItems) {
+      const portfolioItem = element;
       if (portfolioItem.description && portfolioItem.link) {
         // eslint-disable-next-line no-await-in-loop
         await Mysql.query(

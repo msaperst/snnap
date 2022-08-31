@@ -56,7 +56,7 @@ describe('compare hire request applications form', () => {
     );
     modal = await openModal(
       container,
-      'View Applications',
+      'Select Application',
       'compareHireRequestApplicationsModal-5'
     );
   });
@@ -71,7 +71,18 @@ describe('compare hire request applications form', () => {
       'button'
     );
     expect(container.firstChild.firstChild).toHaveTextContent(
-      'View Applications'
+      'Select Application'
+    );
+  });
+
+  it('has different text depending on selection of hire request', () => {
+    const hr = { ...hireRequest };
+    hr.application_selected = 5;
+    const { container } = render(
+      <CompareHireRequestApplications hireRequest={hr} />
+    );
+    expect(container.firstChild.firstChild).toHaveTextContent(
+      'Application Selected'
     );
   });
 
