@@ -242,7 +242,7 @@ describe('hire request application', () => {
       {
         id: 2,
         hire_request_application: 2,
-        link: 'https://link2.com',
+        link: 'link2.com',
         description: 'link2',
       },
     ];
@@ -260,7 +260,7 @@ describe('hire request application', () => {
     expect(row.firstChild.firstChild.getAttribute('rel')).toEqual('noreferrer');
     expect(row.lastChild.firstChild).toHaveTextContent('link2');
     expect(row.lastChild.firstChild.getAttribute('href')).toEqual(
-      'https://link2.com'
+      'http://link2.com'
     );
     expect(row.lastChild.firstChild.getAttribute('target')).toEqual('_blank');
     expect(row.lastChild.firstChild.getAttribute('rel')).toEqual('noreferrer');

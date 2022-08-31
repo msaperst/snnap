@@ -125,7 +125,11 @@ function HireRequestApplication(props) {
               ? fullHireRequestApplication.portfolio.map((portfolioItem) => (
                   <Col md={2} key={portfolioItem.id}>
                     <a
-                      href={portfolioItem.link}
+                      href={
+                        portfolioItem.link.startsWith('http')
+                          ? portfolioItem.link
+                          : `http://${portfolioItem.link}`
+                      }
                       target="_blank"
                       rel="noreferrer"
                     >
