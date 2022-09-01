@@ -107,7 +107,7 @@ describe('snnap menu', () => {
     ).toHaveLength(2);
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[0]
-    ).toHaveTextContent('Gigs');
+    ).toHaveTextContent('My Jobs');
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[1]
     ).toHaveTextContent('msaperst');
@@ -126,7 +126,7 @@ describe('snnap menu', () => {
     const { container } = render(
       <Menu currentUser={{ username: 'msaperst' }} />
     );
-    fireEvent.click(screen.getByText('Gigs'));
+    fireEvent.click(screen.getByText('My Jobs'));
     const gigMenu =
       container.firstChild.firstChild.lastChild.firstChild.children[0];
     expect(gigMenu.children).toHaveLength(2);

@@ -72,7 +72,15 @@ function UserPage() {
         <Row className="mb-3">
           {portfolioItems.map((portfolioItem) => (
             <Col md={2} key={portfolioItem.id}>
-              <a href={portfolioItem.link} target="_blank" rel="noreferrer">
+              <a
+                href={
+                  portfolioItem.link.startsWith('http')
+                    ? portfolioItem.link
+                    : `http://${portfolioItem.link}`
+                }
+                target="_blank"
+                rel="noreferrer"
+              >
                 {portfolioItem.description}
               </a>
             </Col>

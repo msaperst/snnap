@@ -10,7 +10,7 @@ import IconLink from '../IconLink/IconLink';
 import './HireRequestApplication.css';
 
 function HireRequestApplication(props) {
-  const { hireRequestApplication, radio } = props;
+  const { hireRequestApplication, radio, selected } = props;
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
@@ -29,9 +29,11 @@ function HireRequestApplication(props) {
         <Col md={1}>
           <Form.Check
             type="radio"
+            disabled={selected}
             aria-label={`hireRequestApplication-${fullHireRequestApplication.id}`}
             name={`hireRequestApplications-${fullHireRequestApplication.hire_request_id}`}
             onClick={() => radio(fullHireRequestApplication.id)}
+            defaultChecked={selected === fullHireRequestApplication.id}
           />
         </Col>
         <Col md={5}>
@@ -123,7 +125,11 @@ function HireRequestApplication(props) {
               ? fullHireRequestApplication.portfolio.map((portfolioItem) => (
                   <Col md={2} key={portfolioItem.id}>
                     <a
-                      href={portfolioItem.link}
+                      href={
+                        portfolioItem.link.startsWith('http')
+                          ? portfolioItem.link
+                          : `http://${portfolioItem.link}`
+                      }
                       target="_blank"
                       rel="noreferrer"
                     >

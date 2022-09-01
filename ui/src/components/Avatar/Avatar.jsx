@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
 import './Avatar.css';
 
@@ -12,16 +13,28 @@ function Avatar(props) {
   let avatarBlock;
   if (avatar) {
     avatarBlock = (
-      <div className="circle" onClick={onClick} style={{backgroundImage: `url(${avatar})`}} />
+      <div
+        className="circle"
+        onClick={onClick}
+        onKeyPress={onClick}
+        style={{ backgroundImage: `url(${avatar})` }}
+        role="button"
+        tabIndex="0"
+      />
     );
-    console.log(avatar)
   } else {
     let avatarText = '';
     if (firstname) {
       avatarText = `${firstname.charAt(0)}${lastname.charAt(0)}`;
     }
     avatarBlock = (
-      <div className="circle initials" onClick={onClick}>
+      <div
+        className="circle initials"
+        onClick={onClick}
+        onKeyPress={onClick}
+        role="button"
+        tabIndex="0"
+      >
         <span
           onClick={onClick}
           onKeyPress={onClick}

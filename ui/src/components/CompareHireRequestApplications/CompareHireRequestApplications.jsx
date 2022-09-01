@@ -84,7 +84,15 @@ class CompareHireRequestApplications extends React.Component {
             hire-request={hireRequest.id}
             onClick={() => this.setState({ show: true })}
           >
-            View Applications
+            {hireRequest.application_selected
+              ? 'Application Selected'
+              : 'Select Application'}
+            <span
+              className="btn-secondary p-1 rounded-circle"
+              style={{ marginLeft: '10px' }}
+            >
+              {hireRequestApplications.length}
+            </span>
           </Button>
         </div>
         <Modal
@@ -115,18 +123,23 @@ class CompareHireRequestApplications extends React.Component {
                       radio={(id) =>
                         this.setState({ hireRequestApplication: id })
                       }
+                      selected={hireRequest.application_selected}
                     />
                   ))}
                 </Accordion>
               </Row>
-              <Submit
-                buttonText="Select Request To Hire Application"
-                isSubmitting={isSubmitting}
-                error={status}
-                updateError={() => this.setState({ status: null })}
-                success={update}
-                updateSuccess={() => this.setState({ update: null })}
-              />
+              {hireRequest.application_selected ? (
+                ''
+              ) : (
+                <Submit
+                  buttonText="Select Request To Hire Application"
+                  isSubmitting={isSubmitting}
+                  error={status}
+                  updateError={() => this.setState({ status: null })}
+                  success={update}
+                  updateSuccess={() => this.setState({ update: null })}
+                />
+              )}
             </Form>
           </Modal.Body>
         </Modal>
