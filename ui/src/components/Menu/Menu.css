@@ -5,7 +5,7 @@
 
 .logo {
   position: relative;
-  left: -30px;
+  left: -12px;
 }
 @media only screen and (max-width:640px) {
   .logo {
