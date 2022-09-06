@@ -149,7 +149,7 @@ describe('new request to hire', () => {
     for (let i = 0; i < 6; i++) {
       expect(await feedbacks[i].isDisplayed()).toBeFalsy();
     }
-    return await driver.wait(
+    return driver.wait(
       until.elementLocated(By.className('alert-danger'))
     );
   }
