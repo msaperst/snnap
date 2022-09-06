@@ -4,7 +4,7 @@ const Test = require('./common/Test');
 const Home = require('./common/Home');
 
 describe('apply to request to hire', () => {
-  jest.setTimeout(15000);
+  jest.setTimeout(20000);
   let test;
   let driver;
   let user;
