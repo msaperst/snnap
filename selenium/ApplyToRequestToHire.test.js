@@ -2,6 +2,7 @@
 const { until, By } = require('selenium-webdriver');
 const Test = require('./common/Test');
 const Home = require('./common/Home');
+require('chromedriver');
 
 describe('apply to request to hire', () => {
   jest.setTimeout(15000);
@@ -387,7 +388,7 @@ describe('apply to request to hire', () => {
       until.elementLocated(By.className('alert-success'))
     );
     expect(await alert.getText()).toEqual('Job Filing Submitted');
-    driver.wait(() =>
+    await driver.wait(() =>
       driver
         .findElements(By.css('.modal-header'))
         .then((elements) => elements.length === 0)
