@@ -93,14 +93,12 @@ describe('new request to hire', () => {
 
   it('shows errors upon submitting when selecting previous day', async () => {
     const alert = await basicEnterAndCheck();
-    expect(await alert.getText()).toEqual(
-      'Please provide a date after today.'
-    );
+    expect(await alert.getText()).toEqual('Please provide a date after today.');
   });
 
   it('allows clearing of response alert', async () => {
     await enterData(2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
-    driver
+    await driver
       .wait(until.elementLocated(By.css('[aria-label="Close alert"]')))
       .click();
     const alerts = await modal.findElements(By.className('alert-danger'));
@@ -110,13 +108,13 @@ describe('new request to hire', () => {
   it('closes modal with successful submission of the form', async () => {
     const cards = (await driver.findElements(By.className('card'))).length;
     await enterData(2, 'Fairfax', 'New Deetz', '100', '100', '10/13/2031');
-    driver.wait(() =>
+    await driver.wait(() =>
       driver
         .findElements(By.css('.modal-header'))
         .then((elements) => elements.length === 0)
     );
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
-    driver.wait(() =>
+    await driver.wait(() =>
       driver
         .findElements(By.className('card'))
         .then((elements) => elements.length === cards + 1)
@@ -128,19 +126,20 @@ describe('new request to hire', () => {
 
   async function enterData(option, location, details, pay, duration, date) {
     const select = driver.wait(until.elementLocated(By.id('formJobType')));
-    driver.wait(until.elementIsEnabled(select));
-    (await select.findElements(By.css('option')))[option].click();
-    (await modal.findElement(By.css('[placeholder="Location"]'))).sendKeys(
-      location
-    );
-    driver
+    await driver.wait(until.elementIsEnabled(select));
+    await (await select.findElements(By.css('option')))[option].click();
+    await (
+      await modal.findElement(By.css('[placeholder="Location"]'))
+    ).sendKeys(location);
+    await driver
       .wait(until.elementLocated(By.className('geoapify-autocomplete-item')))
       .click();
-    (await modal.findElement(By.id('formJobDetails'))).sendKeys(details);
-    (await modal.findElement(By.id('formPay'))).sendKeys(pay);
-    (await modal.findElement(By.id('formDuration'))).sendKeys(duration);
-    (await modal.findElement(By.id('formDate'))).sendKeys(date);
-    (await modal.findElement(By.id('createNewRequestButton'))).click();
+    await (await modal.findElement(By.id('formJobDetails'))).sendKeys(details);
+    await (await modal.findElement(By.id('formPay'))).sendKeys(pay);
+    await (await modal.findElement(By.id('formDuration'))).sendKeys(duration);
+    await (await modal.findElement(By.id('formDate'))).sendKeys(date);
+    await Test.sleep(1000); // kludge for location not updating quick enough
+    await (await modal.findElement(By.id('createNewRequestButton'))).click();
   }
 
   async function basicEnterAndCheck() {
@@ -149,9 +148,7 @@ describe('new request to hire', () => {
     for (let i = 0; i < 6; i++) {
       expect(await feedbacks[i].isDisplayed()).toBeFalsy();
     }
-    return driver.wait(
-      until.elementLocated(By.className('alert-danger'))
-    );
+    return driver.wait(until.elementLocated(By.className('alert-danger')));
   }
 
   // TODO

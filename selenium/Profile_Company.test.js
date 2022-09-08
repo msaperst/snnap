@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const { By, Key, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
@@ -96,6 +97,8 @@ describe('profile page', () => {
     driver.navigate().refresh();
   }
 
+  // asserts in checkForms method
+  // eslint-disable-next-line jest/expect-expect
   it('allows keeping the company values empty', async () => {
     await checkForms();
     await saveWaitAndRefresh();
@@ -113,10 +116,10 @@ describe('profile page', () => {
     }
 
     let { companyName, website, insta, facebook } = getFields();
-    companyName.sendKeys('0');
-    website.sendKeys('123.org');
-    insta.sendKeys('instagram.com/snnap');
-    facebook.sendKeys('https://facebook.com/me');
+    await companyName.sendKeys('0');
+    await website.sendKeys('123.org');
+    await insta.sendKeys('instagram.com/snnap');
+    await facebook.sendKeys('https://facebook.com/me');
     await expected();
     await saveWaitAndRefresh();
     companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
@@ -128,7 +131,7 @@ describe('profile page', () => {
 
   async function inputLinkData(formData, textStart) {
     const website = driver.wait(until.elementLocated(By.id(formData)));
-    website.sendKeys('123.o');
+    await website.sendKeys('123.o');
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     const danger = driver.wait(
       until.elementLocated(By.className('alert-danger'))
@@ -136,14 +139,20 @@ describe('profile page', () => {
     expect(await danger.getText()).toEqual(`${textStart} must be a valid URL`);
   }
 
+  // asserts in inputLinkData method
+  // eslint-disable-next-line jest/expect-expect
   it('requires website url to be valid', async () => {
     await inputLinkData('formWebsite', 'Website');
   });
 
+  // asserts in inputLinkData method
+  // eslint-disable-next-line jest/expect-expect
   it('requires insta url to be valid', async () => {
     await inputLinkData('formInstagramLink', 'Instagram Link');
   });
 
+  // asserts in inputLinkData method
+  // eslint-disable-next-line jest/expect-expect
   it('requires fb url to be valid', async () => {
     await inputLinkData('formFacebookLink', 'Facebook Link');
   });
@@ -152,14 +161,14 @@ describe('profile page', () => {
     const facebook = driver.wait(
       until.elementLocated(By.id('formFacebookLink'))
     );
-    facebook.sendKeys('123.o');
+    await facebook.sendKeys('123.o');
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     const danger = driver.wait(
       until.elementLocated(By.className('alert-danger'))
     );
     expect(await danger.getText()).toEqual('Facebook Link must be a valid URL');
-    facebook.clear();
-    facebook.sendKeys('123.org');
+    await facebook.clear();
+    await facebook.sendKeys('123.org');
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     const success = driver.wait(
       until.elementLocated(By.className('alert-success'))
@@ -184,7 +193,7 @@ describe('profile page', () => {
   async function saveAndRefresh() {
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     driver.wait(until.elementLocated(By.className('alert-success')));
-    driver.navigate().refresh();
+    await driver.navigate().refresh();
     await driver.wait(until.elementLocated(By.css('h2')));
     return (await driver.findElements(By.css('form')))[3];
   }
@@ -283,7 +292,7 @@ describe('profile page', () => {
       ],
       []
     );
-    driver.navigate().refresh();
+    await driver.navigate().refresh();
     let { nextDivs } = await getCompanyFields();
     waitForNumber(nextDivs, 5);
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(5);
@@ -307,11 +316,11 @@ describe('profile page', () => {
     await equipmentMultiSelectInput.click();
     const option1 = By.id(id.replace('input', 'option-1'));
     driver.wait(until.elementLocated(option1));
-    driver.findElement(option1).click();
+    await driver.findElement(option1).click();
     await equipmentMultiSelectInput.click();
     const option2 = By.id(id.replace('input', 'option-2'));
     driver.wait(until.elementLocated(option2));
-    driver.findElement(option2).click();
+    await driver.findElement(option2).click();
     const companyInformation = await saveAndRefresh();
     multiSelects = await companyInformation.findElements(
       By.className('multi-select-form')
@@ -338,7 +347,7 @@ describe('profile page', () => {
         },
       ]
     );
-    driver.navigate().refresh();
+    await driver.navigate().refresh();
     await driver.wait(until.elementLocated(By.css('h2')));
     let companyInformation = (await driver.findElements(By.css('form')))[3];
     let multiSelects = await companyInformation.findElements(

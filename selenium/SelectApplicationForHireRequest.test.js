@@ -2,6 +2,7 @@
 const { until, By } = require('selenium-webdriver');
 const Test = require('./common/Test');
 const Home = require('./common/Home');
+require('chromedriver');
 
 describe('apply to request to hire', () => {
   jest.setTimeout(20000);
@@ -121,10 +122,10 @@ describe('apply to request to hire', () => {
     expect(await accordianBody.isDisplayed()).toBeFalsy();
     const header = driver.findElement(By.className('accordion-header'));
     await header.click();
-    driver.wait(until.elementIsVisible(accordianBody));
+    await driver.wait(until.elementIsVisible(accordianBody));
     expect(await accordianBody.isDisplayed()).toBeTruthy();
     await header.click();
-    driver.wait(until.elementIsNotVisible(accordianBody));
+    await driver.wait(until.elementIsNotVisible(accordianBody));
     expect(await accordianBody.isDisplayed()).toBeFalsy();
   });
 
@@ -146,11 +147,11 @@ describe('apply to request to hire', () => {
     expect(await avatar.isDisplayed()).toBeFalsy();
     // make visible
     await accordion.findElement(By.className('accordion-header')).click();
-    driver.wait(until.elementIsVisible(avatar));
+    await driver.wait(until.elementIsVisible(avatar));
     // all things are now shown
     expect(await avatar.isDisplayed()).toBeTruthy();
     expect(await rows[1].getText()).toEqual('');
-    expect(await rows[2].getText()).toEqual('');
+    expect(await rows[2].getText()).toEqual('Equipment\nSkills');
     expect(await rows[3].getText()).toEqual('');
   });
 
@@ -175,7 +176,7 @@ describe('apply to request to hire', () => {
     expect(await rows[3].getText()).toEqual('');
     // make visible
     await accordion.findElement(By.className('accordion-header')).click();
-    driver.wait(until.elementIsVisible(avatar));
+    await driver.wait(until.elementIsVisible(avatar));
     // all things are now shown
     expect(await avatar.isDisplayed()).toBeTruthy();
     for (const icon of icons) {
@@ -183,17 +184,21 @@ describe('apply to request to hire', () => {
     }
     await Test.sleep(500);
     expect(await rows[1].getText()).toEqual('some experience');
-    expect(await rows[2].getText()).toEqual(
-      'Equipment\n' +
-        'Flash: other things\n' +
-        'Camera: something\n' +
-        'Skills\n' +
-        'Retouch\n' +
-        'Photography'
-    );
-    expect(await rows[3].getText()).toEqual(
-      'description 3\ndescription 1\ndescription 2'
-    );
+    // kludge as this is sometimes out of order
+    const equipmentSkillText = await rows[2].getText();
+    expect(equipmentSkillText).toHaveLength(74);
+    expect(equipmentSkillText).toMatch(/^Equipment\n/);
+    expect(equipmentSkillText).toMatch(/Flash: other things\n/);
+    expect(equipmentSkillText).toMatch(/Camera: something\n/);
+    expect(equipmentSkillText).toMatch(/Skills\n/);
+    expect(equipmentSkillText).toMatch(/Retouch/);
+    expect(equipmentSkillText).toMatch(/Photography/);
+    // kludge as this is sometimes out of order
+    const descriptionText = await rows[3].getText();
+    expect(descriptionText).toHaveLength(41);
+    expect(descriptionText).toMatch(/description 1/);
+    expect(descriptionText).toMatch(/description 2/);
+    expect(descriptionText).toMatch(/description 3/);
   });
 
   it('unable to submit without choosing an application', async () => {
@@ -224,7 +229,7 @@ describe('apply to request to hire', () => {
       until.elementLocated(By.className('alert-success'))
     );
     expect(await alert.getText()).toEqual('Hire Request Application Chosen');
-    driver.wait(() =>
+    await driver.wait(() =>
       driver
         .findElements(By.css('.modal-header'))
         .then((elements) => elements.length === 0)

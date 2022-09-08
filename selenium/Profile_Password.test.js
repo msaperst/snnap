@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
@@ -58,7 +59,7 @@ describe('profile page', () => {
       expect(await feedback.getText()).toEqual('');
       expect(await feedback.isDisplayed()).toBeFalsy();
     }
-    driver.findElement(By.id('updatePasswordButton')).click();
+    await driver.findElement(By.id('updatePasswordButton')).click();
     expect(await feedbacks[0].getText()).toEqual(
       'Please provide a valid current password.'
     );
@@ -77,8 +78,8 @@ describe('profile page', () => {
     const newPassword = driver.wait(
       until.elementLocated(By.id('formNewPassword'))
     );
-    currentPassword.sendKeys('password');
-    newPassword.sendKeys('password1');
+    await currentPassword.sendKeys('password');
+    await newPassword.sendKeys('password1');
     expect(await currentPassword.getAttribute('value')).toEqual('password');
     expect(await newPassword.getAttribute('value')).toEqual('password1');
     await driver.findElement(By.id('updatePasswordButton')).click();
@@ -99,8 +100,8 @@ describe('profile page', () => {
     const newPassword = driver.wait(
       until.elementLocated(By.id('formNewPassword'))
     );
-    currentPassword.sendKeys('pass');
-    newPassword.sendKeys('password1');
+    await currentPassword.sendKeys('pass');
+    await newPassword.sendKeys('password1');
     await driver.findElement(By.id('updatePasswordButton')).click();
     const danger = driver.wait(
       until.elementLocated(By.className('alert-danger'))

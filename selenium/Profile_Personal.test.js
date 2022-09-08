@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
@@ -77,12 +78,12 @@ describe('profile page', () => {
       expect(await feedback.getText()).toEqual('');
       expect(await feedback.isDisplayed()).toBeFalsy();
     }
-    driver.findElement(By.id('formFirstName')).clear();
-    driver.findElement(By.id('formLastName')).clear();
-    driver.findElement(By.id('formCity')).clear();
-    driver.findElement(By.id('formState')).clear();
-    driver.findElement(By.id('formZip')).clear();
-    driver.findElement(By.id('savePersonalInformationButton')).click();
+    await driver.findElement(By.id('formFirstName')).clear();
+    await driver.findElement(By.id('formLastName')).clear();
+    await driver.findElement(By.id('formCity')).clear();
+    await driver.findElement(By.id('formState')).clear();
+    await driver.findElement(By.id('formZip')).clear();
+    await driver.findElement(By.id('savePersonalInformationButton')).click();
     expect(await feedbacks[0].getText()).toEqual(
       'Please provide a valid first name.'
     );
@@ -116,13 +117,15 @@ describe('profile page', () => {
     let state = driver.wait(until.elementLocated(By.id('formState')));
     let zip = driver.wait(until.elementLocated(By.id('formZip')));
     test.waitUntilInputFilled(By.id('formFirstName'));
-    firstName.sendKeys('0');
-    lastName.sendKeys('0');
-    city.sendKeys('0');
-    state.sendKeys('0');
-    zip.sendKeys('0');
+    await firstName.sendKeys('0');
+    await lastName.sendKeys('0');
+    await city.sendKeys('0');
+    await state.sendKeys('0');
+    await zip.sendKeys('0');
     await checkFields(firstName, lastName, city, state, zip);
-    await driver.findElement(By.id('savePersonalInformationButton')).click();
+    await await driver
+      .findElement(By.id('savePersonalInformationButton'))
+      .click();
     const success = driver.wait(
       until.elementLocated(By.className('alert-success'))
     );

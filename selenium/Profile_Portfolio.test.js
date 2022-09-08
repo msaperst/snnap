@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const { By, until, Key } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
@@ -106,7 +107,7 @@ describe('profile page', () => {
 
   it('allows updating the portfolio values', async () => {
     let { experience, description, link } = fillOutPortfilio();
-    link.sendKeys('https://Link.com');
+    await link.sendKeys('https://Link.com');
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
     expect(await description.getAttribute('value')).toEqual('Description');
     expect(await link.getAttribute('value')).toEqual('https://Link.com');
@@ -119,7 +120,7 @@ describe('profile page', () => {
     expect(
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
-    driver.navigate().refresh();
+    await driver.navigate().refresh();
     experience = driver.wait(until.elementLocated(By.id('formExperience')));
     description = driver.wait(
       until.elementLocated(By.id('galleryDescription-0'))
@@ -172,7 +173,7 @@ describe('profile page', () => {
 
   it('requires a valid link when updating the portfolio values', async () => {
     const { experience, description, link } = fillOutPortfilio();
-    link.sendKeys('Link');
+    await link.sendKeys('Link');
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
     expect(await description.getAttribute('value')).toEqual('Description');
     expect(await link.getAttribute('value')).toEqual('Link');

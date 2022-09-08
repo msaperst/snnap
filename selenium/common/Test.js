@@ -8,6 +8,7 @@ const ApplicationForRequestToHire = require('../../api/components/applicationFor
 const Company = require('../../api/components/company/Company');
 
 class Test {
+  // eslint-disable-next-line no-useless-constructor
   constructor() {
     // do nothing
   }
@@ -28,7 +29,7 @@ class Test {
       .setChromeOptions(new Options().headless())
       .build();
     await driver.get(Test.getApp() + url);
-    await driver.manage().window().setSize(1200, 1800);
+    await driver.manage().window().setRect({ height: 1600, width: 1800 });
     this.driver = driver;
     return driver;
   }
@@ -200,16 +201,16 @@ class Test {
     );
   }
 
-  waitUntilNotPresent(locator) {
+  async waitUntilNotPresent(locator) {
     const { driver } = this;
-    driver.wait(() =>
+    await driver.wait(() =>
       driver.findElements(locator).then((elements) => elements.length === 0)
     );
   }
 
-  waitUntilInputFilled(locator) {
+  async waitUntilInputFilled(locator) {
     const { driver } = this;
-    driver.wait(() =>
+    await driver.wait(() =>
       driver
         .findElement(locator)
         .then(async (element) => (await element.getAttribute('value')) !== '')
