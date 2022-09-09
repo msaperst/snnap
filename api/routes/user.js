@@ -47,6 +47,16 @@ router.get('/hire-request-applications', async (req, res) => {
   });
 });
 
+router.get('/notifications', async (req, res) => {
+  await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
+    const user = User.auth(token);
+    const notifications = await Mysql.query(
+      `SELECT * FROM notifications WHERE to_user = ${await user.getId()};`
+    );
+    return res.send(await notifications);
+  });
+});
+
 const setAvatarValidation = [
   check('avatar', 'Avatar is required').not().isEmpty(),
 ];

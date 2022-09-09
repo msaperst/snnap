@@ -5,6 +5,7 @@ export const userService = {
   get,
   getHireRequests,
   getHireRequestApplications,
+  getNotifications,
   updateAccountInformation,
   updatePersonalInformation,
   uploadAvatar,
@@ -30,6 +31,11 @@ function getHireRequestApplications() {
   return fetch(`/api/user/hire-request-applications`, requestOptions).then(
     handleResponse
   );
+}
+
+function getNotifications() {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/user/notifications`, requestOptions).then(handleResponse);
 }
 
 function updateAccountInformation(email, number) {
