@@ -74,9 +74,9 @@ const ApplicationForRequestToHire = class {
           hireRequest.user
         }, ${db.escape(userId)}, ${db.escape(hireRequestId)}, ${db.escape(
           result.insertId
-        )}, '<a href="/profile/${db.escape(fromUser.username)}">${db.escape(
-          userName
-        )}</a> applied to your hire request');`
+        )}, ${db.escape(
+          `<a href='/profile/${fromUser.username}'>${userName}</a> applied to your hire request`
+        )});`
       );
     })();
     return newApplicationForRequestToHire;

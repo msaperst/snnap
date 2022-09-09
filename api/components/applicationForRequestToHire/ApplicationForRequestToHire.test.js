@@ -36,7 +36,10 @@ describe('application for request to hire', () => {
 
   it('sets the request to hire with basic values on creation', async () => {
     const spy = jest.spyOn(Mysql, 'query');
-    Mysql.query.mockResolvedValue({ insertId: 15 });
+    Mysql.query
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce([{ user: 1 }])
+      .mockResolvedValueOnce([{ username: 'max' }]);
     const applicationForRequestToHire = ApplicationForRequestToHire.create(
       1,
       5,
@@ -53,15 +56,33 @@ describe('application for request to hire', () => {
     );
     await expect(applicationForRequestToHire.getId()).resolves.toEqual(15);
     // verify the sql calls
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(
+    expect(spy).toHaveBeenCalledTimes(4);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
       "INSERT INTO hire_request_applications (hire_request_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM hire_requests WHERE id = 1;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(3, 'SELECT * FROM users WHERE id = 5;');
+    expect(spy).toHaveBeenNthCalledWith(
+      4,
+      "INSERT INTO notifications (to_user, from_user, hire_request, hire_request_application, notification) VALUES (1, 5, 1, 15, '<a href=\\'/profile/max\\'>Max Saperstone</a> applied to your hire request');"
     );
   });
 
   it('sets the request to hire with skills and equipment and portfolio on creation', async () => {
     const spy = jest.spyOn(Mysql, 'query');
-    Mysql.query.mockResolvedValue({ insertId: 15 });
+    Mysql.query
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce([{ user: 1 }])
+      .mockResolvedValueOnce([{ username: 'max' }]);
     const applicationForRequestToHire = ApplicationForRequestToHire.create(
       1,
       5,
@@ -87,7 +108,7 @@ describe('application for request to hire', () => {
     );
     await expect(applicationForRequestToHire.getId()).resolves.toEqual(15);
     // verify the sql calls
-    expect(spy).toHaveBeenCalledTimes(6);
+    expect(spy).toHaveBeenCalledTimes(9);
     expect(spy).toHaveBeenNthCalledWith(
       1,
       "INSERT INTO hire_request_applications (hire_request_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', 'website', NULL, 'fb', NULL);"
@@ -111,6 +132,15 @@ describe('application for request to hire', () => {
     expect(spy).toHaveBeenNthCalledWith(
       6,
       "INSERT INTO hire_request_applications_portfolios (hire_request_application, link, description) VALUES (15, 'link2', 'description2');"
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      7,
+      'SELECT * FROM hire_requests WHERE id = 1;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(8, 'SELECT * FROM users WHERE id = 5;');
+    expect(spy).toHaveBeenNthCalledWith(
+      9,
+      "INSERT INTO notifications (to_user, from_user, hire_request, hire_request_application, notification) VALUES (1, 5, 1, 15, '<a href=\\'/profile/max\\'>Max Saperstone</a> applied to your hire request');"
     );
   });
 
