@@ -6,6 +6,7 @@ export const userService = {
   getHireRequests,
   getHireRequestApplications,
   getNotifications,
+  markNotificationRead,
   updateAccountInformation,
   updatePersonalInformation,
   uploadAvatar,
@@ -36,6 +37,20 @@ function getHireRequestApplications() {
 function getNotifications() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/user/notifications`, requestOptions).then(handleResponse);
+}
+
+function markNotificationRead(notification) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ notification }),
+  };
+
+  return fetch(`/api/user/mark-notification-read`, requestOptions).then(
+    handleResponse
+  );
 }
 
 function updateAccountInformation(email, number) {

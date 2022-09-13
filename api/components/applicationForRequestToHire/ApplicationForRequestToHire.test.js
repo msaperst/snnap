@@ -67,7 +67,7 @@ describe('application for request to hire', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (1, 1, 15);'
+      "INSERT INTO notifications (to_user, what, hire_request, hire_request_application) VALUES (1, 'applied', 1, 15);"
     );
   });
 
@@ -138,7 +138,7 @@ describe('application for request to hire', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       8,
-      'INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (1, 1, 15);'
+      "INSERT INTO notifications (to_user, what, hire_request, hire_request_application) VALUES (1, 'applied', 1, 15);"
     );
   });
 

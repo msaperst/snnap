@@ -54,3 +54,7 @@
 .btn-secondary:focus, .btn-secondary:hover {
   color: #6A3CA5;
 }
+
+.container.skinny {
+  max-width: 600px;
+}

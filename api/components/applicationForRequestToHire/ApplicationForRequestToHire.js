@@ -65,9 +65,11 @@ const ApplicationForRequestToHire = class {
         )
       )[0];
       await Mysql.query(
-        `INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (${
+        `INSERT INTO notifications (to_user, what, hire_request, hire_request_application) VALUES (${
           hireRequest.user
-        }, ${db.escape(hireRequestId)}, ${db.escape(result.insertId)});`
+        }, 'applied', ${db.escape(hireRequestId)}, ${db.escape(
+          result.insertId
+        )});`
       );
     })();
     return newApplicationForRequestToHire;

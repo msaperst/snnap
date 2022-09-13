@@ -114,9 +114,9 @@ const RequestToHire = class {
       )
     )[0];
     await Mysql.query(
-      `INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (${db.escape(
+      `INSERT INTO notifications (to_user, what, hire_request, hire_request_application) VALUES (${db.escape(
         hireRequestApp.user_id
-      )}, ${this.id}, ${db.escape(hireRequestApplication)});`
+      )}, 'selected', ${this.id}, ${db.escape(hireRequestApplication)});`
     );
   }
 };

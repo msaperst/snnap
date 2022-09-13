@@ -12,7 +12,7 @@ describe('snnap menu', () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
 
-    userService.userService.getNotifications.mockResolvedValue('');
+    userService.userService.getNotifications.mockResolvedValue([]);
   });
 
   it('renders only logo when no user', () => {
@@ -263,8 +263,12 @@ describe('snnap menu', () => {
     expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications');
   });
 
-  it('shows notifications icon when no notifications', async () => {
-    userService.userService.getNotifications.mockResolvedValue([1, 2, 3]);
+  it('shows notifications icon when notifications', async () => {
+    userService.userService.getNotifications.mockResolvedValue([
+      { reviewed: true },
+      2,
+      { reviewed: 0 },
+    ]);
     let menu;
     await act(async () => {
       menu = render(<Menu currentUser={{ username: 'msaperst' }} />);
@@ -273,9 +277,9 @@ describe('snnap menu', () => {
     });
     const { container } = menu;
 
-    fireEvent.click(screen.getByText('msaperst'));
+    fireEvent.click(screen.getByText('msaperst 🔔'));
     const userNav =
       container.firstChild.firstChild.lastChild.firstChild.children[1];
-    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications3');
+    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications2');
   });
 });

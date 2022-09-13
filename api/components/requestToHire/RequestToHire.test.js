@@ -203,7 +203,7 @@ describe('request to hire', () => {
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (5, 4, 3);'
+      "INSERT INTO notifications (to_user, what, hire_request, hire_request_application) VALUES (5, 'selected', 4, 3);"
     );
   });
 });

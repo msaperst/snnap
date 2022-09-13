@@ -13,22 +13,27 @@ function Menu(props) {
   let menu = null;
   const { logout, currentUser } = props;
   const [notifications, setNotifications] = useState('');
+  const [bell, setBell] = useState('');
 
   useEffect(() => {
-    userService.getNotifications().then((n) => {
-      if (n.length > 0) {
-        const not = (
-          <span
-            className="btn-primary p-1 rounded-circle"
-            style={{ marginLeft: '10px' }}
-          >
-            {n.length}
-          </span>
-        );
-        setNotifications(not);
-      }
-    });
-  }, []);
+    if (currentUser) {
+      userService.getNotifications().then((n) => {
+        const unread = n.filter((val) => !val.reviewed);
+        if (unread.length > 0) {
+          const not = (
+            <span
+              className="btn-primary p-1 rounded-circle"
+              style={{ marginLeft: '10px' }}
+            >
+              {unread.length}
+            </span>
+          );
+          setNotifications(not);
+          setBell(' 🔔');
+        }
+      });
+    }
+  }, [currentUser]);
 
   if (currentUser) {
     collapse = <Navbar.Toggle aria-controls="responsive-navbar-nav" />;
@@ -52,7 +57,10 @@ function Menu(props) {
             {/*  My Work Request Applications */}
             {/* </NavDropdown.Item> */}
           </NavDropdown>
-          <NavDropdown title={currentUser.username} id="user-dropdown">
+          <NavDropdown
+            title={`${currentUser.username}${bell}`}
+            id="user-dropdown"
+          >
             <NavDropdown.Item href="/notifications">
               Notifications{notifications}
             </NavDropdown.Item>
