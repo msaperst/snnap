@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const { check } = require('express-validator');
+const db = require('mysql');
 const User = require('../components/user/User');
 const Mysql = require('../services/Mysql');
 const Common = require('./common');
@@ -51,11 +52,39 @@ router.get('/notifications', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
     const notifications = await Mysql.query(
-      `SELECT * FROM notifications WHERE to_user = ${await user.getId()};`
+      `SELECT * FROM notifications WHERE to_user = ${await user.getId()} ORDER BY timestamp desc;`
     );
     return res.send(await notifications);
   });
 });
+
+const markNotificationReadValidation = [
+  check('notification', 'Notification must be provided').isNumeric(),
+];
+
+router.post(
+  '/mark-notification-read',
+  markNotificationReadValidation,
+  async (req, res) => {
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
+    }
+    try {
+      User.auth(token);
+      await Mysql.query(
+        `UPDATE notifications SET reviewed = true WHERE id = ${db.escape(
+          req.body.notification
+        )};`
+      );
+      return res.status(200).send();
+    } catch (error) {
+      return res.status(422).send({
+        msg: error.message,
+      });
+    }
+  }
+);
 
 const setAvatarValidation = [
   check('avatar', 'Avatar is required').not().isEmpty(),

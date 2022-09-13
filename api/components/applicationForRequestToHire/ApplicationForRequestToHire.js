@@ -64,19 +64,10 @@ const ApplicationForRequestToHire = class {
           `SELECT * FROM hire_requests WHERE id = ${db.escape(hireRequestId)};`
         )
       )[0];
-      const fromUser = (
-        await Mysql.query(
-          `SELECT * FROM users WHERE id = ${db.escape(userId)};`
-        )
-      )[0];
       await Mysql.query(
-        `INSERT INTO notifications (to_user, from_user, hire_request, hire_request_application, notification) VALUES (${
+        `INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (${
           hireRequest.user
-        }, ${db.escape(userId)}, ${db.escape(hireRequestId)}, ${db.escape(
-          result.insertId
-        )}, ${db.escape(
-          `<a href='/profile/${fromUser.username}'>${userName}</a> applied to your hire request`
-        )});`
+        }, ${db.escape(hireRequestId)}, ${db.escape(result.insertId)});`
       );
     })();
     return newApplicationForRequestToHire;

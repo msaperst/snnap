@@ -56,7 +56,7 @@ describe('application for request to hire', () => {
     );
     await expect(applicationForRequestToHire.getId()).resolves.toEqual(15);
     // verify the sql calls
-    expect(spy).toHaveBeenCalledTimes(4);
+    expect(spy).toHaveBeenCalledTimes(3);
     expect(spy).toHaveBeenNthCalledWith(
       1,
       "INSERT INTO hire_request_applications (hire_request_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
@@ -65,10 +65,9 @@ describe('application for request to hire', () => {
       2,
       'SELECT * FROM hire_requests WHERE id = 1;'
     );
-    expect(spy).toHaveBeenNthCalledWith(3, 'SELECT * FROM users WHERE id = 5;');
     expect(spy).toHaveBeenNthCalledWith(
-      4,
-      "INSERT INTO notifications (to_user, from_user, hire_request, hire_request_application, notification) VALUES (1, 5, 1, 15, '<a href=\\'/profile/max\\'>Max Saperstone</a> applied to your hire request');"
+      3,
+      'INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (1, 1, 15);'
     );
   });
 
@@ -108,7 +107,7 @@ describe('application for request to hire', () => {
     );
     await expect(applicationForRequestToHire.getId()).resolves.toEqual(15);
     // verify the sql calls
-    expect(spy).toHaveBeenCalledTimes(9);
+    expect(spy).toHaveBeenCalledTimes(8);
     expect(spy).toHaveBeenNthCalledWith(
       1,
       "INSERT INTO hire_request_applications (hire_request_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', 'website', NULL, 'fb', NULL);"
@@ -137,10 +136,9 @@ describe('application for request to hire', () => {
       7,
       'SELECT * FROM hire_requests WHERE id = 1;'
     );
-    expect(spy).toHaveBeenNthCalledWith(8, 'SELECT * FROM users WHERE id = 5;');
     expect(spy).toHaveBeenNthCalledWith(
-      9,
-      "INSERT INTO notifications (to_user, from_user, hire_request, hire_request_application, notification) VALUES (1, 5, 1, 15, '<a href=\\'/profile/max\\'>Max Saperstone</a> applied to your hire request');"
+      8,
+      'INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (1, 1, 15);'
     );
   });
 

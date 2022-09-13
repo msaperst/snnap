@@ -187,13 +187,23 @@ describe('request to hire', () => {
 
   it('adds a selected application', async () => {
     const spy = jest.spyOn(Mysql, 'query');
-    Mysql.query.mockResolvedValue([]);
+    Mysql.query
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ user_id: 5 }]);
     const hireRequest = new RequestToHire(4);
     await hireRequest.selectApplication(3);
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledTimes(3);
     expect(spy).toHaveBeenNthCalledWith(
       1,
       'UPDATE hire_requests SET hire_requests.application_selected = 3, hire_requests.date_application_selected = CURRENT_TIMESTAMP WHERE hire_requests.id = 4;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM hire_request_applications WHERE id = 3;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      3,
+      'INSERT INTO notifications (to_user, hire_request, hire_request_application) VALUES (5, 4, 3);'
     );
   });
 });
