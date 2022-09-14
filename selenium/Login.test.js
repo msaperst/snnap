@@ -79,7 +79,7 @@ describe('log in page', () => {
   });
 
   it('allows you to navigate to the register page', async () => {
-    await driver.findElement(By.id('registerButton')).click();
+    await driver.findElement(By.linkText('Sign Up')).click();
     await driver.wait(until.elementLocated(By.id('formFirstname')));
     const header = driver.findElement(By.css('h2'));
     expect(await header.getText()).toEqual('Register');

@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Form,
+  Row,
+  Spinner,
+} from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
 
@@ -47,66 +55,62 @@ function LoginPage() {
   };
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <Row className="mb-3">
-        <SnnapFormInput size={6} name="Username" />
-        <SnnapFormInput size={6} name="Password" type="password" />
-      </Row>
-      <Row className="mb-3">
-        <Col md={5}>
-          <Form.Check id="rememberMe" label="Remember Me" />
-        </Col>
-        <Form.Group as={Col}>
-          <Button
-            id="loginButton"
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting && (
-              <Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
+    <Container className="skinny">
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <h2>Login</h2>
+        <Row className="mb-3">
+          <SnnapFormInput name="Username" />
+        </Row>
+        <Row className="mb-3">
+          <SnnapFormInput name="Password" type="password" />
+        </Row>
+        <Row className="mb-3">
+          <Col md={5}>
+            <Form.Check id="rememberMe" label="Remember Me" defaultChecked />
+          </Col>
+          <Col md={7} className="text-md-end">
+            <Link to="/passwordReset">Forgot Password</Link>
+          </Col>
+        </Row>
+        <Row className="mb-3">
+          <Form.Group as={Col}>
+            <Button
+              id="loginButton"
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting && (
+                <Spinner
+                  as="span"
+                  animation="grow"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              )}{' '}
+              Login
+            </Button>
+          </Form.Group>
+          <Col md={8}>
+            {status && (
+              <Alert
+                variant="danger"
+                dismissible
+                onClose={() => setStatus(null)}
+              >
+                {status}
+              </Alert>
             )}
-            Login
-          </Button>
-        </Form.Group>
-        <Col className="text-center">
-          <Button
-            id="forgotPasswordButton"
-            type="button"
-            variant="primary"
-            href="/passwordReset"
-          >
-            Forgot Password
-          </Button>
-        </Col>
-        <Col className="text-right">
-          <Button
-            id="registerButton"
-            type="button"
-            variant="primary"
-            href="/register"
-          >
-            Register
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          {status && (
-            <Alert variant="danger" dismissible onClose={() => setStatus(null)}>
-              {status}
-            </Alert>
-          )}
-        </Col>
-      </Row>
-    </Form>
+          </Col>
+        </Row>
+        <Row className="mt-md-5 text-center">
+          <Col>
+            Don&apos;t have an account, <Link to="/register">Sign Up</Link>
+          </Col>
+        </Row>
+      </Form>
+    </Container>
   );
 }
 
