@@ -20,7 +20,11 @@ router.get('/get/:user', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const userInfo =
       await Mysql.query(`SELECT id, username, first_name, last_name, avatar
-                                         FROM users WHERE id = '${req.params.user}' OR username = '${req.params.user}';`);
+                                         FROM users WHERE id = '${db.escape(
+                                           req.params.user
+                                         )}' OR username = '${db.escape(
+        req.params.user
+      )}';`);
     if (userInfo[0] && userInfo[0].id) {
       return res.send(userInfo[0]);
     }
