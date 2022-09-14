@@ -1,16 +1,18 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
+import { act } from 'react-dom/test-utils';
 import Menu from './Menu';
 
-Enzyme.configure({ adapter: new Adapter() });
+jest.mock('../../services/user.service');
+const userService = require('../../services/user.service');
 
 describe('snnap menu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+
+    userService.userService.getNotifications.mockResolvedValue([]);
   });
 
   it('renders only logo when no user', () => {
@@ -248,5 +250,36 @@ describe('snnap menu', () => {
     fireEvent.click(screen.getByText('msaperst'));
     fireEvent.click(screen.getByText('Logout'));
     expect(x).toEqual(1);
+  });
+
+  it('shows no notification icon when no notifications', () => {
+    userService.userService.getNotifications.mockResolvedValue([]);
+    const { container } = render(
+      <Menu currentUser={{ username: 'msaperst' }} />
+    );
+    fireEvent.click(screen.getByText('msaperst'));
+    const userNav =
+      container.firstChild.firstChild.lastChild.firstChild.children[1];
+    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications');
+  });
+
+  it('shows notifications icon when notifications', async () => {
+    userService.userService.getNotifications.mockResolvedValue([
+      { reviewed: true },
+      2,
+      { reviewed: 0 },
+    ]);
+    let menu;
+    await act(async () => {
+      menu = render(<Menu currentUser={{ username: 'msaperst' }} />);
+      const { container } = menu;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = menu;
+
+    fireEvent.click(screen.getByText('msaperst 🔔'));
+    const userNav =
+      container.firstChild.firstChild.lastChild.firstChild.children[1];
+    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications2');
   });
 });

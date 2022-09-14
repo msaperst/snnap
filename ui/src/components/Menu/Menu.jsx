@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
@@ -6,11 +6,34 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import './Menu.css';
 import snnapLogo from './SNNAP.png';
 import NewRequestToHire from '../NewRequestToHire/NewRequestToHire';
+import { userService } from '../../services/user.service';
 
 function Menu(props) {
   let collapse = null;
   let menu = null;
   const { logout, currentUser } = props;
+  const [notifications, setNotifications] = useState('');
+  const [bell, setBell] = useState('');
+
+  useEffect(() => {
+    if (currentUser) {
+      userService.getNotifications().then((n) => {
+        const unread = n.filter((val) => !val.reviewed);
+        if (unread.length > 0) {
+          const not = (
+            <span
+              className="btn-primary p-1 rounded-circle"
+              style={{ marginLeft: '10px' }}
+            >
+              {unread.length}
+            </span>
+          );
+          setNotifications(not);
+          setBell(' 🔔');
+        }
+      });
+    }
+  }, [currentUser]);
 
   if (currentUser) {
     collapse = <Navbar.Toggle aria-controls="responsive-navbar-nav" />;
@@ -34,9 +57,12 @@ function Menu(props) {
             {/*  My Work Request Applications */}
             {/* </NavDropdown.Item> */}
           </NavDropdown>
-          <NavDropdown title={currentUser.username} id="user-dropdown">
+          <NavDropdown
+            title={`${currentUser.username}${bell}`}
+            id="user-dropdown"
+          >
             <NavDropdown.Item href="/notifications">
-              Notifications
+              Notifications{notifications}
             </NavDropdown.Item>
             <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
             <NavDropdown.Divider />

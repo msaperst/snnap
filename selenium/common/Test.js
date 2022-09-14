@@ -201,6 +201,11 @@ class Test {
     );
   }
 
+  static async chooseApplicationForRequestToHire(hireRequestId, applicationId) {
+    const hireRequest = new RequestToHire(hireRequestId);
+    await hireRequest.selectApplication(applicationId);
+  }
+
   async waitUntilNotPresent(locator) {
     const { driver } = this;
     await driver.wait(() =>

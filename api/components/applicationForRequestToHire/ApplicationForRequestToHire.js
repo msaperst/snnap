@@ -58,6 +58,19 @@ const ApplicationForRequestToHire = class {
         }
       });
       newApplicationForRequestToHire.id = result.insertId;
+      // set the notification
+      const hireRequest = (
+        await Mysql.query(
+          `SELECT * FROM hire_requests WHERE id = ${db.escape(hireRequestId)};`
+        )
+      )[0];
+      await Mysql.query(
+        `INSERT INTO notifications (to_user, what, hire_request, hire_request_application) VALUES (${
+          hireRequest.user
+        }, 'applied', ${db.escape(hireRequestId)}, ${db.escape(
+          result.insertId
+        )});`
+      );
     })();
     return newApplicationForRequestToHire;
   }

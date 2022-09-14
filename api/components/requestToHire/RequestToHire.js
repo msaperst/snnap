@@ -105,6 +105,19 @@ const RequestToHire = class {
         this.id
       };`
     );
+    // set the notification
+    const hireRequestApp = (
+      await Mysql.query(
+        `SELECT * FROM hire_request_applications WHERE id = ${db.escape(
+          hireRequestApplication
+        )};`
+      )
+    )[0];
+    await Mysql.query(
+      `INSERT INTO notifications (to_user, what, hire_request, hire_request_application) VALUES (${db.escape(
+        hireRequestApp.user_id
+      )}, 'selected', ${this.id}, ${db.escape(hireRequestApplication)});`
+    );
   }
 };
 
