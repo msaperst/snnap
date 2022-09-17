@@ -17,30 +17,17 @@ export const authenticationService = {
   },
 };
 
-function register(
-  firstName,
-  lastName,
-  username,
-  email,
-  number,
-  password,
-  city,
-  state,
-  zip
-) {
+function register(firstName, lastName, location, email, username, password) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       firstName,
       lastName,
-      username,
+      location,
       email,
-      number,
+      username,
       password,
-      city,
-      state,
-      zip,
     }),
   };
 

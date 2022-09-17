@@ -11,6 +11,7 @@ import {
   hasSaveInformation,
   noModal,
   openModal,
+  selectFairfax,
 } from '../CommonTestComponents';
 
 jest.mock('../../services/job.service');
@@ -19,6 +20,7 @@ const jobService = require('../../services/job.service');
 describe('new request to hire form', () => {
   jest.setTimeout(10000);
   let modal;
+  let getText;
   const assignMock = jest.fn();
 
   delete window.location;
@@ -40,7 +42,8 @@ describe('new request to hire form', () => {
       { id: 5, name: 'Retouch' },
     ]);
 
-    const { container } = render(<NewRequestToHire />);
+    const { container, getByText } = render(<NewRequestToHire />);
+    getText = getByText;
     modal = await openModal(
       container,
       'New Request to Hire',
@@ -118,7 +121,7 @@ describe('new request to hire form', () => {
       'geoapify-close-button'
     );
     expect(locationInput.getAttribute('id')).toBeNull();
-    expect(locationInput.getAttribute('placeholder')).toEqual('Location');
+    expect(locationInput.getAttribute('placeholder')).toEqual('City');
     expect(locationInput.getAttribute('disabled')).toBeNull();
     expect(locationInput.getAttribute('type')).toEqual('text');
     expect(locationInput.getAttribute('value')).toBeNull();
@@ -217,13 +220,23 @@ describe('new request to hire form', () => {
     expect(spy).toBeCalledTimes(0);
   });
 
-  function fillOutForm(modalForm) {
+  async function fillOutForm(modalForm, location = true) {
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
     });
-    fireEvent.change(modalForm.children[1].firstChild.firstChild.children[1], {
-      target: { value: 'Fairfax, VA' },
-    });
+    if (location) {
+      const selectItem = selectFairfax(getText);
+      await selectItem(modalForm.children[1].firstChild.firstChild.children[1]);
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 500));
+    } else {
+      fireEvent.change(
+        modalForm.children[1].firstChild.firstChild.children[1],
+        {
+          target: { value: 'fairfax' },
+        }
+      );
+    }
     fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
       target: { value: '10/13/2030' },
     });
@@ -236,19 +249,36 @@ describe('new request to hire form', () => {
     fireEvent.change(modalForm.children[3].lastChild.firstChild.children[1], {
       target: { value: '50' },
     });
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((r) => setTimeout(r, 500));
   }
+
+  it('has an alert when no location is properly selected', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
+    jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    await fillOutForm(modalForm, false);
+    // hack to remove location because this is blocking our submission
+    modalForm.children[1].remove();
+    await hasAnError(modal, 'Please provide a valid city.');
+    expect(spy).toHaveBeenCalledTimes(0);
+  });
 
   it('has an alert on failure of a submission', async () => {
     const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
     jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fillOutForm(modalForm);
+    await fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await hasAnError(modal);
     expect(spy).toHaveBeenCalledWith(
       '7',
-      undefined,
+      {
+        lat: 38.8462236,
+        loc: 'Fairfax, VA, United States of America',
+        lon: -77.3063733,
+      },
       'Some Deets',
       '50',
       '8',
@@ -265,7 +295,7 @@ describe('new request to hire form', () => {
   it('is able to close an alert after failure', async () => {
     jobService.jobService.newRequestToHire.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fillOutForm(modalForm);
+    await fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await closeAlert(modal);
@@ -275,13 +305,17 @@ describe('new request to hire form', () => {
     const spy = jest.spyOn(jobService.jobService, 'newRequestToHire');
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fillOutForm(modalForm);
+    await fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await hasASuccess(modal, 'New Request to Hire Submitted');
     expect(spy).toHaveBeenCalledWith(
       '7',
-      undefined,
+      {
+        loc: 'Fairfax, VA, United States of America',
+        lat: 38.8462236,
+        lon: -77.3063733,
+      },
       'Some Deets',
       '50',
       '8',
@@ -298,7 +332,7 @@ describe('new request to hire form', () => {
   it('is able to close an alert after success', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fillOutForm(modalForm);
+    await fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await closeAlert(modal);
@@ -309,7 +343,7 @@ describe('new request to hire form', () => {
   it('removes the success alert after 5 seconds', async () => {
     jobService.jobService.newRequestToHire.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
-    fillOutForm(modalForm);
+    await fillOutForm(modalForm);
     // hack to remove location because this is blocking our submission
     modalForm.children[1].remove();
     await noModal(modal);

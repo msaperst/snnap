@@ -28,7 +28,7 @@ function SnnapFormLocationInput(props) {
     }
   });
 
-  const { size, name, onChange } = props;
+  const { value, size, name, onChange } = props;
   if (!name) {
     return null;
   }
@@ -45,6 +45,8 @@ function SnnapFormLocationInput(props) {
         <FloatingLabel controlId={`form${safeName}`} label={name}>
           <GeoapifyGeocoderAutocomplete
             placeholder={name}
+            type="city"
+            value={value}
             skipIcons
             placeSelect={change}
           />

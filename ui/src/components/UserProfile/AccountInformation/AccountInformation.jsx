@@ -1,4 +1,4 @@
-import { Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import EditAvatar from '../EditAvatar/EditAvatar';
@@ -16,7 +16,7 @@ function AccountInformation(props) {
 
   useEffect(() => {
     if (user) {
-      setFormData({ Email: user.email, Number: user.number });
+      setFormData({ Email: user.email });
     }
   }, [user]);
 
@@ -31,23 +31,21 @@ function AccountInformation(props) {
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
-      userService
-        .updateAccountInformation(formData.Email, formData.Number)
-        .then(
-          () => {
-            commonFormComponents.setBasicSuccess(
-              setIsSubmitting,
-              setStatus,
-              setUpdate,
-              setValidated,
-              'Account Information Updated'
-            );
-          },
-          (error) => {
-            setIsSubmitting(false);
-            setStatus(error.toString());
-          }
-        );
+      userService.updateAccountInformation(formData.Email).then(
+        () => {
+          commonFormComponents.setBasicSuccess(
+            setIsSubmitting,
+            setStatus,
+            setUpdate,
+            setValidated,
+            'Account Information Updated'
+          );
+        },
+        (error) => {
+          setIsSubmitting(false);
+          setStatus(error.toString());
+        }
+      );
     }
   };
 
@@ -60,26 +58,18 @@ function AccountInformation(props) {
       <h3>Account Information</h3>
       <Row className="mb-3">
         <EditAvatar user={user} />
-        <SnnapFormInput
-          name="Username"
-          size={10}
-          disabled
-          value={user.username}
-        />
-      </Row>
-      <Row className="mb-3">
-        <SnnapFormInput
-          name="Email"
-          size={6}
-          value={user.email}
-          onChange={updateForm}
-        />
-        <SnnapFormInput
-          name="Number"
-          size={6}
-          value={user.number}
-          onChange={updateForm}
-        />
+        <Col md={9}>
+          <Row className="mb-3">
+            <SnnapFormInput name="Username" disabled value={user.username} />
+          </Row>
+          <Row>
+            <SnnapFormInput
+              name="Email"
+              value={user.email}
+              onChange={updateForm}
+            />
+          </Row>
+        </Col>
       </Row>
       <Submit
         buttonText="Save Account Information"

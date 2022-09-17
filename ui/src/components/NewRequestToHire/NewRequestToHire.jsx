@@ -47,35 +47,47 @@ class NewRequestToHire extends React.Component {
     const form = document.querySelector('#newRequestToHireForm');
     if (form.checkValidity() === true) {
       const { formData } = this.state;
-      this.setState({ isSubmitting: true });
-      jobService
-        .newRequestToHire(
-          formData['Job Type'],
-          formData.Location,
-          formData['Job Details'],
-          formData.Pay,
-          formData.Duration,
-          formData.DurationRange,
-          formData.Date,
-          formData.Time,
-          formData['Equipment Needed'],
-          formData['Skills Needed']
-        )
-        .then(
-          () => {
-            commonFormComponents.setRedrawSuccess(
-              (state) => this.setState(state),
-              'New Request to Hire Submitted'
-            );
-          },
-          (error) => {
-            this.setState({
-              status: error.toString(),
-              update: null,
-              isSubmitting: false,
-            });
-          }
-        );
+      if (
+        formData.City &&
+        formData.City.properties &&
+        formData.City.properties.formatted
+      ) {
+        this.setState({ isSubmitting: true });
+        jobService
+          .newRequestToHire(
+            formData['Job Type'],
+            {
+              lat: formData.City.properties.lat,
+              lon: formData.City.properties.lon,
+              loc: formData.City.properties.formatted,
+            },
+            formData['Job Details'],
+            formData.Pay,
+            formData.Duration,
+            formData.DurationRange,
+            formData.Date,
+            formData.Time,
+            formData['Equipment Needed'],
+            formData['Skills Needed']
+          )
+          .then(
+            () => {
+              commonFormComponents.setRedrawSuccess(
+                (state) => this.setState(state),
+                'New Request to Hire Submitted'
+              );
+            },
+            (error) => {
+              this.setState({
+                status: error.toString(),
+                update: null,
+                isSubmitting: false,
+              });
+            }
+          );
+      } else {
+        this.setState({ status: 'Please provide a valid city.' });
+      }
     }
     this.setState({ validated: true });
   }
@@ -132,8 +144,7 @@ class NewRequestToHire extends React.Component {
               </Row>
               <Row className="mb-3">
                 <SnnapFormLocationInput
-                  name="Location"
-                  type="text"
+                  name="City"
                   size={8}
                   onChange={this.updateForm}
                 />

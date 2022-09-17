@@ -7,6 +7,12 @@ jest.mock('../../services/Mysql');
 const Mysql = require('../../services/Mysql');
 
 describe('User', () => {
+  const location = {
+    loc: 'Fairfax, VA, United States of America',
+    lat: 5,
+    lon: -71.2345,
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -171,27 +177,24 @@ describe('User', () => {
     const user = User.register(
       'Bob',
       'Robert',
-      'Robert',
+      location,
       `bobert@example.org`,
-      'Number',
-      'password',
-      'City',
-      'State',
-      'Zip'
+      'Bobert',
+      'password'
     );
     await expect(user.getToken()).resolves.toEqual(undefined);
     await expect(user.getId()).resolves.toEqual(15);
-    await expect(user.getUsername()).resolves.toEqual('Robert');
+    await expect(user.getUsername()).resolves.toEqual('Bobert');
     await expect(user.getInfo()).resolves.toEqual({
-      city: 'City',
+      avatar: undefined,
       email: 'bobert@example.org',
       firstName: 'Bob',
       id: 15,
       lastName: 'Robert',
-      number: 'Number',
-      state: 'State',
-      username: 'Robert',
-      zip: 'Zip',
+      username: 'Bobert',
+      lat: 5,
+      loc: 'Fairfax, VA, United States of America',
+      lon: -71.2345,
     });
   });
 
