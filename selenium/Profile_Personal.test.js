@@ -49,22 +49,10 @@ describe('profile page', () => {
   it('displays the city', async () => {
     const city = driver.wait(until.elementLocated(By.id('formCity')));
     test.waitUntilInputFilled(By.id('formCity'));
-    expect(await city.getAttribute('value')).toEqual('City');
+    expect(await city.getAttribute('value')).toEqual(
+      'Fairfax, VA, United States of America'
+    );
     expect(await city.getAttribute('disabled')).toBeNull();
-  });
-
-  it('displays the state', async () => {
-    const state = driver.wait(until.elementLocated(By.id('formState')));
-    test.waitUntilInputFilled(By.id('formState'));
-    expect(await state.getAttribute('value')).toEqual('State');
-    expect(await state.getAttribute('disabled')).toBeNull();
-  });
-
-  it('displays the zip', async () => {
-    const zip = driver.wait(until.elementLocated(By.id('formZip')));
-    test.waitUntilInputFilled(By.id('formZip'));
-    expect(await zip.getAttribute('value')).toEqual('Zip');
-    expect(await zip.getAttribute('disabled')).toBeNull();
   });
 
   it('shows error when you update profile blank information', async () => {
@@ -73,7 +61,7 @@ describe('profile page', () => {
     const feedbacks = await profile.findElements(
       By.className('invalid-feedback')
     );
-    expect(feedbacks).toHaveLength(5);
+    expect(feedbacks).toHaveLength(3);
     for (const feedback of feedbacks) {
       expect(await feedback.getText()).toEqual('');
       expect(await feedback.isDisplayed()).toBeFalsy();
@@ -81,8 +69,6 @@ describe('profile page', () => {
     await driver.findElement(By.id('formFirstName')).clear();
     await driver.findElement(By.id('formLastName')).clear();
     await driver.findElement(By.id('formCity')).clear();
-    await driver.findElement(By.id('formState')).clear();
-    await driver.findElement(By.id('formZip')).clear();
     await driver.findElement(By.id('savePersonalInformationButton')).click();
     expect(await feedbacks[0].getText()).toEqual(
       'Please provide a valid first name.'
@@ -93,40 +79,29 @@ describe('profile page', () => {
     expect(await feedbacks[2].getText()).toEqual(
       'Please provide a valid city.'
     );
-    expect(await feedbacks[3].getText()).toEqual(
-      'Please provide a valid state.'
-    );
-    expect(await feedbacks[4].getText()).toEqual('Please provide a valid zip.');
     for (const feedback of feedbacks) {
       expect(await feedback.isDisplayed()).toBeTruthy();
     }
   });
 
-  async function checkFields(firstName, lastName, city, state, zip) {
+  async function checkFields(firstName, lastName) {
     expect(await firstName.getAttribute('value')).toEqual('Test0');
     expect(await lastName.getAttribute('value')).toEqual('User0');
-    expect(await city.getAttribute('value')).toEqual('City0');
-    expect(await state.getAttribute('value')).toEqual('State0');
-    expect(await zip.getAttribute('value')).toEqual('Zip0');
   }
 
   it('allows updating the personal values', async () => {
-    let firstName = driver.wait(until.elementLocated(By.id('formFirstName')));
-    let lastName = driver.wait(until.elementLocated(By.id('formLastName')));
-    let city = driver.wait(until.elementLocated(By.id('formCity')));
-    let state = driver.wait(until.elementLocated(By.id('formState')));
-    let zip = driver.wait(until.elementLocated(By.id('formZip')));
-    test.waitUntilInputFilled(By.id('formFirstName'));
+    let firstName = await driver.wait(
+      until.elementLocated(By.id('formFirstName'))
+    );
+    let lastName = await driver.wait(
+      until.elementLocated(By.id('formLastName'))
+    );
+    await test.waitUntilInputFilled(By.id('formFirstName'));
     await firstName.sendKeys('0');
     await lastName.sendKeys('0');
-    await city.sendKeys('0');
-    await state.sendKeys('0');
-    await zip.sendKeys('0');
-    await checkFields(firstName, lastName, city, state, zip);
-    await await driver
-      .findElement(By.id('savePersonalInformationButton'))
-      .click();
-    const success = driver.wait(
+    await checkFields(firstName, lastName);
+    await driver.findElement(By.id('savePersonalInformationButton')).click();
+    const success = await driver.wait(
       until.elementLocated(By.className('alert-success'))
     );
     expect(await success.getText()).toEqual('Personal Information Updated');
@@ -134,12 +109,31 @@ describe('profile page', () => {
     expect(
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
-    driver.navigate().refresh();
-    firstName = driver.wait(until.elementLocated(By.id('formFirstName')));
-    lastName = driver.wait(until.elementLocated(By.id('formLastName')));
-    city = driver.wait(until.elementLocated(By.id('formCity')));
-    state = driver.wait(until.elementLocated(By.id('formState')));
-    zip = driver.wait(until.elementLocated(By.id('formZip')));
-    await checkFields(firstName, lastName, city, state, zip);
+    await driver.navigate().refresh();
+    firstName = await driver.wait(until.elementLocated(By.id('formFirstName')));
+    lastName = await driver.wait(until.elementLocated(By.id('formLastName')));
+    await checkFields(firstName, lastName);
+  });
+
+  it('allows updating the city', async () => {
+    let city = await driver.wait(until.elementLocated(By.id('formCity')));
+    await test.waitUntilInputFilled(By.id('formCity'));
+    await city.clear();
+    await city.sendKeys('Chantilly');
+    const location = await driver.wait(
+      until.elementLocated(By.xpath('//*[text()="Chantilly"]'))
+    );
+    await location.click();
+    expect(await city.getAttribute('value')).toEqual(
+      'Chantilly, VA, United States of America'
+    );
+    await Test.sleep(1000);
+    await driver.findElement(By.id('savePersonalInformationButton')).click();
+    await driver.wait(until.elementLocated(By.className('alert-success')));
+    await driver.navigate().refresh();
+    city = await driver.wait(until.elementLocated(By.id('formCity')));
+    expect(await city.getAttribute('value')).toEqual(
+      'Chantilly, VA, United States of America'
+    );
   });
 });

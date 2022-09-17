@@ -12,6 +12,7 @@ function SnnapFormLocationInput(props) {
     if (input) {
       // reformat the input
       input.className = 'form-control';
+      input.id = `form${safeName}`;
       input.setAttribute('required', true);
       // move the input
       const close = input.nextSibling;
