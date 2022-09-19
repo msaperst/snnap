@@ -19,7 +19,7 @@ describe('snnap menu', () => {
     const { container } = render(<Menu />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass(
-      'navbar navbar-expand-lg navbar-dark bg-dark'
+      'navbar navbar-expand-lg navbar-dark'
     );
     expect(container.firstChild.children).toHaveLength(1);
     expect(container.firstChild.firstChild).toHaveClass('container');
@@ -44,7 +44,7 @@ describe('snnap menu', () => {
     );
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass(
-      'navbar navbar-expand-lg navbar-dark bg-dark'
+      'navbar navbar-expand-lg navbar-dark'
     );
     expect(container.firstChild.children).toHaveLength(1);
     expect(container.firstChild.firstChild).toHaveClass('container');
