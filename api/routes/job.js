@@ -10,7 +10,7 @@ const Common = require('./common');
 
 const newRequestToHireValidation = [
   check('type', 'Please provide a valid job type.').isNumeric(),
-  check('location', 'Please provide a valid location.').not().isEmpty(),
+  check('location', 'Please provide a valid city.').not().isEmpty(),
   check('details', 'Please provide a valid job details.').not().isEmpty(),
   check('pay', 'Please provide a valid pay.').isNumeric(),
   check('duration', 'Please provide a valid duration.').isNumeric(),
@@ -35,7 +35,7 @@ router.post(
       RequestToHire.create(
         await user.getId(),
         req.body.type,
-        req.body.location.properties.formatted,
+        req.body.location,
         req.body.details,
         req.body.pay,
         req.body.duration,

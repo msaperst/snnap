@@ -114,7 +114,6 @@ const updateAccountInformationValidation = [
   check('email', 'Please include a valid email')
     .isEmail()
     .normalizeEmail({ gmail_remove_dots: true }),
-  check('number', 'Number is required').not().isEmpty(),
 ];
 
 router.post(
@@ -140,9 +139,7 @@ router.post(
 const updatePersonalInformationValidation = [
   check('firstName', 'First name is required').not().isEmpty(),
   check('lastName', 'Last name is required').not().isEmpty(),
-  check('city', 'City is required').not().isEmpty(),
-  check('state', 'State is required').not().isEmpty(),
-  check('zip', 'Zip is required').not().isEmpty(),
+  check('location', 'City is required').not().isEmpty(),
 ];
 
 router.post(
@@ -158,9 +155,7 @@ router.post(
       await user.setPersonalInformation(
         req.body.firstName,
         req.body.lastName,
-        req.body.city,
-        req.body.state,
-        req.body.zip
+        req.body.location
       );
       return res.status(200).send();
     } catch (error) {

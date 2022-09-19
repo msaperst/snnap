@@ -96,34 +96,23 @@ describe('profile page', () => {
     expect(await email.getAttribute('disabled')).toBeNull();
   });
 
-  it('displays the number', async () => {
-    const number = driver.wait(until.elementLocated(By.id('formNumber')));
-    test.waitUntilInputFilled(By.id('formNumber'));
-    expect(await number.getAttribute('value')).toEqual('Number');
-    expect(await number.getAttribute('disabled')).toBeNull();
-  });
-
   it('shows error when you update with blank information', async () => {
     driver.wait(until.elementLocated(By.css('h2')));
     const accountInfo = (await driver.findElements(By.css('form')))[0];
     const feedback = await accountInfo.findElements(
       By.className('invalid-feedback')
     );
-    expect(feedback).toHaveLength(3);
+    expect(feedback).toHaveLength(2);
     for (let i = 0; i < feedback.length; i++) {
       expect(await feedback[i].getText()).toEqual('');
       expect(await feedback[i].isDisplayed()).toBeFalsy();
     }
     driver.findElement(By.id('formEmail')).clear();
-    driver.findElement(By.id('formNumber')).clear();
     driver.findElement(By.id('saveAccountInformationButton')).click();
     expect(await feedback[0].getText()).toEqual('');
     expect(await feedback[0].isDisplayed()).toBeFalsy();
     expect(await feedback[1].getText()).toEqual(
       'Please provide a valid email.'
-    );
-    expect(await feedback[2].getText()).toEqual(
-      'Please provide a valid number.'
     );
     for (let i = 1; i < feedback.length; i++) {
       expect(await feedback[i].isDisplayed()).toBeTruthy();
@@ -203,17 +192,6 @@ describe('profile page', () => {
     } finally {
       await test1.removeUser();
     }
-  });
-
-  it('allows updating the number', async () => {
-    let number = driver.wait(until.elementLocated(By.id('formNumber')));
-    await test.waitUntilInputFilled(By.id('formNumber'));
-    await number.sendKeys('o');
-    expect(await number.getAttribute('value')).toEqual('Numbero');
-    await updateAccountInfo();
-    number = await driver.wait(until.elementLocated(By.id('formNumber')));
-    await test.waitUntilInputFilled(By.id('formNumber'));
-    expect(await number.getAttribute('value')).toEqual('Numbero');
   });
 
   it('account information error message goes away once success is had', async () => {

@@ -6,17 +6,7 @@ const Mysql = require('../../services/Mysql');
 const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-jwt-token';
 
 const User = class {
-  static register(
-    firstName,
-    lastName,
-    username,
-    email,
-    number,
-    password,
-    city,
-    state,
-    zip
-  ) {
+  static register(firstName, lastName, location, email, username, password) {
     const newUser = new User();
     newUser.instancePromise = (async () => {
       let exists = await Mysql.query(
@@ -39,22 +29,20 @@ const User = class {
       }
       const hash = await bcrypt.hash(password, 10);
       const result = await Mysql.query(
-        `INSERT INTO users (first_name, last_name, username, email, number, password, city, state, zip)
+        `INSERT INTO users (first_name, last_name, email, username, password, loc, lat, lon)
          VALUES (${db.escape(firstName)}, ${db.escape(lastName)},
-                 ${db.escape(username)}, ${db.escape(email)},
-                 ${db.escape(number)}, ${db.escape(hash)},
-                 ${db.escape(city)}, ${db.escape(state)},
-                 ${db.escape(zip)})`
+                 ${db.escape(email)}, ${db.escape(username)}, 
+                 ${db.escape(hash)}, ${db.escape(location.loc)},
+                 ${db.escape(location.lat)}, ${db.escape(location.lon)});`
       );
       newUser.id = result.insertId;
       newUser.username = username;
       newUser.firstName = firstName;
       newUser.lastName = lastName;
+      newUser.loc = location.loc;
+      newUser.lat = location.lat;
+      newUser.lon = location.lon;
       newUser.email = email;
-      newUser.number = number;
-      newUser.city = city;
-      newUser.state = state;
-      newUser.zip = zip;
     })();
     return newUser;
   }
@@ -99,10 +87,9 @@ const User = class {
         newUser.firstName = user[0].first_name;
         newUser.lastName = user[0].last_name;
         newUser.email = user[0].email;
-        newUser.number = user[0].number;
-        newUser.city = user[0].city;
-        newUser.state = user[0].state;
-        newUser.zip = user[0].zip;
+        newUser.loc = user[0].loc;
+        newUser.lat = user[0].lat;
+        newUser.lon = user[0].lon;
       } else {
         throw new Error('Username or password is incorrect!');
       }
@@ -124,10 +111,9 @@ const User = class {
       newUser.firstName = user[0].first_name;
       newUser.lastName = user[0].last_name;
       newUser.email = user[0].email;
-      newUser.number = user[0].number;
-      newUser.city = user[0].city;
-      newUser.state = user[0].state;
-      newUser.zip = user[0].zip;
+      newUser.loc = user[0].loc;
+      newUser.lat = user[0].lat;
+      newUser.lon = user[0].lon;
     })();
     return newUser;
   }
@@ -146,7 +132,7 @@ const User = class {
     );
   }
 
-  async setAccountInformation(email, number) {
+  async setAccountInformation(email) {
     const exists = await Mysql.query(
       `SELECT *
        FROM users
@@ -157,21 +143,20 @@ const User = class {
       throw new Error('This email is already in our system.');
     }
     await Mysql.query(
-      `UPDATE users
-       SET email  = ${db.escape(email)},
-           number = ${db.escape(number)}
-       WHERE id = ${await this.getId()}`
+      `UPDATE users SET email  = ${db.escape(
+        email
+      )} WHERE id = ${await this.getId()}`
     );
   }
 
-  async setPersonalInformation(firstName, lastName, city, state, zip) {
+  async setPersonalInformation(firstName, lastName, location) {
     await Mysql.query(
       `UPDATE users
        SET first_name = ${db.escape(firstName)},
            last_name  = ${db.escape(lastName)},
-           city       = ${db.escape(city)},
-           state      = ${db.escape(state)},
-           zip        = ${db.escape(zip)}
+           loc       = ${db.escape(location.loc)},
+           lat       = ${db.escape(location.lat)},
+           lon       = ${db.escape(location.lon)}
        WHERE id = ${await this.getId()}`
     );
   }
@@ -222,10 +207,9 @@ const User = class {
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,
-      number: this.number,
-      city: this.city,
-      state: this.state,
-      zip: this.zip,
+      loc: this.loc,
+      lat: this.lat,
+      lon: this.lon,
     };
   }
 

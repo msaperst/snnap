@@ -5,6 +5,7 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import AccountInformation from './AccountInformation';
+import { hasError } from '../CommonTestComponents';
 
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');
@@ -28,7 +29,7 @@ describe('account information', () => {
     const { container } = render(<AccountInformation user={{}} />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild.getAttribute('noValidate')).toEqual('');
-    expect(container.firstChild.children).toHaveLength(4);
+    expect(container.firstChild.children).toHaveLength(3);
     expect(container.firstChild.firstChild).toHaveTextContent(
       'Account Information'
     );
@@ -42,7 +43,7 @@ describe('account information', () => {
 
   it('has avatar in the first row', () => {
     const { container } = render(<AccountInformation user={{}} />);
-    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-2');
+    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-3');
     expect(container.firstChild.children[1].firstChild.children).toHaveLength(
       2
     );
@@ -52,38 +53,37 @@ describe('account information', () => {
     // the rest is verified in Avatar.test.jsx
   });
 
+  it('has username and email in the first row', () => {
+    const { container } = render(<AccountInformation user={{}} />);
+    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-9');
+    expect(container.firstChild.children[1].lastChild.children).toHaveLength(2);
+  });
+
   it('has disabled empty username in the first row', () => {
     const { container } = render(<AccountInformation user={{}} />);
-    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-10');
-    expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
-      'form-floating'
+      'mb-3 row'
     );
+
     expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'id'
-      )
-    ).toEqual('formUsername');
+      container.firstChild.children[1].lastChild.firstChild.firstChild
+    ).toHaveClass('col-md-12');
+
     expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'disabled'
-      )
-    ).toEqual('');
+      container.firstChild.children[1].lastChild.firstChild.children
+    ).toHaveLength(1);
     expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('text');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'value'
-      )
-    ).toEqual('');
-    expect(
-      container.firstChild.children[1].lastChild.firstChild.firstChild.getAttribute(
-        'required'
-      )
-    ).toEqual('');
+      container.firstChild.children[1].lastChild.firstChild.firstChild
+        .firstChild
+    ).toHaveClass('form-floating');
+    const form =
+      container.firstChild.children[1].lastChild.firstChild.firstChild
+        .firstChild.firstChild;
+    expect(form.getAttribute('id')).toEqual('formUsername');
+    expect(form.getAttribute('disabled')).toEqual('');
+    expect(form.getAttribute('type')).toEqual('text');
+    expect(form.getAttribute('value')).toEqual('');
+    expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -91,13 +91,22 @@ describe('account information', () => {
     const { container } = render(
       <AccountInformation user={{ username: 'msaperst' }} />
     );
-    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-10');
-    expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
-      'form-floating'
+      'mb-3 row'
     );
+    expect(
+      container.firstChild.children[1].lastChild.firstChild.firstChild
+    ).toHaveClass('col-md-12');
+    expect(
+      container.firstChild.children[1].lastChild.firstChild.firstChild.children
+    ).toHaveLength(1);
+    expect(
+      container.firstChild.children[1].lastChild.firstChild.firstChild
+        .firstChild
+    ).toHaveClass('form-floating');
     const form =
-      container.firstChild.children[1].lastChild.firstChild.firstChild;
+      container.firstChild.children[1].lastChild.firstChild.firstChild
+        .firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formUsername');
     expect(form.getAttribute('disabled')).toEqual('');
     expect(form.getAttribute('type')).toEqual('text');
@@ -106,48 +115,29 @@ describe('account information', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has 2 items in the second row', () => {
-    const { container } = render(<AccountInformation user={{}} />);
-    expect(container.firstChild.children[2]).toHaveClass('mb-3 row');
-    expect(container.firstChild.children[2].children).toHaveLength(2);
-  });
-
   it('has email in the second row', () => {
     const { container } = render(
       <AccountInformation user={{ email: 'msaperst@gmail.com' }} />
     );
-    expect(container.firstChild.children[2].firstChild).toHaveClass('col-md-6');
-    expect(container.firstChild.children[2].firstChild.children).toHaveLength(
-      1
+    expect(container.firstChild.children[1].lastChild.lastChild).toHaveClass(
+      'row'
     );
-    expect(container.firstChild.children[2].firstChild.firstChild).toHaveClass(
-      'form-floating'
-    );
+    expect(
+      container.firstChild.children[1].lastChild.lastChild.firstChild
+    ).toHaveClass('col-md-12');
+    expect(
+      container.firstChild.children[1].lastChild.lastChild.firstChild.children
+    ).toHaveLength(1);
+    expect(
+      container.firstChild.children[1].lastChild.lastChild.firstChild.firstChild
+    ).toHaveClass('form-floating');
     const form =
-      container.firstChild.children[2].firstChild.firstChild.firstChild;
+      container.firstChild.children[1].lastChild.lastChild.firstChild.firstChild
+        .firstChild;
     expect(form.getAttribute('id')).toEqual('formEmail');
     expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('value')).toEqual('msaperst@gmail.com');
-    expect(form.getAttribute('required')).toEqual('');
-    // the rest is verified in SnnapFormInput.test.jsx
-  });
-
-  it('has number in the second row', () => {
-    const { container } = render(
-      <AccountInformation user={{ number: '1234567890' }} />
-    );
-    expect(container.firstChild.children[2].lastChild).toHaveClass('col-md-6');
-    expect(container.firstChild.children[2].lastChild.children).toHaveLength(1);
-    expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
-      'form-floating'
-    );
-    const form =
-      container.firstChild.children[2].lastChild.firstChild.firstChild;
-    expect(form.getAttribute('id')).toEqual('formNumber');
-    expect(form.getAttribute('disabled')).toBeNull();
-    expect(form.getAttribute('type')).toEqual('text');
-    expect(form.getAttribute('value')).toEqual('1234567890');
     expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx
   });
@@ -207,34 +197,8 @@ describe('account information', () => {
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith('msaperst@gmail.com', '1234567890');
-    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
-    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
-      'fade alert alert-danger alert-dismissible show'
-    );
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.getAttribute('role')
-    ).toEqual('alert');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild
-    ).toHaveTextContent('Some Error');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.children
-    ).toHaveLength(1);
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild.getAttribute(
-        'aria-label'
-      )
-    ).toEqual('Close alert');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('button');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild
-    ).toHaveClass('btn-close');
+    expect(spy).toHaveBeenCalledWith('msaperst@gmail.com');
+    hasError(container);
   });
 
   it('is able to close an alert after failure', async () => {
@@ -281,7 +245,7 @@ describe('account information', () => {
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith('msaperst@gmail.com', '1234567890');
+    expect(spy).toHaveBeenCalledWith('msaperst@gmail.com');
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
@@ -377,18 +341,15 @@ describe('account information', () => {
       />
     );
     await fireEvent.change(
-      container.firstChild.children[2].firstChild.firstChild.firstChild,
+      container.firstChild.children[1].lastChild.lastChild.firstChild.firstChild
+        .firstChild,
       { target: { value: 'newEmail@gmail.com' } }
-    );
-    await fireEvent.change(
-      container.firstChild.children[2].lastChild.firstChild.firstChild,
-      { target: { value: '0987654321' } }
     );
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith('newEmail@gmail.com', '0987654321');
+    expect(spy).toHaveBeenCalledWith('newEmail@gmail.com');
   });
 });

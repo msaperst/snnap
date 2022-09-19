@@ -5,6 +5,7 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import Password from './Password';
+import { hasError } from '../CommonTestComponents';
 
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');
@@ -135,33 +136,7 @@ describe('personal information', () => {
       );
     });
     expect(spy).toHaveBeenCalledWith('current password', 'new password');
-    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
-    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
-      'fade alert alert-danger alert-dismissible show'
-    );
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.getAttribute('role')
-    ).toEqual('alert');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild
-    ).toHaveTextContent('Some Error');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.children
-    ).toHaveLength(1);
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild.getAttribute(
-        'aria-label'
-      )
-    ).toEqual('Close alert');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('button');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild
-    ).toHaveClass('btn-close');
+    hasError(container);
   });
 
   it('is able to close an alert after failure', async () => {
