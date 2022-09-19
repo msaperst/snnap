@@ -120,7 +120,7 @@ describe('new request to hire form', () => {
     expect(modalForm.children[1].firstChild.firstChild.firstChild).toHaveClass(
       'geoapify-close-button'
     );
-    expect(locationInput.getAttribute('id')).toBeNull();
+    expect(locationInput.getAttribute('id')).toEqual('formCity');
     expect(locationInput.getAttribute('placeholder')).toEqual('City');
     expect(locationInput.getAttribute('disabled')).toBeNull();
     expect(locationInput.getAttribute('type')).toEqual('text');
