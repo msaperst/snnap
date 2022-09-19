@@ -65,10 +65,10 @@ function LoginPage() {
           <SnnapFormInput name="Password" type="password" />
         </Row>
         <Row className="mb-3">
-          <Col md={5}>
+          <Col xs={5}>
             <Form.Check id="rememberMe" label="Remember Me" defaultChecked />
           </Col>
-          <Col md={7} className="text-md-end">
+          <Col xs={7} className="text-end">
             <Link to="/passwordReset">Forgot Password</Link>
           </Col>
         </Row>
