@@ -122,10 +122,14 @@ describe('profile page', () => {
     await facebook.sendKeys('https://facebook.com/me');
     await expected();
     await saveWaitAndRefresh();
-    companyName = driver.wait(until.elementLocated(By.id('formCompanyName')));
-    website = driver.wait(until.elementLocated(By.id('formWebsite')));
-    insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
-    facebook = driver.wait(until.elementLocated(By.id('formFacebookLink')));
+    companyName = await driver.wait(
+      until.elementLocated(By.id('formCompanyName'))
+    );
+    website = await driver.wait(until.elementLocated(By.id('formWebsite')));
+    insta = await driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    facebook = await driver.wait(
+      until.elementLocated(By.id('formFacebookLink'))
+    );
     await expected();
   });
 

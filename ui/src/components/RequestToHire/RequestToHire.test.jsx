@@ -36,7 +36,6 @@ describe('request to hire', () => {
     hireRequest = {
       id: 5,
       type: "B'nai Mitzvah",
-      location: 'Fairfax, VA, United States of America',
       details: 'Some details',
       pay: 200,
       duration: 2,
@@ -46,11 +45,13 @@ describe('request to hire', () => {
       skills: '',
       user: 4,
       typeId: 5,
+      loc: 'Fairfax, VA, United States of America',
+      lat: 5,
+      lon: -71.2345,
     };
     hireRequestDuration = {
       id: 5,
       type: "B'nai Mitzvah",
-      location: 'Fairfax, VA, United States of America',
       details: 'Some details',
       pay: 200,
       duration: 2,
@@ -61,6 +62,9 @@ describe('request to hire', () => {
       skills: '',
       user: 4,
       typeId: 5,
+      loc: 'Fairfax, VA, United States of America',
+      lat: 5,
+      lon: -71.2345,
     };
     createUser = { id: 4 };
     otherUser = { id: 5 };

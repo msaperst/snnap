@@ -3,8 +3,8 @@ import Enzyme from 'enzyme';
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import userEvent from '@testing-library/user-event';
 import SnnapFormLocationInput from './SnnapFormLocationInput';
+import { selectFairfax } from '../CommonTestComponents';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -34,18 +34,22 @@ describe('snnap form input', () => {
     expect(container.firstChild).toHaveClass('col-md-5');
   });
 
-  it('uses an onchange when provided', () => {
+  it('uses an onchange when provided', async () => {
     let x = 0;
     const updateX = (key, value) => {
       x = value;
     };
-    const { container } = render(
+    const { container, getByText } = render(
       <SnnapFormLocationInput name="123" onChange={updateX} />
     );
     const input = container.querySelector('input');
-    userEvent.type(input, 'Fairfax{arrowdown}{enter}');
-    expect(input).toHaveValue('Fairfax');
-    expect(x).toEqual(0); // TODO - this should equal 'Fairfax'
+
+    const selectItem = selectFairfax(getByText);
+    await selectItem(input);
+    expect(input).toHaveValue('Fairfax, VA, United States of America');
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((r) => setTimeout(r, 1000));
+    expect(x).not.toEqual(0); // this should equal 'Fairfax'
   });
 
   it('is wrapped in a form float', () => {

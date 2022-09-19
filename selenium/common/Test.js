@@ -46,13 +46,14 @@ class Test {
     this.user = User.register(
       'Test',
       'User',
-      username,
+      {
+        lat: 38.8462236,
+        lon: -77.3063733,
+        loc: 'Fairfax, VA, United States of America',
+      },
       `${username}@example.org`,
-      'Number',
-      'password',
-      'City',
-      'State',
-      'Zip'
+      username,
+      'password'
     );
   }
 
@@ -118,7 +119,11 @@ class Test {
     return RequestToHire.create(
       user,
       type,
-      'Chantilly, VA, United States of America',
+      {
+        lat: 38.8461234,
+        lon: -77.303452,
+        loc: 'Chantilly, VA, United States of America',
+      },
       'Some details',
       200,
       4,

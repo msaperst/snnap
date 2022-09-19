@@ -75,7 +75,7 @@ describe('new request to hire', () => {
       'Please provide a valid job type.'
     );
     expect(await feedbacks[1].getText()).toEqual(
-      'Please provide a valid location.'
+      'Please provide a valid city.'
     );
     expect(await feedbacks[2].getText()).toEqual(
       'Please provide a valid date.'
@@ -129,7 +129,7 @@ describe('new request to hire', () => {
     await driver.wait(until.elementIsEnabled(select));
     await (await select.findElements(By.css('option')))[option].click();
     await (
-      await modal.findElement(By.css('[placeholder="Location"]'))
+      await modal.findElement(By.css('[placeholder="City"]'))
     ).sendKeys(location);
     await driver
       .wait(until.elementLocated(By.className('geoapify-autocomplete-item')))

@@ -31,7 +31,7 @@ class Home {
     expect(await duration.getAttribute('disabled')).toBeTruthy();
     expect(await duration.getAttribute('value')).toEqual('4 hours');
 
-    const location = await this.driver.findElement(By.id('formLocation'));
+    const location = await this.driver.findElement(By.id('formCity'));
     expect(await location.getAttribute('disabled')).toBeTruthy();
     expect(await location.getAttribute('value')).toEqual('Chantilly, VA');
 

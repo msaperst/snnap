@@ -4,6 +4,7 @@ import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
 import { userService } from '../../../services/user.service';
 import Submit from '../../Submit/Submit';
 import { commonFormComponents } from '../../CommonFormComponents';
+import SnnapFormLocationInput from '../../SnnapForms/SnnapFormLocationInput';
 
 function PersonalInformation(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,9 +19,13 @@ function PersonalInformation(props) {
       setFormData({
         'First Name': user.firstName,
         'Last Name': user.lastName,
-        City: user.city,
-        State: user.state,
-        Zip: user.zip,
+        City: {
+          properties: {
+            lat: user.lat,
+            lon: user.lon,
+            formatted: user.loc,
+          },
+        },
       });
     }
   }, [user]);
@@ -32,34 +37,45 @@ function PersonalInformation(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    setValidated(true);
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
-      setIsSubmitting(true);
-      userService
-        .updatePersonalInformation(
-          formData['First Name'],
-          formData['Last Name'],
-          formData.City,
-          formData.State,
-          formData.Zip
-        )
-        .then(
-          () => {
-            commonFormComponents.setBasicSuccess(
-              setIsSubmitting,
-              setStatus,
-              setUpdate,
-              setValidated,
-              'Personal Information Updated'
-            );
-          },
-          (error) => {
-            setIsSubmitting(false);
-            setStatus(error.toString());
-          }
-        );
+      if (
+        formData.City &&
+        formData.City.properties &&
+        formData.City.properties.lat &&
+        formData.City.properties.lon
+      ) {
+        setIsSubmitting(true);
+        userService
+          .updatePersonalInformation(
+            formData['First Name'],
+            formData['Last Name'],
+            {
+              lat: formData.City.properties.lat,
+              lon: formData.City.properties.lon,
+              loc: formData.City.properties.formatted,
+            }
+          )
+          .then(
+            () => {
+              commonFormComponents.setBasicSuccess(
+                setIsSubmitting,
+                setStatus,
+                setUpdate,
+                setValidated,
+                'Personal Information Updated'
+              );
+            },
+            (error) => {
+              setIsSubmitting(false);
+              setStatus(error.toString());
+            }
+          );
+      } else {
+        setStatus('Please provide a valid city.');
+      }
     }
+    setValidated(true);
   };
 
   const updateForm = (key, value) => {
@@ -84,22 +100,9 @@ function PersonalInformation(props) {
         />
       </Row>
       <Row className="mb-3">
-        <SnnapFormInput
+        <SnnapFormLocationInput
           name="City"
-          size={5}
-          value={user.city}
-          onChange={updateForm}
-        />
-        <SnnapFormInput
-          name="State"
-          size={3}
-          value={user.state}
-          onChange={updateForm}
-        />
-        <SnnapFormInput
-          name="Zip"
-          size={4}
-          value={user.zip}
+          value={user.loc}
           onChange={updateForm}
         />
       </Row>

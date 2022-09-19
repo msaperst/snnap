@@ -7,17 +7,14 @@ const User = require('../components/user/User');
 const signupValidation = [
   check('firstName', 'First name is required').not().isEmpty(),
   check('lastName', 'Last name is required').not().isEmpty(),
-  check('username', 'Username is required').not().isEmpty(),
-  check('number', 'Number is required').not().isEmpty(),
+  check('location', 'Location is required').not().isEmpty(),
   check('email', 'Please include a valid email')
     .isEmail()
     .normalizeEmail({ gmail_remove_dots: true }),
+  check('username', 'Username is required').not().isEmpty(),
   check('password', 'Password must be 6 or more characters').isLength({
     min: 6,
   }),
-  check('city', 'City is required').not().isEmpty(),
-  check('state', 'State is required').not().isEmpty(),
-  check('zip', 'Zip is required').not().isEmpty(),
 ];
 
 const loginValidation = [
@@ -34,13 +31,10 @@ router.post('/register', signupValidation, async (req, res) => {
   const user = User.register(
     req.body.firstName,
     req.body.lastName,
-    req.body.username,
+    req.body.location,
     req.body.email,
-    req.body.number,
-    req.body.password,
-    req.body.city,
-    req.body.state,
-    req.body.zip
+    req.body.username,
+    req.body.password
   );
   try {
     await user.getToken();

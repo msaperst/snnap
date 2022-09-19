@@ -63,7 +63,7 @@ function EditAvatar(props) {
   };
 
   return (
-    <Col md={2}>
+    <Col md={3}>
       <Avatar
         avatar={avatar}
         firstname={user.firstName}

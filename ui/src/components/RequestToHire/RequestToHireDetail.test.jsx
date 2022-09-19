@@ -16,7 +16,6 @@ describe('request to hire detail info', () => {
     hireRequestAlt = {
       id: 5,
       type: 'Event',
-      location: 'Fairfax, VA, United States of America',
       details: "Max's 40th Birthday, woot!!!",
       pay: 0.5,
       duration: 8,
@@ -24,6 +23,9 @@ describe('request to hire detail info', () => {
       user: 1,
       durationMax: 9,
       typeId: 2,
+      loc: 'Fairfax, VA, United States of America',
+      lat: 5,
+      lon: -71.2345,
     };
   });
 
@@ -107,8 +109,8 @@ describe('request to hire detail info', () => {
     checkInput(
       container.children[2].children[0],
       8,
-      'formLocation',
-      'Location',
+      'formCity',
+      'City',
       'Fairfax, VA'
     );
     checkInput(
