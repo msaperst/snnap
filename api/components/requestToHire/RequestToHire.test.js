@@ -28,6 +28,11 @@ describe('request to hire', () => {
     typeId: 2,
     type: 'Event',
   };
+  const location = {
+    loc: 'Fairfax, VA, United States of America',
+    lat: 5,
+    lon: -71.2345,
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -40,7 +45,7 @@ describe('request to hire', () => {
     const requestToHire = RequestToHire.create(
       1,
       5,
-      'Fairfax, VA, United States of America',
+      location,
       'Deetz',
       100,
       5,
@@ -51,13 +56,11 @@ describe('request to hire', () => {
     );
     await expect(requestToHire.getId()).resolves.toEqual(15);
     await expect(requestToHire.getType()).resolves.toEqual(5);
-    await expect(requestToHire.getLocation()).resolves.toEqual(
-      'Fairfax, VA, United States of America'
-    );
+    await expect(requestToHire.getLocation()).resolves.toEqual(location);
     // verify the sql calls
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(
-      "INSERT INTO hire_requests (user, type, location, details, pay, duration, durationMax, date_time) VALUES (1, 5, 'Fairfax, VA, United States of America', 'Deetz', 100, 5, NULL, '2022-02-16 00:00:00')"
+      "INSERT INTO hire_requests (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, NULL, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
   });
 
@@ -67,7 +70,7 @@ describe('request to hire', () => {
     const requestToHire = RequestToHire.create(
       1,
       5,
-      'Fairfax, VA, United States of America',
+      location,
       'Deetz',
       100,
       5,
@@ -81,14 +84,12 @@ describe('request to hire', () => {
     );
     await expect(requestToHire.getId()).resolves.toEqual(15);
     await expect(requestToHire.getType()).resolves.toEqual(5);
-    await expect(requestToHire.getLocation()).resolves.toEqual(
-      'Fairfax, VA, United States of America'
-    );
+    await expect(requestToHire.getLocation()).resolves.toEqual(location);
     // verify the sql calls
     expect(spy).toHaveBeenCalledTimes(4);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO hire_requests (user, type, location, details, pay, duration, durationMax, date_time) VALUES (1, 5, 'Fairfax, VA, United States of America', 'Deetz', 100, 5, NULL, '2022-02-16 00:00:00')"
+      "INSERT INTO hire_requests (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, NULL, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,

@@ -22,13 +22,15 @@ const RequestToHire = class {
     newRequestToHire.instancePromise = (async () => {
       const dateTime = `${date} 00:00:00`;
       const result = await Mysql.query(
-        `INSERT INTO hire_requests (user, type, location, details, pay, duration, durationMax, date_time) VALUES (${db.escape(
+        `INSERT INTO hire_requests (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${db.escape(
           user
-        )}, ${db.escape(type)}, ${db.escape(location)}, ${db.escape(
-          details
-        )}, ${db.escape(pay)}, ${db.escape(duration)}, ${db.escape(
-          durationMax
-        )}, ${db.escape(dateTime)})`
+        )}, ${db.escape(type)}, ${db.escape(details)}, ${db.escape(
+          pay
+        )}, ${db.escape(duration)}, ${db.escape(durationMax)}, ${db.escape(
+          dateTime
+        )}, ${db.escape(location.loc)}, ${db.escape(location.lat)},${db.escape(
+          location.lon
+        )});`
       );
       equipment.map(async (equip) => {
         await Mysql.query(

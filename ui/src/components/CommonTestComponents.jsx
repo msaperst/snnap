@@ -1,10 +1,11 @@
 import { fireEvent, getByText, screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event';
 
 export const hr = {
   id: 5,
   type: 'Event',
-  location: 'Fairfax, VA, United States of America',
+  loc: 'Fairfax, VA, United States of America',
   details: "Max's 40th Birthday, woot!!!",
   pay: 0.5,
   duration: 8,
@@ -118,3 +119,9 @@ export async function noModal(modal) {
   expect(saveRow.lastChild.children).toHaveLength(0);
   expect(modal).not.toBeVisible();
 }
+
+export const selectFairfax = (getByText) => async (input) => {
+  userEvent.type(input, 'Fairfax{arrowdown}{enter}');
+  await waitFor(() => getByText('VA, United States of America'));
+  userEvent.click(getByText('VA, United States of America'));
+};

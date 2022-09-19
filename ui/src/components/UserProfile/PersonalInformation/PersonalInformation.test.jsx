@@ -1,10 +1,12 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import PersonalInformation from './PersonalInformation';
+import { selectFairfax } from '../../CommonTestComponents';
+import { hasError } from '../CommonTestComponents';
 
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');
@@ -97,17 +99,23 @@ describe('personal information', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has 3 items in the second row', () => {
+  it('has 1 item in the second row', () => {
     const { container } = render(<PersonalInformation user={{}} />);
     expect(container.firstChild.children[2]).toHaveClass('mb-3 row');
-    expect(container.firstChild.children[2].children).toHaveLength(3);
+    expect(container.firstChild.children[2].children).toHaveLength(1);
   });
 
-  it('has city in the second row', () => {
-    const { container } = render(
-      <PersonalInformation user={{ city: 'Fairfax' }} />
+  it('has city in the second row', async () => {
+    let personalInfo;
+    await act(async () => {
+      personalInfo = render(<PersonalInformation user={{ loc: 'Fairfax' }} />);
+      const { container } = personalInfo;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = personalInfo;
+    expect(container.firstChild.children[2].firstChild).toHaveClass(
+      'col-md-12'
     );
-    expect(container.firstChild.children[2].firstChild).toHaveClass('col-md-5');
     expect(container.firstChild.children[2].firstChild.children).toHaveLength(
       1
     );
@@ -115,52 +123,10 @@ describe('personal information', () => {
       'form-floating'
     );
     const form =
-      container.firstChild.children[2].firstChild.firstChild.firstChild;
-    expect(form.getAttribute('id')).toEqual('formCity');
+      container.firstChild.children[2].firstChild.firstChild.children[1];
     expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
-    expect(form.getAttribute('value')).toEqual('Fairfax');
-    expect(form.getAttribute('required')).toEqual('');
-    // the rest is verified in SnnapFormInput.test.jsx
-  });
-
-  it('has state in the second row', () => {
-    const { container } = render(
-      <PersonalInformation user={{ state: 'VA' }} />
-    );
-    expect(container.firstChild.children[2].children[1]).toHaveClass(
-      'col-md-3'
-    );
-    expect(container.firstChild.children[2].children[1].children).toHaveLength(
-      1
-    );
-    expect(container.firstChild.children[2].children[1].firstChild).toHaveClass(
-      'form-floating'
-    );
-    const form =
-      container.firstChild.children[2].children[1].firstChild.firstChild;
-    expect(form.getAttribute('id')).toEqual('formState');
-    expect(form.getAttribute('type')).toEqual('text');
-    expect(form.getAttribute('value')).toEqual('VA');
-    expect(form.getAttribute('required')).toEqual('');
-    // the rest is verified in SnnapFormInput.test.jsx
-  });
-
-  it('has zip in the second row', () => {
-    const { container } = render(
-      <PersonalInformation user={{ zip: '22030' }} />
-    );
-    expect(container.firstChild.children[2].lastChild).toHaveClass('col-md-4');
-    expect(container.firstChild.children[2].lastChild.children).toHaveLength(1);
-    expect(container.firstChild.children[2].lastChild.firstChild).toHaveClass(
-      'form-floating'
-    );
-    const form =
-      container.firstChild.children[2].lastChild.firstChild.firstChild;
-    expect(form.getAttribute('id')).toEqual('formZip');
-    expect(form.getAttribute('type')).toEqual('text');
-    expect(form.getAttribute('value')).toEqual('22030');
-    expect(form.getAttribute('required')).toEqual('');
+    expect(form.getAttribute('required')).toEqual('true');
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
@@ -200,6 +166,61 @@ describe('personal information', () => {
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
+  it('has an alert when an invalid city is present', async () => {
+    const spy = jest.spyOn(
+      userService.userService,
+      'updatePersonalInformation'
+    );
+    const { container } = render(
+      <PersonalInformation
+        user={{ firstName: 'Max', lastName: 'Saperstone', loc: 'Fairfax' }}
+      />
+    );
+    await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    expect(spy).toHaveBeenCalledTimes(0);
+    hasError(container, 'Please provide a valid city.');
+  });
+
+  it('has an alert when only lat is present', async () => {
+    const spy = jest.spyOn(
+      userService.userService,
+      'updatePersonalInformation'
+    );
+    const { container } = render(
+      <PersonalInformation
+        user={{
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          loc: 'Fairfax',
+          lat: 'Fairfax',
+        }}
+      />
+    );
+    await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    expect(spy).toHaveBeenCalledTimes(0);
+    hasError(container, 'Please provide a valid city.');
+  });
+
+  it('has an alert when only lon is present', async () => {
+    const spy = jest.spyOn(
+      userService.userService,
+      'updatePersonalInformation'
+    );
+    const { container } = render(
+      <PersonalInformation
+        user={{
+          firstName: 'Max',
+          lastName: 'Saperstone',
+          loc: 'Fairfax',
+          lon: 'Fairfax',
+        }}
+      />
+    );
+    await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    expect(spy).toHaveBeenCalledTimes(0);
+    hasError(container, 'Please provide a valid city.');
+  });
+
   it('has an alert on failure of a submission', async () => {
     const spy = jest.spyOn(
       userService.userService,
@@ -213,9 +234,9 @@ describe('personal information', () => {
         user={{
           firstName: 'Max',
           lastName: 'Saperstone',
-          city: 'Fairfax',
-          state: 'VA',
-          zip: '22030',
+          loc: 'Fairfax',
+          lat: 7,
+          lon: '22030',
         }}
       />
     );
@@ -224,40 +245,12 @@ describe('personal information', () => {
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith(
-      'Max',
-      'Saperstone',
-      'Fairfax',
-      'VA',
-      '22030'
-    );
-    expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
-    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
-      'fade alert alert-danger alert-dismissible show'
-    );
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.getAttribute('role')
-    ).toEqual('alert');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild
-    ).toHaveTextContent('Some Error');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.children
-    ).toHaveLength(1);
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild.getAttribute(
-        'aria-label'
-      )
-    ).toEqual('Close alert');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild.getAttribute(
-        'type'
-      )
-    ).toEqual('button');
-    expect(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild
-    ).toHaveClass('btn-close');
+    expect(spy).toHaveBeenCalledWith('Max', 'Saperstone', {
+      lat: 7,
+      loc: 'Fairfax',
+      lon: '22030',
+    });
+    hasError(container);
   });
 
   it('is able to close an alert after failure', async () => {
@@ -269,9 +262,9 @@ describe('personal information', () => {
         user={{
           firstName: 'Max',
           lastName: 'Saperstone',
-          city: 'Fairfax',
-          state: 'VA',
-          zip: '22030',
+          loc: 'Fairfax',
+          lat: 7,
+          lon: '22030',
         }}
       />
     );
@@ -300,9 +293,9 @@ describe('personal information', () => {
         user={{
           firstName: 'Max',
           lastName: 'Saperstone',
-          city: 'Fairfax',
-          state: 'VA',
-          zip: '22030',
+          loc: 'Fairfax',
+          lat: 7,
+          lon: '22030',
         }}
       />
     );
@@ -311,13 +304,11 @@ describe('personal information', () => {
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith(
-      'Max',
-      'Saperstone',
-      'Fairfax',
-      'VA',
-      '22030'
-    );
+    expect(spy).toHaveBeenCalledWith('Max', 'Saperstone', {
+      lat: 7,
+      loc: 'Fairfax',
+      lon: '22030',
+    });
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
@@ -356,9 +347,9 @@ describe('personal information', () => {
         user={{
           firstName: 'Max',
           lastName: 'Saperstone',
-          city: 'Fairfax',
-          state: 'VA',
-          zip: '22030',
+          loc: 'Fairfax',
+          lat: 7,
+          lon: '22030',
         }}
       />
     );
@@ -383,9 +374,9 @@ describe('personal information', () => {
         user={{
           firstName: 'Max',
           lastName: 'Saperstone',
-          city: 'Fairfax',
-          state: 'VA',
-          zip: '22030',
+          loc: 'Fairfax',
+          lat: 7,
+          lon: '22030',
         }}
       />
     );
@@ -410,36 +401,41 @@ describe('personal information', () => {
     userService.userService.updatePersonalInformation.mockResolvedValue(
       'Some Success'
     );
-    const { container } = render(
+    const { container, getByText } = render(
       <PersonalInformation
         user={{
           firstName: 'Max',
           lastName: 'Saperstone',
-          city: 'Fairfax',
-          state: 'VA',
-          zip: '22030',
+          loc: 'Main',
+          lat: 18,
+          lon: '34566',
         }}
       />
     );
     await fireEvent.change(
-      container.firstChild.children[2].firstChild.firstChild.firstChild,
-      { target: { value: 'City' } }
+      container.firstChild.children[1].firstChild.firstChild.firstChild,
+      { target: { value: 'George' } }
     );
     await fireEvent.change(
-      container.firstChild.children[2].lastChild.firstChild.firstChild,
-      { target: { value: '12345' } }
+      container.firstChild.children[2].firstChild.firstChild.children[1],
+      { target: { value: '' } }
     );
+    const selectItem = selectFairfax(getByText);
+    await selectItem(
+      container.firstChild.children[2].firstChild.firstChild.children[1]
+    );
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((r) => setTimeout(r, 1000));
+
     await act(async () => {
       await fireEvent.click(
         container.firstChild.lastChild.firstChild.firstChild
       );
     });
-    expect(spy).toHaveBeenCalledWith(
-      'Max',
-      'Saperstone',
-      'City',
-      'VA',
-      '12345'
-    );
+    expect(spy).toHaveBeenNthCalledWith(2, 'George', 'Saperstone', {
+      loc: 'Fairfax, VA, United States of America',
+      lat: 38.8462236,
+      lon: -77.3063733,
+    });
   });
 });

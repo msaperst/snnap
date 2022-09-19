@@ -33,7 +33,9 @@ describe('request to hire', () => {
       requestForHire = render(
         <RequestToHire
           hireRequest={{
-            location: 'Fairfax, VA, United States of America',
+            loc: 'Fairfax, VA, United States of America',
+            lat: 5,
+            lon: -71.2345,
             date_time: '2022-03-04T23:40:00.000Z',
           }}
           currentUser={{}}
