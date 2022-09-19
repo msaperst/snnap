@@ -40,8 +40,8 @@ function RequestToHireDetail(props) {
       <Row className="mb-3">
         <SnnapFormInput
           size={8}
-          name="Location"
-          value={hireRequest.location.replace(', United States of America', '')}
+          name="City"
+          value={hireRequest.loc.replace(', United States of America', '')}
           disabled
         />
         <SnnapFormInput

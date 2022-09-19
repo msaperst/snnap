@@ -53,13 +53,13 @@ function markNotificationRead(notification) {
   );
 }
 
-function updateAccountInformation(email, number) {
+function updateAccountInformation(email) {
   const headers = authHeader();
   headers['Content-Type'] = 'application/json';
   const requestOptions = {
     method: 'POST',
     headers,
-    body: JSON.stringify({ email, number }),
+    body: JSON.stringify({ email }),
   };
 
   return fetch(`/api/user/update-account-information`, requestOptions).then(
@@ -67,13 +67,13 @@ function updateAccountInformation(email, number) {
   );
 }
 
-function updatePersonalInformation(firstName, lastName, city, state, zip) {
+function updatePersonalInformation(firstName, lastName, location) {
   const headers = authHeader();
   headers['Content-Type'] = 'application/json';
   const requestOptions = {
     method: 'POST',
     headers,
-    body: JSON.stringify({ firstName, lastName, city, state, zip }),
+    body: JSON.stringify({ firstName, lastName, location }),
   };
 
   return fetch(`/api/user/update-personal-information`, requestOptions).then(

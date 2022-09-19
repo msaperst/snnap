@@ -12,6 +12,7 @@ function SnnapFormLocationInput(props) {
     if (input) {
       // reformat the input
       input.className = 'form-control';
+      input.id = `form${safeName}`;
       input.setAttribute('required', true);
       // move the input
       const close = input.nextSibling;
@@ -28,7 +29,7 @@ function SnnapFormLocationInput(props) {
     }
   });
 
-  const { size, name, onChange } = props;
+  const { value, size, name, onChange } = props;
   if (!name) {
     return null;
   }
@@ -45,6 +46,8 @@ function SnnapFormLocationInput(props) {
         <FloatingLabel controlId={`form${safeName}`} label={name}>
           <GeoapifyGeocoderAutocomplete
             placeholder={name}
+            type="city"
+            value={value}
             skipIcons
             placeSelect={change}
           />

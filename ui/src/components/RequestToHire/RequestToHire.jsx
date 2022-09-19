@@ -16,8 +16,8 @@ function RequestToHire(props) {
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
-    userService.get(hireRequest.user).then((user) => {
-      setUser(user);
+    userService.get(hireRequest.user).then((u) => {
+      setUser(u);
     });
     jobService.getHireRequestApplications(hireRequest.id).then((apps) => {
       setApplications(apps);
@@ -83,7 +83,7 @@ function RequestToHire(props) {
                   </Row>
                   <Row>
                     <Col md={6}>
-                      {hireRequest.location.replace(
+                      {hireRequest.loc.replace(
                         ', United States of America',
                         ''
                       )}

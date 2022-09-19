@@ -26,3 +26,7 @@ ALTER TABLE hire_requests DROP COLUMN skills;
 ALTER TABLE hire_requests ADD COLUMN date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE hire_requests ADD COLUMN application_selected int(11);
 ALTER TABLE hire_requests ADD COLUMN date_application_selected TIMESTAMP;
+ALTER TABLE hire_requests DROP COLUMN location;
+ALTER TABLE hire_requests ADD COLUMN loc mediumtext NOT NULL;
+ALTER TABLE hire_requests ADD COLUMN lat long NOT NULL;
+ALTER TABLE hire_requests ADD COLUMN lon long NOT NULL;

@@ -36,7 +36,7 @@ describe('register page', () => {
     const feedback = await driver.findElements(
       By.className('invalid-feedback')
     );
-    expect(feedback).toHaveLength(10);
+    expect(feedback).toHaveLength(7);
     for (let i = 0; i < feedback.length; i++) {
       expect(await feedback[i].getText()).toEqual('');
       expect(await feedback[i].isDisplayed()).toBeFalsy();
@@ -48,24 +48,18 @@ describe('register page', () => {
     expect(await feedback[1].getText()).toEqual(
       'Please provide a valid last name.'
     );
-    expect(await feedback[2].getText()).toEqual(
-      'Please provide a valid username.'
-    );
+    expect(await feedback[2].getText()).toEqual('Please provide a valid city.');
     expect(await feedback[3].getText()).toEqual(
       'Please provide a valid email.'
     );
     expect(await feedback[4].getText()).toEqual(
-      'Please provide a valid phone number.'
+      'Please provide a valid username.'
     );
+
     expect(await feedback[5].getText()).toEqual(
       'Please provide a valid password.'
     );
-    expect(await feedback[6].getText()).toEqual('Please provide a valid city.');
-    expect(await feedback[7].getText()).toEqual(
-      'Please provide a valid state.'
-    );
-    expect(await feedback[8].getText()).toEqual('Please provide a valid zip.');
-    expect(await feedback[9].getText()).toEqual(
+    expect(await feedback[6].getText()).toEqual(
       'You must agree before submitting.'
     );
     for (let i = 0; i < feedback.length; i++) {
@@ -77,13 +71,10 @@ describe('register page', () => {
     await register(
       'Test',
       'User',
-      'registerUser',
+      'Fairfax',
       'registerUser@example.org',
-      '0123456789',
+      'registerUser',
       'password',
-      'City',
-      'State',
-      'Zip',
       true
     );
     const dropDownMenu = driver.wait(
@@ -114,13 +105,10 @@ describe('register page', () => {
     await register(
       'Test',
       'User',
-      'registerUser',
+      'Fairfax',
       'registerUser@example.org',
-      '0123456789',
+      'registerUser',
       'password',
-      'City',
-      'State',
-      'Zip',
       true
     );
     const alert = driver.wait(
@@ -136,13 +124,10 @@ describe('register page', () => {
     await register(
       'Test',
       'User',
-      'registerUser',
+      'Fairfax',
       'registerUser1@example.org',
-      '0123456789',
+      'registerUser',
       'password',
-      'City',
-      'State',
-      'Zip',
       true
     );
     const alert = driver.wait(
@@ -153,27 +138,46 @@ describe('register page', () => {
     );
   });
 
+  it('does not allow you to register with an invalid city', async () => {
+    test.addUser('registerUser');
+    await register(
+      'Test',
+      'User',
+      'Fairfax',
+      'registerUser1@example.org',
+      'registerUser',
+      'password',
+      true,
+      false
+    );
+    const alert = driver.wait(
+      until.elementLocated(By.className('alert-danger'))
+    );
+    expect(await alert.getText()).toEqual('Please provide a valid city.');
+  });
+
   async function register(
     firstName,
     lastName,
-    username,
-    email,
-    phoneNumber,
-    password,
     city,
-    state,
-    zip,
-    agree
+    email,
+    username,
+    password,
+    agree,
+    fullCity = true
   ) {
     await driver.findElement(By.id('formFirstname')).sendKeys(firstName);
     await driver.findElement(By.id('formLastname')).sendKeys(lastName);
-    await driver.findElement(By.id('formUsername')).sendKeys(username);
-    await driver.findElement(By.id('formEmail')).sendKeys(email);
-    await driver.findElement(By.id('formPhonenumber')).sendKeys(phoneNumber);
-    await driver.findElement(By.id('formPassword')).sendKeys(password);
     await driver.findElement(By.id('formCity')).sendKeys(city);
-    await driver.findElement(By.id('formState')).sendKeys(state);
-    await driver.findElement(By.id('formZip')).sendKeys(zip);
+    if (fullCity) {
+      const location = await driver.wait(
+        until.elementLocated(By.xpath(`//*[text()="${city}"]`))
+      );
+      await location.click();
+    }
+    await driver.findElement(By.id('formEmail')).sendKeys(email);
+    await driver.findElement(By.id('formUsername')).sendKeys(username);
+    await driver.findElement(By.id('formPassword')).sendKeys(password);
     if (agree) {
       await driver.findElement(By.id('agreeToTerms')).click();
     }
