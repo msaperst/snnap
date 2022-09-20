@@ -2,10 +2,12 @@ const rateLimit = require('express-rate-limit');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const http = require('http');
 const job = require('./routes/job.js');
 const authentication = require('./routes/authentication.js');
 const user = require('./routes/user.js');
 const company = require('./routes/company.js');
+const setupWebSocket = require('./services/setupWebSocket');
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
@@ -32,10 +34,14 @@ app.use('/api/company', company);
 app.use('/api/jobs', job);
 
 // Handling Errors
-app.use((err, req, res) => {
+app.use((err, _req, res) => {
   res.status(err.statusCode || 500).json({
     message: err.message || 'Internal Server Error',
   });
 });
 
-app.listen(process.env.API_PORT || 3001);
+const server = http.createServer(app);
+setupWebSocket(server);
+
+// start our server
+server.listen(process.env.PORT || 3001);
