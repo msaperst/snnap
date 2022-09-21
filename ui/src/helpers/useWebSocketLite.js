@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 // the interval between retries
 function useWebSocketLite({
   socketUrl,
-  retry: defaultRetry = 3,
+  retry: defaultRetry = 9999999999,
   retryInterval = 1500,
 }) {
   // message and timestamp
@@ -22,7 +22,6 @@ function useWebSocketLite({
   useEffect(() => {
     const ws = new WebSocket(socketUrl);
     ws.onopen = () => {
-      console.log('Connected to socket');
       setReadyState(true);
 
       // function to send messages

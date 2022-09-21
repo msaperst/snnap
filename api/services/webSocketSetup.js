@@ -18,7 +18,7 @@ const getParams = (request) => {
     });
     return res;
   } catch (err) {
-    return 'na';
+    return {};
   }
 };
 
@@ -48,10 +48,9 @@ function webSocketSetup(server) {
         });
         // });
       } else {
-        throw 'No token found';
+        throw new Error('No token found');
       }
     } catch (err) {
-      console.log('upgrade exception', err);
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
     }
@@ -60,7 +59,6 @@ function webSocketSetup(server) {
   // what to do after a connection is established
   wss.on('connection', (ctx) => {
     // print number of active connections
-    console.log('connected', wss.clients.size);
 
     let interval;
     if (path === '/unreadNotifications') {
@@ -70,13 +68,11 @@ function webSocketSetup(server) {
     // handle message events
     // receive a message and echo it back
     ctx.on('message', (message) => {
-      console.log(`Received message => ${message}`);
       ctx.send(`you said ${message}`);
     });
 
     // handle close event
     ctx.on('close', () => {
-      console.log('closed', wss.clients.size);
       clearInterval(interval);
     });
 

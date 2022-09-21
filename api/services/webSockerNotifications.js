@@ -19,7 +19,8 @@ function getUnreadMessageCount(ctx, token) {
 function broadcastPipeline(clients) {
   let idx = 0;
   return setInterval(() => {
-    for (const c of clients.values()) {
+    for (let index = 0, l = clients.values().length; index < l; index += 1) {
+      const c = clients.values()[index];
       c.send(`broadcast message ${idx}`);
     }
     idx++;

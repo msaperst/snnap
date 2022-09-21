@@ -422,7 +422,7 @@ describe('User', () => {
       ])
       .mockResolvedValue([]);
     const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
-    const user = await User.auth(token);
+    const user = User.auth(token);
     const hash = await bcrypt.hash('password', 10);
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValue([{ password: hash }]);
@@ -433,7 +433,7 @@ describe('User', () => {
   it('can get all notifications', async () => {
     Mysql.query.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValue([1, 2]);
     const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
-    const user = await User.auth(token);
+    const user = User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getNotifications()).toEqual([1, 2]);
     expect(spy).toHaveBeenCalledTimes(2);
