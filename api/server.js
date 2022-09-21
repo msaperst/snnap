@@ -7,7 +7,7 @@ const job = require('./routes/job.js');
 const authentication = require('./routes/authentication.js');
 const user = require('./routes/user.js');
 const company = require('./routes/company.js');
-const setupWebSocket = require('./services/setupWebSocket');
+const setupWebSocket = require('./services/webSocketSetup');
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes

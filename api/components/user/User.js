@@ -213,6 +213,12 @@ const User = class {
     };
   }
 
+  async getNotifications() {
+    return Mysql.query(
+      `SELECT * FROM notifications WHERE to_user = ${await this.getId()} ORDER BY timestamp desc;`
+    );
+  }
+
   static getToken(authorization) {
     if (
       !authorization ||

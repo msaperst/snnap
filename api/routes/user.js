@@ -55,10 +55,7 @@ router.get('/hire-request-applications', async (req, res) => {
 router.get('/notifications', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
-    const notifications = await Mysql.query(
-      `SELECT * FROM notifications WHERE to_user = ${await user.getId()} ORDER BY timestamp desc;`
-    );
-    return res.send(await notifications);
+    return res.send(await user.getNotifications());
   });
 });
 

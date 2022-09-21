@@ -6,34 +6,43 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import './Menu.css';
 import snnapLogo from './SNNAP.png';
 import NewRequestToHire from '../NewRequestToHire/NewRequestToHire';
-import { userService } from '../../services/user.service';
+import useWebSocketLite from '../../helpers/useWebSocketLite';
 
 function Menu(props) {
   let collapse = null;
   let menu = null;
   const { logout, currentUser } = props;
+  const [token, setToken] = useState('');
   const [notifications, setNotifications] = useState('');
   const [bell, setBell] = useState('');
 
+  const ws = useWebSocketLite({
+    socketUrl: `ws://localhost:3001/unreadNotifications?token=${token}`,
+  });
+
   useEffect(() => {
     if (currentUser) {
-      userService.getNotifications().then((n) => {
-        const unread = n.filter((val) => !val.reviewed);
-        if (unread.length > 0) {
-          const not = (
-            <span
-              className="btn-primary p-1 rounded-circle"
-              style={{ marginLeft: '10px' }}
-            >
-              {unread.length}
-            </span>
-          );
-          setNotifications(not);
-          setBell(' 🔔');
-        }
-      });
+      setToken(currentUser.token);
     }
-  }, [currentUser]);
+    if (ws.data) {
+      const { message } = ws.data;
+      if (message > 0) {
+        const not = (
+          <span
+            className="btn-primary p-1 rounded-circle"
+            style={{ marginLeft: '10px' }}
+          >
+            {message}
+          </span>
+        );
+        setNotifications(not);
+        setBell(' 🔔');
+      } else {
+        setNotifications('');
+        setBell('');
+      }
+    }
+  }, [currentUser, ws.data]);
 
   if (currentUser) {
     collapse = <Navbar.Toggle aria-controls="responsive-navbar-nav" />;
