@@ -422,11 +422,33 @@ describe('User', () => {
       ])
       .mockResolvedValue([]);
     const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
-    const user = await User.auth(token);
+    const user = User.auth(token);
     const hash = await bcrypt.hash('password', 10);
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValue([{ password: hash }]);
     await user.updatePassword('password', 'password');
     expect(spy).toHaveBeenCalledTimes(3);
+  });
+
+  it('gets nothing with bad id', async () => {
+    Mysql.query.mockResolvedValueOnce([]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    expect(await user.getNotifications()).toEqual([]);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('can get all notifications', async () => {
+    Mysql.query.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValue([1, 2]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    expect(await user.getNotifications()).toEqual([1, 2]);
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM notifications WHERE to_user = 1 ORDER BY timestamp desc;'
+    );
   });
 });

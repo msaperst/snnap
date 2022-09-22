@@ -103,15 +103,17 @@ const ApplicationForRequestToHire = class {
         `SELECT * FROM hire_request_applications WHERE hire_request_applications.id = ${this.id};`
       )
     )[0];
-    hireRequestApplication.equipment = await Mysql.query(
-      `SELECT equipment.id as value, equipment.name, hire_request_applications_equipment.what FROM hire_request_applications_equipment INNER JOIN equipment ON equipment.id = hire_request_applications_equipment.equipment WHERE hire_request_application = ${this.id};`
-    );
-    hireRequestApplication.skills = await Mysql.query(
-      `SELECT skills.id as value, skills.name FROM hire_request_applications_skills INNER JOIN skills ON skills.id = hire_request_applications_skills.skill WHERE hire_request_application = ${this.id};`
-    );
-    hireRequestApplication.portfolio = await Mysql.query(
-      `SELECT * FROM hire_request_applications_portfolios WHERE hire_request_application = ${this.id};`
-    );
+    if (hireRequestApplication) {
+      hireRequestApplication.equipment = await Mysql.query(
+        `SELECT equipment.id as value, equipment.name, hire_request_applications_equipment.what FROM hire_request_applications_equipment INNER JOIN equipment ON equipment.id = hire_request_applications_equipment.equipment WHERE hire_request_application = ${this.id};`
+      );
+      hireRequestApplication.skills = await Mysql.query(
+        `SELECT skills.id as value, skills.name FROM hire_request_applications_skills INNER JOIN skills ON skills.id = hire_request_applications_skills.skill WHERE hire_request_application = ${this.id};`
+      );
+      hireRequestApplication.portfolio = await Mysql.query(
+        `SELECT * FROM hire_request_applications_portfolios WHERE hire_request_application = ${this.id};`
+      );
+    }
     return hireRequestApplication;
   }
 };

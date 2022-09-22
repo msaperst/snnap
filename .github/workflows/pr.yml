@@ -49,6 +49,10 @@ jobs:
           docker exec snnap_mysql ./setup-database.sh
           APP=http://localhost:70 npm run test
 
+      - name: Retrieve Docker API Logs
+        if: always()
+        run: docker logs snnap_api
+
       - name: Archive Test Results 📊
         if: always()
         uses: actions/upload-artifact@v2

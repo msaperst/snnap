@@ -76,20 +76,20 @@ const User = class {
            SET last_login = now()
            WHERE id = '${newUser.id}'`
         );
-        const user = await Mysql.query(
+        const u = await Mysql.query(
           `SELECT *
            FROM users
            WHERE id = '${newUser.id}'`
         );
-        newUser.id = user[0].id;
-        newUser.username = user[0].username;
-        newUser.avatar = user[0].avatar;
-        newUser.firstName = user[0].first_name;
-        newUser.lastName = user[0].last_name;
-        newUser.email = user[0].email;
-        newUser.loc = user[0].loc;
-        newUser.lat = user[0].lat;
-        newUser.lon = user[0].lon;
+        newUser.id = u[0].id;
+        newUser.username = u[0].username;
+        newUser.avatar = u[0].avatar;
+        newUser.firstName = u[0].first_name;
+        newUser.lastName = u[0].last_name;
+        newUser.email = u[0].email;
+        newUser.loc = u[0].loc;
+        newUser.lat = u[0].lat;
+        newUser.lon = u[0].lon;
       } else {
         throw new Error('Username or password is incorrect!');
       }
@@ -105,15 +105,17 @@ const User = class {
       const user = await Mysql.query(`SELECT *
                                       FROM users
                                       where id = ${decoded.id}`);
-      newUser.id = user[0].id;
-      newUser.username = user[0].username;
-      newUser.avatar = user[0].avatar;
-      newUser.firstName = user[0].first_name;
-      newUser.lastName = user[0].last_name;
-      newUser.email = user[0].email;
-      newUser.loc = user[0].loc;
-      newUser.lat = user[0].lat;
-      newUser.lon = user[0].lon;
+      if (user.length) {
+        newUser.id = user[0].id;
+        newUser.username = user[0].username;
+        newUser.avatar = user[0].avatar;
+        newUser.firstName = user[0].first_name;
+        newUser.lastName = user[0].last_name;
+        newUser.email = user[0].email;
+        newUser.loc = user[0].loc;
+        newUser.lat = user[0].lat;
+        newUser.lon = user[0].lon;
+      }
     })();
     return newUser;
   }
@@ -211,6 +213,16 @@ const User = class {
       lat: this.lat,
       lon: this.lon,
     };
+  }
+
+  async getNotifications() {
+    const id = await this.getId();
+    if (id) {
+      return Mysql.query(
+        `SELECT * FROM notifications WHERE to_user = ${id} ORDER BY timestamp desc;`
+      );
+    }
+    return [];
   }
 
   static getToken(authorization) {

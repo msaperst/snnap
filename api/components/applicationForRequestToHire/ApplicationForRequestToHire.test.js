@@ -142,6 +142,21 @@ describe('application for request to hire', () => {
     );
   });
 
+  it('retrieves nothing when application is missing', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValueOnce([]);
+    const applicationForRequestToHire = new ApplicationForRequestToHire(5);
+    await expect(
+      applicationForRequestToHire.getInfo()
+    ).resolves.toBeUndefined();
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM hire_request_applications WHERE hire_request_applications.id = 5;'
+    );
+  });
+
   it('retrieves all of the info for the request', async () => {
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query

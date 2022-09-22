@@ -89,12 +89,14 @@ const RequestToHire = class {
         `SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.id = ${this.id};`
       )
     )[0];
-    hireRequest.equipment = await Mysql.query(
-      `SELECT equipment.id as value, equipment.name FROM hire_requests_equipment INNER JOIN equipment ON equipment.id = hire_requests_equipment.equipment WHERE hire_request = ${this.id};`
-    );
-    hireRequest.skills = await Mysql.query(
-      `SELECT skills.id as value, skills.name FROM hire_requests_skills INNER JOIN skills ON skills.id = hire_requests_skills.skill WHERE hire_request = ${this.id};`
-    );
+    if (hireRequest) {
+      hireRequest.equipment = await Mysql.query(
+        `SELECT equipment.id as value, equipment.name FROM hire_requests_equipment INNER JOIN equipment ON equipment.id = hire_requests_equipment.equipment WHERE hire_request = ${this.id};`
+      );
+      hireRequest.skills = await Mysql.query(
+        `SELECT skills.id as value, skills.name FROM hire_requests_skills INNER JOIN skills ON skills.id = hire_requests_skills.skill WHERE hire_request = ${this.id};`
+      );
+    }
     return hireRequest;
   }
 

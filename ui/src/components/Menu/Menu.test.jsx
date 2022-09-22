@@ -3,16 +3,16 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import Menu from './Menu';
+import useWebSocketLite from '../../helpers/useWebSocketLite';
 
-jest.mock('../../services/user.service');
-const userService = require('../../services/user.service');
+jest.mock('../../helpers/useWebSocketLite');
 
 describe('snnap menu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
 
-    userService.userService.getNotifications.mockResolvedValue([]);
+    useWebSocketLite.mockResolvedValue({ data: 0 });
   });
 
   it('renders only logo when no user', () => {
@@ -24,18 +24,7 @@ describe('snnap menu', () => {
     expect(container.firstChild.children).toHaveLength(1);
     expect(container.firstChild.firstChild).toHaveClass('container');
     expect(container.firstChild.firstChild.children).toHaveLength(1);
-    expect(container.firstChild.firstChild.firstChild).toHaveClass(
-      'navbar-brand'
-    );
-    expect(container.firstChild.firstChild.firstChild.firstChild).toHaveClass(
-      'd-inline-block align-top'
-    );
-    expect(
-      container.firstChild.firstChild.firstChild.firstChild.getAttribute('alt')
-    ).toEqual('SNNAP');
-    expect(
-      container.firstChild.firstChild.firstChild.firstChild.getAttribute('src')
-    ).toEqual('SNNAP.png');
+    expect(checkMainBrand(container)).toBeTruthy();
   });
 
   it('renders menu when data', () => {
@@ -55,18 +44,7 @@ describe('snnap menu', () => {
     const { container } = render(
       <Menu currentUser={{ username: 'msaperst' }} />
     );
-    expect(container.firstChild.firstChild.firstChild).toHaveClass(
-      'navbar-brand'
-    );
-    expect(container.firstChild.firstChild.firstChild.firstChild).toHaveClass(
-      'd-inline-block align-top'
-    );
-    expect(
-      container.firstChild.firstChild.firstChild.firstChild.getAttribute('alt')
-    ).toEqual('SNNAP');
-    expect(
-      container.firstChild.firstChild.firstChild.firstChild.getAttribute('src')
-    ).toEqual('SNNAP.png');
+    expect(checkMainBrand(container)).toBeTruthy();
   });
 
   it('renders togglable menu when data', () => {
@@ -252,23 +230,38 @@ describe('snnap menu', () => {
     expect(x).toEqual(1);
   });
 
-  it('shows no notification icon when no notifications', () => {
-    userService.userService.getNotifications.mockResolvedValue([]);
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
-    fireEvent.click(screen.getByText('msaperst'));
-    const userNav =
-      container.firstChild.firstChild.lastChild.firstChild.children[1];
+  it('shows no notification icon when no notifications', async () => {
+    const message = 0;
+    const userNav = await renderWithSockets(message, 'msaperst');
     expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications');
   });
 
   it('shows notifications icon when notifications', async () => {
-    userService.userService.getNotifications.mockResolvedValue([
-      { reviewed: true },
-      2,
-      { reviewed: 0 },
-    ]);
+    const message = 2;
+    const userNav = await renderWithSockets(message, 'msaperst 🔔');
+    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications2');
+  });
+
+  function checkMainBrand(container) {
+    expect(container.firstChild.firstChild.firstChild).toHaveClass(
+      'navbar-brand'
+    );
+    expect(container.firstChild.firstChild.firstChild.firstChild).toHaveClass(
+      'd-inline-block align-top'
+    );
+    expect(
+      container.firstChild.firstChild.firstChild.firstChild.getAttribute('alt')
+    ).toEqual('SNNAP');
+    expect(
+      container.firstChild.firstChild.firstChild.firstChild.getAttribute('src')
+    ).toEqual('SNNAP.png');
+    return true;
+  }
+
+  async function renderWithSockets(message, username) {
+    const data = { message };
+    useWebSocketLite.mockReturnValue({ data });
+
     let menu;
     await act(async () => {
       menu = render(<Menu currentUser={{ username: 'msaperst' }} />);
@@ -277,9 +270,7 @@ describe('snnap menu', () => {
     });
     const { container } = menu;
 
-    fireEvent.click(screen.getByText('msaperst 🔔'));
-    const userNav =
-      container.firstChild.firstChild.lastChild.firstChild.children[1];
-    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications2');
-  });
+    fireEvent.click(screen.getByText(username));
+    return container.firstChild.firstChild.lastChild.firstChild.children[1];
+  }
 });
