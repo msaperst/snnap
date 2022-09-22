@@ -105,6 +105,18 @@ describe('request to hire', () => {
     );
   });
 
+  it('retrieves nothing when request is missing', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValueOnce([]);
+    const requestToHire = new RequestToHire(5);
+    await expect(requestToHire.getInfo()).resolves.toBeUndefined();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT hire_requests.*, hire_requests.type as typeId, job_types.type FROM hire_requests INNER JOIN job_types ON hire_requests.type = job_types.id WHERE hire_requests.id = 5;'
+    );
+  });
+
   it('retrieves all of the info for the request', async () => {
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query

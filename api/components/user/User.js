@@ -105,7 +105,7 @@ const User = class {
       const user = await Mysql.query(`SELECT *
                                       FROM users
                                       where id = ${decoded.id}`);
-      if (user.length !== 0) {
+      if (user.length) {
         newUser.id = user[0].id;
         newUser.username = user[0].username;
         newUser.avatar = user[0].avatar;

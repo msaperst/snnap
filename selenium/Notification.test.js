@@ -115,22 +115,28 @@ describe('notifications', () => {
 
   it('shows an icon in the menu when there is a new notification', async () => {
     await driver.get(Test.getApp());
-    let dropDown = driver.wait(until.elementLocated(By.id('user-dropdown')));
+    let dropDown = await driver.wait(
+      until.elementLocated(By.id('user-dropdown'))
+    );
     expect(await dropDown.getText()).toEqual('notificationUser');
     await createAppliedToHireRequestNotification();
-    dropDown = driver.wait(until.elementLocated(By.id('user-dropdown')));
+    dropDown = await driver.wait(until.elementLocated(By.id('user-dropdown')));
+    await driver.wait(until.elementTextIs(dropDown, 'notificationUser 🔔'));
     expect(await dropDown.getText()).toEqual('notificationUser 🔔');
   });
 
   it('shows the unread notification count in the menu for all notifications', async () => {
     await driver.get(Test.getApp());
-    let dropDown = driver.wait(until.elementLocated(By.id('user-dropdown')));
+    let dropDown = await driver.wait(
+      until.elementLocated(By.id('user-dropdown'))
+    );
     await dropDown.click();
     expect(
       await driver.findElement(By.css('[href="/notifications"]')).getText()
     ).toEqual('Notifications');
     await createAppliedToHireRequestNotification();
-    dropDown = driver.wait(until.elementLocated(By.id('user-dropdown')));
+    dropDown = await driver.wait(until.elementLocated(By.id('user-dropdown')));
+    await driver.wait(until.elementTextIs(dropDown, 'notificationUser 🔔'));
     await dropDown.click();
     expect(
       await driver.findElement(By.css('[href="/notifications"]')).getText()
