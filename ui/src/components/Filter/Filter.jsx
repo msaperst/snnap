@@ -1,5 +1,10 @@
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
+import {
+  GeoapifyContext,
+  GeoapifyGeocoderAutocomplete,
+} from '@geoapify/react-geocoder-autocomplete';
+import '@geoapify/geocoder-autocomplete/styles/minimal.css';
 import { jobService } from '../../services/job.service';
 import { usePosition } from '../../helpers/usePosition';
 import RequestToHire from '../RequestToHire/RequestToHire';
@@ -18,9 +23,11 @@ function Filter(props) {
   const [equipment, setEquipment] = useState([]);
   const [skills, setSkills] = useState([]);
   const [distance, setDistance] = useState(distances[0]);
-  const [location, setLocation] = useState(locations[0]);
+  const [location, setLocation] = useState(currentUser);
   const [currentLocation, setCurrentLocation] = useState({});
   const [selectedJobTypes, setSelectedJobTypes] = useState([]);
+
+  const [showOwnLocation, setShowOwnLocation] = useState(false);
 
   useEffect(() => {
     jobService.getJobTypes().then((jobs) => {
@@ -54,7 +61,43 @@ function Filter(props) {
     currentLocation,
   ]);
 
+  useEffect(() => {
+    if (showOwnLocation) {
+      // fix some stylings
+      const input = document.querySelector('.geoapify-autocomplete-input');
+      input.className = 'form-control small-select';
+      const parent = input.parentNode;
+      parent.style.float = 'right';
+      parent.style.color = 'black';
+    }
+  }, [showOwnLocation]);
+
+  const setOther = (e) => {
+    setLocation(e.properties);
+  };
+
+  const selectFilterLocation = (value) => {
+    // determine which location to use
+    switch (value) {
+      case 'my home':
+        setLocation(currentUser);
+        break;
+      case 'me':
+        setLocation(currentLocation);
+        break;
+      case 'other':
+        setLocation({ lat: 0, lon: 0 });
+        setShowOwnLocation(true);
+        break;
+      default:
+        setLocation(currentUser);
+    }
+  };
+
   const updateResults = () => {
+    if (location === 'other') {
+      return;
+    }
     // start out empty
     let hireRequests = allHireRequests;
 
@@ -70,25 +113,9 @@ function Filter(props) {
       selectedJobTypes.includes(hireRequest.typeId)
     );
 
-    // determine which location to use
-    let whichLocation;
-    switch (location) {
-      case 'my home':
-        whichLocation = currentUser;
-        break;
-      case 'me':
-        whichLocation = currentLocation;
-        break;
-      case 'other':
-        whichLocation = { lat: 10, lon: 5 };
-        break;
-      default:
-        whichLocation = currentUser;
-    }
-
     // filter out ones outside our location
     hireRequests = hireRequests.filter(
-      (hireRequest) => distance >= calculateDistance(whichLocation, hireRequest)
+      (hireRequest) => distance >= calculateDistance(location, hireRequest)
     );
 
     // set our new values;
@@ -153,8 +180,8 @@ function Filter(props) {
           <Col md={4}>
             <h3>Found {filteredHireRequests.length} Jobs</h3>
           </Col>
-          <Col md={4} />
-          <Col md={4} className="text-end">
+          <Col md={3} />
+          <Col md={5} className="text-end">
             <Form.Select
               className="small-select"
               aria-label="Within Miles"
@@ -169,19 +196,30 @@ function Filter(props) {
               ))}
             </Form.Select>{' '}
             of{' '}
-            <Form.Select
-              className="small-select"
-              aria-label="Where At"
-              onChange={(e) => {
-                setLocation(e.target.value);
-              }}
-            >
-              {locations.map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-            </Form.Select>
+            {!showOwnLocation && (
+              <Form.Select
+                className="small-select"
+                aria-label="Where At"
+                onChange={(e) => selectFilterLocation(e.target.value)}
+              >
+                {locations.map((l) => (
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
+                ))}
+              </Form.Select>
+            )}
+            {showOwnLocation && (
+              <GeoapifyContext apiKey="fa2749a615994e459a223b8cb3832599">
+                <GeoapifyGeocoderAutocomplete
+                  className="123"
+                  placeholder="Enter City"
+                  type="city"
+                  skipIcons
+                  placeSelect={setOther}
+                />
+              </GeoapifyContext>
+            )}
           </Col>
         </Row>
       </Form>

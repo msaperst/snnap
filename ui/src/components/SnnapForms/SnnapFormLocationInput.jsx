@@ -38,10 +38,9 @@ function SnnapFormLocationInput(props) {
   if (onChange) {
     change = (e) => onChange(name, e);
   }
-  const key = 'fa2749a615994e459a223b8cb3832599';
 
   return (
-    <GeoapifyContext apiKey={key}>
+    <GeoapifyContext apiKey="fa2749a615994e459a223b8cb3832599">
       <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
         <FloatingLabel controlId={`form${safeName}`} label={name}>
           <GeoapifyGeocoderAutocomplete

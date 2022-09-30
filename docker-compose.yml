@@ -52,5 +52,6 @@ services:
       - api
     environment:
       API_PORT: ${API_PORT}
+      GEOAPIFY_API_KEY: ${GEOAPIFY_API_KEY}
 volumes:
   mysql:
