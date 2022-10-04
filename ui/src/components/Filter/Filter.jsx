@@ -12,7 +12,7 @@ import './Filter.css';
 
 function Filter(props) {
   const distances = [5, 25, 100, 250];
-  const locations = ['my home', 'me', 'other'];
+  const locations = ['my home', 'my location', 'custom'];
 
   const { currentUser, filter } = props;
   const { latitude, longitude } = usePosition();
@@ -75,10 +75,10 @@ function Filter(props) {
   const selectFilterLocation = (value) => {
     // determine which location to use
     switch (value) {
-      case 'me':
+      case 'my location':
         setLocation(currentLocation);
         break;
-      case 'other':
+      case 'custom':
         setLocation({ lat: 0, lon: 0 });
         setShowOwnLocation(true);
         break;

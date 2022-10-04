@@ -178,13 +178,13 @@ describe('filter', () => {
     expect(select.children[0].selected).toBeTruthy();
     expect(select.children[0].value).toEqual('my home');
 
-    expect(select.children[1].textContent).toEqual('me');
+    expect(select.children[1].textContent).toEqual('my location');
     expect(select.children[1].selected).toBeFalsy();
-    expect(select.children[1].value).toEqual('me');
+    expect(select.children[1].value).toEqual('my location');
 
-    expect(select.children[2].textContent).toEqual('other');
+    expect(select.children[2].textContent).toEqual('custom');
     expect(select.children[2].selected).toBeFalsy();
-    expect(select.children[2].value).toEqual('other');
+    expect(select.children[2].value).toEqual('custom');
   });
 
   it('shows correct jobs based on default filter', async () => {
@@ -321,7 +321,7 @@ describe('filter', () => {
     await basicFilter();
     const select = screen.getByLabelText('Where At');
     act(() => {
-      fireEvent.change(select, { target: { value: 'me' } });
+      fireEvent.change(select, { target: { value: 'my location' } });
     });
     expect(select.children[0].selected).toBeFalsy();
     expect(select.children[1].selected).toBeTruthy();
@@ -334,7 +334,7 @@ describe('filter', () => {
     await basicFilter();
     const select = screen.getByLabelText('Where At');
     act(() => {
-      fireEvent.change(select, { target: { value: 'other' } });
+      fireEvent.change(select, { target: { value: 'custom' } });
     });
     expect(select.children[0].selected).toBeFalsy();
     expect(select.children[1].selected).toBeFalsy();
@@ -361,7 +361,7 @@ describe('filter', () => {
     await basicFilter();
     const select = screen.getByLabelText('Where At');
     act(() => {
-      fireEvent.change(select, { target: { value: 'me' } });
+      fireEvent.change(select, { target: { value: 'my location' } });
     });
     act(() => {
       fireEvent.change(select, { target: { value: 'my home' } });
