@@ -88,7 +88,7 @@ class CompareHireRequestApplications extends React.Component {
               ? 'Application Selected'
               : 'Select Application'}
             <span
-              className="btn-secondary p-1 rounded-circle"
+              className="btn-warning p-1 rounded-circle"
               style={{ marginLeft: '10px' }}
             >
               {hireRequestApplications.length}

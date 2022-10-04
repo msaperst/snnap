@@ -1,41 +1,25 @@
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
-import { render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import Search from './Search';
 
-jest.mock('../../services/job.service');
-const jobService = require('../../services/job.service');
-
-Enzyme.configure({ adapter: new Adapter() });
-
 describe('search', () => {
-  let wrapper;
-  let wrapper2;
-  let x = 0;
+  let x;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.resetAllMocks();
-    jobService.jobService.getJobTypes.mockResolvedValue([
-      { id: 5, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
-      { id: 7, type: 'Misc', plural: 'Misc' },
-    ]);
-    wrapper = Enzyme.shallow(<Search />);
-    wrapper2 = Enzyme.shallow(<Search filter={updateX} filteredOn={5} />);
+    x = 0;
   });
 
   it('displays the main tagline', () => {
-    expect(wrapper.find('#tagline').text()).toEqual(
-      'Photography help in a snap'
-    );
+    const search = render(<Search />);
+    const tag = search.getByText('Photography help in a snap');
+    expect(tag.getAttribute('id')).toEqual('tagline');
   });
 
   it('displays the next tagline', () => {
-    expect(wrapper.find('#subTagline').text()).toEqual(
-      'The extra n is for easy'
-    );
+    const search = render(<Search />);
+    const sub = search.getByText('The extra n is for easy');
+    expect(sub.getAttribute('id')).toEqual('subTagline');
   });
 
   it('displays search bar', () => {
@@ -44,40 +28,30 @@ describe('search', () => {
   });
 
   it('displays each button', () => {
-    const buttons = wrapper.find('Button');
-    expect(buttons).toHaveLength(3);
-    // first button is search
-    expect(buttons.at(0).text()).toEqual('<FaSearch />');
-    // other buttons are returned plural values
-    expect(buttons.at(1).text()).toEqual("B'nai Mitzvahs");
-    expect(buttons.at(2).text()).toEqual('Misc');
+    render(<Search filter={updateX} />);
+    const searchButton = screen.getByRole('button');
+    expect(searchButton).toHaveClass('btn btn-primary');
+    expect(searchButton.getAttribute('id')).toEqual('searchForJobButton');
+    expect(searchButton.getAttribute('type')).toEqual('submit');
+    expect(searchButton).toHaveTextContent('');
   });
 
-  it('gets the job types', () => {
-    expect(wrapper.state().jobTypes).toEqual([
-      { id: 5, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
-      { id: 7, type: 'Misc', plural: 'Misc' },
-    ]);
+  it('does nothing when submitted', () => {
+    render(<Search filter={updateX} />);
+    const searchButton = screen.getByRole('button');
+    fireEvent.click(searchButton);
+    expect(x).toEqual(0);
   });
 
-  it('does something when a filter button is clicked', () => {
-    wrapper2.find('Button').at(1).simulate('click');
-    expect(x).toEqual(5);
+  it('updates the filter when values are entered', () => {
+    render(<Search filter={updateX} />);
+    fireEvent.change(screen.getByLabelText('Search For Job'), {
+      target: { value: '123' },
+    });
+    expect(x).toEqual('123');
   });
 
-  it('shows not filtering by default', () => {
-    const buttons = wrapper.find('Button');
-    expect(buttons.at(1).prop('variant')).toEqual('primary');
-    expect(buttons.at(2).prop('variant')).toEqual('primary');
-  });
-
-  it('shows filtering when clicked', () => {
-    const buttons = wrapper2.find('Button');
-    expect(buttons.at(1).prop('variant')).toEqual('secondary');
-    expect(buttons.at(2).prop('variant')).toEqual('primary');
-  });
-
-  const updateX = (value) => {
-    x = value;
+  const updateX = (e) => {
+    x = e.target.value;
   };
 });
