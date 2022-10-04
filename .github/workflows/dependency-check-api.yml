@@ -16,6 +16,9 @@ jobs:
         with:
           node-version: 14.x
 
+      - name: Install 🔧
+        run: cd api; npm ci
+
       - name: Dependency Check 🐛
         run: |
           cd api
