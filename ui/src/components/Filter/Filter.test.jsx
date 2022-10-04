@@ -87,6 +87,14 @@ describe('filter', () => {
     });
   }
 
+  async function expectOneMatch() {
+    const header = screen.getByRole('heading', { level: 3 });
+    expect(header.textContent).toEqual('Found 1 Job');
+    const cards = screen.getAllByText('job card');
+    expect(cards).toHaveLength(1);
+    return true;
+  }
+
   it('loads our filtering buttons', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
@@ -194,10 +202,7 @@ describe('filter', () => {
     expect(buttons[0]).toHaveClass('btn-filter btn btn-secondary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-primary');
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 1 Job');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(1);
+    expectOneMatch();
   });
 
   it('updates displayed jobs based on all selected filter button', async () => {
@@ -233,10 +238,7 @@ describe('filter', () => {
     expect(buttons[0]).toHaveClass('btn-filter btn btn-primary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-secondary');
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 1 Job');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(1);
+    expectOneMatch();
   });
 
   it('updates displayed jobs based on text in search box', async () => {
@@ -267,10 +269,7 @@ describe('filter', () => {
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 1 Job');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(1);
+    expect(expectOneMatch()).toBeTruthy();
   });
 
   it('updates displayed jobs based on different user home location', async () => {
@@ -281,10 +280,7 @@ describe('filter', () => {
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 1 Job');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(1);
+    expect(expectOneMatch()).toBeTruthy();
   });
 
   it('updates displayed jobs based on mileage dropdown', async () => {
@@ -331,10 +327,7 @@ describe('filter', () => {
     expect(select.children[1].selected).toBeTruthy();
     expect(select.children[2].selected).toBeFalsy();
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 1 Job');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(1);
+    expectOneMatch();
   });
 
   it('updates displayed jobs based on custom where dropdown', async () => {

@@ -14,10 +14,9 @@ function HomePage() {
 
   useEffect(() => {
     userService.get().then((user) => {
-      currentUser.lastLogin = user.lastLogin;
-      setCurrentUser(currentUser);
+      setCurrentUser({ ...currentUser, lastLogin: user.lastLogin });
     });
-  });
+  }, []);
 
   // eslint-disable-next-line class-methods-use-this
   const filter = (e) => {
