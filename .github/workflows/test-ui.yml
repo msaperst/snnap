@@ -27,6 +27,3 @@ jobs:
 
       - name: Unit Test 🤞
         run: cd ui; npm run test
-
-      - name: Dependency Check 🐛
-        run: cd ui; npm run owasp
