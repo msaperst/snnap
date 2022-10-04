@@ -115,22 +115,32 @@ class Test {
     await Mysql.query(`DELETE FROM portfolio WHERE company = ${id}`);
   }
 
-  static async addRequestToHire(user, type, date) {
+  static async addFullRequestToHire(user, type, date, location, details) {
     return RequestToHire.create(
       user,
       type,
-      {
-        lat: 38.8461234,
-        lon: -77.303452,
-        loc: 'Chantilly, VA, United States of America',
-      },
-      'Some details',
+      location,
+      details,
       200,
       4,
       null,
       date,
       [],
       []
+    );
+  }
+
+  static async addRequestToHire(user, type, date) {
+    return this.addFullRequestToHire(
+      user,
+      type,
+      date,
+      {
+        lat: 38.8461234,
+        lon: -77.303452,
+        loc: 'Chantilly, VA, United States of America',
+      },
+      'Some details'
     );
   }
 

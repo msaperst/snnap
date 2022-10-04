@@ -172,6 +172,7 @@ function Filter(props) {
           <Col md={3} />
           <Col md={5} className="text-end">
             <Form.Select
+              id="select-mileage"
               className="small-select"
               aria-label="Within Miles"
               onChange={(e) => {
@@ -187,6 +188,7 @@ function Filter(props) {
             of{' '}
             {!showOwnLocation && (
               <Form.Select
+                id="select-location"
                 className="small-select"
                 aria-label="Where At"
                 onChange={(e) => selectFilterLocation(e.target.value)}

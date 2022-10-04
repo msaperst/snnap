@@ -93,7 +93,7 @@ function RequestToHire(props) {
                 </Col>
               </Row>
               <Row className="mt-3">
-                <Col>{hireRequest.details}</Col>
+                <Col className="details">{hireRequest.details}</Col>
               </Row>
             </Container>
           </Card.Body>
