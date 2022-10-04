@@ -130,9 +130,10 @@ describe('home page', () => {
       until.elementLocated(By.id('searchForJobInput'))
     );
     await searchInput.sendKeys('Alexandria');
-    const cards = driver.findElements(By.className('card'));
-    for (let i = 0; i < cards.length; i++) {
-      const details = cards[i].findElement(By.className('details'));
+    const cards = await driver.findElements(By.className('card'));
+    // eslint-disable-next-line no-restricted-syntax
+    for (const card of cards) {
+      const details = card.findElement(By.className('details'));
       expect(details.getText()).toContain('Alexandria');
     }
   });
