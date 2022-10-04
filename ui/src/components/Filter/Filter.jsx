@@ -63,7 +63,7 @@ function Filter(props) {
 
   useEffect(() => {
     if (showOwnLocation) {
-      // fix some stylings
+      // fix some styling
       const input = document.querySelector('.geoapify-autocomplete-input');
       input.className = 'form-control small-select';
       const parent = input.parentNode;
@@ -72,16 +72,9 @@ function Filter(props) {
     }
   }, [showOwnLocation]);
 
-  const setOther = (e) => {
-    setLocation(e.properties);
-  };
-
   const selectFilterLocation = (value) => {
     // determine which location to use
     switch (value) {
-      case 'my home':
-        setLocation(currentUser);
-        break;
       case 'me':
         setLocation(currentLocation);
         break;
@@ -90,34 +83,27 @@ function Filter(props) {
         setShowOwnLocation(true);
         break;
       default:
-        setLocation(currentUser);
+        setLocation(currentUser); // also works for 'my home'
     }
   };
 
   const updateResults = () => {
-    if (location === 'other') {
-      return;
-    }
-    // start out empty
+    // start out with everything
     let hireRequests = allHireRequests;
-
     // remove elements not in our job type
     if (filter) {
       hireRequests = hireRequests.filter((hireRequest) =>
         hireRequest.details.toLowerCase().includes(filter.toLowerCase())
       );
     }
-
     // remove hireRequests based on selected job types
     hireRequests = hireRequests.filter((hireRequest) =>
       selectedJobTypes.includes(hireRequest.typeId)
     );
-
     // filter out ones outside our location
     hireRequests = hireRequests.filter(
       (hireRequest) => distance >= calculateDistance(location, hireRequest)
     );
-
     // set our new values;
     setFilteredHireRequests(hireRequests);
   };
@@ -178,7 +164,10 @@ function Filter(props) {
         </Row>
         <Row>
           <Col md={4}>
-            <h3>Found {filteredHireRequests.length} Jobs</h3>
+            <h3>
+              Found {filteredHireRequests.length} Job
+              {filteredHireRequests.length !== 1 ? 's' : ''}
+            </h3>
           </Col>
           <Col md={3} />
           <Col md={5} className="text-end">
@@ -216,7 +205,7 @@ function Filter(props) {
                   placeholder="Enter City"
                   type="city"
                   skipIcons
-                  placeSelect={setOther}
+                  placeSelect={(e) => setLocation(e.properties)}
                 />
               </GeoapifyContext>
             )}
