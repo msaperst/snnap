@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop */
+/* eslint-disable no-await-in-loop,no-restricted-syntax */
 const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
@@ -131,7 +131,6 @@ describe('home page', () => {
     );
     await searchInput.sendKeys('Alexandria');
     const cards = await driver.findElements(By.className('card'));
-    // eslint-disable-next-line no-restricted-syntax
     for (const card of cards) {
       const details = card.findElement(By.className('details'));
       expect(details.getText()).toContain('Alexandria');
