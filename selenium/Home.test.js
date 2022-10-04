@@ -1,5 +1,5 @@
-/* eslint-disable no-await-in-loop */
-const { By, Key, until } = require('selenium-webdriver');
+/* eslint-disable no-await-in-loop,no-restricted-syntax */
+const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
@@ -13,7 +13,19 @@ describe('home page', () => {
     // load the default page
     driver = await test.getDriver();
     // login as a user
-    requestToHires.push(await Test.addRequestToHire(0, 2, '2023-03-12'));
+    requestToHires.push(
+      await Test.addRequestToHire(
+        0,
+        2,
+        '2023-03-12',
+        {
+          lat: 38.8051095,
+          loc: 'Alexandria, VA, United States of America',
+          lon: -77.0470229,
+        },
+        'Gig in Alexandria'
+      )
+    );
     requestToHires.push(await Test.addRequestToHire(0, 2, '2023-03-10'));
 
     await test.loginUser('homeUser');
@@ -56,8 +68,9 @@ describe('home page', () => {
   });
 
   it('has 4 filter buttons', async () => {
-    driver.wait(until.elementsLocated(By.className('btn-filter')));
-    const filterButtons = await driver.findElements(By.className('btn-filter'));
+    const filterButtons = await driver.wait(
+      until.elementsLocated(By.className('btn-filter'))
+    );
     expect(filterButtons).toHaveLength(4);
     expect(await filterButtons[0].getText()).toEqual('Weddings');
     expect(await filterButtons[1].getText()).toEqual("B'nai Mitzvahs");
@@ -68,49 +81,42 @@ describe('home page', () => {
   it('displays all entries unfiltered', async () => {
     const foundText = await getFoundText(0);
     const foundDigit = parseInt(foundText.replace(/\D/g, ''), 10);
-    expect(foundText).toMatch(/Found \d+ results/);
+    expect(foundText).toMatch(/Found \d+ Job(s)?/);
     expect(foundDigit).toBeGreaterThanOrEqual(1);
+    const cards = await driver.findElements(By.className('card'));
+    expect(cards).toHaveLength(foundDigit);
   });
 
-  it('displays only filtered entries', async () => {
+  it("hides created b'nai mitzvahs we created when filtered out", async () => {
     const initialFoundText = await getFoundText(0);
     const initialFoundDigit = parseInt(initialFoundText.replace(/\D/g, ''), 10);
-    driver.wait(until.elementsLocated(By.className('btn-filter')));
-    const filterButtons = await driver.findElements(By.className('btn-filter'));
-    // ensure weddings filters out the rest (is missing at least the one we added)
-    await filterButtons[0].click();
-    let afterFoundText = await getFoundText(initialFoundDigit);
-    let afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
-    expect(afterFoundDigit).toBeLessThanOrEqual(initialFoundDigit - 1);
-    // ensure b'nai filters out the rest (has at least the one we added)
-    await filterButtons[1].click();
-    afterFoundText = await getFoundText(afterFoundDigit);
-    afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
-    expect(afterFoundDigit).toBeLessThanOrEqual(initialFoundDigit);
-    expect(afterFoundDigit).toBeGreaterThanOrEqual(1);
-  });
-
-  it('displays no employers when unchecked, and employers when rechecked', async () => {
-    const initialFoundText = await getFoundText(0);
-    const initialFoundDigit = parseInt(initialFoundText.replace(/\D/g, ''), 10);
-    const employersButton = driver.wait(
-      until.elementLocated(By.id('showEmployers'))
+    const filterButtons = await driver.wait(
+      until.elementsLocated(By.className('btn-filter'))
     );
-    await employersButton.sendKeys(Key.SPACE);
-    let afterFoundText = await getFoundText(initialFoundDigit);
-    let afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
-    // now we're looking for zero, afterward we implement hirings, we'll need to update this
-    expect(afterFoundDigit).toEqual(0);
-    await employersButton.sendKeys(Key.SPACE);
-    afterFoundText = await getFoundText(0);
-    afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
-    // now we're looking for zero, afterward we implement hirings, we'll need to update this
-    expect(afterFoundDigit).toEqual(initialFoundDigit);
+    await filterButtons[1].click();
+    const afterFoundText = await getFoundText(initialFoundDigit);
+    const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
+    expect(afterFoundDigit).toBeLessThanOrEqual(initialFoundDigit - 2);
+    const cards = await driver.findElements(By.className('card'));
+    expect(cards).toHaveLength(afterFoundDigit);
+  });
+
+  it('hides weddings, but not others when filtered out', async () => {
+    const filterButtons = await driver.wait(
+      until.elementsLocated(By.className('btn-filter'))
+    );
+    await filterButtons[0].click();
+    const afterFoundText = await getFoundText(0);
+    const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
+    expect(afterFoundDigit).toBeGreaterThanOrEqual(1);
+    const cards = await driver.findElements(By.className('card'));
+    expect(cards).toHaveLength(afterFoundDigit);
   });
 
   it('displays soonest at the top', async () => {
-    driver.wait(until.elementsLocated(By.className('card')));
-    const cards = await driver.findElements(By.className('card'));
+    const cards = await driver.wait(
+      until.elementsLocated(By.className('card'))
+    );
     let last = Date.now() - 24 * 60 * 60 * 1000; // makes this yesterday
     for (let i = 0; i < cards.length; i++) {
       const cardDate = await getCardDate(i);
@@ -119,44 +125,55 @@ describe('home page', () => {
     }
   });
 
-  it('displays soonest at the bottom when resorted', async () => {
-    // resort
-    const firstDate = await getCardDate(0);
-    const select = await driver.findElement(By.className('form-select'));
-    (await select.findElements(By.css('option')))[1].click();
-    driver.wait(() => getCardDate(0).then((date) => date !== firstDate));
-    // check the cards
-    driver.wait(until.elementsLocated(By.className('card')));
+  it('updates displayed jobs based on text in search box', async () => {
+    const searchInput = await driver.wait(
+      until.elementLocated(By.id('searchForJobInput'))
+    );
+    await searchInput.sendKeys('Alexandria');
     const cards = await driver.findElements(By.className('card'));
-    let last = Date.now() - 24 * 60 * 60 * 1000; // makes this yesterday
-    for (let i = cards.length - 1; i >= 0; i--) {
-      const cardDate = await getCardDate(i);
-      expect(cardDate).toBeGreaterThanOrEqual(last);
-      last = cardDate;
+    for (const card of cards) {
+      const details = card.findElement(By.className('details'));
+      expect(details.getText()).toContain('Alexandria');
     }
   });
 
-  it('displays soonest at the top when reresorted', async () => {
-    // resort
-    const firstDate = await getCardDate(0);
-    const select = await driver.findElement(By.className('form-select'));
-    (await select.findElements(By.css('option')))[1].click();
-    driver.wait(() => getCardDate(0).then((date) => date !== firstDate));
-    // resort
-    (await select.findElements(By.css('option')))[0].click();
-    driver.wait(() => getCardDate(0).then((date) => date === firstDate));
-    // check the cards
-    driver.wait(until.elementsLocated(By.className('card')));
+  it('updates displayed jobs based on mileage dropdown', async () => {
+    const initialFoundText = await getFoundText(0);
+    const initialFoundDigit = parseInt(initialFoundText.replace(/\D/g, ''), 10);
+    const select = await driver.wait(
+      until.elementLocated(By.id('select-mileage'))
+    );
+    await (await select.findElements(By.css('option')))[2].click();
+    const afterFoundText = await getFoundText(initialFoundDigit);
+    const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
+    expect(afterFoundDigit).toBeGreaterThanOrEqual(2);
     const cards = await driver.findElements(By.className('card'));
-    let last = Date.now() - 24 * 60 * 60 * 1000; // makes this yesterday
-    for (let i = 0; i < cards.length; i++) {
-      const cardDate = await getCardDate(i);
-      expect(cardDate).toBeGreaterThanOrEqual(last);
-      last = cardDate;
-    }
+    expect(cards).toHaveLength(afterFoundDigit);
   });
 
-  // TODO - fill me out as we get more functionality
+  // TODO - remove the above when this test is completed
+  // eslint-disable-next-line jest/expect-expect
+  it('updates displayed jobs based on from where dropdown', () => {
+    // TODO - unable to do this currently as allowing location isn't possible/simple through Selenium
+  });
+
+  it('updates displayed jobs based on custom where dropdown', async () => {
+    const select = await driver.wait(
+      until.elementLocated(By.id('select-location'))
+    );
+    await (await select.findElements(By.css('option')))[2].click();
+    await (
+      await driver.findElement(By.css('[placeholder="Enter City"]'))
+    ).sendKeys('Alexandria, VA');
+    await driver
+      .wait(until.elementLocated(By.className('geoapify-autocomplete-item')))
+      .click();
+    const afterFoundText = await getFoundText(0);
+    const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
+    expect(afterFoundDigit).toBeGreaterThanOrEqual(1);
+    const cards = await driver.findElements(By.className('card'));
+    expect(cards).toHaveLength(afterFoundDigit);
+  });
 
   async function getFoundText(waitUntilNot) {
     let foundText = `Found ${waitUntilNot} results`;

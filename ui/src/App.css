@@ -37,22 +37,21 @@
   }
 }
 
-.btn-primary, .btn-primary:focus, .btn-primary:hover {
-  background: #6A3CA5;
-  border-color: #6A3CA5;
-}
-
-.btn-primary:focus, .btn-primary:hover {
-  color: #DC7603;
-}
-
-.btn-secondary, .btn-secondary:focus, .btn-secondary:hover {
-  background: #DC7603;
-  border-color: #DC7603;
-}
-
-.btn-secondary:focus, .btn-secondary:hover {
-  color: #6A3CA5;
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #6a3ca5;
+  --bs-btn-border-color: #6a3ca5;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #682C7F;
+  --bs-btn-hover-border-color: #672672;
+  --bs-btn-focus-shadow-rgb: 49,132,253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #672672;
+  --bs-btn-active-border-color: #672166;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #6a3ca5;
+  --bs-btn-disabled-border-color: #6a3ca5;
 }
 
 .container.skinny {

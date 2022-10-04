@@ -1,0 +1,10 @@
+.small-select {
+    display: initial;
+    width: initial;
+}
+
+.btn-filter {
+    z-index: 10;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
