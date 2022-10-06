@@ -201,7 +201,7 @@ function Filter(props) {
               </Form.Select>
             )}
             {showOwnLocation && (
-              <GeoapifyContext apiKey="fa2749a615994e459a223b8cb3832599">
+              <GeoapifyContext apiKey={process.env.REACT_APP_GEOAPIFY_API_KEY}>
                 <GeoapifyGeocoderAutocomplete
                   className="123"
                   placeholder="Enter City"

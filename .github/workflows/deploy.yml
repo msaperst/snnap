@@ -36,6 +36,9 @@ jobs:
           echo "" >> .env
           echo "# api information" >> .env
           echo "API_PORT=3001" >> .env
+          echo "" >> .env
+          echo "# third party information" >> .env
+          echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
 
       - name: Build Dockerfile 🐋
         run: docker-compose -f docker-compose.yml build
