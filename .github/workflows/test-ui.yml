@@ -16,7 +16,7 @@ jobs:
 
       - name: Setup env file ⚙
         run: |
-          echo "REACT_APP_GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" > .env
+          echo "REACT_APP_GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" > ui/.env
 
       - name: Setup Node ☕
         uses: actions/setup-node@v1
