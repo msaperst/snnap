@@ -14,6 +14,10 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
 
+      - name: Setup env file ⚙
+        run: |
+          echo "REACT_APP_GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" > .env
+
       - name: Setup Node ☕
         uses: actions/setup-node@v1
         with:
