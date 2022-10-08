@@ -38,7 +38,7 @@ describe('apply to job', () => {
 
   it('can be viewed from any job', async () => {
     jobs.push(await Test.addJob(0, 2, '2023-03-10'));
-    jobs.push(await Test.addJob(1, 4, '2023-03-10'));
+    jobs.push(await Test.addJob(await user.getId(), 4, '2023-03-10'));
     await driver.navigate().refresh();
     for (const job of jobs) {
       const button = await home.getButton(await job.getId());

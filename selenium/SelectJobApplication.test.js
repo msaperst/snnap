@@ -204,6 +204,7 @@ describe('apply to job', () => {
       By.id('selectJobApplicationButton')
     );
     await applyLink.click();
+    await driver.wait(until.elementIsDisabled(applyLink));
     expect(await applyLink.isEnabled()).toBeFalsy();
     const alert = await driver.wait(
       until.elementLocated(By.className('alert-success'))
