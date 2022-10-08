@@ -38,7 +38,8 @@ describe('apply to job', () => {
     const button = await home.getButton(await jobs[0].getId());
     await button.click();
     form = await driver.wait(
-      until.elementLocated(By.id('compareJobApplicationsForm'))
+      until.elementLocated(By.id('compareJobApplicationsForm')),
+      5000
     );
   }, 10000);
 
@@ -56,9 +57,10 @@ describe('apply to job', () => {
 
   it('opens the modal when clicked', async () => {
     const modal = driver.wait(
-      until.elementLocated(By.className('modal-dialog'))
+      until.elementLocated(By.className('modal-dialog')),
+      5000
     );
-    driver.wait(until.elementIsVisible(modal));
+    driver.wait(until.elementIsVisible(modal), 5000);
     expect(await modal.isDisplayed()).toBeTruthy();
     expect(
       await modal.findElement(By.className('modal-title')).getText()
@@ -107,10 +109,10 @@ describe('apply to job', () => {
     expect(await accordianBody.isDisplayed()).toBeFalsy();
     const header = driver.findElement(By.className('accordion-header'));
     await header.click();
-    await driver.wait(until.elementIsVisible(accordianBody));
+    await driver.wait(until.elementIsVisible(accordianBody), 5000);
     expect(await accordianBody.isDisplayed()).toBeTruthy();
     await header.click();
-    await driver.wait(until.elementIsNotVisible(accordianBody));
+    await driver.wait(until.elementIsNotVisible(accordianBody), 5000);
     expect(await accordianBody.isDisplayed()).toBeFalsy();
   });
 
@@ -132,7 +134,7 @@ describe('apply to job', () => {
     expect(await avatar.isDisplayed()).toBeFalsy();
     // make visible
     await accordion.findElement(By.className('accordion-header')).click();
-    await driver.wait(until.elementIsVisible(avatar));
+    await driver.wait(until.elementIsVisible(avatar), 5000);
     // all things are now shown
     expect(await avatar.isDisplayed()).toBeTruthy();
     expect(await rows[1].getText()).toEqual('');
@@ -161,7 +163,7 @@ describe('apply to job', () => {
     expect(await rows[3].getText()).toEqual('');
     // make visible
     await accordion.findElement(By.className('accordion-header')).click();
-    await driver.wait(until.elementIsVisible(avatar));
+    await driver.wait(until.elementIsVisible(avatar), 5000);
     // all things are now shown
     expect(await avatar.isDisplayed()).toBeTruthy();
     for (const icon of icons) {
@@ -192,7 +194,8 @@ describe('apply to job', () => {
     );
     await applyLink.click();
     const alert = await driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual('Please select an application');
   });
@@ -209,16 +212,19 @@ describe('apply to job', () => {
       By.id('selectJobApplicationButton')
     );
     await applyLink.click();
-    await driver.wait(until.elementIsDisabled(applyLink));
+    await driver.wait(until.elementIsDisabled(applyLink), 5000);
     expect(await applyLink.isEnabled()).toBeFalsy();
     const alert = await driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await alert.getText()).toEqual('Job Application Chosen');
-    await driver.wait(() =>
-      driver
-        .findElements(By.css('.modal-header'))
-        .then((elements) => elements.length === 0)
+    await driver.wait(
+      () =>
+        driver
+          .findElements(By.css('.modal-header'))
+          .then((elements) => elements.length === 0),
+      5000
     );
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
@@ -235,15 +241,20 @@ describe('apply to job', () => {
       By.id('selectJobApplicationButton')
     );
     await applyLink.click();
-    await driver.wait(until.elementLocated(By.className('alert-success')));
-    await driver.wait(async () =>
-      driver
-        .findElements(
-          By.css(
-            `input[aria-label="jobApplication-${await applicationsForJobs[0].getId()}"]`
+    await driver.wait(
+      until.elementLocated(By.className('alert-success')),
+      5000
+    );
+    await driver.wait(
+      async () =>
+        driver
+          .findElements(
+            By.css(
+              `input[aria-label="jobApplication-${await applicationsForJobs[0].getId()}"]`
+            )
           )
-        )
-        .then((elements) => elements.length === 0)
+          .then((elements) => elements.length === 0),
+      5000
     );
     expect(
       await driver.findElements(

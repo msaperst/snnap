@@ -17,12 +17,13 @@ describe('new job', () => {
     // login as a user
     await test.loginUser('newJobUser');
     await driver.get(Test.getApp());
-    const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')));
+    const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')), 5000);
     gigs.click();
-    button = driver.wait(until.elementLocated(By.id('openNewJobButton')));
+    button = driver.wait(until.elementLocated(By.id('openNewJobButton')), 5000);
     await button.click();
     modal = driver.wait(
-      until.elementLocated(By.css('[data-testid="newJobModal"]'))
+      until.elementLocated(By.css('[data-testid="newJobModal"]')),
+      5000
     );
   }, 10000);
 
@@ -35,9 +36,12 @@ describe('new job', () => {
 
   it('has a link to open the modal', async () => {
     driver.navigate().refresh();
-    const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')));
+    const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')), 5000);
     gigs.click();
-    const button = driver.wait(until.elementLocated(By.id('openNewJobButton')));
+    const button = driver.wait(
+      until.elementLocated(By.id('openNewJobButton')),
+      5000
+    );
     expect(await button.getText()).toEqual('Create New Job');
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
@@ -104,16 +108,20 @@ describe('new job', () => {
   it('closes modal with successful submission of the form', async () => {
     const cards = (await driver.findElements(By.className('card'))).length;
     await enterData(2, 'Fairfax', 'New Deetz', '100', '100', '10/13/2031');
-    await driver.wait(() =>
-      driver
-        .findElements(By.css('.modal-header'))
-        .then((elements) => elements.length === 0)
+    await driver.wait(
+      () =>
+        driver
+          .findElements(By.css('.modal-header'))
+          .then((elements) => elements.length === 0),
+      5000
     );
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
-    await driver.wait(() =>
-      driver
-        .findElements(By.className('card'))
-        .then((elements) => elements.length === cards + 1)
+    await driver.wait(
+      () =>
+        driver
+          .findElements(By.className('card'))
+          .then((elements) => elements.length === cards + 1),
+      5000
     );
     expect(await driver.findElements(By.className('card'))).toHaveLength(
       cards + 1
@@ -121,8 +129,11 @@ describe('new job', () => {
   });
 
   async function enterData(option, location, details, pay, duration, date) {
-    const select = driver.wait(until.elementLocated(By.id('formJobType')));
-    await driver.wait(until.elementIsEnabled(select));
+    const select = driver.wait(
+      until.elementLocated(By.id('formJobType')),
+      5000
+    );
+    await driver.wait(until.elementIsEnabled(select), 5000);
     await (await select.findElements(By.css('option')))[option].click();
     await (
       await modal.findElement(By.css('[placeholder="City"]'))
@@ -144,7 +155,10 @@ describe('new job', () => {
     for (let i = 0; i < 6; i++) {
       expect(await feedbacks[i].isDisplayed()).toBeFalsy();
     }
-    return driver.wait(until.elementLocated(By.className('alert-danger')));
+    return driver.wait(
+      until.elementLocated(By.className('alert-danger')),
+      5000
+    );
   }
 
   // TODO

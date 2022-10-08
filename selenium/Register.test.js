@@ -26,7 +26,7 @@ describe('register page', () => {
   });
 
   it('shows the register header', async () => {
-    driver.wait(until.elementLocated(By.id('formFirstname')));
+    driver.wait(until.elementLocated(By.id('formFirstname')), 5000);
     expect(await driver.findElement(By.css('h2')).getText()).toEqual(
       'Register'
     );
@@ -78,7 +78,8 @@ describe('register page', () => {
       true
     );
     const dropDownMenu = driver.wait(
-      until.elementLocated(By.id('user-dropdown'))
+      until.elementLocated(By.id('user-dropdown')),
+      5000
     );
     expect(await dropDownMenu.getText()).toEqual('registerUser');
     await Mysql.query(
@@ -112,7 +113,8 @@ describe('register page', () => {
       true
     );
     const alert = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual(
       'This email is already in our system. Try resetting your password.'
@@ -131,7 +133,8 @@ describe('register page', () => {
       true
     );
     const alert = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual(
       'Sorry, that username is already in use.'
@@ -151,7 +154,8 @@ describe('register page', () => {
       false
     );
     const alert = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual('Please provide a valid city.');
   });
@@ -171,7 +175,8 @@ describe('register page', () => {
     await driver.findElement(By.id('formCity')).sendKeys(city);
     if (fullCity) {
       const location = await driver.wait(
-        until.elementLocated(By.xpath(`//*[text()="${city}"]`))
+        until.elementLocated(By.xpath(`//*[text()="${city}"]`)),
+        5000
       );
       await location.click();
       Test.sleep(1000);

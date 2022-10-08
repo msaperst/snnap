@@ -68,14 +68,18 @@ describe('notifications', () => {
     let notification = await createAppliedToJobNotification();
     await notification.findElement(By.css('svg')).click();
     await driver.navigate().refresh();
-    notification = await driver.wait(until.elementLocated(By.css('div.card')));
+    notification = await driver.wait(
+      until.elementLocated(By.css('div.card')),
+      5000
+    );
     expect(await notification.findElements(By.css('svg'))).toHaveLength(0);
   });
 
   it('navigates to the user page when clicking on the user name', async () => {
     await createAppliedToJobNotification();
     const link = await driver.wait(
-      until.elementLocated(By.linkText('Test User'))
+      until.elementLocated(By.linkText('Test User')),
+      5000
     );
     await link.click();
     expect(await driver.getCurrentUrl()).toEqual(
@@ -85,7 +89,10 @@ describe('notifications', () => {
 
   it('navigates to the job when clicking on the job', async () => {
     await createAppliedToJobNotification();
-    const link = await driver.wait(until.elementLocated(By.linkText('job')));
+    const link = await driver.wait(
+      until.elementLocated(By.linkText('job')),
+      5000
+    );
     await link.click();
     expect(await driver.getCurrentUrl()).toEqual(
       `${Test.getApp()}/jobs#${await jobs[0].getId()}`
@@ -95,7 +102,8 @@ describe('notifications', () => {
   it('navigates to the job application when clicking on the application', async () => {
     await createChosenJobApplicationNotification();
     const link = await driver.wait(
-      until.elementLocated(By.linkText('job application'))
+      until.elementLocated(By.linkText('job application')),
+      5000
     );
     await link.click();
     expect(await driver.getCurrentUrl()).toEqual(
@@ -106,34 +114,48 @@ describe('notifications', () => {
   it('shows an icon in the menu when there is a new notification', async () => {
     await driver.get(Test.getApp());
     let dropDown = await driver.wait(
-      until.elementLocated(By.id('user-dropdown'))
+      until.elementLocated(By.id('user-dropdown')),
+      5000
     );
     expect(await dropDown.getText()).toEqual('notificationUser');
     await createAppliedToJobNotification();
-    dropDown = await driver.wait(until.elementLocated(By.id('user-dropdown')));
-    await driver.wait(until.elementTextIs(dropDown, 'notificationUser 🔔'));
+    dropDown = await driver.wait(
+      until.elementLocated(By.id('user-dropdown')),
+      5000
+    );
+    await driver.wait(
+      until.elementTextIs(dropDown, 'notificationUser 🔔'),
+      5000
+    );
     expect(await dropDown.getText()).toEqual('notificationUser 🔔');
   });
 
   it('shows the unread notification count in the menu for all notifications', async () => {
     await driver.get(Test.getApp());
     let dropDown = await driver.wait(
-      until.elementLocated(By.id('user-dropdown'))
+      until.elementLocated(By.id('user-dropdown')),
+      5000
     );
     await dropDown.click();
     expect(
       await driver.findElement(By.css('[href="/notifications"]')).getText()
     ).toEqual('Notifications');
     await createAppliedToJobNotification();
-    dropDown = await driver.wait(until.elementLocated(By.id('user-dropdown')));
-    await driver.wait(until.elementTextIs(dropDown, 'notificationUser 🔔'));
+    dropDown = await driver.wait(
+      until.elementLocated(By.id('user-dropdown')),
+      5000
+    );
+    await driver.wait(
+      until.elementTextIs(dropDown, 'notificationUser 🔔'),
+      5000
+    );
     await dropDown.click();
     expect(
       await driver.findElement(By.css('[href="/notifications"]')).getText()
     ).toEqual('Notifications1');
     await driver.findElement(By.css('svg')).click();
     await driver.navigate().refresh();
-    dropDown = driver.wait(until.elementLocated(By.id('user-dropdown')));
+    dropDown = driver.wait(until.elementLocated(By.id('user-dropdown')), 5000);
     await dropDown.click();
     expect(
       await driver.findElement(By.css('[href="/notifications"]')).getText()
@@ -151,7 +173,7 @@ describe('notifications', () => {
       )
     );
     await driver.get(`${Test.getApp()}/notifications`);
-    return driver.wait(until.elementLocated(By.css('div.card')));
+    return driver.wait(until.elementLocated(By.css('div.card')), 5000);
   }
 
   async function createChosenJobApplicationNotification() {
@@ -168,6 +190,6 @@ describe('notifications', () => {
       await application.getId()
     );
     await driver.get(`${Test.getApp()}/notifications`);
-    return driver.wait(until.elementLocated(By.css('div.card')));
+    return driver.wait(until.elementLocated(By.css('div.card')), 5000);
   }
 });

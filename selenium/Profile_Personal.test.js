@@ -25,7 +25,7 @@ describe('profile page', () => {
   }, 15000);
 
   it('shows the personal information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const personalInfo = (await driver.findElements(By.css('form')))[1];
     expect(await personalInfo.findElement(By.css('h3')).getText()).toEqual(
       'Personal Information'
@@ -33,21 +33,27 @@ describe('profile page', () => {
   });
 
   it('displays the first name', async () => {
-    const firstName = driver.wait(until.elementLocated(By.id('formFirstName')));
+    const firstName = driver.wait(
+      until.elementLocated(By.id('formFirstName')),
+      5000
+    );
     await test.waitUntilInputFilled(By.id('formFirstName'));
     expect(await firstName.getAttribute('value')).toEqual('Test');
     expect(await firstName.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the last name', async () => {
-    const lastName = driver.wait(until.elementLocated(By.id('formLastName')));
+    const lastName = driver.wait(
+      until.elementLocated(By.id('formLastName')),
+      5000
+    );
     await test.waitUntilInputFilled(By.id('formLastName'));
     expect(await lastName.getAttribute('value')).toEqual('User');
     expect(await lastName.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the city', async () => {
-    const city = driver.wait(until.elementLocated(By.id('formCity')));
+    const city = driver.wait(until.elementLocated(By.id('formCity')), 5000);
     await test.waitUntilInputFilled(By.id('formCity'));
     expect(await city.getAttribute('value')).toEqual(
       'Fairfax, VA, United States of America'
@@ -56,7 +62,7 @@ describe('profile page', () => {
   });
 
   it('shows error when you update profile blank information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const profile = (await driver.findElements(By.css('form')))[1];
     const feedbacks = await profile.findElements(
       By.className('invalid-feedback')
@@ -91,10 +97,12 @@ describe('profile page', () => {
 
   it('allows updating the personal values', async () => {
     let firstName = await driver.wait(
-      until.elementLocated(By.id('formFirstName'))
+      until.elementLocated(By.id('formFirstName')),
+      5000
     );
     let lastName = await driver.wait(
-      until.elementLocated(By.id('formLastName'))
+      until.elementLocated(By.id('formLastName')),
+      5000
     );
     await test.waitUntilInputFilled(By.id('formFirstName'));
     await firstName.sendKeys('0');
@@ -102,7 +110,8 @@ describe('profile page', () => {
     await checkFields(firstName, lastName);
     await driver.findElement(By.id('savePersonalInformationButton')).click();
     const success = await driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await success.getText()).toEqual('Personal Information Updated');
     await Test.sleep(5000);
@@ -110,18 +119,25 @@ describe('profile page', () => {
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
     await driver.navigate().refresh();
-    firstName = await driver.wait(until.elementLocated(By.id('formFirstName')));
-    lastName = await driver.wait(until.elementLocated(By.id('formLastName')));
+    firstName = await driver.wait(
+      until.elementLocated(By.id('formFirstName')),
+      5000
+    );
+    lastName = await driver.wait(
+      until.elementLocated(By.id('formLastName')),
+      5000
+    );
     await checkFields(firstName, lastName);
   });
 
   it('allows updating the city', async () => {
-    let city = await driver.wait(until.elementLocated(By.id('formCity')));
+    let city = await driver.wait(until.elementLocated(By.id('formCity')), 5000);
     await test.waitUntilInputFilled(By.id('formCity'));
     await city.clear();
     await city.sendKeys('Chantilly');
     const location = await driver.wait(
-      until.elementLocated(By.xpath('//*[text()="Chantilly"]'))
+      until.elementLocated(By.xpath('//*[text()="Chantilly"]')),
+      5000
     );
     await location.click();
     expect(await city.getAttribute('value')).toEqual(
@@ -129,9 +145,12 @@ describe('profile page', () => {
     );
     await Test.sleep(1000);
     await driver.findElement(By.id('savePersonalInformationButton')).click();
-    await driver.wait(until.elementLocated(By.className('alert-success')));
+    await driver.wait(
+      until.elementLocated(By.className('alert-success')),
+      5000
+    );
     await driver.navigate().refresh();
-    city = await driver.wait(until.elementLocated(By.id('formCity')));
+    city = await driver.wait(until.elementLocated(By.id('formCity')), 5000);
     await test.waitUntilInputFilled(By.id('formCity'));
     expect(await city.getAttribute('value')).toEqual(
       'Chantilly, VA, United States of America'

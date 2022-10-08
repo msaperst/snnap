@@ -223,17 +223,23 @@ class Test {
 
   async waitUntilNotPresent(locator) {
     const { driver } = this;
-    await driver.wait(() =>
-      driver.findElements(locator).then((elements) => elements.length === 0)
+    await driver.wait(
+      () =>
+        driver.findElements(locator).then((elements) => elements.length === 0),
+      5000
     );
   }
 
   async waitUntilInputFilled(locator) {
     const { driver } = this;
-    await driver.wait(() =>
-      driver
-        .findElement(locator)
-        .then(async (element) => (await element.getAttribute('value')) !== '')
+    await driver.wait(
+      () =>
+        driver
+          .findElement(locator)
+          .then(
+            async (element) => (await element.getAttribute('value')) !== ''
+          ),
+      5000
     );
   }
 }

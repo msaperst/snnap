@@ -26,7 +26,7 @@ describe('profile page', () => {
   }, 15000);
 
   it('shows the company information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const companyInformation = (await driver.findElements(By.css('form')))[3];
     expect(
       await companyInformation.findElement(By.css('h3')).getText()
@@ -35,27 +35,35 @@ describe('profile page', () => {
 
   it('displays the company name', async () => {
     const companyName = driver.wait(
-      until.elementLocated(By.id('formCompanyName'))
+      until.elementLocated(By.id('formCompanyName')),
+      5000
     );
     expect(await companyName.getAttribute('value')).toEqual('');
     expect(await companyName.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the website', async () => {
-    const website = driver.wait(until.elementLocated(By.id('formWebsite')));
+    const website = driver.wait(
+      until.elementLocated(By.id('formWebsite')),
+      5000
+    );
     expect(await website.getAttribute('value')).toEqual('');
     expect(await website.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the instagram link', async () => {
-    const insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    const insta = driver.wait(
+      until.elementLocated(By.id('formInstagramLink')),
+      5000
+    );
     expect(await insta.getAttribute('value')).toEqual('');
     expect(await insta.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the facebook link', async () => {
     const facebook = driver.wait(
-      until.elementLocated(By.id('formFacebookLink'))
+      until.elementLocated(By.id('formFacebookLink')),
+      5000
     );
     expect(await facebook.getAttribute('value')).toEqual('');
     expect(await facebook.getAttribute('disabled')).toBeNull();
@@ -63,12 +71,20 @@ describe('profile page', () => {
 
   function getFields() {
     const companyName = driver.wait(
-      until.elementLocated(By.id('formCompanyName'))
+      until.elementLocated(By.id('formCompanyName')),
+      5000
     );
-    const website = driver.wait(until.elementLocated(By.id('formWebsite')));
-    const insta = driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    const website = driver.wait(
+      until.elementLocated(By.id('formWebsite')),
+      5000
+    );
+    const insta = driver.wait(
+      until.elementLocated(By.id('formInstagramLink')),
+      5000
+    );
     const facebook = driver.wait(
-      until.elementLocated(By.id('formFacebookLink'))
+      until.elementLocated(By.id('formFacebookLink')),
+      5000
     );
     return { companyName, website, insta, facebook };
   }
@@ -85,7 +101,8 @@ describe('profile page', () => {
   async function saveWaitAndRefresh() {
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     const success = driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await success.getText()).toEqual('Company Information Updated');
     await Test.sleep(5000);
@@ -121,22 +138,31 @@ describe('profile page', () => {
     await expected();
     await saveWaitAndRefresh();
     companyName = await driver.wait(
-      until.elementLocated(By.id('formCompanyName'))
+      until.elementLocated(By.id('formCompanyName')),
+      5000
     );
-    website = await driver.wait(until.elementLocated(By.id('formWebsite')));
-    insta = await driver.wait(until.elementLocated(By.id('formInstagramLink')));
+    website = await driver.wait(
+      until.elementLocated(By.id('formWebsite')),
+      5000
+    );
+    insta = await driver.wait(
+      until.elementLocated(By.id('formInstagramLink')),
+      5000
+    );
     facebook = await driver.wait(
-      until.elementLocated(By.id('formFacebookLink'))
+      until.elementLocated(By.id('formFacebookLink')),
+      5000
     );
     await expected();
   });
 
   async function inputLinkData(formData, textStart) {
-    const website = driver.wait(until.elementLocated(By.id(formData)));
+    const website = driver.wait(until.elementLocated(By.id(formData)), 5000);
     await website.sendKeys('123.o');
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     const danger = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await danger.getText()).toEqual(`${textStart} must be a valid URL`);
   }
@@ -161,19 +187,22 @@ describe('profile page', () => {
 
   it('url error message goes away once success is had', async () => {
     const facebook = driver.wait(
-      until.elementLocated(By.id('formFacebookLink'))
+      until.elementLocated(By.id('formFacebookLink')),
+      5000
     );
     await facebook.sendKeys('123.o');
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     const danger = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await danger.getText()).toEqual('Facebook Link must be a valid URL');
     await facebook.clear();
     await facebook.sendKeys('123.org');
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     const success = driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await success.getText()).toEqual('Company Information Updated');
     expect(
@@ -182,7 +211,7 @@ describe('profile page', () => {
   });
 
   async function getCompanyFields() {
-    await driver.wait(until.elementLocated(By.css('h2')));
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
     const companyInformation = (await driver.findElements(By.css('form')))[3];
     const multiSelects = await companyInformation.findElements(
       By.className('multi-select-form')
@@ -194,9 +223,9 @@ describe('profile page', () => {
 
   async function saveAndRefresh() {
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
-    driver.wait(until.elementLocated(By.className('alert-success')));
+    driver.wait(until.elementLocated(By.className('alert-success')), 5000);
     await driver.navigate().refresh();
-    await driver.wait(until.elementLocated(By.css('h2')));
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
     return (await driver.findElements(By.css('form')))[3];
   }
 
@@ -225,7 +254,7 @@ describe('profile page', () => {
     const id = await equipmentMultiSelectInput.getAttribute('id');
     await equipmentMultiSelectInput.click();
     const option1 = By.id(id.replace('input', 'option-1'));
-    driver.wait(until.elementLocated(option1));
+    driver.wait(until.elementLocated(option1), 5000);
     driver.findElement(option1).click();
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     feedbacks = await companyInformation.findElements(
@@ -252,7 +281,8 @@ describe('profile page', () => {
     await equipmentMultiSelectInput.sendKeys(Key.ARROW_DOWN);
     await equipmentMultiSelectInput.sendKeys(Key.ENTER);
     let equipmentList = await driver.wait(
-      until.elementLocated(By.id('formFlashEquipmentList'))
+      until.elementLocated(By.id('formFlashEquipmentList')),
+      5000
     );
     await equipmentList.sendKeys('Some Flashy Stuffs');
     const companyInformation = await saveAndRefresh();
@@ -262,7 +292,8 @@ describe('profile page', () => {
     const firstDiv = await multiSelects[0].findElement(By.css('div'));
     await checkNextDivs(firstDiv);
     equipmentList = await driver.wait(
-      until.elementLocated(By.id('formFlashEquipmentList'))
+      until.elementLocated(By.id('formFlashEquipmentList')),
+      5000
     );
     await test.waitUntilInputFilled(By.id('formFlashEquipmentList'));
     expect(await equipmentList.getAttribute('value')).toEqual(
@@ -271,10 +302,12 @@ describe('profile page', () => {
   });
 
   function waitForNumber(nextDivs, howMany) {
-    driver.wait(() =>
-      nextDivs
-        .findElements(By.css('div'))
-        .then((elements) => elements.length === howMany)
+    driver.wait(
+      () =>
+        nextDivs
+          .findElements(By.css('div'))
+          .then((elements) => elements.length === howMany),
+      5000
     );
   }
 
@@ -318,11 +351,11 @@ describe('profile page', () => {
     const id = await equipmentMultiSelectInput.getAttribute('id');
     await equipmentMultiSelectInput.click();
     const option1 = By.id(id.replace('input', 'option-1'));
-    driver.wait(until.elementLocated(option1));
+    driver.wait(until.elementLocated(option1), 5000);
     await driver.findElement(option1).click();
     await equipmentMultiSelectInput.click();
     const option2 = By.id(id.replace('input', 'option-2'));
-    driver.wait(until.elementLocated(option2));
+    driver.wait(until.elementLocated(option2), 5000);
     await driver.findElement(option2).click();
     const companyInformation = await saveAndRefresh();
     multiSelects = await companyInformation.findElements(
@@ -352,7 +385,7 @@ describe('profile page', () => {
       ]
     );
     await driver.navigate().refresh();
-    await driver.wait(until.elementLocated(By.css('h2')));
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
     let companyInformation = (await driver.findElements(By.css('form')))[3];
     let multiSelects = await companyInformation.findElements(
       By.className('multi-select-form')

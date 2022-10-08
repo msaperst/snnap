@@ -28,7 +28,10 @@ describe('apply to job', () => {
     await driver.get(Test.getApp());
     const button = await home.getButton(await jobs[0].getId());
     await button.click();
-    form = await driver.wait(until.elementLocated(By.id('applyToJobForm')));
+    form = await driver.wait(
+      until.elementLocated(By.id('applyToJobForm')),
+      5000
+    );
   }, 10000);
 
   afterEach(async () => {
@@ -85,13 +88,17 @@ describe('apply to job', () => {
     for (let i = 0; i < jobs.length; i++) {
       const job = jobs[i];
       const button = driver.wait(
-        until.elementLocated(By.id(`openApplyToJobButton-${await job.getId()}`))
+        until.elementLocated(
+          By.id(`openApplyToJobButton-${await job.getId()}`)
+        ),
+        5000
       );
       await button.click();
       const modal = driver.wait(
-        until.elementLocated(By.className('modal-dialog'))
+        until.elementLocated(By.className('modal-dialog')),
+        5000
       );
-      driver.wait(until.elementIsVisible(modal));
+      driver.wait(until.elementIsVisible(modal), 5000);
       expect(await modal.isDisplayed()).toBeTruthy();
       expect(
         await modal.findElement(By.className('modal-title')).getText()
@@ -168,13 +175,17 @@ describe('apply to job', () => {
     await driver.navigate().refresh();
     await driver.wait(
       until.elementLocated(
-        By.id(`openApplyToJobButton-${await jobs[0].getId()}`)
+        By.id(`openApplyToJobButton-${await jobs[0].getId()}`),
+        5000
       )
     );
     await driver
       .findElement(By.id(`openApplyToJobButton-${await jobs[0].getId()}`))
       .click();
-    form = await driver.wait(until.elementLocated(By.id('applyToJobForm')));
+    form = await driver.wait(
+      until.elementLocated(By.id('applyToJobForm')),
+      5000
+    );
     expect(
       await (await form.findElements(By.className('mb-3 row')))[5].getText()
     ).toEqual('Your Information');
@@ -298,7 +309,8 @@ describe('apply to job', () => {
     const applyLink = await driver.findElement(By.id('applyToJobButton'));
     await applyLink.click();
     const alert = await driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual('Website must be a valid URL');
   });
@@ -309,7 +321,8 @@ describe('apply to job', () => {
     const applyLink = await driver.findElement(By.id('applyToJobButton'));
     await applyLink.click();
     const alert = await driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual('Instagram Link must be a valid URL');
   });
@@ -320,7 +333,8 @@ describe('apply to job', () => {
     const applyLink = await driver.findElement(By.id('applyToJobButton'));
     await applyLink.click();
     const alert = await driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual('Facebook Link must be a valid URL');
   });
@@ -335,7 +349,8 @@ describe('apply to job', () => {
     const applyLink = await driver.findElement(By.id('applyToJobButton'));
     await applyLink.click();
     const alert = await driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual('Portfolio Link must be a valid URL');
   });
@@ -345,13 +360,16 @@ describe('apply to job', () => {
     await applyLink.click();
     expect(await applyLink.isEnabled()).toBeFalsy();
     const alert = await driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await alert.getText()).toEqual('Job Filing Submitted');
-    await driver.wait(() =>
-      driver
-        .findElements(By.css('.modal-header'))
-        .then((elements) => elements.length === 0)
+    await driver.wait(
+      () =>
+        driver
+          .findElements(By.css('.modal-header'))
+          .then((elements) => elements.length === 0),
+      5000
     );
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
     await checkAlreadyApplied();
