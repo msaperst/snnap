@@ -11,14 +11,14 @@ jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
 describe('notification', () => {
-  let hireRequest;
+  let job;
   let application;
 
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
 
-    hireRequest = {
+    job = {
       id: 5,
       type: "B'nai Mitzvah",
       location: 'Fairfax, VA, United States of America',
@@ -38,7 +38,7 @@ describe('notification', () => {
       company_name: 'Some Company',
       experience: 'some awesome experience',
       fb: 'facebook.com/me',
-      hire_request_id: 2,
+      job_id: 2,
       id: 3,
       insta: 'https://insta.com',
       user_id: 1,
@@ -46,10 +46,8 @@ describe('notification', () => {
       website: 'https://website.com',
     };
 
-    jobService.jobService.getHireRequest.mockResolvedValue(hireRequest);
-    jobService.jobService.getHireRequestApplication.mockResolvedValue(
-      application
-    );
+    jobService.jobService.getJob.mockResolvedValue(job);
+    jobService.jobService.getJobApplication.mockResolvedValue(application);
     userService.userService.get.mockResolvedValue({
       first_name: 'Max',
       last_name: 'Saperstone',
@@ -105,9 +103,7 @@ describe('notification', () => {
     let notification;
     await act(async () => {
       notification = render(
-        <Notification
-          notification={{ hire_request: 1, hire_request_application: 1 }}
-        />
+        <Notification notification={{ job: 1, job_application: 1 }} />
       );
       const { container } = notification;
       await waitFor(() => container.firstChild);
@@ -117,7 +113,7 @@ describe('notification', () => {
       container.firstChild.firstChild.firstChild.firstChild.firstChild
         .firstChild;
     expect(message.firstChild.textContent).toEqual(
-      'Max Saperstone applied to your hire request'
+      'Max Saperstone applied to your job'
     );
   });
 
@@ -127,9 +123,9 @@ describe('notification', () => {
       notification = render(
         <Notification
           notification={{
-            hire_request: 1,
+            job: 1,
             what: 'applied',
-            hire_request_application: 1,
+            job_application: 1,
           }}
         />
       );
@@ -141,7 +137,7 @@ describe('notification', () => {
       container.firstChild.firstChild.firstChild.firstChild.firstChild
         .firstChild;
     expect(message.firstChild.textContent).toEqual(
-      'Max Saperstone applied to your hire request'
+      'Max Saperstone applied to your job'
     );
   });
 
@@ -151,9 +147,9 @@ describe('notification', () => {
       notification = render(
         <Notification
           notification={{
-            hire_request: 1,
+            job: 1,
             what: 'selected',
-            hire_request_application: 1,
+            job_application: 1,
           }}
         />
       );
@@ -165,7 +161,7 @@ describe('notification', () => {
       container.firstChild.firstChild.firstChild.firstChild.firstChild
         .firstChild;
     expect(message.firstChild.textContent).toEqual(
-      'Max Saperstone selected your hire request application'
+      'Max Saperstone selected your job application'
     );
   });
 

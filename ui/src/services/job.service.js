@@ -5,13 +5,13 @@ export const jobService = {
   getJobTypes,
   getEquipment,
   getSkills,
-  newRequestToHire,
-  getHireRequest,
-  getHireRequests,
-  applyToHireRequest,
-  getHireRequestApplication,
-  getHireRequestApplications,
-  chooseHireRequestApplication,
+  newJob,
+  getJob,
+  getJobs,
+  applyToJob,
+  getJobApplication,
+  getJobApplications,
+  chooseJobApplication,
 };
 
 function getJobTypes() {
@@ -29,7 +29,7 @@ function getSkills() {
   return fetch(`/api/jobs/skills`, requestOptions).then(handleResponse);
 }
 
-function newRequestToHire(
+function newJob(
   type,
   location,
   details,
@@ -60,40 +60,35 @@ function newRequestToHire(
     }),
   };
 
-  return fetch(`/api/jobs/new-request-to-hire`, requestOptions).then(
+  return fetch(`/api/jobs/new-job`, requestOptions).then(handleResponse);
+}
+
+function getJob(id) {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/jobs/job/${id}`, requestOptions).then(handleResponse);
+}
+
+function getJobs() {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/jobs/jobs`, requestOptions).then(handleResponse);
+}
+
+function getJobApplication(id) {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/jobs/job-application/${id}`, requestOptions).then(
     handleResponse
   );
 }
 
-function getHireRequest(id) {
+function getJobApplications(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/jobs/hire-request/${id}`, requestOptions).then(
+  return fetch(`/api/jobs/job-applications/${id}`, requestOptions).then(
     handleResponse
   );
 }
 
-function getHireRequests() {
-  const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/jobs/hire-requests`, requestOptions).then(handleResponse);
-}
-
-function getHireRequestApplication(id) {
-  const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/jobs/hire-request-application/${id}`, requestOptions).then(
-    handleResponse
-  );
-}
-
-function getHireRequestApplications(id) {
-  const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(
-    `/api/jobs/hire-request-applications/${id}`,
-    requestOptions
-  ).then(handleResponse);
-}
-
-function applyToHireRequest(
-  hireRequest,
+function applyToJob(
+  job,
   user,
   company,
   userName,
@@ -112,7 +107,7 @@ function applyToHireRequest(
     method: 'POST',
     headers,
     body: JSON.stringify({
-      hireRequest,
+      job,
       user,
       company,
       userName,
@@ -127,25 +122,22 @@ function applyToHireRequest(
     }),
   };
 
-  return fetch(`/api/jobs/apply-to-hire-request`, requestOptions).then(
-    handleResponse
-  );
+  return fetch(`/api/jobs/apply-to-job`, requestOptions).then(handleResponse);
 }
 
-function chooseHireRequestApplication(hireRequest, hireRequestApplication) {
+function chooseJobApplication(job, jobApplication) {
   const headers = authHeader();
   headers['Content-Type'] = 'application/json';
   const requestOptions = {
     method: 'POST',
     headers,
     body: JSON.stringify({
-      hireRequest,
-      hireRequestApplication,
+      job,
+      jobApplication,
     }),
   };
 
-  return fetch(
-    `/api/jobs/select-hire-request-application`,
-    requestOptions
-  ).then(handleResponse);
+  return fetch(`/api/jobs/select-job-application`, requestOptions).then(
+    handleResponse
+  );
 }

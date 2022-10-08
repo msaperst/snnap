@@ -5,16 +5,14 @@ class Home {
     this.driver = driver;
   }
 
-  async getButton(hireRequestId) {
+  async getButton(jobId) {
     await this.driver.wait(
-      until.elementLocated(By.css(`button[hire-request="${hireRequestId}"]`))
+      until.elementLocated(By.css(`button[job="${jobId}"]`))
     );
-    return this.driver.findElement(
-      By.css(`button[hire-request="${hireRequestId}"]`)
-    );
+    return this.driver.findElement(By.css(`button[job="${jobId}"]`));
   }
 
-  async hasHireRequestInfo(form) {
+  async hasJobInfo(form) {
     expect(
       await (await form.findElements(By.className('mb-3 row')))[0].getText()
     ).toEqual('Job Information');

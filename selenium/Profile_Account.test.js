@@ -82,14 +82,14 @@ describe('profile page', () => {
 
   it('displays the username as disabled', async () => {
     const username = driver.wait(until.elementLocated(By.id('formUsername')));
-    test.waitUntilInputFilled(By.id('formUsername'));
+    await test.waitUntilInputFilled(By.id('formUsername'));
     expect(await username.getAttribute('value')).toEqual('profileAccountUser');
     expect(await username.getAttribute('disabled')).toEqual('true');
   });
 
   it('displays the email', async () => {
     const email = driver.wait(until.elementLocated(By.id('formEmail')));
-    test.waitUntilInputFilled(By.id('formEmail'));
+    await test.waitUntilInputFilled(By.id('formEmail'));
     expect(await email.getAttribute('value')).toEqual(
       'profileAccountUser@example.org'
     );

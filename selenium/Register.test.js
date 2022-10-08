@@ -174,6 +174,7 @@ describe('register page', () => {
         until.elementLocated(By.xpath(`//*[text()="${city}"]`))
       );
       await location.click();
+      Test.sleep(1);
     }
     await driver.findElement(By.id('formEmail')).sendKeys(email);
     await driver.findElement(By.id('formUsername')).sendKeys(username);

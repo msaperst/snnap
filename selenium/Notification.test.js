@@ -11,8 +11,8 @@ describe('notifications', () => {
   let user;
   let otherUser;
   let driver;
-  let requestToHires = [];
-  let applicationsForRequestToHires = [];
+  let jobs = [];
+  let applicationsForJobs = [];
 
   beforeEach(async () => {
     test = new Test();
@@ -24,17 +24,9 @@ describe('notifications', () => {
   }, 10000);
 
   afterEach(async () => {
-    for (const requestToHire of requestToHires) {
-      await Test.removeRequestToHire(await requestToHire.getId());
-    }
-    requestToHires = [];
-    // clean up the applications for hire requests
-    for (const applicationsForRequestToHire of applicationsForRequestToHires) {
-      await Test.removeApplicationForRequestToHire(
-        await applicationsForRequestToHire.getId()
-      );
-    }
-    applicationsForRequestToHires = [];
+    jobs = [];
+    // clean up the applications for jobs
+    applicationsForJobs = [];
     // delete the user
     await test.removeUser();
     await Mysql.query(
@@ -46,18 +38,18 @@ describe('notifications', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('applying to a hire request creates a notification', async () => {
-    const notification = await createAppliedToHireRequestNotification();
+  it('applying to a job creates a notification', async () => {
+    const notification = await createAppliedToJobNotification();
     expect(await notification.isDisplayed()).toBeTruthy();
   });
 
-  it('choosing a hire request creates a notification', async () => {
-    const notification = await createChosenHireRequestApplicationNotification();
+  it('choosing a job creates a notification', async () => {
+    const notification = await createChosenJobApplicationNotification();
     expect(await notification.isDisplayed()).toBeTruthy();
   });
 
   it('new notification shows unread icon', async () => {
-    const notification = await createAppliedToHireRequestNotification();
+    const notification = await createAppliedToJobNotification();
     expect(
       await notification
         .findElement(By.css('[style="cursor: pointer;"]'))
@@ -66,14 +58,14 @@ describe('notifications', () => {
   });
 
   it('clicking unread icon marks the notification as read', async () => {
-    const notification = await createAppliedToHireRequestNotification();
+    const notification = await createAppliedToJobNotification();
     await notification.findElement(By.css('svg')).click();
     await test.waitUntilNotPresent(By.css('svg'));
     expect(await notification.findElements(By.css('svg'))).toHaveLength(0);
   });
 
   it('read notification has no icon', async () => {
-    let notification = await createAppliedToHireRequestNotification();
+    let notification = await createAppliedToJobNotification();
     await notification.findElement(By.css('svg')).click();
     await driver.navigate().refresh();
     notification = await driver.wait(until.elementLocated(By.css('div.card')));
@@ -81,7 +73,7 @@ describe('notifications', () => {
   });
 
   it('navigates to the user page when clicking on the user name', async () => {
-    await createAppliedToHireRequestNotification();
+    await createAppliedToJobNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('Test User'))
     );
@@ -91,25 +83,23 @@ describe('notifications', () => {
     );
   });
 
-  it('navigates to the hire request when clicking on the hire request', async () => {
-    await createAppliedToHireRequestNotification();
-    const link = await driver.wait(
-      until.elementLocated(By.linkText('hire request'))
-    );
+  it('navigates to the job when clicking on the job', async () => {
+    await createAppliedToJobNotification();
+    const link = await driver.wait(until.elementLocated(By.linkText('job')));
     await link.click();
     expect(await driver.getCurrentUrl()).toEqual(
-      `${Test.getApp()}/hire-requests#${await requestToHires[0].getId()}`
+      `${Test.getApp()}/jobs#${await jobs[0].getId()}`
     );
   });
 
-  it('navigates to the hire request application when clicking on the application', async () => {
-    await createChosenHireRequestApplicationNotification();
+  it('navigates to the job application when clicking on the application', async () => {
+    await createChosenJobApplicationNotification();
     const link = await driver.wait(
-      until.elementLocated(By.linkText('hire request application'))
+      until.elementLocated(By.linkText('job application'))
     );
     await link.click();
     expect(await driver.getCurrentUrl()).toEqual(
-      `${Test.getApp()}/hire-request-applications#${await applicationsForRequestToHires[0].getId()}`
+      `${Test.getApp()}/job-applications#${await applicationsForJobs[0].getId()}`
     );
   });
 
@@ -119,7 +109,7 @@ describe('notifications', () => {
       until.elementLocated(By.id('user-dropdown'))
     );
     expect(await dropDown.getText()).toEqual('notificationUser');
-    await createAppliedToHireRequestNotification();
+    await createAppliedToJobNotification();
     dropDown = await driver.wait(until.elementLocated(By.id('user-dropdown')));
     await driver.wait(until.elementTextIs(dropDown, 'notificationUser 🔔'));
     expect(await dropDown.getText()).toEqual('notificationUser 🔔');
@@ -134,7 +124,7 @@ describe('notifications', () => {
     expect(
       await driver.findElement(By.css('[href="/notifications"]')).getText()
     ).toEqual('Notifications');
-    await createAppliedToHireRequestNotification();
+    await createAppliedToJobNotification();
     dropDown = await driver.wait(until.elementLocated(By.id('user-dropdown')));
     await driver.wait(until.elementTextIs(dropDown, 'notificationUser 🔔'));
     await dropDown.click();
@@ -150,16 +140,12 @@ describe('notifications', () => {
     ).toEqual('Notifications');
   });
 
-  async function createAppliedToHireRequestNotification() {
-    const hireRequest = await Test.addRequestToHire(
-      await user.getId(),
-      1,
-      '2023-03-12'
-    );
-    requestToHires.push(hireRequest);
-    applicationsForRequestToHires.push(
-      await Test.addApplicationForRequestToHire(
-        await hireRequest.getId(),
+  async function createAppliedToJobNotification() {
+    const job = await Test.addJob(await user.getId(), 1, '2023-03-12');
+    jobs.push(job);
+    applicationsForJobs.push(
+      await Test.addJobApplication(
+        await job.getId(),
         await otherUser.getId(),
         0
       )
@@ -168,21 +154,17 @@ describe('notifications', () => {
     return driver.wait(until.elementLocated(By.css('div.card')));
   }
 
-  async function createChosenHireRequestApplicationNotification() {
-    const hireRequest = await Test.addRequestToHire(
-      await otherUser.getId(),
-      1,
-      '2023-03-12'
-    );
-    requestToHires.push(hireRequest);
-    const application = await Test.addApplicationForRequestToHire(
-      await hireRequest.getId(),
+  async function createChosenJobApplicationNotification() {
+    const job = await Test.addJob(await otherUser.getId(), 1, '2023-03-12');
+    jobs.push(job);
+    const application = await Test.addJobApplication(
+      await job.getId(),
       await user.getId(),
       1
     );
-    applicationsForRequestToHires.push(application);
-    await Test.chooseApplicationForRequestToHire(
-      await hireRequest.getId(),
+    applicationsForJobs.push(application);
+    await Test.chooseJobApplication(
+      await job.getId(),
       await application.getId()
     );
     await driver.get(`${Test.getApp()}/notifications`);

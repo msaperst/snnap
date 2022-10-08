@@ -100,8 +100,8 @@ const User = class {
   static auth(token) {
     const newUser = new User();
     newUser.token = token;
+    const decoded = jwt.verify(newUser.token, JWT_SECRET);
     newUser.instancePromise = (async () => {
-      const decoded = jwt.verify(newUser.token, JWT_SECRET);
       const user = await Mysql.query(`SELECT *
                                       FROM users
                                       where id = ${decoded.id}`);

@@ -2,7 +2,6 @@
 const { By, Key, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
-const Company = require('../api/components/company/Company');
 
 describe('profile page', () => {
   jest.setTimeout(10000);
@@ -22,7 +21,6 @@ describe('profile page', () => {
   afterEach(async () => {
     // delete the user
     await test.removeUser();
-    await Test.removeProfile(await user.getId());
     // close the driver
     await test.cleanUp();
   }, 15000);
@@ -281,11 +279,12 @@ describe('profile page', () => {
   }
 
   it('allows removing a piece of equipment', async () => {
-    const company = new Company(await user.getId());
-    await company.setCompanyInformation(
+    await Test.setUpProfile(
+      await user.getId(),
       'Test',
       '123.org',
       'instagram.com/snnap',
+      '',
       '',
       [
         {
@@ -336,9 +335,10 @@ describe('profile page', () => {
   });
 
   it('allows removing a skill', async () => {
-    const company = new Company(await user.getId());
-    await company.setCompanyInformation(
+    await Test.setUpProfile(
+      await user.getId(),
       'Test',
+      '',
       '',
       '',
       '',

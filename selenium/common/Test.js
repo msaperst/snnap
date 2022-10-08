@@ -1,10 +1,11 @@
+/* eslint-disable no-await-in-loop */
 const { addAttach } = require('jest-html-reporters/helper');
 const { Builder } = require('selenium-webdriver');
 const { Options } = require('selenium-webdriver/chrome');
 const User = require('../../api/components/user/User');
 const Mysql = require('../../api/services/Mysql');
-const RequestToHire = require('../../api/components/requestToHire/RequestToHire');
-const ApplicationForRequestToHire = require('../../api/components/applicationForRequestToHire/ApplicationForRequestToHire');
+const Job = require('../../api/components/job/Job');
+const ApplicationForJob = require('../../api/components/jobApplication/JobApplication');
 const Company = require('../../api/components/company/Company');
 
 class Test {
@@ -71,16 +72,52 @@ class Test {
 
   async removeUser() {
     if (this.user) {
-      await Mysql.query(
-        `DELETE
-         FROM users
-         WHERE username = '${await this.user.getUsername()}';`
+      const id = await this.user.getId();
+      const companies = await Mysql.query(
+        `SELECT * FROM companies WHERE user = ${id} OR user = 0;`
       );
-      await Mysql.query(
-        `DELETE
-         FROM companies
-         WHERE user = '${await this.user.getId()}';`
+      const applications = await Mysql.query(
+        `SELECT * FROM job_applications WHERE user_id = ${id} OR user_id = 0;`
       );
+      const jobs = await Mysql.query(
+        `SELECT * FROM jobs WHERE user = ${id} OR user = 0;`
+      );
+      // delete our user
+      await Mysql.query(`DELETE FROM users WHERE id = ${id} OR id = 0;`);
+      // delete our user's company(s)
+      for (const company of companies) {
+        await Mysql.query(`DELETE FROM companies WHERE id = ${company.id}`);
+        await Mysql.query(
+          `DELETE FROM company_equipment WHERE company = ${company.id}`
+        );
+        await Mysql.query(
+          `DELETE FROM company_skills WHERE company = ${company.id}`
+        );
+        await Mysql.query(
+          `DELETE FROM portfolio WHERE company = ${company.id}`
+        );
+      }
+      // delete our user's application(s)
+      for (const application of applications) {
+        await Mysql.query(
+          `DELETE FROM job_applications WHERE id = ${application.id}`
+        );
+        await Mysql.query(
+          `DELETE FROM job_applications_equipment WHERE job_application = ${application.id}`
+        );
+        await Mysql.query(
+          `DELETE FROM job_applications_skills WHERE job_application = ${application.id}`
+        );
+        await Mysql.query(
+          `DELETE FROM job_applications_portfolios WHERE job_application = ${application.id}`
+        );
+      }
+      // delete our user's job(s)
+      for (const job of jobs) {
+        await Mysql.query(`DELETE FROM jobs WHERE id = ${job.id}`);
+        await Mysql.query(`DELETE FROM job_equipment WHERE job = ${job.id}`);
+        await Mysql.query(`DELETE FROM job_skills WHERE job = ${job.id}`);
+      }
     }
   }
 
@@ -108,15 +145,8 @@ class Test {
     return company.getInfo();
   }
 
-  static async removeProfile(id) {
-    await Mysql.query(`DELETE FROM companies WHERE id = ${id}`);
-    await Mysql.query(`DELETE FROM company_equipment WHERE company = ${id}`);
-    await Mysql.query(`DELETE FROM company_skills WHERE company = ${id}`);
-    await Mysql.query(`DELETE FROM portfolio WHERE company = ${id}`);
-  }
-
-  static async addFullRequestToHire(user, type, date, location, details) {
-    return RequestToHire.create(
+  static async addFullJob(user, type, date, location, details) {
+    return Job.create(
       user,
       type,
       location,
@@ -130,8 +160,8 @@ class Test {
     );
   }
 
-  static async addRequestToHire(user, type, date) {
-    return this.addFullRequestToHire(
+  static async addJob(user, type, date) {
+    return this.addFullJob(
       user,
       type,
       date,
@@ -144,23 +174,9 @@ class Test {
     );
   }
 
-  static async removeRequestToHire(id) {
-    await Mysql.query(`DELETE FROM hire_requests WHERE id = ${id}`);
-    await Mysql.query(
-      `DELETE FROM hire_requests_equipment WHERE hire_request = ${id}`
-    );
-    await Mysql.query(
-      `DELETE FROM hire_requests_skills WHERE hire_request = ${id}`
-    );
-  }
-
-  static async addApplicationForRequestToHire(
-    hireRequestId,
-    userId,
-    companyId
-  ) {
-    return ApplicationForRequestToHire.create(
-      hireRequestId,
+  static async addJobApplication(jobId, userId, companyId) {
+    return ApplicationForJob.create(
+      jobId,
       userId,
       companyId,
       'Test User',
@@ -175,13 +191,9 @@ class Test {
     );
   }
 
-  static async addFullApplicationForRequestToHire(
-    hireRequestId,
-    userId,
-    companyId
-  ) {
-    return ApplicationForRequestToHire.create(
-      hireRequestId,
+  static async addFullJobApplication(jobId, userId, companyId) {
+    return ApplicationForJob.create(
+      jobId,
       userId,
       companyId,
       'Test User',
@@ -203,22 +215,9 @@ class Test {
     );
   }
 
-  static async removeApplicationForRequestToHire(id) {
-    await Mysql.query(`DELETE FROM hire_request_applications WHERE id = ${id}`);
-    await Mysql.query(
-      `DELETE FROM hire_request_applications_equipment WHERE hire_request_application = ${id}`
-    );
-    await Mysql.query(
-      `DELETE FROM hire_request_applications_skills WHERE hire_request_application = ${id}`
-    );
-    await Mysql.query(
-      `DELETE FROM hire_request_applications_portfolios WHERE hire_request_application = ${id}`
-    );
-  }
-
-  static async chooseApplicationForRequestToHire(hireRequestId, applicationId) {
-    const hireRequest = new RequestToHire(hireRequestId);
-    await hireRequest.selectApplication(applicationId);
+  static async chooseJobApplication(jobId, applicationId) {
+    const job = new Job(jobId);
+    await job.selectApplication(applicationId);
   }
 
   async waitUntilNotPresent(locator) {

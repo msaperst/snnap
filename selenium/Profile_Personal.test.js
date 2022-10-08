@@ -34,21 +34,21 @@ describe('profile page', () => {
 
   it('displays the first name', async () => {
     const firstName = driver.wait(until.elementLocated(By.id('formFirstName')));
-    test.waitUntilInputFilled(By.id('formFirstName'));
+    await test.waitUntilInputFilled(By.id('formFirstName'));
     expect(await firstName.getAttribute('value')).toEqual('Test');
     expect(await firstName.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the last name', async () => {
     const lastName = driver.wait(until.elementLocated(By.id('formLastName')));
-    test.waitUntilInputFilled(By.id('formLastName'));
+    await test.waitUntilInputFilled(By.id('formLastName'));
     expect(await lastName.getAttribute('value')).toEqual('User');
     expect(await lastName.getAttribute('disabled')).toBeNull();
   });
 
   it('displays the city', async () => {
     const city = driver.wait(until.elementLocated(By.id('formCity')));
-    test.waitUntilInputFilled(By.id('formCity'));
+    await test.waitUntilInputFilled(By.id('formCity'));
     expect(await city.getAttribute('value')).toEqual(
       'Fairfax, VA, United States of America'
     );
@@ -132,6 +132,7 @@ describe('profile page', () => {
     await driver.wait(until.elementLocated(By.className('alert-success')));
     await driver.navigate().refresh();
     city = await driver.wait(until.elementLocated(By.id('formCity')));
+    await test.waitUntilInputFilled(By.id('formCity'));
     expect(await city.getAttribute('value')).toEqual(
       'Chantilly, VA, United States of America'
     );

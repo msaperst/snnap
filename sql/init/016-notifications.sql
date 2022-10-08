@@ -12,3 +12,6 @@ CREATE TABLE IF NOT EXISTS notifications
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
+
+ALTER TABLE notifications RENAME COLUMN hire_request TO job;
+ALTER TABLE notifications RENAME COLUMN hire_request_application TO job_application;

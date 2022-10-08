@@ -6,27 +6,24 @@ require('chromedriver');
 describe('home page', () => {
   let test;
   let driver;
-  let requestToHires = [];
 
   beforeEach(async () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
     // login as a user
-    requestToHires.push(
-      await Test.addRequestToHire(
-        0,
-        2,
-        '2023-03-12',
-        {
-          lat: 38.8051095,
-          loc: 'Alexandria, VA, United States of America',
-          lon: -77.0470229,
-        },
-        'Gig in Alexandria'
-      )
+    await Test.addFullJob(
+      0,
+      2,
+      '2023-03-12',
+      {
+        lat: 38.8051095,
+        loc: 'Alexandria, VA, United States of America',
+        lon: -77.0470229,
+      },
+      'Gig in Alexandria'
     );
-    requestToHires.push(await Test.addRequestToHire(0, 2, '2023-03-10'));
+    await Test.addJob(0, 2, '2023-03-10');
 
     await test.loginUser('homeUser');
     await driver.get(Test.getApp());
@@ -35,10 +32,6 @@ describe('home page', () => {
   afterEach(async () => {
     // delete the user
     await test.removeUser();
-    for (const requestToHire of requestToHires) {
-      await Test.removeRequestToHire(await requestToHire.getId());
-    }
-    requestToHires = [];
     // close the driver
     await test.cleanUp();
   }, 15000);
@@ -67,15 +60,17 @@ describe('home page', () => {
     expect(await header.getText()).toEqual('Photography help in a snap');
   });
 
-  it('has 4 filter buttons', async () => {
+  it('has 6 filter buttons', async () => {
     const filterButtons = await driver.wait(
       until.elementsLocated(By.className('btn-filter'))
     );
-    expect(filterButtons).toHaveLength(4);
-    expect(await filterButtons[0].getText()).toEqual('Weddings');
-    expect(await filterButtons[1].getText()).toEqual("B'nai Mitzvahs");
-    expect(await filterButtons[2].getText()).toEqual('Commercial Events');
-    expect(await filterButtons[3].getText()).toEqual('Misc');
+    expect(filterButtons).toHaveLength(6);
+    expect(await filterButtons[0].getText()).toEqual("B'nai Mitzvahs");
+    expect(await filterButtons[1].getText()).toEqual('Commercial Events');
+    expect(await filterButtons[2].getText()).toEqual('Portraits');
+    expect(await filterButtons[3].getText()).toEqual('Studio Work');
+    expect(await filterButtons[4].getText()).toEqual('Weddings');
+    expect(await filterButtons[5].getText()).toEqual('Other');
   });
 
   it('displays all entries unfiltered', async () => {
@@ -93,10 +88,10 @@ describe('home page', () => {
     const filterButtons = await driver.wait(
       until.elementsLocated(By.className('btn-filter'))
     );
-    await filterButtons[1].click();
+    await filterButtons[0].click(); // b'nai mitzvahs button
     const afterFoundText = await getFoundText(initialFoundDigit);
     const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
-    expect(afterFoundDigit).toBeLessThanOrEqual(initialFoundDigit - 2);
+    expect(afterFoundDigit).toBeLessThanOrEqual(initialFoundDigit - 1);
     const cards = await driver.findElements(By.className('card'));
     expect(cards).toHaveLength(afterFoundDigit);
   });
@@ -105,7 +100,7 @@ describe('home page', () => {
     const filterButtons = await driver.wait(
       until.elementsLocated(By.className('btn-filter'))
     );
-    await filterButtons[0].click();
+    await filterButtons[4].click(); // weddings button
     const afterFoundText = await getFoundText(0);
     const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
     expect(afterFoundDigit).toBeGreaterThanOrEqual(1);
