@@ -8,6 +8,7 @@ describe('apply to job', () => {
   jest.setTimeout(15000);
   let test;
   let driver;
+  let jobCreatorId;
   let user;
   let jobs = [];
   let form;
@@ -18,8 +19,11 @@ describe('apply to job', () => {
     // load the default page
     driver = await test.getDriver();
     home = new Home(driver);
+    // create a job for our test user
+    test.addUser('newApplyToJobCreatorUser');
+    jobCreatorId = await test.user.getId();
+    jobs.push(await Test.addJob(jobCreatorId, 1, '2023-03-12'));
     // login as a user
-    jobs.push(await Test.addJob(0, 1, '2023-03-12'));
     user = await test.loginUser('newApplyToJobUser');
     await driver.get(Test.getApp());
     const button = await home.getButton(await jobs[0].getId());
@@ -31,13 +35,14 @@ describe('apply to job', () => {
     // clean up the jobs
     jobs = [];
     // delete the user
+    await Test.removeUserById(jobCreatorId);
     await test.removeUser();
     // close the driver
     await test.cleanUp();
   }, 15000);
 
   it('can be viewed from any job', async () => {
-    jobs.push(await Test.addJob(0, 2, '2023-03-10'));
+    jobs.push(await Test.addJob(jobCreatorId, 2, '2023-03-10'));
     jobs.push(await Test.addJob(await user.getId(), 4, '2023-03-10'));
     await driver.navigate().refresh();
     for (const job of jobs) {
@@ -73,9 +78,9 @@ describe('apply to job', () => {
 
   it('displays job application', async () => {
     const events = ['Wedding', "B'nai Mitzvah", 'Commercial Event', 'Other'];
-    jobs.push(await Test.addJob(0, 2, '2024-03-10'));
-    jobs.push(await Test.addJob(0, 3, '2025-03-10'));
-    jobs.push(await Test.addJob(0, 4, '2026-03-10'));
+    jobs.push(await Test.addJob(jobCreatorId, 2, '2024-03-10'));
+    jobs.push(await Test.addJob(jobCreatorId, 3, '2025-03-10'));
+    jobs.push(await Test.addJob(jobCreatorId, 4, '2026-03-10'));
     await driver.navigate().refresh();
     for (let i = 0; i < jobs.length; i++) {
       const job = jobs[i];

@@ -6,14 +6,18 @@ require('chromedriver');
 describe('home page', () => {
   let test;
   let driver;
+  let jobCreatorId;
 
   beforeEach(async () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
+    // create a job for our test user
+    test.addUser('homeJobCreatorUser');
+    jobCreatorId = await test.user.getId();
     // login as a user
     await Test.addFullJob(
-      0,
+      jobCreatorId,
       2,
       '2023-03-12',
       {
@@ -23,7 +27,7 @@ describe('home page', () => {
       },
       'Gig in Alexandria'
     );
-    await Test.addJob(0, 2, '2023-03-10');
+    await Test.addJob(jobCreatorId, 2, '2023-03-10');
 
     await test.loginUser('homeUser');
     await driver.get(Test.getApp());
@@ -31,6 +35,7 @@ describe('home page', () => {
 
   afterEach(async () => {
     // delete the user
+    await Test.removeUserById(jobCreatorId);
     await test.removeUser();
     // close the driver
     await test.cleanUp();

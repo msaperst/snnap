@@ -70,54 +70,55 @@ class Test {
     return this.user;
   }
 
+  static async removeUserById(id) {
+    const companies = await Mysql.query(
+      `SELECT * FROM companies WHERE user = ${id} OR user = 0;`
+    );
+    const applications = await Mysql.query(
+      `SELECT * FROM job_applications WHERE user_id = ${id} OR user_id = 0;`
+    );
+    const jobs = await Mysql.query(
+      `SELECT * FROM jobs WHERE user = ${id} OR user = 0;`
+    );
+    // delete our user
+    await Mysql.query(`DELETE FROM users WHERE id = ${id} OR id = 0;`);
+    // delete our user's company(s)
+    for (const company of companies) {
+      await Mysql.query(`DELETE FROM companies WHERE id = ${company.id}`);
+      await Mysql.query(
+        `DELETE FROM company_equipment WHERE company = ${company.id}`
+      );
+      await Mysql.query(
+        `DELETE FROM company_skills WHERE company = ${company.id}`
+      );
+      await Mysql.query(`DELETE FROM portfolio WHERE company = ${company.id}`);
+    }
+    // delete our user's application(s)
+    for (const application of applications) {
+      await Mysql.query(
+        `DELETE FROM job_applications WHERE id = ${application.id}`
+      );
+      await Mysql.query(
+        `DELETE FROM job_applications_equipment WHERE job_application = ${application.id}`
+      );
+      await Mysql.query(
+        `DELETE FROM job_applications_skills WHERE job_application = ${application.id}`
+      );
+      await Mysql.query(
+        `DELETE FROM job_applications_portfolios WHERE job_application = ${application.id}`
+      );
+    }
+    // delete our user's job(s)
+    for (const job of jobs) {
+      await Mysql.query(`DELETE FROM jobs WHERE id = ${job.id}`);
+      await Mysql.query(`DELETE FROM job_equipment WHERE job = ${job.id}`);
+      await Mysql.query(`DELETE FROM job_skills WHERE job = ${job.id}`);
+    }
+  }
+
   async removeUser() {
     if (this.user) {
-      const id = await this.user.getId();
-      const companies = await Mysql.query(
-        `SELECT * FROM companies WHERE user = ${id} OR user = 0;`
-      );
-      const applications = await Mysql.query(
-        `SELECT * FROM job_applications WHERE user_id = ${id} OR user_id = 0;`
-      );
-      const jobs = await Mysql.query(
-        `SELECT * FROM jobs WHERE user = ${id} OR user = 0;`
-      );
-      // delete our user
-      await Mysql.query(`DELETE FROM users WHERE id = ${id} OR id = 0;`);
-      // delete our user's company(s)
-      for (const company of companies) {
-        await Mysql.query(`DELETE FROM companies WHERE id = ${company.id}`);
-        await Mysql.query(
-          `DELETE FROM company_equipment WHERE company = ${company.id}`
-        );
-        await Mysql.query(
-          `DELETE FROM company_skills WHERE company = ${company.id}`
-        );
-        await Mysql.query(
-          `DELETE FROM portfolio WHERE company = ${company.id}`
-        );
-      }
-      // delete our user's application(s)
-      for (const application of applications) {
-        await Mysql.query(
-          `DELETE FROM job_applications WHERE id = ${application.id}`
-        );
-        await Mysql.query(
-          `DELETE FROM job_applications_equipment WHERE job_application = ${application.id}`
-        );
-        await Mysql.query(
-          `DELETE FROM job_applications_skills WHERE job_application = ${application.id}`
-        );
-        await Mysql.query(
-          `DELETE FROM job_applications_portfolios WHERE job_application = ${application.id}`
-        );
-      }
-      // delete our user's job(s)
-      for (const job of jobs) {
-        await Mysql.query(`DELETE FROM jobs WHERE id = ${job.id}`);
-        await Mysql.query(`DELETE FROM job_equipment WHERE job = ${job.id}`);
-        await Mysql.query(`DELETE FROM job_skills WHERE job = ${job.id}`);
-      }
+      await Test.removeUserById(await this.user.getId());
     }
   }
 

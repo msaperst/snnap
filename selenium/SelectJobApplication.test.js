@@ -8,6 +8,7 @@ describe('apply to job', () => {
   jest.setTimeout(20000);
   let test;
   let driver;
+  let jobCreatorId;
   let user;
   let jobs = [];
   let applicationsForJobs = [];
@@ -19,15 +20,18 @@ describe('apply to job', () => {
     // load the default page
     driver = await test.getDriver();
     home = new Home(driver);
+    // create a job for our test user
+    test.addUser('chooseJobApplicationJobCreatorUser');
+    jobCreatorId = await test.user.getId();
     // login as a user
     user = await test.loginUser('chooseJobApplicationUser');
     // generate the required data
     jobs.push(await Test.addJob(await user.getId(), 1, '2023-03-12'));
     applicationsForJobs.push(
-      await Test.addJobApplication(await jobs[0].getId(), 0, 0)
+      await Test.addJobApplication(await jobs[0].getId(), jobCreatorId, 0)
     );
     applicationsForJobs.push(
-      await Test.addFullJobApplication(await jobs[0].getId(), 0, 0)
+      await Test.addFullJobApplication(await jobs[0].getId(), jobCreatorId, 0)
     );
     // load the main page
     await driver.get(Test.getApp());
@@ -44,6 +48,7 @@ describe('apply to job', () => {
     // clean up the applications for jobs
     applicationsForJobs = [];
     // delete the user
+    await Test.removeUserById(jobCreatorId);
     await test.removeUser();
     // close the driver
     await test.cleanUp();
