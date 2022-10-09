@@ -64,10 +64,9 @@ const JobApplication = class {
       );
       if (job && job.length) {
         await Mysql.query(
-          `INSERT INTO notifications (to_user, what, job, job_application)
-           VALUES (${job[0].user}, 'applied', ${db.escape(jobId)}, ${db.escape(
-            result.insertId
-          )});`
+          `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${
+            job[0].user
+          }, 'applied', ${db.escape(jobId)}, ${db.escape(result.insertId)});`
         );
       }
     })();
