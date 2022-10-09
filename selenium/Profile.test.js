@@ -26,20 +26,22 @@ describe('profile page', () => {
   it('allows us to navigate to the profile', async () => {
     await driver.get(Test.getApp());
     const dropDownMenu = driver.wait(
-      until.elementLocated(By.id('user-dropdown'))
+      until.elementLocated(By.id('user-dropdown')),
+      5000
     );
     await dropDownMenu.click();
     const profileLink = driver.wait(
-      until.elementLocated(By.linkText('Profile'))
+      until.elementLocated(By.linkText('Profile')),
+      5000
     );
-    driver.wait(until.elementIsVisible(profileLink));
+    driver.wait(until.elementIsVisible(profileLink), 5000);
     await profileLink.click();
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/profile`);
     expect(await driver.findElement(By.css('h2')).getText()).toEqual('Profile');
   });
 
   it('has 5 different forms for updated data', async () => {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const forms = await driver.findElements(By.css('form'));
     expect(forms).toHaveLength(5);
   });

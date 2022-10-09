@@ -221,15 +221,15 @@ describe('User', () => {
   });
 
   it('throws an error on a bad token', async () => {
-    await expect(User.auth('sometoken').getUsername()).rejects.toEqual(
-      new JsonWebTokenError('jwt malformed')
-    );
+    expect(() => {
+      User.auth('sometoken');
+    }).toThrow(new JsonWebTokenError('jwt malformed'));
   });
 
   it('throws an error on a badly signed token', async () => {
-    await expect(
-      User.auth(jwt.sign({ id: 123 }, 'some-secret')).getUsername()
-    ).rejects.toEqual(new JsonWebTokenError('invalid signature'));
+    expect(() => {
+      User.auth(jwt.sign({ id: 123 }, 'some-secret'));
+    }).toThrow(new JsonWebTokenError('invalid signature'));
   });
 
   it('sets the user values on valid credentials via token', async () => {

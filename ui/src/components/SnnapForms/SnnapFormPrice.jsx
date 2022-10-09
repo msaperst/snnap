@@ -16,7 +16,7 @@ function SnnapFormPrice(props) {
     <Form.Control
       required
       type="number"
-      step={0.01}
+      step={1.0}
       min={0}
       placeholder={name}
       aria-describedby={`inputGroup${safeName}`}

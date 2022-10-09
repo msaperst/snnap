@@ -14,3 +14,9 @@ INSERT INTO skills (name) VALUES ('Lighting');
 INSERT INTO skills (name) VALUES ('Posing');
 INSERT INTO skills (name) VALUES ('Pets');
 INSERT INTO skills (name) VALUES ('Children');
+
+DELETE FROM skills;
+INSERT INTO skills (name) VALUES ('Off Camera Flash');
+INSERT INTO skills (name) VALUES ('Solo Photography');
+INSERT INTO skills (name) VALUES ('Natural Light');
+INSERT INTO skills (name) VALUES ('Post Production Editing');
