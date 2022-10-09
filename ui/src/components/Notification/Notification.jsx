@@ -11,37 +11,32 @@ function Notification(props) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    jobService.getHireRequest(notification.hire_request).then((hireRequest) => {
+    jobService.getJob(notification.job).then((job) => {
       jobService
-        .getHireRequestApplication(notification.hire_request_application)
-        .then((hireRequestApplication) => {
+        .getJobApplication(notification.job_application)
+        .then((jobApplication) => {
           if (notification.what === 'selected') {
-            userService.get(hireRequest.user).then((user) => {
+            userService.get(job.user).then((user) => {
               setMessage(
                 <>
                   <a href={`/profile/${user.username}`}>
                     {user.first_name} {user.last_name}
                   </a>{' '}
                   selected your{' '}
-                  <a
-                    href={`/hire-request-applications#${notification.hire_request_application}`}
-                  >
-                    hire request application
+                  <a href={`/job-applications#${notification.job_application}`}>
+                    job application
                   </a>
                 </>
               );
             });
           } else {
-            userService.get(hireRequestApplication.user_id).then((user) => {
+            userService.get(jobApplication.user_id).then((user) => {
               setMessage(
                 <>
                   <a href={`/profile/${user.username}`}>
-                    {hireRequestApplication.user_name}
+                    {jobApplication.user_name}
                   </a>{' '}
-                  applied to your{' '}
-                  <a href={`/hire-requests#${notification.hire_request}`}>
-                    hire request
-                  </a>
+                  applied to your <a href={`/jobs#${notification.job}`}>job</a>
                 </>
               );
             });

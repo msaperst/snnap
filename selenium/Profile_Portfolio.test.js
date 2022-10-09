@@ -25,7 +25,7 @@ describe('profile page', () => {
   }, 15000);
 
   it('shows the portfolio information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const portfolioInfo = (await driver.findElements(By.css('form')))[4];
     expect(await portfolioInfo.findElement(By.css('h3')).getText()).toEqual(
       'Portfolio'
@@ -34,16 +34,17 @@ describe('profile page', () => {
 
   it('displays the experience', async () => {
     const experience = driver.wait(
-      until.elementLocated(By.id('formExperience'))
+      until.elementLocated(By.id('formExperience')),
+      5000
     );
     expect(await experience.getAttribute('value')).toEqual('');
     expect(await experience.getAttribute('disabled')).toBeNull();
   });
 
   async function verifyNoErrors() {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const portfolio = (await driver.findElements(By.css('form')))[4];
-    driver.wait(until.elementLocated(By.id('galleryDescription-0')));
+    driver.wait(until.elementLocated(By.id('galleryDescription-0')), 5000);
     const feedbacks = await portfolio.findElements(
       By.className('invalid-feedback')
     );
@@ -53,7 +54,8 @@ describe('profile page', () => {
       expect(await feedback.isDisplayed()).toBeFalsy();
     }
     const experience = driver.wait(
-      until.elementLocated(By.id('formExperience'))
+      until.elementLocated(By.id('formExperience')),
+      5000
     );
     return { feedback: feedbacks, experience };
   }
@@ -61,7 +63,8 @@ describe('profile page', () => {
   it('throws an error if you try to submit with only a description filled out', async () => {
     const { feedback, experience } = await verifyNoErrors();
     const description = driver.wait(
-      until.elementLocated(By.id('galleryDescription-0'))
+      until.elementLocated(By.id('galleryDescription-0')),
+      5000
     );
     experience.sendKeys('Some Experience');
     description.sendKeys('Some Description');
@@ -78,7 +81,10 @@ describe('profile page', () => {
 
   it('throws an error if you try to submit with only a link filled out', async () => {
     const { feedback, experience } = await verifyNoErrors();
-    const link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
+    const link = driver.wait(
+      until.elementLocated(By.id('galleryLink-0')),
+      5000
+    );
     experience.sendKeys('Some Experience');
     link.sendKeys('Linky');
     driver.findElement(By.id('savePortfolioButton')).click();
@@ -94,12 +100,17 @@ describe('profile page', () => {
 
   function fillOutPortfilio() {
     const experience = driver.wait(
-      until.elementLocated(By.id('formExperience'))
+      until.elementLocated(By.id('formExperience')),
+      5000
     );
     const description = driver.wait(
-      until.elementLocated(By.id('galleryDescription-0'))
+      until.elementLocated(By.id('galleryDescription-0')),
+      5000
     );
-    const link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
+    const link = driver.wait(
+      until.elementLocated(By.id('galleryLink-0')),
+      5000
+    );
     experience.sendKeys('Some Experience');
     description.sendKeys('Description');
     return { experience, description, link };
@@ -113,7 +124,8 @@ describe('profile page', () => {
     expect(await link.getAttribute('value')).toEqual('https://Link.com');
     await driver.findElement(By.id('savePortfolioButton')).click();
     const success = driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await success.getText()).toEqual('Portfolio Updated');
     await Test.sleep(5000);
@@ -121,11 +133,15 @@ describe('profile page', () => {
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
     await driver.navigate().refresh();
-    experience = driver.wait(until.elementLocated(By.id('formExperience')));
-    description = driver.wait(
-      until.elementLocated(By.id('galleryDescription-0'))
+    experience = driver.wait(
+      until.elementLocated(By.id('formExperience')),
+      5000
     );
-    link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
+    description = driver.wait(
+      until.elementLocated(By.id('galleryDescription-0')),
+      5000
+    );
+    link = driver.wait(until.elementLocated(By.id('galleryLink-0')), 5000);
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
     expect(await description.getAttribute('value')).toEqual('Description');
     expect(await link.getAttribute('value')).toEqual('https://Link.com');
@@ -133,9 +149,13 @@ describe('profile page', () => {
 
   it('adds a new row when you fill out both description and link', async () => {
     const description = driver.wait(
-      until.elementLocated(By.id('galleryDescription-0'))
+      until.elementLocated(By.id('galleryDescription-0')),
+      5000
     );
-    const link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
+    const link = driver.wait(
+      until.elementLocated(By.id('galleryLink-0')),
+      5000
+    );
     expect(
       await driver.findElements(By.id('galleryDescription-1'))
     ).toHaveLength(0);
@@ -150,9 +170,13 @@ describe('profile page', () => {
 
   it('removes a row when you remove both description and link', async () => {
     const description = driver.wait(
-      until.elementLocated(By.id('galleryDescription-0'))
+      until.elementLocated(By.id('galleryDescription-0')),
+      5000
     );
-    const link = driver.wait(until.elementLocated(By.id('galleryLink-0')));
+    const link = driver.wait(
+      until.elementLocated(By.id('galleryLink-0')),
+      5000
+    );
     await description.sendKeys('Description');
     await link.sendKeys('Link');
     expect(
@@ -179,7 +203,8 @@ describe('profile page', () => {
     expect(await link.getAttribute('value')).toEqual('Link');
     await driver.findElement(By.id('savePortfolioButton')).click();
     const danger = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await danger.getText()).toEqual(
       'Portfolio Link must be a valid URL'

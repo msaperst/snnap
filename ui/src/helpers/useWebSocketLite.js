@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 // the interval between retries
 function useWebSocketLite({
   socketUrl,
+  token,
   retry: defaultRetry = 9999999999,
   retryInterval = 1500,
 }) {
@@ -20,45 +21,48 @@ function useWebSocketLite({
   const [readyState, setReadyState] = useState(false);
 
   useEffect(() => {
-    const ws = new WebSocket(socketUrl);
-    ws.onopen = () => {
-      setReadyState(true);
+    if (token) {
+      const ws = new WebSocket(`${socketUrl}?token=${token}`);
+      ws.onopen = () => {
+        setReadyState(true);
 
-      // function to send messages
-      setSend(() => (da) => {
-        try {
-          const d = JSON.stringify(da);
-          ws.send(d);
-          return true;
-        } catch (err) {
-          return false;
-        }
-      });
+        // function to send messages
+        setSend(() => (da) => {
+          try {
+            const d = JSON.stringify(da);
+            ws.send(d);
+            return true;
+          } catch (err) {
+            return false;
+          }
+        });
 
-      // receive messages
-      ws.onmessage = (event) => {
-        const msg = formatMessage(event.data);
-        setData({ message: msg, timestamp: getTimestamp() });
+        // receive messages
+        ws.onmessage = (event) => {
+          const msg = formatMessage(event.data);
+          setData({ message: msg, timestamp: getTimestamp() });
+        };
       };
-    };
 
-    // on close we should update connection state
-    // and retry connection
-    ws.onclose = () => {
-      setReadyState(false);
-      // retry logic
-      if (retry > 0) {
-        setTimeout(() => {
-          setRetry((r) => r - 1);
-        }, retryInterval);
-      }
-    };
-    // terminate connection on unmount
-    return () => {
-      ws.close();
-    };
-    // retry dependency here triggers the connection attempt
-  }, [retry]);
+      // on close we should update connection state
+      // and retry connection
+      ws.onclose = () => {
+        setReadyState(false);
+        // retry logic
+        if (retry > 0) {
+          setTimeout(() => {
+            setRetry((r) => r - 1);
+          }, retryInterval);
+        }
+      };
+      // terminate connection on unmount
+      return () => {
+        ws.close();
+      };
+      // retry dependency here triggers the connection attempt
+    }
+    return true;
+  }, [retry, retryInterval, socketUrl, token]);
 
   return { send, data, readyState };
 }

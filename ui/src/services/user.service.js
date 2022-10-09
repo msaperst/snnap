@@ -3,8 +3,8 @@ import { handleResponse } from '../helpers/handle-response';
 
 export const userService = {
   get,
-  getHireRequests,
-  getHireRequestApplications,
+  getJobs,
+  getJobApplications,
   getNotifications,
   markNotificationRead,
   updateAccountInformation,
@@ -22,14 +22,14 @@ function get(id) {
   return fetch(url, requestOptions).then(handleResponse);
 }
 
-function getHireRequests() {
+function getJobs() {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/user/hire-requests`, requestOptions).then(handleResponse);
+  return fetch(`/api/user/jobs`, requestOptions).then(handleResponse);
 }
 
-function getHireRequestApplications() {
+function getJobApplications() {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/user/hire-request-applications`, requestOptions).then(
+  return fetch(`/api/user/job-applications`, requestOptions).then(
     handleResponse
   );
 }

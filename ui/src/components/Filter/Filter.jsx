@@ -7,7 +7,7 @@ import {
 import '@geoapify/geocoder-autocomplete/styles/minimal.css';
 import { jobService } from '../../services/job.service';
 import { usePosition } from '../../helpers/usePosition';
-import RequestToHire from '../RequestToHire/RequestToHire';
+import Job from '../Job/Job';
 import './Filter.css';
 
 function Filter(props) {
@@ -17,8 +17,8 @@ function Filter(props) {
   const { currentUser, filter } = props;
   const { latitude, longitude } = usePosition();
 
-  const [allHireRequests, setAllHireRequests] = useState([]);
-  const [filteredHireRequests, setFilteredHireRequests] = useState([]);
+  const [allJobs, setAllJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
   const [equipment, setEquipment] = useState([]);
   const [skills, setSkills] = useState([]);
@@ -40,9 +40,9 @@ function Filter(props) {
     jobService.getSkills().then((s) => {
       setSkills(s);
     });
-    jobService.getHireRequests().then((hr) => {
-      setAllHireRequests(hr);
-      setFilteredHireRequests(hr);
+    jobService.getJobs().then((hr) => {
+      setAllJobs(hr);
+      setFilteredJobs(hr);
     });
   }, []);
 
@@ -52,14 +52,7 @@ function Filter(props) {
 
   useEffect(() => {
     updateResults();
-  }, [
-    allHireRequests,
-    filter,
-    distance,
-    location,
-    selectedJobTypes,
-    currentLocation,
-  ]);
+  }, [allJobs, filter, distance, location, selectedJobTypes, currentLocation]);
 
   useEffect(() => {
     if (showOwnLocation) {
@@ -89,23 +82,19 @@ function Filter(props) {
 
   const updateResults = () => {
     // start out with everything
-    let hireRequests = allHireRequests;
+    let jobs = allJobs;
     // remove elements not in our job type
     if (filter) {
-      hireRequests = hireRequests.filter((hireRequest) =>
-        hireRequest.details.toLowerCase().includes(filter.toLowerCase())
+      jobs = jobs.filter((job) =>
+        job.details.toLowerCase().includes(filter.toLowerCase())
       );
     }
-    // remove hireRequests based on selected job types
-    hireRequests = hireRequests.filter((hireRequest) =>
-      selectedJobTypes.includes(hireRequest.typeId)
-    );
+    // remove jobs based on selected job types
+    jobs = jobs.filter((job) => selectedJobTypes.includes(job.typeId));
     // filter out ones outside our location
-    hireRequests = hireRequests.filter(
-      (hireRequest) => distance >= calculateDistance(location, hireRequest)
-    );
+    jobs = jobs.filter((job) => distance >= calculateDistance(location, job));
     // set our new values;
-    setFilteredHireRequests(hireRequests);
+    setFilteredJobs(jobs);
   };
 
   const calculateDistance = (p1, p2) => {
@@ -165,8 +154,8 @@ function Filter(props) {
         <Row>
           <Col md={4}>
             <h3>
-              Found {filteredHireRequests.length} Job
-              {filteredHireRequests.length !== 1 ? 's' : ''}
+              Found {filteredJobs.length} Job
+              {filteredJobs.length !== 1 ? 's' : ''}
             </h3>
           </Col>
           <Col md={3} />
@@ -214,11 +203,11 @@ function Filter(props) {
           </Col>
         </Row>
       </Form>
-      {filteredHireRequests.map((hireRequest) => (
-        <RequestToHire
-          key={hireRequest.id}
+      {filteredJobs.map((job) => (
+        <Job
+          key={job.id}
           currentUser={currentUser}
-          hireRequest={hireRequest}
+          job={job}
           equipment={equipment}
           skills={skills}
         />

@@ -13,3 +13,7 @@ INSERT INTO job_types (type, plural) VALUES ('Wedding', 'Weddings');
 INSERT INTO job_types (type, plural) VALUES ('B\'nai Mitzvah', 'B\'nai Mitzvahs');
 INSERT INTO job_types (type, plural) VALUES ('Commercial Event', 'Commercial Events');
 INSERT INTO job_types (type, plural) VALUES ('Misc', 'Misc');
+UPDATE job_types SET type = 'Other' WHERE type = 'Misc';
+UPDATE job_types SET plural = 'Other' WHERE plural = 'Misc';
+INSERT INTO job_types (type, plural) VALUES ('Studio Work', 'Studio Work');
+INSERT INTO job_types (type, plural) VALUES ('Portrait', 'Portraits');

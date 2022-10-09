@@ -51,7 +51,8 @@ describe('log in page', () => {
     await driver.findElement(By.id('formPassword')).sendKeys('password');
     await driver.findElement(By.id('loginButton')).click();
     const dropDownMenu = driver.wait(
-      until.elementLocated(By.id('user-dropdown'))
+      until.elementLocated(By.id('user-dropdown')),
+      5000
     );
     expect(await dropDownMenu.getText()).toEqual('loginUser');
   });
@@ -61,7 +62,8 @@ describe('log in page', () => {
     await driver.findElement(By.id('formPassword')).sendKeys('password');
     await driver.findElement(By.id('loginButton')).click();
     const header = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await header.getText()).toEqual(
       'Username or password is incorrect!'
@@ -73,14 +75,15 @@ describe('log in page', () => {
     await driver.findElement(By.id('formPassword')).sendKeys('passwor');
     await driver.findElement(By.id('loginButton')).click();
     const alert = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await alert.getText()).toEqual('Username or password is incorrect!');
   });
 
   it('allows you to navigate to the register page', async () => {
     await driver.findElement(By.linkText('Sign Up')).click();
-    await driver.wait(until.elementLocated(By.id('formFirstname')));
+    await driver.wait(until.elementLocated(By.id('formFirstname')), 5000);
     const header = driver.findElement(By.css('h2'));
     expect(await header.getText()).toEqual('Register');
   });

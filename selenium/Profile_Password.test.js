@@ -25,7 +25,7 @@ describe('profile page', () => {
   }, 15000);
 
   it('shows the password', async () => {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const password = (await driver.findElements(By.css('form')))[2];
     expect(await password.findElement(By.css('h3')).getText()).toEqual(
       'Password'
@@ -34,7 +34,8 @@ describe('profile page', () => {
 
   it('displays the current password', async () => {
     const currentPassword = driver.wait(
-      until.elementLocated(By.id('formCurrentPassword'))
+      until.elementLocated(By.id('formCurrentPassword')),
+      5000
     );
     expect(await currentPassword.getAttribute('value')).toEqual('');
     expect(await currentPassword.getAttribute('disabled')).toBeNull();
@@ -42,14 +43,15 @@ describe('profile page', () => {
 
   it('displays the new password', async () => {
     const newPassword = driver.wait(
-      until.elementLocated(By.id('formNewPassword'))
+      until.elementLocated(By.id('formNewPassword')),
+      5000
     );
     expect(await newPassword.getAttribute('value')).toEqual('');
     expect(await newPassword.getAttribute('disabled')).toBeNull();
   });
 
   it('shows error when you update password blank information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')));
+    driver.wait(until.elementLocated(By.css('h2')), 5000);
     const profile = (await driver.findElements(By.css('form')))[2];
     const feedbacks = await profile.findElements(
       By.className('invalid-feedback')
@@ -73,10 +75,12 @@ describe('profile page', () => {
 
   it('allows updating the password values', async () => {
     const currentPassword = driver.wait(
-      until.elementLocated(By.id('formCurrentPassword'))
+      until.elementLocated(By.id('formCurrentPassword')),
+      5000
     );
     const newPassword = driver.wait(
-      until.elementLocated(By.id('formNewPassword'))
+      until.elementLocated(By.id('formNewPassword')),
+      5000
     );
     await currentPassword.sendKeys('password');
     await newPassword.sendKeys('password1');
@@ -84,7 +88,8 @@ describe('profile page', () => {
     expect(await newPassword.getAttribute('value')).toEqual('password1');
     await driver.findElement(By.id('updatePasswordButton')).click();
     const success = driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await success.getText()).toEqual('Password Updated');
     await Test.sleep(5000);
@@ -95,16 +100,19 @@ describe('profile page', () => {
 
   it('does not allow updating with a bad password', async () => {
     const currentPassword = driver.wait(
-      until.elementLocated(By.id('formCurrentPassword'))
+      until.elementLocated(By.id('formCurrentPassword')),
+      5000
     );
     const newPassword = driver.wait(
-      until.elementLocated(By.id('formNewPassword'))
+      until.elementLocated(By.id('formNewPassword')),
+      5000
     );
     await currentPassword.sendKeys('pass');
     await newPassword.sendKeys('password1');
     await driver.findElement(By.id('updatePasswordButton')).click();
     const danger = driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     expect(await danger.getText()).toEqual(
       "Current password doesn't match existing password."
@@ -113,16 +121,19 @@ describe('profile page', () => {
 
   async function checkPasswordFields() {
     const currentPassword = driver.wait(
-      until.elementLocated(By.id('formCurrentPassword'))
+      until.elementLocated(By.id('formCurrentPassword')),
+      5000
     );
     const newPassword = driver.wait(
-      until.elementLocated(By.id('formNewPassword'))
+      until.elementLocated(By.id('formNewPassword')),
+      5000
     );
     currentPassword.sendKeys('pass');
     newPassword.sendKeys('pass');
     await driver.findElement(By.id('updatePasswordButton')).click();
     const danger = await driver.wait(
-      until.elementLocated(By.className('alert-danger'))
+      until.elementLocated(By.className('alert-danger')),
+      5000
     );
     return { danger, currentPassword, newPassword };
   }
@@ -144,7 +155,8 @@ describe('profile page', () => {
     newPassword.sendKeys('word');
     await driver.findElement(By.id('updatePasswordButton')).click();
     const success = driver.wait(
-      until.elementLocated(By.className('alert-success'))
+      until.elementLocated(By.className('alert-success')),
+      5000
     );
     expect(await success.getText()).toEqual('Password Updated');
     expect(

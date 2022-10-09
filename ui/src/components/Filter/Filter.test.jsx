@@ -9,7 +9,7 @@ jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
 jest.mock(
-  '../RequestToHire/RequestToHire',
+  '../Job/Job',
   () =>
     function () {
       return <div>job card</div>;
@@ -38,7 +38,7 @@ describe('filter', () => {
     jobService.jobService.getJobTypes.mockResolvedValue(types);
     jobService.jobService.getEquipment.mockResolvedValue([]);
     jobService.jobService.getSkills.mockResolvedValue([]);
-    jobService.jobService.getHireRequests.mockResolvedValue([
+    jobService.jobService.getJobs.mockResolvedValue([
       {
         id: 1,
         lat: '38.8462236',
@@ -108,7 +108,7 @@ describe('filter', () => {
   });
 
   it('displays the number of jobs when no jobs', async () => {
-    jobService.jobService.getHireRequests.mockResolvedValue([]);
+    jobService.jobService.getJobs.mockResolvedValue([]);
     await act(async () => {
       filter = render(
         <Filter currentUser={{ lat: 38.8462236, lon: -77.3063733 }} />
@@ -121,7 +121,7 @@ describe('filter', () => {
   });
 
   it('displays the number of jobs when 1 job', async () => {
-    jobService.jobService.getHireRequests.mockResolvedValue([
+    jobService.jobService.getJobs.mockResolvedValue([
       {
         id: 1,
         lat: '38.8462236',

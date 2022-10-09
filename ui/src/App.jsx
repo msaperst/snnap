@@ -15,9 +15,9 @@ const UserPage = lazy(() => import('./pages/User/UserPage'));
 const NotificationsPage = lazy(() =>
   import('./pages/Notifications/NotificationsPage')
 );
-const HireRequests = lazy(() => import('./pages/HireRequests/HireRequests'));
-const HireRequestApplications = lazy(() =>
-  import('./pages/HireRequestApplications/HireRequestApplications')
+const Jobs = lazy(() => import('./pages/Jobs/Jobs'));
+const JobApplications = lazy(() =>
+  import('./pages/JobApplications/JobApplications')
 );
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
@@ -79,18 +79,18 @@ function App() {
               }
             />
             <Route
-              path="/hire-requests"
+              path="/jobs"
               element={
                 <PrivateRoute>
-                  <HireRequests />
+                  <Jobs />
                 </PrivateRoute>
               }
             />
             <Route
-              path="/hire-request-applications"
+              path="/job-applications"
               element={
                 <PrivateRoute>
-                  <HireRequestApplications />
+                  <JobApplications />
                 </PrivateRoute>
               }
             />

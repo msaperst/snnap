@@ -6,8 +6,8 @@ const db = require('mysql');
 const User = require('../components/user/User');
 const Mysql = require('../services/Mysql');
 const Common = require('./common');
-const RequestToHire = require('../components/requestToHire/RequestToHire');
-const ApplicationForRequestToHire = require('../components/applicationForRequestToHire/ApplicationForRequestToHire');
+const Job = require('../components/job/Job');
+const JobApplication = require('../components/jobApplication/JobApplication');
 
 router.get('/get', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
@@ -32,22 +32,18 @@ router.get('/get/:user', async (req, res) => {
   });
 });
 
-router.get('/hire-requests', async (req, res) => {
+router.get('/jobs', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
-    const hireRequests = await RequestToHire.getUserHireRequests(
-      await user.getId()
-    );
-    return res.send(hireRequests);
+    const jobs = await Job.getUserJobs(await user.getId());
+    return res.send(jobs);
   });
 });
 
-router.get('/hire-request-applications', async (req, res) => {
+router.get('/job-applications', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
-    const applications = ApplicationForRequestToHire.getUserApplications(
-      await user.getId()
-    );
+    const applications = JobApplication.getUserApplications(await user.getId());
     return res.send(await applications);
   });
 });

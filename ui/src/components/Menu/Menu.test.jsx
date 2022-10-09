@@ -126,7 +126,7 @@ describe('snnap menu', () => {
       )
     ).toEqual('');
     expect(gigMenu.lastChild.firstChild.firstChild.getAttribute('id')).toEqual(
-      'openNewRequestToHireButton'
+      'openNewJobButton'
     );
     expect(
       gigMenu.lastChild.firstChild.firstChild.getAttribute('href')
@@ -138,27 +138,25 @@ describe('snnap menu', () => {
       gigMenu.lastChild.firstChild.firstChild.getAttribute('tabIndex')
     ).toEqual('0');
     expect(gigMenu.lastChild.firstChild.firstChild).toHaveTextContent(
-      'New Request to Hire'
+      'New Job'
     );
 
     expect(gigMenu.lastChild.children[1]).toHaveClass('dropdown-item');
     expect(
       gigMenu.lastChild.children[1].getAttribute('data-rr-ui-dropdown-item')
     ).toEqual('');
-    expect(gigMenu.lastChild.children[1].getAttribute('href')).toEqual(
-      '/hire-requests'
-    );
-    expect(gigMenu.lastChild.children[1]).toHaveTextContent('My Hire Requests');
+    expect(gigMenu.lastChild.children[1].getAttribute('href')).toEqual('/jobs');
+    expect(gigMenu.lastChild.children[1]).toHaveTextContent('My Jobs');
 
     expect(gigMenu.lastChild.lastChild).toHaveClass('dropdown-item');
     expect(
       gigMenu.lastChild.lastChild.getAttribute('data-rr-ui-dropdown-item')
     ).toEqual('');
     expect(gigMenu.lastChild.lastChild.getAttribute('href')).toEqual(
-      '/hire-request-applications'
+      '/job-applications'
     );
     expect(gigMenu.lastChild.lastChild).toHaveTextContent(
-      'My Hire Request Applications'
+      "Jobs I've Applied To"
     );
   });
 

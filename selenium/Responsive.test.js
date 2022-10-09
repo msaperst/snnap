@@ -23,11 +23,13 @@ describe('home page', () => {
 
   it('displays full menu at large size', async () => {
     const navBar = driver.wait(
-      until.elementLocated(By.id('responsive-navbar-nav'))
+      until.elementLocated(By.id('responsive-navbar-nav')),
+      5000
     );
     expect(await navBar.isDisplayed()).toBeTruthy();
     const navBurger = driver.wait(
-      until.elementLocated(By.className('navbar-toggler collapsed'))
+      until.elementLocated(By.className('navbar-toggler collapsed')),
+      5000
     );
     expect(await navBurger.isDisplayed()).toBeFalsy();
   });
@@ -35,18 +37,21 @@ describe('home page', () => {
   it('displays burger menu at medium size', async () => {
     await driver.manage().window().setRect({ height: 800, width: 800 });
     const navBar = driver.wait(
-      until.elementLocated(By.id('responsive-navbar-nav'))
+      until.elementLocated(By.id('responsive-navbar-nav')),
+      5000
     );
     expect(await navBar.isDisplayed()).toBeFalsy();
     const navBurger = driver.wait(
-      until.elementLocated(By.className('navbar-toggler collapsed'))
+      until.elementLocated(By.className('navbar-toggler collapsed')),
+      5000
     );
     expect(await navBurger.isDisplayed()).toBeTruthy();
   });
 
   it('displays search guy at large size', async () => {
     const searchGuy = driver.wait(
-      until.elementLocated(By.className('searchGuy'))
+      until.elementLocated(By.className('searchGuy')),
+      5000
     );
     expect(await searchGuy.isDisplayed()).toBeTruthy();
   });
@@ -54,7 +59,8 @@ describe('home page', () => {
   it('displays search guy at medium size', async () => {
     await driver.manage().window().setRect({ height: 800, width: 800 });
     const searchGuy = driver.wait(
-      until.elementLocated(By.className('searchGuy'))
+      until.elementLocated(By.className('searchGuy')),
+      5000
     );
     expect(await searchGuy.isDisplayed()).toBeFalsy();
   });
@@ -62,7 +68,8 @@ describe('home page', () => {
   it('displays no search guy at extra small size', async () => {
     await driver.manage().window().setRect({ height: 400, width: 800 });
     const searchGuy = driver.wait(
-      until.elementLocated(By.className('searchGuy'))
+      until.elementLocated(By.className('searchGuy')),
+      5000
     );
     expect(await searchGuy.isDisplayed()).toBeFalsy();
   });

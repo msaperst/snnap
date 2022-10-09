@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import './Menu.css';
 import snnapLogo from './SNNAP.png';
-import NewRequestToHire from '../NewRequestToHire/NewRequestToHire';
+import NewJob from '../NewJob/NewJob';
 import useWebSocketLite from '../../helpers/useWebSocketLite';
 
 function Menu(props) {
@@ -17,7 +17,8 @@ function Menu(props) {
   const [bell, setBell] = useState('');
 
   const ws = useWebSocketLite({
-    socketUrl: `ws://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_HTTP_PORT}/wsapp/unreadNotifications?token=${token}`,
+    socketUrl: `ws://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_HTTP_PORT}/wsapp/unreadNotifications`,
+    token,
   });
 
   useEffect(() => {
@@ -50,12 +51,10 @@ function Menu(props) {
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="ml-auto">
           <NavDropdown title="My Jobs" id="gig-dropdown">
-            <NewRequestToHire />
-            <NavDropdown.Item href="/hire-requests">
-              My Hire Requests
-            </NavDropdown.Item>
-            <NavDropdown.Item href="/hire-request-applications">
-              My Hire Request Applications
+            <NewJob />
+            <NavDropdown.Item href="/jobs">My Jobs</NavDropdown.Item>
+            <NavDropdown.Item href="/job-applications">
+              Jobs I&apos;ve Applied To
             </NavDropdown.Item>
             {/* <NavDropdown.Divider /> */}
             {/* <NewRequestToWork /> */}

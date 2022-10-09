@@ -24,7 +24,7 @@ jobs:
           cd api
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.2.1/dependency-check-7.2.1-release.zip
           unzip dependency-check-7.2.1-release.zip
-          dependency-check/bin/dependency-check.sh --out=./dependency-check-reports --scan package-lock.json -f HTML -f JSON --failOnCVSS 8 --project="snnap api" --data=/tmp/dependency-check-data
+          dependency-check/bin/dependency-check.sh --out=./dependency-check-reports --scan package-lock.json -f HTML -f JSON --failOnCVSS 8 --project="snnap api" --data=/tmp/dependency-check-data --suppression suppressions.xml
 
       - name: Publish Result
         if: always()
