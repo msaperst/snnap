@@ -82,6 +82,14 @@ const Job = class {
     );
   }
 
+  static async getEquipment() {
+    return Mysql.query(`SELECT * FROM equipment ORDER BY name;`);
+  }
+
+  static async getSkills() {
+    return Mysql.query(`SELECT * FROM skills ORDER BY name;`);
+  }
+
   static async getJobTypes() {
     const jobTypes = await Mysql.query(
       `SELECT * FROM job_types ORDER BY type;`

@@ -214,6 +214,38 @@ describe('job', () => {
     );
   });
 
+  it('properly pulls and sorts the equipment', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValueOnce([
+      { id: 1, name: 'Camera' },
+      { id: 2, name: 'Flash' },
+      { id: 3, name: 'Lights' },
+    ]);
+    expect(await Job.getEquipment()).toEqual([
+      { id: 1, name: 'Camera' },
+      { id: 2, name: 'Flash' },
+      { id: 3, name: 'Lights' },
+    ]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith('SELECT * FROM equipment ORDER BY name;');
+  });
+
+  it('properly pulls and sorts the skills', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValueOnce([
+      { id: 1, name: 'Camera' },
+      { id: 2, name: 'Flash' },
+      { id: 3, name: 'Lights' },
+    ]);
+    expect(await Job.getSkills()).toEqual([
+      { id: 1, name: 'Camera' },
+      { id: 2, name: 'Flash' },
+      { id: 3, name: 'Lights' },
+    ]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith('SELECT * FROM skills ORDER BY name;');
+  });
+
   it('properly pulls and sorts the job type', async () => {
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValueOnce([

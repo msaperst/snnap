@@ -369,7 +369,7 @@ describe('apply to job', () => {
         driver
           .findElements(By.css('.modal-header'))
           .then((elements) => elements.length === 0),
-      5000
+      6000
     );
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
     await checkAlreadyApplied();

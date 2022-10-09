@@ -2,7 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 const { check } = require('express-validator');
-const Mysql = require('../services/Mysql');
 const User = require('../components/user/User');
 const Job = require('../components/job/Job');
 const JobApplication = require('../components/jobApplication/JobApplication');
@@ -145,19 +144,15 @@ router.get('/types', async (req, res) => {
 });
 
 router.get('/equipment', async (req, res) => {
-  await Common.basicAuthExecuteAndReturn(req, res, async () => {
-    const equipment = await Mysql.query(`SELECT *
-                                         FROM equipment;`);
-    return res.send(equipment);
-  });
+  await Common.basicAuthExecuteAndReturn(req, res, async () =>
+    res.send(await Job.getEquipment())
+  );
 });
 
 router.get('/skills', async (req, res) => {
-  await Common.basicAuthExecuteAndReturn(req, res, async () => {
-    const skills = await Mysql.query(`SELECT *
-                                      FROM skills;`);
-    return res.send(skills);
-  });
+  await Common.basicAuthExecuteAndReturn(req, res, async () =>
+    res.send(await Job.getSkills())
+  );
 });
 
 router.get('/job/:id', async (req, res) => {

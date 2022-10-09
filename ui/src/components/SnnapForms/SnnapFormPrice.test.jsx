@@ -1,11 +1,7 @@
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { screen, fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormPrice from './SnnapFormPrice';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap form input', () => {
   // basic input field data
@@ -49,12 +45,10 @@ describe('snnap form input', () => {
       x = key;
       y = value;
     };
-    const component = mount(<SnnapFormPrice name="123" onChange={updateX} />);
-    const event = {
-      preventDefault() {},
+    render(<SnnapFormPrice name="123" onChange={updateX} />);
+    fireEvent.change(screen.getByRole('spinbutton'), {
       target: { value: '1234' },
-    };
-    component.find('.form-control').simulate('change', event);
+    });
     expect(x).toEqual('123');
     expect(y).toEqual('1234');
   });
@@ -86,7 +80,7 @@ describe('snnap form input', () => {
     ).toEqual('number');
     expect(
       container.firstChild.firstChild.children[1].getAttribute('step')
-    ).toEqual('0.01');
+    ).toEqual('1');
     expect(
       container.firstChild.firstChild.children[1].getAttribute('min')
     ).toEqual('0');

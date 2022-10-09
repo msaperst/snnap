@@ -173,13 +173,13 @@ describe('apply to job', () => {
     expect(await rows[1].getText()).toEqual('some experience');
     // kludge as this is sometimes out of order
     const equipmentSkillText = await rows[2].getText();
-    expect(equipmentSkillText).toHaveLength(74);
+    expect(equipmentSkillText).toHaveLength(88);
     expect(equipmentSkillText).toMatch(/^Equipment\n/);
     expect(equipmentSkillText).toMatch(/Flash: other things\n/);
     expect(equipmentSkillText).toMatch(/Camera: something\n/);
     expect(equipmentSkillText).toMatch(/Skills\n/);
-    expect(equipmentSkillText).toMatch(/Retouch/);
-    expect(equipmentSkillText).toMatch(/Photography/);
+    expect(equipmentSkillText).toMatch(/Off Camera Flash/);
+    expect(equipmentSkillText).toMatch(/Solo Photography/);
     // kludge as this is sometimes out of order
     const descriptionText = await rows[3].getText();
     expect(descriptionText).toHaveLength(41);
@@ -224,7 +224,7 @@ describe('apply to job', () => {
         driver
           .findElements(By.css('.modal-header'))
           .then((elements) => elements.length === 0),
-      5000
+      6000
     );
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
@@ -254,7 +254,7 @@ describe('apply to job', () => {
             )
           )
           .then((elements) => elements.length === 0),
-      5000
+      6000
     );
     expect(
       await driver.findElements(

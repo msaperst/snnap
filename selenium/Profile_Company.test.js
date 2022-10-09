@@ -377,9 +377,9 @@ describe('profile page', () => {
       '',
       [],
       [
-        { value: 1, label: 'Flash' },
+        { value: 8, label: 'Flash' },
         {
-          value: 2,
+          value: 9,
           label: 'Flashy',
         },
       ]
