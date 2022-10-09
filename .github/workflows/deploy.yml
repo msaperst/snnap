@@ -25,7 +25,8 @@ jobs:
       - name: Setup env file ⚙
         run: |
           echo "# tool hosting information" > .env
-          echo "HTTP_PORT=70" >> .env
+          echo "HTTP_PORT=80" >> .env
+          echo "DOMAIN=snnap.app" >> .env
           echo "" >> .env
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
@@ -36,6 +37,9 @@ jobs:
           echo "" >> .env
           echo "# api information" >> .env
           echo "API_PORT=3001" >> .env
+          echo "" >> .env
+          echo "# third party information" >> .env
+          echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
 
       - name: Build Dockerfile 🐋
         run: docker-compose -f docker-compose.yml build
@@ -49,6 +53,8 @@ jobs:
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^    build:/d" docker-compose.yml'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      context:/d" docker-compose.yml'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      dockerfile:/d" docker-compose.yml'
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      args:/d" docker-compose.yml'
+          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/REACT_APP/d" docker-compose.yml'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "s/container_name/image/g" docker-compose.yml'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/\${MYSQL_PORT}$/d" docker-compose.yml'
           ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^    expose:/d" docker-compose.yml'

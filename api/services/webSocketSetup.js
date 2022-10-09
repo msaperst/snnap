@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const url = require('url');
-const { getUnreadMessageCount } = require('./webSockerNotifications');
+const { getUnreadMessageCount } = require('./webSocketNotifications');
 const User = require('../components/user/User');
 
 // available as part of nodejs
@@ -61,7 +61,7 @@ function webSocketSetup(server) {
     // print number of active connections
 
     let interval;
-    if (path === '/unreadNotifications') {
+    if (path === '/wsapp/unreadNotifications') {
       interval = getUnreadMessageCount(ctx, token);
     }
 

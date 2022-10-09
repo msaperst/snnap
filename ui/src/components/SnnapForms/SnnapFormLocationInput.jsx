@@ -40,7 +40,7 @@ function SnnapFormLocationInput(props) {
   }
 
   return (
-    <GeoapifyContext apiKey="fa2749a615994e459a223b8cb3832599">
+    <GeoapifyContext apiKey={process.env.REACT_APP_GEOAPIFY_API_KEY}>
       <Form.Group as={Col} md={size} controlId={`form${safeName}`}>
         <FloatingLabel controlId={`form${safeName}`} label={name}>
           <GeoapifyGeocoderAutocomplete

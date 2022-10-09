@@ -18,6 +18,7 @@ jobs:
         run: |
           echo "# tool hosting information" > .env
           echo "HTTP_PORT=70" >> .env
+          echo "DOMAIN=localhost" >> .env
           echo "" >> .env
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=xFRcwhHSF4aHxpGv7n5DuzSz" >> .env
@@ -29,6 +30,9 @@ jobs:
           echo "# api information" >> .env
           echo "API_PORT=3001" >> .env
           echo "API_LIMIT=10000" >> .env
+          echo "" >> .env
+          echo "# third party information" >> .env
+          echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
 
       - name: Build Dockerfile 🐋
         run: docker-compose -f docker-compose.yml up -d --build
