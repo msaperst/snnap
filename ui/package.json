@@ -53,7 +53,7 @@
     "test:ci": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:3001",
+  "proxy": "https://localhost:3001",
   "eslintConfig": {
     "extends": [
       "react-app",

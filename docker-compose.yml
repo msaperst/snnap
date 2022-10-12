@@ -38,6 +38,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       API_PORT: ${API_PORT}
       API_LIMIT: ${API_LIMIT}
+    volumes:
+      - ./api/certs:/usr/src/app/certs
   ui:
     build:
       context: ui
