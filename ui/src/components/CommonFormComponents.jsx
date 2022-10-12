@@ -31,6 +31,6 @@ function setRedrawSuccess(updateState, message) {
       update: null,
       validated: false,
     });
-    window.location.reload(); // TODO - figure out how to redraw
+    // no need to redraw or do anything as new jobs/updates are pulled via websockets
   }, 5000);
 }
