@@ -37,9 +37,7 @@ function Filter(props) {
   });
 
   useEffect(() => {
-    if (currentUser) {
-      setToken(currentUser.token);
-    }
+    setToken(currentUser.token);
     if (ws.data) {
       const { message } = ws.data;
       if (Array.isArray(message)) {
