@@ -12,7 +12,7 @@ router.get('/get', async (req, res) => {
     token = await User.isAuth(req.headers.authorization);
   } catch (error) {
     return res.status(401).json({
-      message: error.message,
+      msg: error.message,
     });
   }
   try {
@@ -31,7 +31,7 @@ router.get('/get/:user', async (req, res) => {
     await User.isAuth(req.headers.authorization);
   } catch (error) {
     return res.status(401).json({
-      message: error.message,
+      msg: error.message,
     });
   }
   try {

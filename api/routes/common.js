@@ -12,7 +12,7 @@ const Common = class {
       token = await User.isAuth(req.headers.authorization);
     } catch (error) {
       return res.status(401).json({
-        message: error.message,
+        msg: error.message,
       });
     }
     return token;
@@ -36,7 +36,7 @@ const Common = class {
       token = await User.isAuth(req.headers.authorization);
     } catch (error) {
       return res.status(401).json({
-        message: error.message,
+        msg: error.message,
       });
     }
     try {
