@@ -38,8 +38,8 @@ jobs:
       - name: Setup key files ⚙
         run: |
           mkdir -p api/certs
-          echo "${{ secrets.KEY }}" > key-rsa.pem
-          echo "${{ secrets.CERT }}" > cert.pem
+          echo "${{ secrets.KEY }}" > api/certs/key-rsa.pem
+          echo "${{ secrets.CERT }}" > api/certs/cert.pem
 
       - name: Build Dockerfile 🐋
         run: docker-compose -f docker-compose.yml up -d --build
