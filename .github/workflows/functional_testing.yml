@@ -19,8 +19,8 @@ jobs:
           echo "# tool hosting information" > .env
           echo "HTTP_PORT=70" >> .env
           echo "DOMAIN=localhost" >> .env
-          echo "WS_PROTOCOL=wss" >> .env
-          echo "WS_PORT=443" >> .env
+          echo "WS_PROTOCOL=ws" >> .env
+          echo "WS_PORT=70" >> .env
           echo "" >> .env
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=xFRcwhHSF4aHxpGv7n5DuzSz" >> .env
