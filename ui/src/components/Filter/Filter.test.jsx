@@ -4,6 +4,7 @@ import { act } from 'react-dom/test-utils';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import Filter from './Filter';
 import { selectFairfax } from '../CommonTestComponents';
+import useWebSocketLite from '../../helpers/useWebSocketLite';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
@@ -24,12 +25,51 @@ jest.mock('../../helpers/usePosition', () => ({
   }),
 }));
 
+jest.mock('../../helpers/useWebSocketLite');
+
 describe('filter', () => {
   let filter;
   const types = [
     { id: 1, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
     { id: 2, type: 'Misc', plural: 'Misc' },
     { id: 3, type: 'Other', plural: 'Others' },
+  ];
+  const jobs = [
+    {
+      id: 1,
+      lat: '38.8462236',
+      lon: '-77.3063733',
+      details: 'some details',
+      typeId: 1,
+    },
+    {
+      id: 2,
+      lat: '38.8051095',
+      lon: '-77.0470229',
+      details: 'other details',
+      typeId: 2,
+    },
+    {
+      id: 3,
+      lat: '39.84487',
+      lon: '-77.43540260778344',
+      details: 'third details',
+      typeId: 2,
+    },
+    {
+      id: 4,
+      lat: '38.8462236',
+      lon: '-77.3063733',
+      details: 'fourth details',
+      typeId: 2,
+    },
+    {
+      id: 5,
+      lat: '24.5878990',
+      lon: '-72.5467790',
+      details: 'fifth',
+      typeId: 2,
+    },
   ];
 
   beforeEach(async () => {
@@ -38,43 +78,8 @@ describe('filter', () => {
     jobService.jobService.getJobTypes.mockResolvedValue(types);
     jobService.jobService.getEquipment.mockResolvedValue([]);
     jobService.jobService.getSkills.mockResolvedValue([]);
-    jobService.jobService.getJobs.mockResolvedValue([
-      {
-        id: 1,
-        lat: '38.8462236',
-        lon: '-77.3063733',
-        details: 'some details',
-        typeId: 1,
-      },
-      {
-        id: 2,
-        lat: '38.8051095',
-        lon: '-77.0470229',
-        details: 'other details',
-        typeId: 2,
-      },
-      {
-        id: 3,
-        lat: '39.84487',
-        lon: '-77.43540260778344',
-        details: 'third details',
-        typeId: 2,
-      },
-      {
-        id: 4,
-        lat: '38.8462236',
-        lon: '-77.3063733',
-        details: 'fourth details',
-        typeId: 2,
-      },
-      {
-        id: 5,
-        lat: '24.5878990',
-        lon: '-72.5467790',
-        details: 'fifth',
-        typeId: 2,
-      },
-    ]);
+    const data = { message: jobs };
+    useWebSocketLite.mockReturnValue({ data });
   });
 
   async function basicFilter() {
@@ -107,8 +112,7 @@ describe('filter', () => {
     }
   });
 
-  it('displays the number of jobs when no jobs', async () => {
-    jobService.jobService.getJobs.mockResolvedValue([]);
+  async function renderAndGetJobsHeader() {
     await act(async () => {
       filter = render(
         <Filter currentUser={{ lat: 38.8462236, lon: -77.3063733 }} />
@@ -117,18 +121,38 @@ describe('filter', () => {
       await waitFor(() => container.firstChild);
     });
     const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 0 Jobs');
+    return header.textContent;
+  }
+
+  it('displays no jobs when no ws data', async () => {
+    useWebSocketLite.mockReturnValue({});
+    expect(await renderAndGetJobsHeader()).toEqual('Found 0 Jobs');
+  });
+
+  it('displays no jobs when bad ws data', async () => {
+    const data = { message: 123 };
+    useWebSocketLite.mockReturnValue({ data });
+    expect(await renderAndGetJobsHeader()).toEqual('Found 0 Jobs');
+  });
+
+  it('displays the number of jobs when no jobs', async () => {
+    const data = { message: [] };
+    useWebSocketLite.mockReturnValue({ data });
+    expect(await renderAndGetJobsHeader()).toEqual('Found 0 Jobs');
   });
 
   it('displays the number of jobs when 1 job', async () => {
-    jobService.jobService.getJobs.mockResolvedValue([
-      {
-        id: 1,
-        lat: '38.8462236',
-        lon: '-77.3063733',
-        typeId: 1,
-      },
-    ]);
+    const data = {
+      message: [
+        {
+          id: 1,
+          lat: '38.8462236',
+          lon: '-77.3063733',
+          typeId: 1,
+        },
+      ],
+    };
+    useWebSocketLite.mockReturnValue({ data });
     await act(async () => {
       filter = render(
         <Filter currentUser={{ lat: 38.8462236, lon: -77.3063733 }} />

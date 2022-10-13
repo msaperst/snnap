@@ -9,6 +9,7 @@ import { jobService } from '../../services/job.service';
 import { usePosition } from '../../helpers/usePosition';
 import Job from '../Job/Job';
 import './Filter.css';
+import useWebSocketLite from '../../helpers/useWebSocketLite';
 
 function Filter(props) {
   const distances = [5, 25, 100, 250];
@@ -17,6 +18,7 @@ function Filter(props) {
   const { currentUser, filter } = props;
   const { latitude, longitude } = usePosition();
 
+  const [token, setToken] = useState('');
   const [allJobs, setAllJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
@@ -29,6 +31,22 @@ function Filter(props) {
 
   const [showOwnLocation, setShowOwnLocation] = useState(false);
 
+  const ws = useWebSocketLite({
+    socketUrl: `${process.env.REACT_APP_WSS}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_HTTP_PORT}/wsapp/jobs`,
+    token,
+  });
+
+  useEffect(() => {
+    setToken(currentUser.token);
+    if (ws.data) {
+      const { message } = ws.data;
+      if (Array.isArray(message)) {
+        setAllJobs(message);
+        setFilteredJobs(message);
+      }
+    }
+  }, [currentUser, ws.data]);
+
   useEffect(() => {
     jobService.getJobTypes().then((jobs) => {
       setJobTypes(jobs);
@@ -39,10 +57,6 @@ function Filter(props) {
     });
     jobService.getSkills().then((s) => {
       setSkills(s);
-    });
-    jobService.getJobs().then((hr) => {
-      setAllJobs(hr);
-      setFilteredJobs(hr);
     });
   }, []);
 

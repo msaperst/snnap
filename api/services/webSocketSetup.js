@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 const url = require('url');
 const { getUnreadMessageCount } = require('./webSocketNotifications');
 const User = require('../components/user/User');
+const { getJobs } = require('./webSocketJobs');
 
 // available as part of nodejs
 
@@ -28,7 +29,9 @@ function webSocketSetup(server) {
   const wss = new WebSocket.Server({ noServer: true });
   let token;
   let path;
+
   // could set a broadcast message here
+  // broadcastPipeline(wss.clients);
 
   // handle upgrade of the request
   server.on('upgrade', async (request, socket, head) => {
@@ -60,9 +63,13 @@ function webSocketSetup(server) {
   wss.on('connection', (ctx) => {
     // print number of active connections
 
-    let interval;
+    let unreadMessageCount;
+    let jobs;
     if (path === '/wsapp/unreadNotifications') {
-      interval = getUnreadMessageCount(ctx, token);
+      unreadMessageCount = getUnreadMessageCount(ctx, token);
+    }
+    if (path === '/wsapp/jobs') {
+      jobs = getJobs(ctx, token);
     }
 
     // handle message events
@@ -73,7 +80,8 @@ function webSocketSetup(server) {
 
     // handle close event
     ctx.on('close', () => {
-      clearInterval(interval);
+      clearInterval(unreadMessageCount);
+      clearInterval(jobs);
     });
 
     // sent a message that we're good to proceed

@@ -10,7 +10,7 @@ export const companyService = {
 function get(id) {
   let url = `/api/company/get`;
   if (id) {
-    url += `/${id}`;
+    url += `/${parseInt(id, 10)}`;
   }
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(url, requestOptions).then(handleResponse);

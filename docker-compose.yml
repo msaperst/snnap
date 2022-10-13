@@ -40,6 +40,9 @@ services:
       API_LIMIT: ${API_LIMIT}
     volumes:
       - ./api/certs:/usr/src/app/certs
+      - /etc/letsencrypt/live/snnap.app:/etc/letsencrypt/live/snnap.app
+      - /etc/letsencrypt/archive/snnap.app:/etc/letsencrypt/archive/snnap.app
+
   ui:
     build:
       context: ui

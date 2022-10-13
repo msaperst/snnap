@@ -65,7 +65,9 @@ function newJob(
 
 function getJob(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/jobs/job/${id}`, requestOptions).then(handleResponse);
+  return fetch(`/api/jobs/job/${parseInt(id, 10)}`, requestOptions).then(
+    handleResponse
+  );
 }
 
 function getJobs() {
@@ -75,16 +77,18 @@ function getJobs() {
 
 function getJobApplication(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/jobs/job-application/${id}`, requestOptions).then(
-    handleResponse
-  );
+  return fetch(
+    `/api/jobs/job-application/${parseInt(id, 10)}`,
+    requestOptions
+  ).then(handleResponse);
 }
 
 function getJobApplications(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/jobs/job-applications/${id}`, requestOptions).then(
-    handleResponse
-  );
+  return fetch(
+    `/api/jobs/job-applications/${parseInt(id, 10)}`,
+    requestOptions
+  ).then(handleResponse);
 }
 
 function applyToJob(
