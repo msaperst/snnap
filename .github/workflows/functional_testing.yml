@@ -35,6 +35,12 @@ jobs:
           echo "# third party information" >> .env
           echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
 
+      - name: Setup key files ⚙
+        run: |
+          mkdir -p api/certs
+          echo "${{ secrets.KEY }}" > key-rsa.pem
+          echo "${{ secrets.CERT }}" > cert.pem
+
       - name: Build Dockerfile 🐋
         run: docker-compose -f docker-compose.yml up -d --build
 
