@@ -26,8 +26,9 @@ jobs:
         run: |
           echo "# tool hosting information" > .env
           echo "HTTP_PORT=80" >> .env
-          echo "WSS=wss" >> .env
           echo "DOMAIN=snnap.app" >> .env
+          echo "WS_PROTOCOL=wss" >> .env
+          echo "WS_PORT=443" >> .env
           echo "" >> .env
           echo "# database information" >> .env
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
