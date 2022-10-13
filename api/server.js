@@ -2,7 +2,8 @@ const rateLimit = require('express-rate-limit');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const job = require('./routes/job.js');
 const authentication = require('./routes/authentication.js');
 const user = require('./routes/user.js');
@@ -40,7 +41,10 @@ app.use((err, _req, res) => {
   });
 });
 
-const server = http.createServer(app);
+const key = fs.readFileSync('certs/key-rsa.pem');
+const cert = fs.readFileSync('certs/cert.pem');
+
+const server = https.createServer({ key, cert }, app);
 setupWebSocket(server);
 
 // start our server
