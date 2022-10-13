@@ -48,9 +48,9 @@ services:
       context: ui
       dockerfile: Dockerfile
       args:
-        REACT_APP_HTTP_PORT: ${HTTP_PORT}
-        REACT_APP_WSS: ${WSS}
         REACT_APP_DOMAIN: ${DOMAIN}
+        REACT_APP_WS_PROTOCOL: ${WS_PROTOCOL}
+        REACT_APP_WS_PORT: ${WS_PORT}
         REACT_APP_GEOAPIFY_API_KEY: ${GEOAPIFY_API_KEY}
     container_name: snnap_ui
     restart: always

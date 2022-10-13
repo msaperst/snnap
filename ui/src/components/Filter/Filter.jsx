@@ -32,7 +32,7 @@ function Filter(props) {
   const [showOwnLocation, setShowOwnLocation] = useState(false);
 
   const ws = useWebSocketLite({
-    socketUrl: `${process.env.REACT_APP_WSS}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_HTTP_PORT}/wsapp/jobs`,
+    socketUrl: `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/jobs`,
     token,
   });
 
