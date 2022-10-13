@@ -48,4 +48,4 @@ const server = https.createServer({ key, cert }, app);
 setupWebSocket(server);
 
 // start our server
-server.listen(process.env.PORT || 3001);
+server.listen(process.env.API_PORT || 3001);
