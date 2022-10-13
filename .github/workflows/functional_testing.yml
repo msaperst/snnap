@@ -18,6 +18,7 @@ jobs:
         run: |
           echo "# tool hosting information" > .env
           echo "HTTP_PORT=70" >> .env
+          echo "WSS=ws" >> .env
           echo "DOMAIN=localhost" >> .env
           echo "" >> .env
           echo "# database information" >> .env
