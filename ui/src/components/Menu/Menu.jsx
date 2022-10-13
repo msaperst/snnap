@@ -17,7 +17,7 @@ function Menu(props) {
   const [bell, setBell] = useState('');
 
   const ws = useWebSocketLite({
-    socketUrl: `ws://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_HTTP_PORT}/wsapp/unreadNotifications`,
+    socketUrl: `${process.env.REACT_APP_WSS}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_HTTP_PORT}/wsapp/unreadNotifications`,
     token,
   });
 

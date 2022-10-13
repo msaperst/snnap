@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "# tool hosting information" > .env
           echo "HTTP_PORT=80" >> .env
+          echo "WSS=wss" >> .env
           echo "DOMAIN=snnap.app" >> .env
           echo "" >> .env
           echo "# database information" >> .env
