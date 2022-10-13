@@ -3,7 +3,9 @@
 
 name: API Code Testing
 
-on: [ push ]
+on:
+  push:
+    branches-ignore: [ main ]
 
 jobs:
   api:
