@@ -41,8 +41,10 @@ function Filter(props) {
     if (ws.data) {
       const { message } = ws.data;
       if (Array.isArray(message)) {
-        setAllJobs(message);
-        setFilteredJobs(message);
+        if (message.length !== allJobs.length) {
+          setAllJobs(message);
+          setFilteredJobs(message);
+        }
       }
     }
   }, [currentUser, ws.data]);
