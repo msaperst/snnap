@@ -83,7 +83,7 @@ describe('profile page', () => {
       'Please provide a valid last name.'
     );
     expect(await feedbacks[2].getText()).toEqual(
-      'Please provide a valid city.'
+      'Please select a valid city from the drop down.'
     );
     for (const feedback of feedbacks) {
       expect(await feedback.isDisplayed()).toBeTruthy();

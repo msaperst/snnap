@@ -376,8 +376,8 @@ describe('apply to job', () => {
   }
 
   async function checkAlreadyApplied() {
-    await Test.sleep(500); // TODO - fix me instead of waiting for the redraw
     const button = await home.getButton(await jobs[0].getId());
+    await driver.wait(until.elementIsDisabled(button), 5000);
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeFalsy();
     expect(await button.getText()).toEqual('Already Applied');

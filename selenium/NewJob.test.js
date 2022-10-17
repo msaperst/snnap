@@ -75,7 +75,7 @@ describe('new job', () => {
       'Please provide a valid job type.'
     );
     expect(await feedbacks[1].getText()).toEqual(
-      'Please provide a valid city.'
+      'Please select a valid city from the drop down.'
     );
     expect(await feedbacks[2].getText()).toEqual(
       'Please provide a valid date.'
@@ -92,7 +92,22 @@ describe('new job', () => {
   });
 
   it('shows errors upon submitting when selecting previous day', async () => {
-    const alert = await basicEnterAndCheck();
+    await enterData(2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
+    const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
+    for (let i = 0; i < 6; i++) {
+      if (i === 2) {
+        expect(await feedbacks[i].isDisplayed()).toBeTruthy();
+        expect(await feedbacks[i].getText()).toEqual(
+          'Please provide a valid date.'
+        );
+      } else {
+        expect(await feedbacks[i].isDisplayed()).toBeFalsy();
+      }
+    }
+    const alert = await driver.wait(
+      until.elementLocated(By.className('alert-danger')),
+      5000
+    );
     expect(await alert.getText()).toEqual('Please provide a date after today.');
   });
 
@@ -147,18 +162,6 @@ describe('new job', () => {
     await (await modal.findElement(By.id('formDate'))).sendKeys(date);
     await Test.sleep(1000); // kludge for location not updating quick enough
     await (await modal.findElement(By.id('createNewRequestButton'))).click();
-  }
-
-  async function basicEnterAndCheck() {
-    await enterData(2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
-    const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
-    for (let i = 0; i < 6; i++) {
-      expect(await feedbacks[i].isDisplayed()).toBeFalsy();
-    }
-    return driver.wait(
-      until.elementLocated(By.className('alert-danger')),
-      5000
-    );
   }
 
   // TODO
