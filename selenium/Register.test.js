@@ -59,7 +59,7 @@ describe('register page', () => {
     );
 
     expect(await feedback[5].getText()).toEqual(
-      'Please provide a valid password.'
+      'Password must be 6 or more characters.'
     );
     expect(await feedback[6].getText()).toEqual(
       'You must agree before submitting.'
