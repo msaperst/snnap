@@ -44,52 +44,70 @@ class NewJob extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    const { formData } = this.state;
     const form = document.querySelector('#newJobForm');
-    if (form.checkValidity() === true) {
-      const { formData } = this.state;
-      if (
-        formData.City &&
-        formData.City.properties &&
-        formData.City.properties.formatted
-      ) {
-        this.setState({ isSubmitting: true });
-        jobService
-          .newJob(
-            formData['Job Type'],
-            {
-              lat: formData.City.properties.lat,
-              lon: formData.City.properties.lon,
-              loc: formData.City.properties.formatted,
-            },
-            formData['Job Details'],
-            formData.Pay,
-            formData.Duration,
-            formData.DurationRange,
-            formData.Date,
-            formData.Time,
-            formData['Equipment Needed'],
-            formData['Skills Needed']
-          )
-          .then(
-            () => {
-              commonFormComponents.setRedrawSuccess(
-                (state) => this.setState(state),
-                'New Job Submitted'
-              );
-            },
-            (error) => {
-              this.setState({
-                status: error.toString(),
-                update: null,
-                isSubmitting: false,
-              });
-            }
-          );
-      } else {
-        this.setState({ status: 'Please provide a valid city.' });
-      }
-    }
+    const city = document.querySelector('#formCity');
+    const date = document.querySelector('#formDate');
+    city.setCustomValidity('');
+    date.setCustomValidity('');
     this.setState({ validated: true });
+    // actually check and submit the form
+    if (form.checkValidity() === true) {
+      // custom checks - should match API checks
+      if (Date.parse(formData.Date) < new Date().setHours(0, 0, 0, 0)) {
+        this.setState({
+          status: 'Please provide a date after today.',
+        });
+        date.setCustomValidity('Invalid field.');
+        return;
+      }
+      if (
+        !(
+          formData.City &&
+          formData.City.properties &&
+          formData.City.properties.formatted
+        )
+      ) {
+        this.setState({
+          status: 'Please select a valid city from the drop down.',
+        });
+        city.setCustomValidity('Invalid field.');
+        return;
+      }
+      this.setState({ isSubmitting: true });
+      jobService
+        .newJob(
+          formData['Job Type'],
+          {
+            lat: formData.City.properties.lat,
+            lon: formData.City.properties.lon,
+            loc: formData.City.properties.formatted,
+          },
+          formData['Job Details'],
+          formData.Pay,
+          formData.Duration,
+          formData.DurationRange,
+          formData.Date,
+          formData.Time,
+          formData['Equipment Needed'],
+          formData['Skills Needed']
+        )
+        .then(
+          () => {
+            commonFormComponents.setRedrawSuccess(
+              (state) => this.setState(state),
+              'New Job Submitted'
+            );
+          },
+          (error) => {
+            this.setState({
+              status: error.toString(),
+              update: null,
+              isSubmitting: false,
+            });
+          }
+        );
+    }
   }
 
   updateForm(key, value) {

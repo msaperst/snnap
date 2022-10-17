@@ -8,7 +8,7 @@ function SnnapFormInput(props) {
   if (!name) {
     return null;
   }
-  const safeName = name.replace(/[\W]+/g, '');
+  const safeName = name.replace(/\W/gi, '');
   let controlId = `form${safeName}`;
   if (id) {
     controlId = id;

@@ -7,7 +7,7 @@ function SnnapFormPrice(props) {
   if (!name) {
     return null;
   }
-  const safeName = name.replace(/[\W]+/g, '');
+  const safeName = name.replace(/\W+/g, '');
   let change = null;
   if (onChange) {
     change = (e) => onChange(name, e.target.value);

@@ -9,7 +9,7 @@ function SnnapFormDuration(props) {
   if (!name) {
     return null;
   }
-  const safeName = name.replace(/[\W]+/g, '');
+  const safeName = name.replace(/\W+/g, '');
   let change = null;
   let changeRange = null;
   if (onChange) {

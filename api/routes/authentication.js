@@ -5,22 +5,27 @@ const { validationResult, check } = require('express-validator');
 const User = require('../components/user/User');
 
 const signupValidation = [
-  check('firstName', 'First name is required').not().isEmpty(),
-  check('lastName', 'Last name is required').not().isEmpty(),
-  check('location', 'Location is required').not().isEmpty(),
-  check('email', 'Please include a valid email')
+  check('firstName', 'Please provide a valid first name.').not().isEmpty(),
+  check('lastName', 'Please provide a valid last name.').not().isEmpty(),
+  check('location', 'Please select a valid city from the drop down.')
+    .not()
+    .isEmpty(),
+  check('email', 'Please provide a valid email.')
     .isEmail()
     .normalizeEmail({ gmail_remove_dots: true }),
-  check('username', 'Username is required').not().isEmpty(),
-  check('password', 'Password must be 6 or more characters').isLength({
+  check(
+    'username',
+    'Username can only contain alpha numeric characters and underscores.'
+  ).matches(/^\w+$/),
+  check('password', 'Password must be 6 or more characters.').isLength({
     min: 6,
   }),
 ];
 
 const loginValidation = [
-  check('username', 'Please include a valid username').not().isEmpty(),
-  check('password', 'Please include a valid password').not().isEmpty(),
-  check('rememberMe', 'Remember me must be true or false').isBoolean(),
+  check('username', 'Please include a valid username.').not().isEmpty(),
+  check('password', 'Please include a valid password.').not().isEmpty(),
+  check('rememberMe', 'Remember me must be true or false.').isBoolean(),
 ];
 
 router.post('/register', signupValidation, async (req, res) => {
