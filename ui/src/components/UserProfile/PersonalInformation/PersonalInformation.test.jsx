@@ -178,7 +178,7 @@ describe('personal information', () => {
     );
     await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     expect(spy).toHaveBeenCalledTimes(0);
-    hasError(container, 'Please provide a valid city.');
+    hasError(container, 'Please select a valid city from the drop down.');
   });
 
   it('has an alert when only lat is present', async () => {
@@ -198,7 +198,7 @@ describe('personal information', () => {
     );
     await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     expect(spy).toHaveBeenCalledTimes(0);
-    hasError(container, 'Please provide a valid city.');
+    hasError(container, 'Please select a valid city from the drop down.');
   });
 
   it('has an alert when only lon is present', async () => {
@@ -218,7 +218,7 @@ describe('personal information', () => {
     );
     await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     expect(spy).toHaveBeenCalledTimes(0);
-    hasError(container, 'Please provide a valid city.');
+    hasError(container, 'Please select a valid city from the drop down.');
   });
 
   it('has an alert on failure of a submission', async () => {
