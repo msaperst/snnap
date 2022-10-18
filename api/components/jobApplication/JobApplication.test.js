@@ -69,7 +69,6 @@ describe('application for job', () => {
   });
 
   it('skips notification when no job length', async () => {
-    // TODO
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query
       .mockResolvedValueOnce({ insertId: 15 })
