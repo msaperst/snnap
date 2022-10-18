@@ -395,7 +395,7 @@ describe('profile page', () => {
     waitForNumber(nextDivs, 9);
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(9);
     await driver
-      .findElement(By.css('[aria-label="Remove Photography"]'))
+      .findElement(By.css('[aria-label="Remove Natural Light"]'))
       .click();
     companyInformation = await saveAndRefresh();
     multiSelects = await companyInformation.findElements(

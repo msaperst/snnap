@@ -103,8 +103,15 @@ describe('apply to job', () => {
       expect(
         await modal.findElement(By.className('modal-title')).getText()
       ).toEqual(`Submit to work the ${events[i]} Session`);
-      const rows = await modal.findElements(By.className('mb-3 row'));
-      expect(rows).toHaveLength(12);
+      await driver.wait(
+        // eslint-disable-next-line no-loop-func
+        () =>
+          driver
+            .findElements(By.className('mb-3 row'))
+            .then((elements) => elements.length === 12),
+        // verifies that 12 elements are present, or wait fails
+        5000
+      );
       await modal.findElement(By.className('btn-close')).click();
     }
   });

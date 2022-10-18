@@ -51,17 +51,18 @@ class Company {
       `DELETE FROM portfolio WHERE company = ${this.companyId};`
     );
     // set new portfolio info
-    for (let i = 0; i < portfolioItems.length; i++) {
-      const portfolioItem = portfolioItems[i];
-      if (portfolioItem.description && portfolioItem.link) {
-        // eslint-disable-next-line no-await-in-loop
-        await Mysql.query(
-          `INSERT INTO portfolio (company, link, description) VALUES (${
-            this.companyId
-          }, ${db.escape(portfolioItem.link)}, ${db.escape(
-            portfolioItem.description
-          )});`
-        );
+    if (portfolioItems) {
+      for (let i = 0; i < portfolioItems.length; i++) {
+        const portfolioItem = portfolioItems[i];
+        if (portfolioItem.description && portfolioItem.link) {
+          // eslint-disable-next-line no-await-in-loop
+          await Mysql.query(
+            `INSERT INTO portfolio (company, link, description)
+           VALUES (${this.companyId}, ${db.escape(
+              portfolioItem.link
+            )}, ${db.escape(portfolioItem.description)});`
+          );
+        }
       }
     }
   }
