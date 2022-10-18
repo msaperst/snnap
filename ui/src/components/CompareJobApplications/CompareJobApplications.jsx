@@ -76,6 +76,18 @@ class CompareJobApplications extends React.Component {
       validated,
       isSubmitting,
     } = this.state;
+
+    // determine button text
+    let showCompareButton = true;
+    let buttonText = 'Select Application';
+    if (job.application_selected) {
+      buttonText = 'Application Selected';
+      showCompareButton = false;
+    } else if (new Date(job.date_time) < new Date().setHours(0, 0, 0, 0)) {
+      buttonText = 'View Applications';
+      showCompareButton = false;
+    }
+
     return (
       <>
         <div>
@@ -84,9 +96,7 @@ class CompareJobApplications extends React.Component {
             job={job.id}
             onClick={() => this.setState({ show: true })}
           >
-            {job.application_selected
-              ? 'Application Selected'
-              : 'Select Application'}
+            {buttonText}
             <span
               className="btn-warning p-1 rounded-circle"
               style={{ marginLeft: '10px' }}
@@ -124,7 +134,7 @@ class CompareJobApplications extends React.Component {
                   ))}
                 </Accordion>
               </Row>
-              {job.application_selected ? (
+              {!showCompareButton ? (
                 ''
               ) : (
                 <Submit
