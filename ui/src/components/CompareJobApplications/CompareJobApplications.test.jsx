@@ -78,6 +78,15 @@ describe('compare job applications form', () => {
     );
   });
 
+  it('has different text depending on date of job', () => {
+    const hr = { ...job };
+    hr.date_time = '2022-10-13T04:00:00.000Z';
+    const { container } = render(<CompareJobApplications job={hr} />);
+    expect(container.firstChild.firstChild).toHaveTextContent(
+      'View Applications'
+    );
+  });
+
   it('opens a modal when button is clicked', () => {
     expect(modal).toBeVisible();
   });
