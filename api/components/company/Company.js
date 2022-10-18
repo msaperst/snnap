@@ -57,10 +57,11 @@ class Company {
         if (portfolioItem.description && portfolioItem.link) {
           // eslint-disable-next-line no-await-in-loop
           await Mysql.query(
-            `INSERT INTO portfolio (company, link, description)
-           VALUES (${this.companyId}, ${db.escape(
-              portfolioItem.link
-            )}, ${db.escape(portfolioItem.description)});`
+            `INSERT INTO portfolio (company, link, description) VALUES (${
+              this.companyId
+            }, ${db.escape(portfolioItem.link)}, ${db.escape(
+              portfolioItem.description
+            )});`
           );
         }
       }
