@@ -48,7 +48,9 @@ describe('register page', () => {
     expect(await feedback[1].getText()).toEqual(
       'Please provide a valid last name.'
     );
-    expect(await feedback[2].getText()).toEqual('Please provide a valid city.');
+    expect(await feedback[2].getText()).toEqual(
+      'Please select a valid city from the drop down.'
+    );
     expect(await feedback[3].getText()).toEqual(
       'Please provide a valid email.'
     );
@@ -57,7 +59,7 @@ describe('register page', () => {
     );
 
     expect(await feedback[5].getText()).toEqual(
-      'Please provide a valid password.'
+      'Password must be 6 or more characters.'
     );
     expect(await feedback[6].getText()).toEqual(
       'You must agree before submitting.'
@@ -157,7 +159,9 @@ describe('register page', () => {
       until.elementLocated(By.className('alert-danger')),
       5000
     );
-    expect(await alert.getText()).toEqual('Please provide a valid city.');
+    expect(await alert.getText()).toEqual(
+      'Please select a valid city from the drop down.'
+    );
   });
 
   async function register(

@@ -96,7 +96,7 @@ describe('snnap form input', () => {
       'invalid-feedback'
     );
     expect(container.firstChild.firstChild.children[2]).toHaveTextContent(
-      'Please provide a valid 123.'
+      'Please select a valid 123 from the drop down.'
     );
   });
 

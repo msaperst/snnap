@@ -48,7 +48,7 @@ class ApplyToJob extends React.Component {
     const form = document.querySelector('#applyToJobForm');
     if (form.checkValidity() === true) {
       const { job, formData } = this.state;
-      const { user } = this.props;
+      const { user, applied } = this.props;
       this.setState({ isSubmitting: true });
       const website = formData.Website || formData.website;
       const insta = formData['Instagram Link'] || formData.insta;
@@ -74,6 +74,7 @@ class ApplyToJob extends React.Component {
               (state) => this.setState(state),
               'Job Filing Submitted'
             );
+            setTimeout(applied, 5000);
           },
           (error) => {
             this.setState({

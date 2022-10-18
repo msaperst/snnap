@@ -16,7 +16,7 @@ export const userService = {
 function get(id) {
   let url = `/api/user/get`;
   if (id) {
-    url += `/${parseInt(id, 10)}`;
+    url += `/${id.toString().replace(/\W/gi, '')}`;
   }
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(url, requestOptions).then(handleResponse);

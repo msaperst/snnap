@@ -212,7 +212,7 @@ describe('new job form', () => {
     expect(spy).toBeCalledTimes(0);
   });
 
-  async function fillOutForm(modalForm, location = true) {
+  async function fillOutForm(modalForm, location = true, date = '2030-10-13') {
     fireEvent.change(modalForm.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '7' },
     });
@@ -230,7 +230,7 @@ describe('new job form', () => {
       );
     }
     fireEvent.change(modalForm.children[1].lastChild.firstChild.firstChild, {
-      target: { value: '10/13/2030' },
+      target: { value: date },
     });
     fireEvent.change(modalForm.children[2].firstChild.firstChild.firstChild, {
       target: { value: 'Some Deets' },
@@ -250,9 +250,16 @@ describe('new job form', () => {
     jobService.jobService.newJob.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
     await fillOutForm(modalForm, false);
-    // hack to remove location because this is blocking our submission
-    modalForm.children[1].remove();
-    await hasAnError(modal, 'Please provide a valid city.');
+    await hasAnError(modal, 'Please select a valid city from the drop down.');
+    expect(spy).toHaveBeenCalledTimes(0);
+  });
+
+  it('has an alert when an old date is selected', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'newJob');
+    jobService.jobService.newJob.mockRejectedValue('Some Error');
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    await fillOutForm(modalForm, false, '2010-10-13');
+    await hasAnError(modal, 'Please provide a date after today.');
     expect(spy).toHaveBeenCalledTimes(0);
   });
 
@@ -261,8 +268,6 @@ describe('new job form', () => {
     jobService.jobService.newJob.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
     await fillOutForm(modalForm);
-    // hack to remove location because this is blocking our submission
-    modalForm.children[1].remove();
     await hasAnError(modal);
     expect(spy).toHaveBeenCalledWith(
       '7',
@@ -275,7 +280,7 @@ describe('new job form', () => {
       '50',
       '8',
       undefined,
-      undefined,
+      '2030-10-13',
       undefined,
       undefined,
       undefined
@@ -288,8 +293,6 @@ describe('new job form', () => {
     jobService.jobService.newJob.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
     await fillOutForm(modalForm);
-    // hack to remove location because this is blocking our submission
-    modalForm.children[1].remove();
     await closeAlert(modal);
   });
 
@@ -298,8 +301,6 @@ describe('new job form', () => {
     jobService.jobService.newJob.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
     await fillOutForm(modalForm);
-    // hack to remove location because this is blocking our submission
-    modalForm.children[1].remove();
     await hasASuccess(modal, 'New Job Submitted');
     expect(spy).toHaveBeenCalledWith(
       '7',
@@ -312,7 +313,7 @@ describe('new job form', () => {
       '50',
       '8',
       undefined,
-      undefined,
+      '2030-10-13',
       undefined,
       undefined,
       undefined
@@ -325,8 +326,6 @@ describe('new job form', () => {
     jobService.jobService.newJob.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
     await fillOutForm(modalForm);
-    // hack to remove location because this is blocking our submission
-    modalForm.children[1].remove();
     await closeAlert(modal);
   });
 
@@ -336,8 +335,6 @@ describe('new job form', () => {
     jobService.jobService.newJob.mockResolvedValue('Some Success');
     const modalForm = modal.firstChild.lastChild.firstChild;
     await fillOutForm(modalForm);
-    // hack to remove location because this is blocking our submission
-    modalForm.children[1].remove();
     await noModal(modal);
   });
 });

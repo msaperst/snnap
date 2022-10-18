@@ -138,6 +138,31 @@ describe('Company', () => {
     );
   });
 
+  it('creates the portfolio without any portfolio', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query
+      .mockResolvedValueOnce([{ id: 3 }])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([]);
+    const company = new Company(2);
+    await company.setPortfolio('experience');
+    expect(company.userId).toEqual('2');
+    expect(company.companyId).toEqual(3);
+    expect(spy).toHaveBeenCalledTimes(3);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM companies WHERE user = 2;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE companies SET experience = 'experience' WHERE user = 2"
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      3,
+      'DELETE FROM portfolio WHERE company = 3;'
+    );
+  });
+
   it('creates the portfolio without any portfolio items', async () => {
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query

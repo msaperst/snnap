@@ -12,8 +12,10 @@ import {
 import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../../components/SnnapForms/SnnapFormInput';
 import SnnapFormLocationInput from '../../components/SnnapForms/SnnapFormLocationInput';
+import SnnapFormPassword from '../../components/SnnapForms/SnnapFormPassword';
 
 function RegisterPage() {
+  const re = /^\w+$/;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,40 +33,76 @@ function RegisterPage() {
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
-    if (form.checkValidity() === true) {
-      if (
-        formData.City &&
-        formData.City.properties &&
-        formData.City.properties.formatted
-      ) {
-        setIsSubmitting(true);
-        authenticationService
-          .register(
-            formData['First name'],
-            formData['Last name'],
-            {
-              lat: formData.City.properties.lat,
-              lon: formData.City.properties.lon,
-              loc: formData.City.properties.formatted,
-            },
-            formData.Email,
-            formData.Username,
-            formData.Password
-          )
-          .then(
-            () => {
-              navigate('/');
-            },
-            (error) => {
-              setIsSubmitting(false);
-              setStatus(error.toString());
-            }
-          );
-      } else {
-        setStatus('Please provide a valid city.');
-      }
-    }
+    const city = document.querySelector('#formCity');
+    const email = document.querySelector('#formEmail');
+    const username = document.querySelector('#formUsername');
+    const password = document.querySelector('#formPassword');
+    city.setCustomValidity('');
+    email.setCustomValidity('');
+    username.setCustomValidity('');
+    password.setCustomValidity('');
     setValidated(true);
+    // actually check and submit the form
+    if (form.checkValidity() === true) {
+      // custom checks - should match API checks
+      if (!re.test(formData.Username)) {
+        setStatus(
+          'Username can only contain alpha numeric characters and underscores.'
+        );
+        username.setCustomValidity('Invalid field.');
+        return;
+      }
+      if (formData.Password.length < 6) {
+        setStatus('Password must be 6 or more characters.');
+        password.setCustomValidity('Invalid field.');
+        return;
+      }
+      if (
+        !(
+          formData.City &&
+          formData.City.properties &&
+          formData.City.properties.formatted
+        )
+      ) {
+        setStatus('Please select a valid city from the drop down.');
+        city.setCustomValidity('Invalid field.');
+        return;
+      }
+      setIsSubmitting(true);
+      authenticationService
+        .register(
+          formData['First name'],
+          formData['Last name'],
+          {
+            lat: formData.City.properties.lat,
+            lon: formData.City.properties.lon,
+            loc: formData.City.properties.formatted,
+          },
+          formData.Email,
+          formData.Username,
+          formData.Password
+        )
+        .then(
+          () => {
+            navigate('/');
+          },
+          (error) => {
+            setIsSubmitting(false);
+            setStatus(error.toString());
+            if (
+              error.toString() ===
+              'This email is already in our system. Try resetting your password.'
+            ) {
+              email.setCustomValidity('Invalid field.');
+            }
+            if (
+              error.toString() === 'Sorry, that username is already in use.'
+            ) {
+              username.setCustomValidity('Invalid field.');
+            }
+          }
+        );
+    }
   };
 
   const updateForm = (key, value) => {
@@ -91,11 +129,7 @@ function RegisterPage() {
           <SnnapFormInput name="Username" onChange={updateForm} />
         </Row>
         <Row className="mb-3">
-          <SnnapFormInput
-            name="Password"
-            type="password"
-            onChange={updateForm}
-          />
+          <SnnapFormPassword name="Password" onChange={updateForm} />
         </Row>
         <Form.Group className="mb-3">
           <Form.Check

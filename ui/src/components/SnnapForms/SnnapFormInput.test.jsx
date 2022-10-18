@@ -108,16 +108,18 @@ describe('snnap form input', () => {
   });
 
   it('has an input field input', () => {
-    const { container } = render(<SnnapFormInput name="123" />);
+    const { container } = render(
+      <SnnapFormInput name="123 456-_!@#$%^&':;,./<>?" />
+    );
     expect(container.firstChild.firstChild.firstChild).toHaveClass(
       'form-control'
     );
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('form123');
+    ).toEqual('form123456_');
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('placeholder')
-    ).toEqual('123');
+    ).toEqual("123 456-_!@#$%^&':;,./<>?");
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('text');

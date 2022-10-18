@@ -1,8 +1,26 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import Job from './Job';
+
+jest.mock(
+  '../ApplyToJob/ApplyToJob',
+  () =>
+    function (props) {
+      const { applied } = props;
+      return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+        <div
+          onClick={() => {
+            applied();
+          }}
+        >
+          Submit For Job
+        </div>
+      );
+    }
+);
 
 jest.mock('../../services/user.service');
 const userService = require('../../services/user.service');
@@ -138,6 +156,22 @@ describe('job', () => {
     const { container } = requestForHire;
     const { cardContainer, data } = checkTop(container);
     checkData(cardContainer, data, '2 to 3 hours', 'Submit For Job');
+  });
+
+  it('reloads the applications when applied to', async () => {
+    const spy = jest.spyOn(jobService.jobService, 'getJobApplications');
+    jobService.jobService.getJobApplications.mockResolvedValue([]);
+    jobService.jobService.getJob.mockResolvedValue({
+      date_time: '2023-10-13 00:00:00',
+      loc: 'paris',
+    });
+    await loadJob(jobDuration, otherUser);
+    const { getByText } = requestForHire;
+    expect(spy).toHaveBeenCalledTimes(1);
+    act(() => {
+      fireEvent.click(getByText('Submit For Job'));
+    });
+    expect(spy).toHaveBeenCalledTimes(2);
   });
 
   async function loadJob(request, user) {

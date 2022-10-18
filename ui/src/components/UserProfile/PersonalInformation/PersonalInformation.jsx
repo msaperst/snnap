@@ -38,44 +38,51 @@ function PersonalInformation(props) {
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
-    if (form.checkValidity() === true) {
-      if (
-        formData.City &&
-        formData.City.properties &&
-        formData.City.properties.lat &&
-        formData.City.properties.lon
-      ) {
-        setIsSubmitting(true);
-        userService
-          .updatePersonalInformation(
-            formData['First Name'],
-            formData['Last Name'],
-            {
-              lat: formData.City.properties.lat,
-              lon: formData.City.properties.lon,
-              loc: formData.City.properties.formatted,
-            }
-          )
-          .then(
-            () => {
-              commonFormComponents.setBasicSuccess(
-                setIsSubmitting,
-                setStatus,
-                setUpdate,
-                setValidated,
-                'Personal Information Updated'
-              );
-            },
-            (error) => {
-              setIsSubmitting(false);
-              setStatus(error.toString());
-            }
-          );
-      } else {
-        setStatus('Please provide a valid city.');
-      }
-    }
+    const city = document.querySelector('#formCity');
+    city.setCustomValidity('');
     setValidated(true);
+    // actually check and submit the form
+    if (form.checkValidity() === true) {
+      // custom checks - should match API checks
+      if (
+        !(
+          formData.City &&
+          formData.City.properties &&
+          formData.City.properties.lat &&
+          formData.City.properties.lon
+        )
+      ) {
+        setStatus('Please select a valid city from the drop down.');
+        city.setCustomValidity('Invalid field.');
+        return;
+      }
+      setIsSubmitting(true);
+      userService
+        .updatePersonalInformation(
+          formData['First Name'],
+          formData['Last Name'],
+          {
+            lat: formData.City.properties.lat,
+            lon: formData.City.properties.lon,
+            loc: formData.City.properties.formatted,
+          }
+        )
+        .then(
+          () => {
+            commonFormComponents.setBasicSuccess(
+              setIsSubmitting,
+              setStatus,
+              setUpdate,
+              setValidated,
+              'Personal Information Updated'
+            );
+          },
+          (error) => {
+            setIsSubmitting(false);
+            setStatus(error.toString());
+          }
+        );
+    }
   };
 
   const updateForm = (key, value) => {

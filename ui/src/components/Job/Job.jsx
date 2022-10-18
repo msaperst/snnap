@@ -13,6 +13,7 @@ function Job(props) {
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
+  const [applied, setApplied] = useState(false);
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ function Job(props) {
     jobService.getJobApplications(job.id).then((apps) => {
       setApplications(apps);
     });
-  }, [job.user, job.id]);
+  }, [job.user, job.id, applied]);
 
   // determine which button we want (if mine, show applications; if applied for, disabled; else, apply for)
   let button;
@@ -41,6 +42,7 @@ function Job(props) {
         user={currentUser}
         equipment={equipment}
         skills={skills}
+        applied={() => setApplied(true)}
       />
     );
   }

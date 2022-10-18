@@ -24,7 +24,7 @@ function SnnapFormMultiSelect(props) {
     return null;
   }
 
-  const safeName = name.replace(/[\W]+/g, '');
+  const safeName = name.replace(/\W+/g, '');
   let change = (e) => {
     setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
   };

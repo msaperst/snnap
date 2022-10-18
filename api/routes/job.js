@@ -9,7 +9,9 @@ const Common = require('./common');
 
 const newJobValidation = [
   check('type', 'Please provide a valid job type.').isNumeric(),
-  check('location', 'Please provide a valid city.').not().isEmpty(),
+  check('location', 'Please select a valid city from the drop down.')
+    .not()
+    .isEmpty(),
   check('details', 'Please provide a valid job details.').not().isEmpty(),
   check('pay', 'Please provide a valid pay.').isNumeric(),
   check('duration', 'Please provide a valid duration.').isNumeric(),

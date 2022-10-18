@@ -23,7 +23,7 @@ function SnnapFormLocationInput(props) {
       oldChild = parent.removeChild(input);
       grandparent.insertBefore(oldChild, parent);
       const formError = document.createElement('div');
-      formError.innerHTML = `Please provide a valid ${name.toLowerCase()}.`;
+      formError.innerHTML = `Please select a valid ${name.toLowerCase()} from the drop down.`;
       formError.className = 'invalid-feedback';
       grandparent.insertBefore(formError, parent);
     }
@@ -33,7 +33,7 @@ function SnnapFormLocationInput(props) {
   if (!name) {
     return null;
   }
-  const safeName = name.replace(/[\W]+/g, '');
+  const safeName = name.replace(/\W+/g, '');
   let change = null;
   if (onChange) {
     change = (e) => onChange(name, e);
