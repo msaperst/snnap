@@ -68,6 +68,36 @@ describe('application for job', () => {
     );
   });
 
+  it('skips notification when no job length', async () => {
+    // TODO
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce([]);
+    const jobApplication = JobApplication.create(
+      1,
+      5,
+      3,
+      'Max Saperstone',
+      'Butts R Us',
+      null,
+      'insta',
+      null,
+      'some experience',
+      [],
+      [],
+      []
+    );
+    await expect(jobApplication.getId()).resolves.toEqual(15);
+    // verify the sql calls
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+    );
+    expect(spy).toHaveBeenNthCalledWith(2, 'SELECT * FROM jobs WHERE id = 1;');
+  });
+
   it('sets the job with skills and equipment and portfolio on creation', async () => {
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query
