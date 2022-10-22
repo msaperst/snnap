@@ -1,5 +1,6 @@
 const db = require('mysql');
 const Mysql = require('../../services/Mysql');
+const Email = require('../../services/Email');
 
 const Job = class {
   constructor(id) {
@@ -143,6 +144,31 @@ const Job = class {
       `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${db.escape(
         jobApp.user_id
       )}, 'selected', ${this.id}, ${db.escape(jobApplication)});`
+    );
+    // send out the email
+    const jobUser = await Mysql.query(
+      `SELECT * FROM users WHERE id = ${(await this.getInfo()).user};`
+    );
+    const applicationUser = await Mysql.query(
+      `SELECT * FROM users WHERE id = ${jobApp.user_id};`
+    );
+    Email.sendMail(
+      applicationUser[0].email,
+      'SNNAP: Job Application Selected',
+      `${jobUser[0].first_name} ${
+        jobUser[0].last_name
+      } selected your job application\nhttps://snnap.app/job-applications#${parseInt(
+        jobApplication,
+        10
+      )}`,
+      `<a href='https://snnap.app/profile/${jobUser[0].username}'>${
+        jobUser[0].first_name
+      } ${
+        jobUser[0].last_name
+      }</a> selected your <a href='https://snnap.app/job-applications#${parseInt(
+        jobApplication,
+        10
+      )}'>job application</a>`
     );
   }
 };
