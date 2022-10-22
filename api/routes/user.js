@@ -20,11 +20,12 @@ router.get('/get/:user', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const userInfo =
       await Mysql.query(`SELECT id, username, first_name, last_name, avatar
-                                         FROM users WHERE id = ${db.escape(
-                                           req.params.user
-                                         )} OR username = ${db.escape(
-        req.params.user
-      )};`);
+                                         FROM users WHERE id = ${parseInt(
+                                           req.params.user,
+                                           10
+                                         )} OR username = ${req.params.user
+        .toString()
+        .replace(/\W/gi, '')};`);
     if (userInfo[0] && userInfo[0].id) {
       return res.send(userInfo[0]);
     }
@@ -70,8 +71,9 @@ router.post(
     try {
       User.auth(token);
       await Mysql.query(
-        `UPDATE notifications SET reviewed = true WHERE id = ${db.escape(
-          req.body.notification
+        `UPDATE notifications SET reviewed = true WHERE id = ${parseInt(
+          req.body.notification,
+          10
         )};`
       );
       return res.status(200).send();

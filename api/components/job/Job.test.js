@@ -64,7 +64,34 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, NULL, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('sets the job with max duration on creation', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    const emailSpy = jest.spyOn(Email, 'sendMail');
+    Mysql.query.mockResolvedValue({ insertId: 15 });
+    const job = Job.create(
+      1,
+      5,
+      location,
+      'Deetz',
+      100,
+      5,
+      10,
+      '2022-02-16',
+      [],
+      []
+    );
+    await expect(job.getId()).resolves.toEqual(15);
+    await expect(job.getType()).resolves.toEqual(5);
+    await expect(job.getLocation()).resolves.toEqual(location);
+    // verify the sql calls
+    expect(sqlSpy).toHaveBeenCalledTimes(1);
+    expect(sqlSpy).toHaveBeenCalledWith(
+      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -95,7 +122,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, NULL, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -189,22 +216,6 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       'SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = 1 ORDER BY jobs.date_time;'
-    );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
-  });
-
-  it("gets all of a user's jobs escaped", async () => {
-    const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
-    Mysql.query.mockResolvedValue([]);
-    await expect(
-      Job.getUserJobs('max;\' "SELECT * WHERE 1=1;"')
-    ).resolves.toEqual([]);
-
-    expect(sqlSpy).toHaveBeenCalledTimes(1);
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      1,
-      "SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = 'max;\\' \\\"SELECT * WHERE 1=1;\\\"' ORDER BY jobs.date_time;"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });

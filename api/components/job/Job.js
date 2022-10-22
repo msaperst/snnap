@@ -4,7 +4,7 @@ const Email = require('../../services/Email');
 
 const Job = class {
   constructor(id) {
-    this.id = db.escape(id);
+    this.id = parseInt(id, 10);
   }
 
   static create(
@@ -23,28 +23,29 @@ const Job = class {
     newJob.instancePromise = (async () => {
       const dateTime = `${date} 00:00:00`;
       const result = await Mysql.query(
-        `INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${db.escape(
-          user
-        )}, ${db.escape(type)}, ${db.escape(details)}, ${db.escape(
+        `INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${parseInt(
+          user,
+          10
+        )}, ${parseInt(type, 10)}, ${db.escape(details)}, ${parseFloat(
           pay
-        )}, ${db.escape(duration)}, ${db.escape(durationMax)}, ${db.escape(
-          dateTime
-        )}, ${db.escape(location.loc)}, ${db.escape(location.lat)},${db.escape(
-          location.lon
-        )});`
+        )}, ${parseInt(duration, 10)}, ${
+          durationMax ? parseInt(durationMax, 10) : null
+        }, ${db.escape(dateTime)}, ${db.escape(location.loc)}, ${parseFloat(
+          location.lat
+        )},${parseFloat(location.lon)});`
       );
       equipment.map(async (equip) => {
         await Mysql.query(
           `INSERT INTO job_equipment (job, equipment) VALUES (${
             result.insertId
-          }, ${db.escape(equip.value)});`
+          }, ${parseInt(equip.value, 10)});`
         );
       });
       skills.map(async (skill) => {
         await Mysql.query(
           `INSERT INTO job_skills (job, skill) VALUES (${
             result.insertId
-          }, ${db.escape(skill.value)});`
+          }, ${parseInt(skill.value, 10)});`
         );
       });
       newJob.id = result.insertId;
@@ -77,8 +78,9 @@ const Job = class {
 
   static async getUserJobs(user) {
     return Mysql.query(
-      `SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = ${db.escape(
-        user
+      `SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = ${parseInt(
+        user,
+        10
       )} ORDER BY jobs.date_time;`
     );
   }
@@ -126,8 +128,9 @@ const Job = class {
   async selectApplication(jobApplication) {
     await this.instancePromise;
     await Mysql.query(
-      `UPDATE jobs SET jobs.application_selected = ${db.escape(
-        jobApplication
+      `UPDATE jobs SET jobs.application_selected = ${parseInt(
+        jobApplication,
+        10
       )}, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = ${
         this.id
       };`
@@ -135,15 +138,17 @@ const Job = class {
     // set the notification
     const jobApp = (
       await Mysql.query(
-        `SELECT * FROM job_applications WHERE id = ${db.escape(
-          jobApplication
+        `SELECT * FROM job_applications WHERE id = ${parseInt(
+          jobApplication,
+          10
         )};`
       )
     )[0];
     await Mysql.query(
-      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${db.escape(
-        jobApp.user_id
-      )}, 'selected', ${this.id}, ${db.escape(jobApplication)});`
+      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${parseInt(
+        jobApp.user_id,
+        10
+      )}, 'selected', ${this.id}, ${parseInt(jobApplication, 10)});`
     );
     // send out the email
     const jobUser = await Mysql.query(
