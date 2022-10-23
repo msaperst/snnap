@@ -19,9 +19,8 @@ router.get('/get/:user', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () => {
     const userInfo =
       await Mysql.query(`SELECT id, username, first_name, last_name, avatar
-                                         FROM users WHERE id = ${parseInt(
-                                           req.params.user,
-                                           10
+                                         FROM users WHERE id = ${parseId(
+                                           req.params.user
                                          )} OR username = '${req.params.user
         .toString()
         .replace(/\W/gi, '')}';`);
@@ -189,5 +188,13 @@ router.post('/update-password', updatePasswordValidation, async (req, res) => {
     }
   }
 });
+
+function parseId(id) {
+  const x = parseInt(id, 10);
+  if (Number.isNaN(x)) {
+    return 0;
+  }
+  return x;
+}
 
 module.exports = router;
