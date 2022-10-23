@@ -87,6 +87,50 @@ describe('application for job', () => {
     );
   });
 
+  it('skips email when no user found', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    const emailSpy = jest.spyOn(Email, 'sendMail');
+    Mysql.query
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce([{ user: 1 }])
+      .mockResolvedValueOnce([{ username: 'max' }])
+      .mockResolvedValueOnce([]);
+    const jobApplication = JobApplication.create(
+      1,
+      5,
+      3,
+      'Max Saperstone',
+      'Butts R Us',
+      null,
+      'insta',
+      null,
+      'some experience',
+      [],
+      [],
+      []
+    );
+    await expect(jobApplication.getId()).resolves.toEqual(15);
+    // verify the sql calls
+    expect(sqlSpy).toHaveBeenCalledTimes(4);
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM jobs WHERE id = 1;'
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      3,
+      "INSERT INTO notifications (to_user, what, job, job_application) VALUES (1, 'applied', 1, 15);"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      4,
+      'SELECT * FROM users WHERE id = 1;'
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
+  });
+
   it('skips notification when no job length', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
     const emailSpy = jest.spyOn(Email, 'sendMail');

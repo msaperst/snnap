@@ -6,6 +6,17 @@ A few tools are needed to be installed for basic development:
 * NodeJS
 * NPM
 
+The webserver (and websockets) run using signed certs on the back end, for a secure connection.
+On a development machine, this means you'll need to create self signed certs, which is easiest
+using `openssl`. The cert should be named `cert.pem` and the key should be named `key-rsa.pem`.
+These should be generated and stored in the `api/certs` directory.
+
+Additionally, because websockets connect directly, you might need to tell your browser to accept
+self signed certs by enabling this on localhost:
+
+[chrome://flags/#allow-insecure-localhost](chrome://flags/#allow-insecure-localhost)
+
+
 ## Deploying Application
 ### Using Docker Compose
 You probably want this for testing and prod deployments, not for development use
@@ -39,6 +50,9 @@ Create a `.env` file with local connection information in the `ui` directory
 #ui/.env
 REACT_APP_GEOAPIFY_API_KEY=[mygeoapifyapikey]
 REACT_APP_HTTP_PORT=3001
+REACT_APP_WS_PROTOCOL=ws
+REACT_APP_DOMAIN=localhost
+REACT_APP_WS_PORT=3001
 ```
 ```shell
 export $(grep -v '^#' .env | xargs)

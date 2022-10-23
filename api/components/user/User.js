@@ -22,9 +22,9 @@ const User = class {
       exists = await Mysql.query(
         `SELECT *
          FROM users
-         WHERE LOWER(username) = LOWER(${username
+         WHERE LOWER(username) = LOWER('${username
            .toString()
-           .replace(/\W/gi, '')});`
+           .replace(/\W/gi, '')}');`
       );
       if (exists.length) {
         throw new Error('Sorry, that username is already in use.');
@@ -33,9 +33,9 @@ const User = class {
       const result = await Mysql.query(
         `INSERT INTO users (first_name, last_name, email, username, password, loc, lat, lon)
          VALUES (${db.escape(firstName)}, ${db.escape(lastName)},
-                 ${db.escape(email)}, ${username
+                 ${db.escape(email)}, '${username
           .toString()
-          .replace(/\W/gi, '')}, 
+          .replace(/\W/gi, '')}', 
                  ${db.escape(hash)}, ${db.escape(location.loc)},
                  ${parseFloat(location.lat)}, ${parseFloat(location.lon)});`
       );
@@ -57,7 +57,7 @@ const User = class {
       const user = await Mysql.query(
         `SELECT *
          FROM users
-         WHERE username = ${username.toString().replace(/\W/gi, '')};`
+         WHERE username = '${username.toString().replace(/\W/gi, '')}';`
       );
       if (!user.length) {
         throw new Error('Username or password is incorrect!');

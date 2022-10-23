@@ -2,7 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 const { check } = require('express-validator');
-const db = require('mysql');
 const User = require('../components/user/User');
 const Mysql = require('../services/Mysql');
 const Common = require('./common');
@@ -23,9 +22,9 @@ router.get('/get/:user', async (req, res) => {
                                          FROM users WHERE id = ${parseInt(
                                            req.params.user,
                                            10
-                                         )} OR username = ${req.params.user
+                                         )} OR username = '${req.params.user
         .toString()
-        .replace(/\W/gi, '')};`);
+        .replace(/\W/gi, '')}';`);
     if (userInfo[0] && userInfo[0].id) {
       return res.send(userInfo[0]);
     }

@@ -1,4 +1,5 @@
 const db = require('mysql');
+const htmlEncode = require('js-htmlencode');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');
 
@@ -48,7 +49,7 @@ const JobApplication = class {
         );
       });
       if (portfolio && Array.isArray(portfolio)) {
-        portfolio.map(async (portfolioItem) => {
+        portfolio.forEach(async (portfolioItem) => {
           // set new portfolio info
           if (portfolioItem.description && portfolioItem.link) {
             await Mysql.query(
@@ -76,20 +77,24 @@ const JobApplication = class {
         const user = await Mysql.query(
           `SELECT * FROM users WHERE id = ${job[0].user};`
         );
-        Email.sendMail(
-          user[0].email,
-          'SNNAP: New Job Application',
-          `${userName} applied to your job\nhttps://snnap.app/jobs#${parseInt(
-            jobId,
-            10
-          )}`,
-          `<a href='https://snnap.app/profile/${
-            user[0].username
-          }'>${userName}</a> applied to your <a href='https://snnap.app/jobs#${parseInt(
-            jobId,
-            10
-          )}'>job</a>`
-        );
+        if (user && user.length) {
+          Email.sendMail(
+            user[0].email,
+            'SNNAP: New Job Application',
+            `${userName} applied to your job\nhttps://snnap.app/jobs#${parseInt(
+              jobId,
+              10
+            )}`,
+            `<a href='https://snnap.app/profile/${
+              user[0].username
+            }'>${htmlEncode(
+              userName
+            )}</a> applied to your <a href='https://snnap.app/jobs#${parseInt(
+              jobId,
+              10
+            )}'>job</a>`
+          );
+        }
       }
     })();
     return newJobApplication;
