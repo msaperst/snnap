@@ -48,11 +48,11 @@ npm run start
 Create a `.env` file with local connection information in the `ui` directory
 ```shell
 #ui/.env
-REACT_APP_GEOAPIFY_API_KEY=[mygeoapifyapikey]
-REACT_APP_HTTP_PORT=3001
-REACT_APP_WS_PROTOCOL=ws
 REACT_APP_DOMAIN=localhost
+REACT_APP_WS_PROTOCOL=ws
 REACT_APP_WS_PORT=3001
+
+REACT_APP_GEOAPIFY_API_KEY=[mygeoapifyapikey]
 ```
 ```shell
 export $(grep -v '^#' .env | xargs)

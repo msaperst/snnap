@@ -38,6 +38,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       API_PORT: ${API_PORT}
       API_LIMIT: ${API_LIMIT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}0
     volumes:
       - ./api/certs:/usr/src/app/certs
       - /etc/letsencrypt/live/snnap.app:/etc/letsencrypt/live/snnap.app
