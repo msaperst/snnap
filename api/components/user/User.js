@@ -22,7 +22,9 @@ const User = class {
       exists = await Mysql.query(
         `SELECT *
          FROM users
-         WHERE LOWER(username) = LOWER(${db.escape(username)});`
+         WHERE LOWER(username) = LOWER('${username
+           .toString()
+           .replace(/\W/gi, '')}');`
       );
       if (exists.length) {
         throw new Error('Sorry, that username is already in use.');
@@ -31,9 +33,11 @@ const User = class {
       const result = await Mysql.query(
         `INSERT INTO users (first_name, last_name, email, username, password, loc, lat, lon)
          VALUES (${db.escape(firstName)}, ${db.escape(lastName)},
-                 ${db.escape(email)}, ${db.escape(username)}, 
+                 ${db.escape(email)}, '${username
+          .toString()
+          .replace(/\W/gi, '')}', 
                  ${db.escape(hash)}, ${db.escape(location.loc)},
-                 ${db.escape(location.lat)}, ${db.escape(location.lon)});`
+                 ${parseFloat(location.lat)}, ${parseFloat(location.lon)});`
       );
       newUser.id = result.insertId;
       newUser.username = username;
@@ -53,7 +57,7 @@ const User = class {
       const user = await Mysql.query(
         `SELECT *
          FROM users
-         WHERE username = ${db.escape(username)};`
+         WHERE username = '${username.toString().replace(/\W/gi, '')}';`
       );
       if (!user.length) {
         throw new Error('Username or password is incorrect!');
@@ -157,8 +161,8 @@ const User = class {
        SET first_name = ${db.escape(firstName)},
            last_name  = ${db.escape(lastName)},
            loc       = ${db.escape(location.loc)},
-           lat       = ${db.escape(location.lat)},
-           lon       = ${db.escape(location.lon)}
+           lat       = ${parseFloat(location.lat)},
+           lon       = ${parseFloat(location.lon)}
        WHERE id = ${await this.getId()}`
     );
   }

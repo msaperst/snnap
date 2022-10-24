@@ -22,7 +22,7 @@ describe('Company', () => {
       equipment: [],
       skills: [],
     });
-    expect(company.userId).toEqual('1');
+    expect(company.userId).toEqual(1);
     expect(company.companyId).toEqual(1);
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
@@ -69,7 +69,7 @@ describe('Company', () => {
         { value: 4, name: 'skill 2' },
       ],
     });
-    expect(company.userId).toEqual('1');
+    expect(company.userId).toEqual(1);
     expect(company.companyId).toEqual(1);
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
@@ -109,7 +109,7 @@ describe('Company', () => {
       equipment: [],
       skills: [],
     });
-    expect(company.userId).toEqual('5');
+    expect(company.userId).toEqual(5);
     expect(company.companyId).toEqual(2);
     expect(spy).toHaveBeenCalledTimes(6);
     expect(spy).toHaveBeenNthCalledWith(
@@ -146,7 +146,7 @@ describe('Company', () => {
       .mockResolvedValueOnce([]);
     const company = new Company(2);
     await company.setPortfolio('experience');
-    expect(company.userId).toEqual('2');
+    expect(company.userId).toEqual(2);
     expect(company.companyId).toEqual(3);
     expect(spy).toHaveBeenCalledTimes(3);
     expect(spy).toHaveBeenNthCalledWith(
@@ -171,7 +171,7 @@ describe('Company', () => {
       .mockResolvedValueOnce([]);
     const company = new Company(2);
     await company.setPortfolio('experience', []);
-    expect(company.userId).toEqual('2');
+    expect(company.userId).toEqual(2);
     expect(company.companyId).toEqual(3);
     expect(spy).toHaveBeenCalledTimes(3);
     expect(spy).toHaveBeenNthCalledWith(
@@ -202,7 +202,7 @@ describe('Company', () => {
       { description: 'description3' },
       { link: 'link4' },
     ]);
-    expect(company.userId).toEqual('2');
+    expect(company.userId).toEqual(2);
     expect(company.companyId).toEqual(3);
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
