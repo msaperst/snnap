@@ -185,6 +185,10 @@ const User = class {
     }
   }
 
+  async updateNotificationSettings(email, push) {
+    // TODO
+  }
+
   async getToken() {
     await this.instancePromise;
     return this.token;
@@ -223,6 +227,11 @@ const User = class {
       );
     }
     return [];
+  }
+
+  async getSettings() {
+    // TODO
+    return {};
   }
 
   static getToken(authorization) {

@@ -32,6 +32,13 @@ router.get('/get/:user', async (req, res) => {
   });
 });
 
+router.get('/settings', async (req, res) => {
+  await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
+    const user = User.auth(token);
+    return res.send(await user.getSettings());
+  });
+});
+
 router.get('/jobs', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async (token) => {
     const user = User.auth(token);
@@ -186,6 +193,22 @@ router.post('/update-password', updatePasswordValidation, async (req, res) => {
           msg: error.message,
         });
     }
+  }
+});
+
+router.post('/update-notification-settings', async (req, res) => {
+  const token = await Common.checkInput(req, res);
+  if (typeof token !== 'string' && !(token instanceof String)) {
+    return token;
+  }
+  try {
+    const user = User.auth(token);
+    await user.updateNotificationSettings(req.body.email, req.body.push);
+    return res.status(200).send();
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
   }
 });
 

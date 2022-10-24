@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Stack } from 'react-bootstrap';
+import { Col, Container, Nav, Row, Tab } from 'react-bootstrap';
 import { userService } from '../../services/user.service';
 import { companyService } from '../../services/company.service';
 import AccountInformation from '../../components/UserProfile/AccountInformation/AccountInformation';
@@ -22,26 +22,57 @@ function ProfilePage() {
   }, []);
 
   return (
-    <Row>
-      <Col>
-        <h2>Profile</h2>
-        <Row className="mb-3">
-          <Col>
-            <Stack>
-              <AccountInformation user={user} />
-              <PersonalInformation user={user} />
-              <Password />
-            </Stack>
-          </Col>
-          <Col>
-            <Stack>
-              <CompanyInformation company={company} />
-              <Portfolio company={company} />
-            </Stack>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <Container className="skinny">
+      <Row>
+        <Col>
+          <h2>Profile</h2>
+          <Tab.Container defaultActiveKey="account">
+            <Row>
+              <Col sm={3}>
+                <Nav variant="pills" className="flex-column">
+                  <Nav.Item>
+                    <Nav.Link eventKey="account">Account Information</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="personal">
+                      Personal Information
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="password">Update Password</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="company">Company Information</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="portfolio">Build Portfolio</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Col>
+              <Col sm={9}>
+                <Tab.Content>
+                  <Tab.Pane eventKey="account">
+                    <AccountInformation user={user} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="personal">
+                    <PersonalInformation user={user} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="password">
+                    <Password />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="company">
+                    <CompanyInformation company={company} />
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="portfolio">
+                    <Portfolio company={company} />
+                  </Tab.Pane>
+                </Tab.Content>
+              </Col>
+            </Row>
+          </Tab.Container>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
