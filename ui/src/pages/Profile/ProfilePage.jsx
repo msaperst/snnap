@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row, Tab, Tabs } from 'react-bootstrap';
+import { Col, Row, Tab, Tabs } from 'react-bootstrap';
 import { userService } from '../../services/user.service';
 import { companyService } from '../../services/company.service';
 import AccountInformation from '../../components/UserProfile/AccountInformation/AccountInformation';
@@ -28,36 +28,42 @@ function ProfilePage() {
   }, []);
 
   return (
-    <Container className="skinny">
-      <Row>
-        <Col>
-          <h2>Profile</h2>
-          <Tabs
-            defaultActiveKey="account"
-            className="mb-3"
-            justify
-            variant="pills"
-          >
-            <Tab eventKey="account" title="Account Information">
+    <Row>
+      <Col>
+        <h2>Profile</h2>
+        <Tabs
+          defaultActiveKey="account"
+          className="mb-3"
+          justify
+          variant="pills"
+        >
+          <Tab eventKey="account" title="Account Information">
+            <div className="skinny">
               <AccountInformation user={user} />
               <Row className="mb-5" />
               <Password />
-            </Tab>
-            <Tab eventKey="personal" title="Personal Profile">
+            </div>
+          </Tab>
+          <Tab eventKey="personal" title="Personal Profile">
+            <div className="skinny">
               <PersonalInformation user={user} />
-            </Tab>
-            <Tab eventKey="company" title="Company Profile">
+            </div>
+          </Tab>
+          <Tab eventKey="company" title="Company Profile">
+            <div className="skinny">
               <CompanyInformation company={company} />
               <Row className="mb-5" />
               <Portfolio company={company} />
-            </Tab>
-            <Tab eventKey="settings" title="SNNAP Settings">
+            </div>
+          </Tab>
+          <Tab eventKey="settings" title="SNNAP Settings">
+            <div className="skinny">
               <Notifications settings={settings} />
-            </Tab>
-          </Tabs>
-        </Col>
-      </Row>
-    </Container>
+            </div>
+          </Tab>
+        </Tabs>
+      </Col>
+    </Row>
   );
 }
 
