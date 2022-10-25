@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
 const User = require('../components/user/User');
-const Mysql = require('../services/Mysql');
 const Common = require('./common');
 const Job = require('../components/job/Job');
 const JobApplication = require('../components/jobApplication/JobApplication');
@@ -17,13 +16,7 @@ router.get('/get', async (req, res) => {
 
 router.get('/get/:user', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () => {
-    const userInfo =
-      await Mysql.query(`SELECT id, username, first_name, last_name, avatar
-                                         FROM users WHERE id = ${parseId(
-                                           req.params.user
-                                         )} OR username = '${req.params.user
-        .toString()
-        .replace(/\W/gi, '')}';`);
+    const userInfo = User.getBasicUserInfo(req.params.user);
     if (userInfo[0] && userInfo[0].id) {
       return res.send(userInfo[0]);
     }
@@ -74,13 +67,8 @@ router.post(
       return token;
     }
     try {
-      User.auth(token);
-      await Mysql.query(
-        `UPDATE notifications SET reviewed = true WHERE id = ${parseInt(
-          req.body.notification,
-          10
-        )};`
-      );
+      const user = User.auth(token);
+      await user.markNotificationRead(req.body.notification);
       return res.status(200).send();
     } catch (error) {
       return res.status(422).send({
@@ -196,28 +184,29 @@ router.post('/update-password', updatePasswordValidation, async (req, res) => {
   }
 });
 
-router.post('/update-notification-settings', async (req, res) => {
-  const token = await Common.checkInput(req, res);
-  if (typeof token !== 'string' && !(token instanceof String)) {
-    return token;
-  }
-  try {
-    const user = User.auth(token);
-    await user.updateNotificationSettings(req.body.email, req.body.push);
-    return res.status(200).send();
-  } catch (error) {
-    return res.status(422).send({
-      msg: error.message,
-    });
-  }
-});
+const updateNotificationSettingsValidation = [
+  check('email', 'Email must be true or false').isBoolean(),
+  check('push', 'Push must be true or false').isBoolean(),
+];
 
-function parseId(id) {
-  const x = parseInt(id, 10);
-  if (Number.isNaN(x)) {
-    return 0;
+router.post(
+  '/update-notification-settings',
+  updateNotificationSettingsValidation,
+  async (req, res) => {
+    const token = await Common.checkInput(req, res);
+    if (typeof token !== 'string' && !(token instanceof String)) {
+      return token;
+    }
+    try {
+      const user = User.auth(token);
+      await user.updateNotificationSettings(req.body.email, req.body.push);
+      return res.status(200).send();
+    } catch (error) {
+      return res.status(422).send({
+        msg: error.message,
+      });
+    }
   }
-  return x;
-}
+);
 
 module.exports = router;

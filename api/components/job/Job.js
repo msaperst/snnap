@@ -150,31 +150,45 @@ const Job = class {
         10
       )}, 'selected', ${this.id}, ${parseInt(jobApplication, 10)});`
     );
-    // send out the email
-    const jobUser = await Mysql.query(
-      `SELECT * FROM users WHERE id = ${(await this.getInfo()).user};`
+    if (Job.getUserSettings().email_notifications) {
+      // send out the email
+      const jobUser = await Mysql.query(
+        `SELECT *
+         FROM users
+         WHERE id = ${(await this.getInfo()).user};`
+      );
+      const applicationUser = await Mysql.query(
+        `SELECT *
+         FROM users
+         WHERE id = ${jobApp.user_id};`
+      );
+      Email.sendMail(
+        applicationUser[0].email,
+        'SNNAP: Job Application Selected',
+        `${jobUser[0].first_name} ${
+          jobUser[0].last_name
+        } selected your job application\nhttps://snnap.app/job-applications#${parseInt(
+          jobApplication,
+          10
+        )}`,
+        `<a href='https://snnap.app/profile/${jobUser[0].username}'>${
+          jobUser[0].first_name
+        } ${
+          jobUser[0].last_name
+        }</a> selected your <a href='https://snnap.app/job-applications#${parseInt(
+          jobApplication,
+          10
+        )}'>job application</a>`
+      );
+    }
+  }
+
+  async getUserSettings() {
+    const jobUser = (await this.getInfo()).user;
+    const settings = await Mysql.query(
+      `SELECT * FROM settings WHERE user = ${parseInt(jobUser, 10)};`
     );
-    const applicationUser = await Mysql.query(
-      `SELECT * FROM users WHERE id = ${jobApp.user_id};`
-    );
-    Email.sendMail(
-      applicationUser[0].email,
-      'SNNAP: Job Application Selected',
-      `${jobUser[0].first_name} ${
-        jobUser[0].last_name
-      } selected your job application\nhttps://snnap.app/job-applications#${parseInt(
-        jobApplication,
-        10
-      )}`,
-      `<a href='https://snnap.app/profile/${jobUser[0].username}'>${
-        jobUser[0].first_name
-      } ${
-        jobUser[0].last_name
-      }</a> selected your <a href='https://snnap.app/job-applications#${parseInt(
-        jobApplication,
-        10
-      )}'>job application</a>`
-    );
+    return settings[0];
   }
 };
 

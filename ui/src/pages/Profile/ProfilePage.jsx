@@ -7,7 +7,7 @@ import PersonalInformation from '../../components/UserProfile/PersonalInformatio
 import CompanyInformation from '../../components/UserProfile/CompanyInformation/CompanyInformation';
 import Portfolio from '../../components/UserProfile/Portfolio/Portfolio';
 import Password from '../../components/UserProfile/Password/Password';
-import Notifications from '../../components/UserSettings/Notifications/Notifications';
+import Notifications from '../../components/UserProfile/Notifications/Notifications';
 import './ProfilePage.css';
 
 function ProfilePage() {
@@ -42,6 +42,8 @@ function ProfilePage() {
               <AccountInformation user={user} />
               <Row className="mb-5" />
               <Password />
+              <Row className="mb-5" />
+              <Notifications settings={settings} />
             </div>
           </Tab>
           <Tab eventKey="personal" title="Personal Profile">
@@ -54,11 +56,6 @@ function ProfilePage() {
               <CompanyInformation company={company} />
               <Row className="mb-5" />
               <Portfolio company={company} />
-            </div>
-          </Tab>
-          <Tab eventKey="settings" title="SNNAP Settings">
-            <div className="skinny">
-              <Notifications settings={settings} />
             </div>
           </Tab>
         </Tabs>

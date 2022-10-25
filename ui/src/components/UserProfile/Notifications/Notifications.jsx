@@ -15,8 +15,8 @@ function Notifications(props) {
   useEffect(() => {
     if (settings) {
       setFormData({
-        emailNotifications: settings.email_notifications,
-        pushNotifications: settings.push_notifications,
+        emailNotifications: Boolean(settings.email_notifications),
+        pushNotifications: Boolean(settings.push_notifications),
       });
     }
   }, [settings]);
@@ -74,6 +74,7 @@ function Notifications(props) {
           label="Push Notifications"
           defaultChecked={settings.push_notifications}
           onChange={updateForm}
+          disabled
         />
       </Row>
       <Submit
