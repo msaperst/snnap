@@ -43,7 +43,7 @@ function Notifications(props) {
             setStatus,
             setUpdate,
             setValidated,
-            'Notifications Updated'
+            'Notification Settings Updated'
           );
         },
         (error) => {
@@ -59,7 +59,7 @@ function Notifications(props) {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h3>Notifications</h3>
+      <h3>Notification Settings</h3>
       <Row className="mb-3">
         <Form.Check
           id="emailNotifications"
