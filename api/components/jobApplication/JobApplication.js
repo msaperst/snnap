@@ -1,9 +1,11 @@
 const db = require('mysql');
+const htmlEncode = require('js-htmlencode');
 const Mysql = require('../../services/Mysql');
+const Email = require('../../services/Email');
 
 const JobApplication = class {
   constructor(id) {
-    this.id = db.escape(id);
+    this.id = parseInt(id, 10);
   }
 
   static create(
@@ -23,9 +25,10 @@ const JobApplication = class {
     const newJobApplication = new JobApplication();
     newJobApplication.instancePromise = (async () => {
       const result = await Mysql.query(
-        `INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (${db.escape(
-          jobId
-        )}, ${db.escape(userId)}, ${db.escape(companyId)}, ${db.escape(
+        `INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (${parseInt(
+          jobId,
+          10
+        )}, ${parseInt(userId, 10)}, ${parseInt(companyId, 10)}, ${db.escape(
           userName
         )}, ${db.escape(companyName)}, ${db.escape(website)}, ${db.escape(
           insta
@@ -35,39 +38,63 @@ const JobApplication = class {
         await Mysql.query(
           `INSERT INTO job_applications_equipment (job_application, equipment, what) VALUES (${
             result.insertId
-          }, ${db.escape(equip.value)}, ${db.escape(equip.what)});`
+          }, ${parseInt(equip.value, 10)}, ${db.escape(equip.what)});`
         );
       });
       skills.map(async (skill) => {
         await Mysql.query(
           `INSERT INTO job_applications_skills (job_application, skill) VALUES (${
             result.insertId
-          }, ${db.escape(skill.value)});`
+          }, ${parseInt(skill.value, 10)});`
         );
       });
-      portfolio.map(async (portfolioItem) => {
-        // set new portfolio info
-        if (portfolioItem.description && portfolioItem.link) {
-          await Mysql.query(
-            `INSERT INTO job_applications_portfolios (job_application, link, description) VALUES (${
-              result.insertId
-            }, ${db.escape(portfolioItem.link)}, ${db.escape(
-              portfolioItem.description
-            )});`
-          );
-        }
-      });
+      if (portfolio && Array.isArray(portfolio)) {
+        portfolio.forEach(async (portfolioItem) => {
+          // set new portfolio info
+          if (portfolioItem.description && portfolioItem.link) {
+            await Mysql.query(
+              `INSERT INTO job_applications_portfolios (job_application, link, description) VALUES (${
+                result.insertId
+              }, ${db.escape(portfolioItem.link)}, ${db.escape(
+                portfolioItem.description
+              )});`
+            );
+          }
+        });
+      }
       newJobApplication.id = result.insertId;
       // set the notification
       const job = await Mysql.query(
-        `SELECT * FROM jobs WHERE id = ${db.escape(jobId)};`
+        `SELECT * FROM jobs WHERE id = ${parseInt(jobId, 10)};`
       );
       if (job && job.length) {
         await Mysql.query(
           `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${
             job[0].user
-          }, 'applied', ${db.escape(jobId)}, ${db.escape(result.insertId)});`
+          }, 'applied', ${parseInt(jobId, 10)}, ${result.insertId});`
         );
+        // send out the email
+        const user = await Mysql.query(
+          `SELECT * FROM users WHERE id = ${job[0].user};`
+        );
+        if (user && user.length) {
+          Email.sendMail(
+            user[0].email,
+            'SNNAP: New Job Application',
+            `${userName} applied to your job\nhttps://snnap.app/jobs#${parseInt(
+              jobId,
+              10
+            )}`,
+            `<a href='https://snnap.app/profile/${
+              user[0].username
+            }'>${htmlEncode(
+              userName
+            )}</a> applied to your <a href='https://snnap.app/jobs#${parseInt(
+              jobId,
+              10
+            )}'>job</a>`
+          );
+        }
       }
     })();
     return newJobApplication;
@@ -80,14 +107,15 @@ const JobApplication = class {
 
   static async getApplications(jobId) {
     return Mysql.query(
-      `SELECT * FROM job_applications WHERE job_id = ${db.escape(jobId)};`
+      `SELECT * FROM job_applications WHERE job_id = ${parseInt(jobId, 10)};`
     );
   }
 
   static async getUserApplications(user) {
     return Mysql.query(
-      `SELECT * FROM job_applications WHERE job_applications.user_id = ${db.escape(
-        user
+      `SELECT * FROM job_applications WHERE job_applications.user_id = ${parseInt(
+        user,
+        10
       )};`
     );
   }

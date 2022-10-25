@@ -162,8 +162,10 @@ describe('User', () => {
       User.register(
         'Bob',
         'password',
+        {},
+        'bobert@gmail.com',
         'Robert',
-        'bobert@gmail.com'
+        ''
       ).getUsername()
     ).rejects.toEqual(new Error('Sorry, that username is already in use.'));
   });

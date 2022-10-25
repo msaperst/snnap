@@ -35,6 +35,10 @@ jobs:
           echo "" >> .env
           echo "# third party information" >> .env
           echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
+          echo "" >> .env
+          echo "# email info" >> .env
+          echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> .env
+          echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
 
       - name: Setup key files ⚙
         run: |
