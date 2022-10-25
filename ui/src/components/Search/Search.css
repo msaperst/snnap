@@ -5,6 +5,10 @@
   right: 0;
 }
 
+#search {
+  padding-top: 150px;
+}
+
 #searchForJobButton {
   z-index: 10;
 }

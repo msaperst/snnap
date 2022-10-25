@@ -11,7 +11,6 @@ const HomePage = lazy(() => import('./pages/Home/HomePage'));
 const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/Register/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
-const SettingsPage = lazy(() => import('./pages/Settings/SettingsPage'));
 const UserPage = lazy(() => import('./pages/User/UserPage'));
 const NotificationsPage = lazy(() =>
   import('./pages/Notifications/NotificationsPage')
@@ -38,7 +37,7 @@ function App() {
   };
 
   return (
-    <div className="vertical-center">
+    <div>
       <Container>
         <Row>
           <Col>
@@ -60,14 +59,6 @@ function App() {
               element={
                 <PrivateRoute>
                   <ProfilePage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <PrivateRoute>
-                  <SettingsPage />
                 </PrivateRoute>
               }
             />
