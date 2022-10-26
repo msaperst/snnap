@@ -1,6 +1,6 @@
 .searchGuy {
   position: absolute;
-  z-index: 9;
+  z-index: 0;
   bottom: -100px;
   right: 0;
 }
@@ -11,4 +11,8 @@
 
 #searchForJobButton {
   z-index: 10;
+}
+
+#searchForJobInput {
+  z-index: -1;
 }

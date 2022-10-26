@@ -26,7 +26,7 @@ describe('profile page', () => {
 
   it('shows the password', async () => {
     driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const password = (await driver.findElements(By.css('form')))[2];
+    const password = (await driver.findElements(By.css('form')))[1];
     expect(await password.findElement(By.css('h3')).getText()).toEqual(
       'Password'
     );
@@ -52,7 +52,7 @@ describe('profile page', () => {
 
   it('shows error when you update password blank information', async () => {
     driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const profile = (await driver.findElements(By.css('form')))[2];
+    const profile = (await driver.findElements(By.css('form')))[1];
     const feedbacks = await profile.findElements(
       By.className('invalid-feedback')
     );

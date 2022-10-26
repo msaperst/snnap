@@ -65,7 +65,7 @@ function Notifications(props) {
           id="emailNotifications"
           label="Email Notifications"
           defaultChecked={settings.email_notifications}
-          onChange={updateForm}
+          onClick={updateForm}
         />
       </Row>
       <Row className="mb-3">
@@ -73,7 +73,7 @@ function Notifications(props) {
           id="pushNotifications"
           label="Push Notifications"
           defaultChecked={settings.push_notifications}
-          onChange={updateForm}
+          onClick={updateForm}
           disabled
         />
       </Row>

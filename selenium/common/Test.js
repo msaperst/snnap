@@ -84,6 +84,7 @@ class Test {
     );
     // delete our user
     await Mysql.query(`DELETE FROM users WHERE id = ${id} OR id = 0;`);
+    await Mysql.query(`DELETE FROM settings WHERE user = ${id} OR user = 0;`);
     // delete our user's company(s)
     for (const company of companies) {
       await Mysql.query(`DELETE FROM companies WHERE id = ${company.id}`);

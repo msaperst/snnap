@@ -16,7 +16,7 @@ router.get('/get', async (req, res) => {
 
 router.get('/get/:user', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () => {
-    const userInfo = User.getBasicUserInfo(req.params.user);
+    const userInfo = await User.getBasicUserInfo(req.params.user);
     if (userInfo[0] && userInfo[0].id) {
       return res.send(userInfo[0]);
     }

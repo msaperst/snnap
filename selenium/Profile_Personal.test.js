@@ -15,6 +15,12 @@ describe('profile page', () => {
     driver = await test.getDriver();
     await test.loginUser('profilePersonalUser');
     await driver.get(`${Test.getApp()}/profile`);
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
+    driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formFirstName'))),
+      5000
+    );
   }, 10000);
 
   afterEach(async () => {
@@ -25,8 +31,7 @@ describe('profile page', () => {
   }, 15000);
 
   it('shows the personal information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const personalInfo = (await driver.findElements(By.css('form')))[1];
+    const personalInfo = (await driver.findElements(By.css('form')))[3];
     expect(await personalInfo.findElement(By.css('h3')).getText()).toEqual(
       'Personal Information'
     );
@@ -62,8 +67,7 @@ describe('profile page', () => {
   });
 
   it('shows error when you update profile blank information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const profile = (await driver.findElements(By.css('form')))[1];
+    const profile = (await driver.findElements(By.css('form')))[3];
     const feedbacks = await profile.findElements(
       By.className('invalid-feedback')
     );
@@ -119,8 +123,10 @@ describe('profile page', () => {
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
     await driver.navigate().refresh();
-    firstName = await driver.wait(
-      until.elementLocated(By.id('formFirstName')),
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
+    firstName = driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formFirstName'))),
       5000
     );
     lastName = await driver.wait(
@@ -150,7 +156,12 @@ describe('profile page', () => {
       5000
     );
     await driver.navigate().refresh();
-    city = await driver.wait(until.elementLocated(By.id('formCity')), 5000);
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
+    city = await driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formCity'))),
+      5000
+    );
     await test.waitUntilInputFilled(By.id('formCity'));
     expect(await city.getAttribute('value')).toEqual(
       'Chantilly, VA, United States of America'

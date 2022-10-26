@@ -16,6 +16,12 @@ describe('profile page', () => {
     driver = await test.getDriver();
     user = await test.loginUser('profileCompanyUser');
     await driver.get(`${Test.getApp()}/profile`);
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+    driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),
+      5000
+    );
   }, 10000);
 
   afterEach(async () => {
@@ -26,8 +32,7 @@ describe('profile page', () => {
   }, 15000);
 
   it('shows the company information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const companyInformation = (await driver.findElements(By.css('form')))[3];
+    const companyInformation = (await driver.findElements(By.css('form')))[4];
     expect(
       await companyInformation.findElement(By.css('h3')).getText()
     ).toEqual('Company Information');
@@ -110,6 +115,12 @@ describe('profile page', () => {
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
     driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+    driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),
+      5000
+    );
   }
 
   // asserts in checkForms method
@@ -211,8 +222,7 @@ describe('profile page', () => {
   });
 
   async function getCompanyFields() {
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const companyInformation = (await driver.findElements(By.css('form')))[3];
+    const companyInformation = (await driver.findElements(By.css('form')))[4];
     const multiSelects = await companyInformation.findElements(
       By.className('multi-select-form')
     );
@@ -226,7 +236,12 @@ describe('profile page', () => {
     driver.wait(until.elementLocated(By.className('alert-success')), 5000);
     await driver.navigate().refresh();
     await driver.wait(until.elementLocated(By.css('h2')), 5000);
-    return (await driver.findElements(By.css('form')))[3];
+    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+    driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),
+      5000
+    );
+    return (await driver.findElements(By.css('form')))[4];
   }
 
   async function checkNextDivs(firstDiv) {
@@ -329,6 +344,12 @@ describe('profile page', () => {
       []
     );
     await driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+    driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),
+      5000
+    );
     let { nextDivs } = await getCompanyFields();
     waitForNumber(nextDivs, 5);
     expect(await nextDivs.findElements(By.css('div'))).toHaveLength(5);
@@ -386,7 +407,9 @@ describe('profile page', () => {
     );
     await driver.navigate().refresh();
     await driver.wait(until.elementLocated(By.css('h2')), 5000);
-    let companyInformation = (await driver.findElements(By.css('form')))[3];
+    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+    driver.wait(until.elementLocated(By.id('formCompanyName')), 5000);
+    let companyInformation = (await driver.findElements(By.css('form')))[4];
     let multiSelects = await companyInformation.findElements(
       By.className('multi-select-form')
     );

@@ -15,6 +15,12 @@ describe('profile page', () => {
     driver = await test.getDriver();
     await test.loginUser('profilePortfolioUser');
     await driver.get(`${Test.getApp()}/profile`);
+    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+    driver.wait(
+      until.elementIsVisible(driver.findElement(By.id('formExperience'))),
+      5000
+    );
   }, 10000);
 
   afterEach(async () => {
@@ -25,8 +31,7 @@ describe('profile page', () => {
   }, 15000);
 
   it('shows the portfolio information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const portfolioInfo = (await driver.findElements(By.css('form')))[4];
+    const portfolioInfo = (await driver.findElements(By.css('form')))[5];
     expect(await portfolioInfo.findElement(By.css('h3')).getText()).toEqual(
       'Portfolio'
     );
@@ -42,8 +47,7 @@ describe('profile page', () => {
   });
 
   async function verifyNoErrors() {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const portfolio = (await driver.findElements(By.css('form')))[4];
+    const portfolio = (await driver.findElements(By.css('form')))[5];
     driver.wait(until.elementLocated(By.id('galleryDescription-0')), 5000);
     const feedbacks = await portfolio.findElements(
       By.className('invalid-feedback')
