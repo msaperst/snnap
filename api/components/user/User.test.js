@@ -12,6 +12,7 @@ describe('User', () => {
     lat: 5,
     lon: -71.2345,
   };
+  const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -235,7 +236,6 @@ describe('User', () => {
   });
 
   it('sets the user values on valid credentials via token', async () => {
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     Mysql.query.mockResolvedValue([
       {
         id: 1,
@@ -273,7 +273,6 @@ describe('User', () => {
   });
 
   it('recognizes an valid token and rejects with an error', async () => {
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     Mysql.query.mockResolvedValue([
       {
         first_name: 'Bob',
@@ -299,14 +298,12 @@ describe('User', () => {
         last_login: '123',
       },
     ]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = await User.auth(token);
     expect(await user.setAvatar('123')).toBeUndefined();
   });
 
   it('will not update account information if the email already exists', async () => {
     Mysql.query.mockResolvedValue([{}]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = await User.auth(token);
     await expect(
       user.setAccountInformation('msaperst@gmail.com', '1234567890')
@@ -327,7 +324,6 @@ describe('User', () => {
         },
       ])
       .mockResolvedValue([]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = await User.auth(token);
     expect(
       await user.setAccountInformation('msaperst@gmail.com', '1234567890')
@@ -348,7 +344,6 @@ describe('User', () => {
         },
       ])
       .mockResolvedValue([]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = await User.auth(token);
     expect(
       await user.setPersonalInformation(
@@ -375,7 +370,6 @@ describe('User', () => {
         },
       ])
       .mockResolvedValue([]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = await User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValue([{ username: 'password' }]);
@@ -399,7 +393,6 @@ describe('User', () => {
         },
       ])
       .mockResolvedValue([]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = await User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValue([{ password: 'password' }]);
@@ -423,7 +416,6 @@ describe('User', () => {
         },
       ])
       .mockResolvedValue([]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = User.auth(token);
     const hash = await bcrypt.hash('password', 10);
     const spy = jest.spyOn(Mysql, 'query');
@@ -434,7 +426,6 @@ describe('User', () => {
 
   it('gets nothing with bad id', async () => {
     Mysql.query.mockResolvedValueOnce([]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getNotifications()).toEqual([]);
@@ -443,7 +434,6 @@ describe('User', () => {
 
   it('can get all notifications', async () => {
     Mysql.query.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValue([1, 2]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getNotifications()).toEqual([1, 2]);
@@ -456,7 +446,6 @@ describe('User', () => {
 
   it('updates notification settings', async () => {
     Mysql.query.mockResolvedValueOnce([{ id: 1 }]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     await user.updateNotificationSettings(1, false);
@@ -474,7 +463,6 @@ describe('User', () => {
 
   it('marks a notification as read', async () => {
     Mysql.query.mockResolvedValueOnce([{ id: 1 }]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     await user.markNotificationRead(5);
@@ -493,7 +481,6 @@ describe('User', () => {
         push_notifications: 1,
       },
     ]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getSettings()).toEqual({
@@ -510,7 +497,6 @@ describe('User', () => {
 
   it('does not gets notification settings without id', async () => {
     Mysql.query.mockResolvedValueOnce([]);
-    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
     const user = User.auth(token);
     const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getSettings()).toEqual({});
