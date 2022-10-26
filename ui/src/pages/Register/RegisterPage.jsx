@@ -107,7 +107,7 @@ function RegisterPage() {
 
   const updateForm = (key, value) => {
     formData[key] = value;
-    setFormData(formData);
+    setFormData(...formData);
   };
 
   return (
