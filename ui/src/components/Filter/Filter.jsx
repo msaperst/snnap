@@ -152,7 +152,6 @@ function Filter(props) {
       <Form>
         <Row className="mb-5">
           <Col>
-            Show:
             {jobTypes.map((type) => (
               <Button
                 className="btn-filter"

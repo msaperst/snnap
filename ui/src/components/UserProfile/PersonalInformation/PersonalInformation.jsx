@@ -95,13 +95,13 @@ function PersonalInformation(props) {
       <Row className="mb-3">
         <SnnapFormInput
           name="First Name"
-          size={6}
+          size={5}
           value={user.firstName}
           onChange={updateForm}
         />
         <SnnapFormInput
           name="Last Name"
-          size={6}
+          size={7}
           value={user.lastName}
           onChange={updateForm}
         />

@@ -95,7 +95,7 @@ function CompanyInformation(props) {
         />
       </Row>
       <Row className="mb-3">
-        <Col md={2}>
+        <Col md={2} className="d-md-block d-sm-none d-none">
           <Globe className="icon" />
         </Col>
         <SnnapFormInput
@@ -107,7 +107,7 @@ function CompanyInformation(props) {
         />
       </Row>
       <Row className="mb-3">
-        <Col md={2}>
+        <Col md={2} className="d-md-block d-sm-none d-none">
           <Instagram className="icon" />
         </Col>
         <SnnapFormInput
@@ -119,7 +119,7 @@ function CompanyInformation(props) {
         />
       </Row>
       <Row className="mb-3">
-        <Col md={2}>
+        <Col md={2} className="d-md-block d-sm-none d-none">
           <Facebook className="icon" />
         </Col>
         <SnnapFormInput

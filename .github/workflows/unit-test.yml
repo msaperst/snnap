@@ -89,9 +89,6 @@ jobs:
           name: ui-coverage
           path: ui/
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

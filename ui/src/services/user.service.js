@@ -3,6 +3,7 @@ import { handleResponse } from '../helpers/handle-response';
 
 export const userService = {
   get,
+  getSettings,
   getJobs,
   getJobApplications,
   getNotifications,
@@ -11,6 +12,7 @@ export const userService = {
   updatePersonalInformation,
   uploadAvatar,
   updatePassword,
+  updateNotificationSettings,
 };
 
 function get(id) {
@@ -20,6 +22,11 @@ function get(id) {
   }
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(url, requestOptions).then(handleResponse);
+}
+
+function getSettings() {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/user/settings`, requestOptions).then(handleResponse);
 }
 
 function getJobs() {
@@ -102,6 +109,20 @@ async function updatePassword(currentPassword, newPassword) {
   };
 
   return fetch(`/api/user/update-password`, requestOptions).then(
+    handleResponse
+  );
+}
+
+async function updateNotificationSettings(email, push) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ email, push }),
+  };
+
+  return fetch(`/api/user/update-notification-settings`, requestOptions).then(
     handleResponse
   );
 }

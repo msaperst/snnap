@@ -47,6 +47,8 @@ const User = class {
       newUser.lat = location.lat;
       newUser.lon = location.lon;
       newUser.email = email;
+      // setup our default user settings
+      await Mysql.query(`INSERT INTO settings (user) VALUE  (${newUser.id});`);
     })();
     return newUser;
   }
@@ -189,6 +191,25 @@ const User = class {
     }
   }
 
+  async updateNotificationSettings(email, push) {
+    const id = await this.getId();
+    await Mysql.query(
+      `UPDATE settings SET email_notifications = ${Boolean(
+        email
+      )}, push_notifications = ${Boolean(push)} WHERE user = ${id};`
+    );
+  }
+
+  async markNotificationRead(notification) {
+    const id = await this.getId();
+    await Mysql.query(
+      `UPDATE notifications SET reviewed = true WHERE id = ${parseInt(
+        notification,
+        10
+      )} AND to_user = ${id};`
+    );
+  }
+
   async getToken() {
     await this.instancePromise;
     return this.token;
@@ -227,6 +248,27 @@ const User = class {
       );
     }
     return [];
+  }
+
+  async getSettings() {
+    const id = await this.getId();
+    if (id) {
+      return (
+        await Mysql.query(`SELECT * FROM settings WHERE user = ${id};`)
+      )[0];
+    }
+    return {};
+  }
+
+  static async getBasicUserInfo(user) {
+    let userId = parseInt(user, 10);
+    if (Number.isNaN(userId)) {
+      userId = 0;
+    }
+    const username = user.toString().replace(/\W/gi, '');
+    return Mysql.query(
+      `SELECT id, username, first_name, last_name, avatar FROM users WHERE id = ${userId} OR username = '${username}';`
+    );
   }
 
   static getToken(authorization) {

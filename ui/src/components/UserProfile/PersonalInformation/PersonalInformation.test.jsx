@@ -44,7 +44,7 @@ describe('personal information', () => {
 
   it('has empty firstname in the first row', () => {
     const { container } = render(<PersonalInformation user={{}} />);
-    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-6');
+    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-5');
     expect(container.firstChild.children[1].firstChild.children).toHaveLength(
       1
     );
@@ -65,7 +65,7 @@ describe('personal information', () => {
     const { container } = render(
       <PersonalInformation user={{ firstName: 'Max' }} />
     );
-    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-6');
+    expect(container.firstChild.children[1].firstChild).toHaveClass('col-md-5');
     expect(container.firstChild.children[1].firstChild.children).toHaveLength(
       1
     );
@@ -85,7 +85,7 @@ describe('personal information', () => {
     const { container } = render(
       <PersonalInformation user={{ lastName: 'Saperstone' }} />
     );
-    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-6');
+    expect(container.firstChild.children[1].lastChild).toHaveClass('col-md-7');
     expect(container.firstChild.children[1].lastChild.children).toHaveLength(1);
     expect(container.firstChild.children[1].lastChild.firstChild).toHaveClass(
       'form-floating'

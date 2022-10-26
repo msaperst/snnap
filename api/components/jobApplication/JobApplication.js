@@ -75,9 +75,9 @@ const JobApplication = class {
         );
         // send out the email
         const user = await Mysql.query(
-          `SELECT * FROM users WHERE id = ${job[0].user};`
+          `SELECT * FROM users JOIN settings WHERE users.id = ${job[0].user};`
         );
-        if (user && user.length) {
+        if (user && user.length && user[0].email_notifications) {
           Email.sendMail(
             user[0].email,
             'SNNAP: New Job Application',

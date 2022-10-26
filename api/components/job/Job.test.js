@@ -230,6 +230,7 @@ describe('job', () => {
       .mockResolvedValueOnce([{ user: 6 }])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ email_notifications: 1 }])
       .mockResolvedValueOnce([
         { first_name: 'bob', last_name: 'smith', username: 'bsmith' },
       ])
@@ -237,7 +238,7 @@ describe('job', () => {
 
     const job = new Job(4);
     await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(8);
+    expect(sqlSpy).toHaveBeenCalledTimes(9);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       'UPDATE jobs SET jobs.application_selected = 3, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = 4;'
@@ -264,10 +265,14 @@ describe('job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       7,
-      'SELECT * FROM users WHERE id = 6;'
+      'SELECT * FROM settings WHERE user = 6;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       8,
+      'SELECT * FROM users WHERE id = 6;'
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      9,
       'SELECT * FROM users WHERE id = 5;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(1);
@@ -277,6 +282,24 @@ describe('job', () => {
       'bob smith selected your job application\nhttps://snnap.app/job-applications#3',
       "<a href='https://snnap.app/profile/bsmith'>bob smith</a> selected your <a href='https://snnap.app/job-applications#3'>job application</a>"
     );
+  });
+
+  it('does not send email if notifications not set', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    const emailSpy = jest.spyOn(Email, 'sendMail');
+    Mysql.query
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ user_id: 5 }])
+      .mockResolvedValueOnce()
+      .mockResolvedValueOnce([{ user: 6 }])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ email_notifications: 0 }]);
+
+    const job = new Job(4);
+    await job.selectApplication(3);
+    expect(sqlSpy).toHaveBeenCalledTimes(7);
+    expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 
   it('properly pulls and sorts the equipment', async () => {

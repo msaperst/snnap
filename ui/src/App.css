@@ -54,6 +54,10 @@
   --bs-btn-disabled-border-color: #6a3ca5;
 }
 
-.container.skinny {
+.skinny {
   max-width: 600px;
+}
+
+.medium {
+  max-width: 900px;
 }

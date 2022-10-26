@@ -37,13 +37,13 @@ function App() {
   };
 
   return (
-    <div className="vertical-center">
-      <Container>
-        <Row>
-          <Col>
-            <Menu currentUser={currentUser} logout={logout} />
-          </Col>
-        </Row>
+    <Container>
+      <Row>
+        <Col>
+          <Menu currentUser={currentUser} logout={logout} />
+        </Col>
+      </Row>
+      <Container className="medium">
         <Suspense fallback="Loading...">
           <Routes>
             <Route
@@ -100,7 +100,7 @@ function App() {
           </Routes>
         </Suspense>
       </Container>
-    </div>
+    </Container>
   );
 }
 
