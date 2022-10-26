@@ -30,7 +30,8 @@ jobs:
       - name: Unit Test 🤞
         run: cd api; npm run test
 
-      - name: Upload Coverage
+      - name: Upload Coverage 📊
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: api-coverage

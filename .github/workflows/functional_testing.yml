@@ -71,7 +71,7 @@ jobs:
 
       - name: Archive Test Results 📊
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Selenium Test Results
           path: 'Selenium Test Results'
