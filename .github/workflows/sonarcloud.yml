@@ -5,7 +5,7 @@ name: SonarCloud Upload
 
 on:
   workflow_run:
-    workflows: [ "API Code Testing", "UI Code Testing" ]
+    workflows: [ "Unit Testing" ]
     types:
       - completed
 
