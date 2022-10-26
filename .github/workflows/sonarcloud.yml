@@ -1,0 +1,38 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: SonarCloud Upload
+
+on:
+  workflows_run:
+    workflows: [ "API Code Testing", "UI Code Testing" ]
+    types:
+      - completed
+
+jobs:
+  sonar:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Get API Coverage
+        uses: actions/download-artifact@v3
+        with:
+          name: api-coverage
+
+      - name: Get UI Coverage
+        uses: actions/download-artifact@v3
+        with:
+          name: ui-coverage
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}

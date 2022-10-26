@@ -33,3 +33,9 @@ jobs:
 
       - name: Unit Test 🤞
         run: cd ui; npm run test
+
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: ui-coverage
+          path: ui/coverage/lcov.info

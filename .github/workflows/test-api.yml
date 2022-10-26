@@ -29,3 +29,9 @@ jobs:
 
       - name: Unit Test 🤞
         run: cd api; npm run test
+
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-coverage
+          path: api/coverage/lcov.info
