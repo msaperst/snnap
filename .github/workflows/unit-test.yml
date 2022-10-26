@@ -69,3 +69,31 @@ jobs:
         with:
           name: ui-coverage
           path: ui/coverage/lcov.info
+
+  sonar:
+    name: SonarCloud
+    needs: [api, ui]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+
+      - name: Get API Coverage
+        uses: actions/download-artifact@v3
+        with:
+          name: api-coverage
+
+      - name: Get UI Coverage
+        uses: actions/download-artifact@v3
+        with:
+          name: ui-coverage
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
