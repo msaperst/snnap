@@ -37,72 +37,70 @@ function App() {
   };
 
   return (
-    <div>
-      <Container>
-        <Row>
-          <Col>
-            <Menu currentUser={currentUser} logout={logout} />
-          </Col>
-        </Row>
-        <Container className="medium">
-          <Suspense fallback="Loading...">
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <PrivateRoute>
-                    <HomePage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <PrivateRoute>
-                    <ProfilePage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/profile/:username"
-                element={
-                  <PrivateRoute>
-                    <UserPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/notifications"
-                element={
-                  <PrivateRoute>
-                    <NotificationsPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/jobs"
-                element={
-                  <PrivateRoute>
-                    <Jobs />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/job-applications"
-                element={
-                  <PrivateRoute>
-                    <JobApplications />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </Container>
+    <Container>
+      <Row>
+        <Col>
+          <Menu currentUser={currentUser} logout={logout} />
+        </Col>
+      </Row>
+      <Container className="medium">
+        <Suspense fallback="Loading...">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <HomePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile/:username"
+              element={
+                <PrivateRoute>
+                  <UserPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <PrivateRoute>
+                  <NotificationsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/jobs"
+              element={
+                <PrivateRoute>
+                  <Jobs />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/job-applications"
+              element={
+                <PrivateRoute>
+                  <JobApplications />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Container>
-    </div>
+    </Container>
   );
 }
 
