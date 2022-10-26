@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node ☕
         uses: actions/setup-node@v1
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup env file ⚙
         run: |
@@ -77,17 +77,19 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Get API Coverage
         uses: actions/download-artifact@v3
         with:
           name: api-coverage
+          path: api/
 
       - name: Get UI Coverage
         uses: actions/download-artifact@v3
         with:
           name: ui-coverage
+          path: ui/
 
       - name: Display structure of downloaded files
         run: ls -R
