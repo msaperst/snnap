@@ -44,7 +44,9 @@ describe('application for job', () => {
       .mockResolvedValueOnce({ insertId: 15 })
       .mockResolvedValueOnce([{ user: 1 }])
       .mockResolvedValueOnce([{ username: 'max' }])
-      .mockResolvedValueOnce([{ user: 'max', email: 'email@address.com' }]);
+      .mockResolvedValueOnce([
+        { user: 'max', email: 'email@address.com', email_notifications: 1 },
+      ]);
     const jobApplication = JobApplication.create(
       1,
       5,
@@ -76,7 +78,7 @@ describe('application for job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT * FROM users WHERE id = 1;'
+      'SELECT * FROM users JOIN settings WHERE users.id = 1;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(1);
     expect(emailSpy).toHaveBeenCalledWith(
@@ -85,6 +87,52 @@ describe('application for job', () => {
       'Max Saperstone applied to your job\nhttps://snnap.app/jobs#1',
       "<a href='https://snnap.app/profile/undefined'>Max Saperstone</a> applied to your <a href='https://snnap.app/jobs#1'>job</a>"
     );
+  });
+
+  it('sets the job with basic values on creation, but does not send out email', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    const emailSpy = jest.spyOn(Email, 'sendMail');
+    Mysql.query
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce([{ user: 1 }])
+      .mockResolvedValueOnce([{ username: 'max' }])
+      .mockResolvedValueOnce([
+        { user: 'max', email: 'email@address.com', email_notifications: 0 },
+      ]);
+    const jobApplication = JobApplication.create(
+      1,
+      5,
+      3,
+      'Max Saperstone',
+      'Butts R Us',
+      null,
+      'insta',
+      null,
+      'some experience',
+      [],
+      [],
+      []
+    );
+    await expect(jobApplication.getId()).resolves.toEqual(15);
+    // verify the sql calls
+    expect(sqlSpy).toHaveBeenCalledTimes(4);
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM jobs WHERE id = 1;'
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      3,
+      "INSERT INTO notifications (to_user, what, job, job_application) VALUES (1, 'applied', 1, 15);"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      4,
+      'SELECT * FROM users JOIN settings WHERE users.id = 1;'
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 
   it('skips email when no user found', async () => {
@@ -126,7 +174,7 @@ describe('application for job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT * FROM users WHERE id = 1;'
+      'SELECT * FROM users JOIN settings WHERE users.id = 1;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -210,7 +258,9 @@ describe('application for job', () => {
       .mockResolvedValueOnce({ insertId: 15 })
       .mockResolvedValueOnce([{ user: 1 }])
       .mockResolvedValueOnce([{ username: 'max' }])
-      .mockResolvedValueOnce([{ user: 'max', email: 'email@address.com' }]);
+      .mockResolvedValueOnce([
+        { user: 'max', email: 'email@address.com', email_notifications: 1 },
+      ]);
     const jobApplication = JobApplication.create(
       1,
       5,
@@ -271,7 +321,7 @@ describe('application for job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       9,
-      'SELECT * FROM users WHERE id = 1;'
+      'SELECT * FROM users JOIN settings WHERE users.id = 1;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(1);
     expect(emailSpy).toHaveBeenCalledWith(

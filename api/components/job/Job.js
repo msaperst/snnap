@@ -150,17 +150,14 @@ const Job = class {
         10
       )}, 'selected', ${this.id}, ${parseInt(jobApplication, 10)});`
     );
-    if (Job.getUserSettings().email_notifications) {
+    const jobUserId = (await this.getInfo()).user;
+    if ((await Job.getUserSettings(jobUserId)).email_notifications) {
       // send out the email
       const jobUser = await Mysql.query(
-        `SELECT *
-         FROM users
-         WHERE id = ${(await this.getInfo()).user};`
+        `SELECT * FROM users WHERE id = ${jobUserId};`
       );
       const applicationUser = await Mysql.query(
-        `SELECT *
-         FROM users
-         WHERE id = ${jobApp.user_id};`
+        `SELECT * FROM users WHERE id = ${jobApp.user_id};`
       );
       Email.sendMail(
         applicationUser[0].email,
@@ -183,8 +180,7 @@ const Job = class {
     }
   }
 
-  async getUserSettings() {
-    const jobUser = (await this.getInfo()).user;
+  static async getUserSettings(jobUser) {
     const settings = await Mysql.query(
       `SELECT * FROM settings WHERE user = ${parseInt(jobUser, 10)};`
     );

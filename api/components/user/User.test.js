@@ -453,4 +453,130 @@ describe('User', () => {
       'SELECT * FROM notifications WHERE to_user = 1 ORDER BY timestamp desc;'
     );
   });
+
+  it('updates notification settings', async () => {
+    Mysql.query.mockResolvedValueOnce([{ id: 1 }]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    await user.updateNotificationSettings(1, false);
+    await user.updateNotificationSettings('cheese', 0);
+    expect(spy).toHaveBeenCalledTimes(3);
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      3,
+      'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;'
+    );
+  });
+
+  it('marks a notification as read', async () => {
+    Mysql.query.mockResolvedValueOnce([{ id: 1 }]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    await user.markNotificationRead(5);
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      'UPDATE notifications SET reviewed = true WHERE id = 5 AND to_user = 1;'
+    );
+  });
+
+  it('gets notification settings', async () => {
+    Mysql.query.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValueOnce([
+      {
+        user: 1,
+        email_notifications: 0,
+        push_notifications: 1,
+      },
+    ]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    expect(await user.getSettings()).toEqual({
+      user: 1,
+      email_notifications: 0,
+      push_notifications: 1,
+    });
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM settings WHERE user = 1;'
+    );
+  });
+
+  it('does not gets notification settings without id', async () => {
+    Mysql.query.mockResolvedValueOnce([]);
+    const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+    const user = User.auth(token);
+    const spy = jest.spyOn(Mysql, 'query');
+    expect(await user.getSettings()).toEqual({});
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('gets basic user info as int', async () => {
+    Mysql.query.mockResolvedValueOnce([
+      {
+        id: 1,
+        first_name: 'max',
+      },
+    ]);
+    const spy = jest.spyOn(Mysql, 'query');
+    expect(await User.getBasicUserInfo(1)).toEqual([
+      {
+        id: 1,
+        first_name: 'max',
+      },
+    ]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    // issue #574 addresses this issue with username/id overlap
+    expect(spy).toHaveBeenCalledWith(
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 1 OR username = '1';"
+    );
+  });
+
+  it('gets basic user info as string', async () => {
+    Mysql.query.mockResolvedValueOnce([
+      {
+        id: 1,
+        first_name: 'max',
+      },
+    ]);
+    const spy = jest.spyOn(Mysql, 'query');
+    expect(await User.getBasicUserInfo('max')).toEqual([
+      {
+        id: 1,
+        first_name: 'max',
+      },
+    ]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    // issue #574 addresses this issue with username/id overlap
+    expect(spy).toHaveBeenCalledWith(
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 0 OR username = 'max';"
+    );
+  });
+
+  it('gets basic user info as mixed', async () => {
+    Mysql.query.mockResolvedValueOnce([
+      {
+        id: 1,
+        first_name: 'max',
+      },
+    ]);
+    const spy = jest.spyOn(Mysql, 'query');
+    expect(await User.getBasicUserInfo('*max1')).toEqual([
+      {
+        id: 1,
+        first_name: 'max',
+      },
+    ]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    // issue #574 addresses this issue with username/id overlap
+    expect(spy).toHaveBeenCalledWith(
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 0 OR username = 'max1';"
+    );
+  });
 });
