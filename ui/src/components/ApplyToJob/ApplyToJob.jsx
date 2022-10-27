@@ -5,10 +5,10 @@ import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import { jobService } from '../../services/job.service';
 import { companyService } from '../../services/company.service';
 import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
-import Gallery from '../UserProfile/Portfolio/Gallery/Gallery';
+import Gallery from '../Settings/Portfolio/Gallery/Gallery';
 import './ApplyToJob.css';
 import Submit from '../Submit/Submit';
-import EquipmentSelect from '../UserProfile/CompanyInformation/EquipmentSelect/EquipmentSelect';
+import EquipmentSelect from '../Settings/CompanyInformation/EquipmentSelect/EquipmentSelect';
 import JobDetail from '../Job/JobDetail';
 import { commonFormComponents } from '../CommonFormComponents';
 

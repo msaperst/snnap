@@ -2,7 +2,7 @@ const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
-describe('profile page', () => {
+describe('settings page', () => {
   jest.setTimeout(10000);
 
   let test;
@@ -12,8 +12,8 @@ describe('profile page', () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    await test.loginUser('profileUser');
-    await driver.get(`${Test.getApp()}/profile`);
+    await test.loginUser('settingsUser');
+    await driver.get(`${Test.getApp()}/settings`);
   }, 10000);
 
   afterEach(async () => {
@@ -23,24 +23,26 @@ describe('profile page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('allows us to navigate to the profile', async () => {
+  it('allows us to navigate to the settings', async () => {
     await driver.get(Test.getApp());
     const dropDownMenu = driver.wait(
       until.elementLocated(By.id('user-dropdown')),
       5000
     );
     await dropDownMenu.click();
-    const profileLink = driver.wait(
-      until.elementLocated(By.linkText('Profile')),
+    const settingsLink = driver.wait(
+      until.elementLocated(By.linkText('Settings')),
       5000
     );
-    driver.wait(until.elementIsVisible(profileLink), 5000);
-    await profileLink.click();
-    expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/profile`);
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Profile');
+    driver.wait(until.elementIsVisible(settingsLink), 5000);
+    await settingsLink.click();
+    expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/settings`);
+    expect(await driver.findElement(By.css('h2')).getText()).toEqual(
+      'Settings'
+    );
   });
 
-  it('has 3 different tabs for updating profile', async () => {
+  it('has 3 different tabs for updating settings', async () => {
     const pills = driver.wait(until.elementLocated(By.css('.nav-pills')), 5000);
     const areas = await pills.findElements(By.css('.nav-link'));
     expect(areas).toHaveLength(3);

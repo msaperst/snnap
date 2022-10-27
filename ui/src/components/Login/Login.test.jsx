@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import Login from './Login';
-import { hasError } from '../UserProfile/CommonTestComponents';
+import { hasError } from '../Settings/CommonTestComponents';
 
 jest.mock('../../services/authentication.service');
 const authenticationService = require('../../services/authentication.service');

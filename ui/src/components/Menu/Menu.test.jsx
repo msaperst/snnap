@@ -117,46 +117,30 @@ describe('snnap menu', () => {
     );
     expect(gigMenu.lastChild.getAttribute('data-bs-popper')).toEqual('static');
 
-    expect(gigMenu.lastChild.firstChild.firstChild).toHaveClass(
-      'dropdown-item'
+    checkMenuItem(
+      gigMenu.lastChild.firstChild.firstChild,
+      '#',
+      'Create New Job'
     );
-    expect(
-      gigMenu.lastChild.firstChild.firstChild.getAttribute(
-        'data-rr-ui-dropdown-item'
-      )
-    ).toEqual('');
     expect(gigMenu.lastChild.firstChild.firstChild.getAttribute('id')).toEqual(
       'openNewJobButton'
     );
-    expect(
-      gigMenu.lastChild.firstChild.firstChild.getAttribute('href')
-    ).toEqual('#');
     expect(
       gigMenu.lastChild.firstChild.firstChild.getAttribute('role')
     ).toEqual('button');
     expect(
       gigMenu.lastChild.firstChild.firstChild.getAttribute('tabIndex')
     ).toEqual('0');
-    expect(gigMenu.lastChild.firstChild.firstChild).toHaveTextContent(
-      'New Job'
-    );
 
-    expect(gigMenu.lastChild.children[1]).toHaveClass('dropdown-item');
-    expect(
-      gigMenu.lastChild.children[1].getAttribute('data-rr-ui-dropdown-item')
-    ).toEqual('');
-    expect(gigMenu.lastChild.children[1].getAttribute('href')).toEqual('/jobs');
-    expect(gigMenu.lastChild.children[1]).toHaveTextContent('My Jobs');
-
-    expect(gigMenu.lastChild.lastChild).toHaveClass('dropdown-item');
-    expect(
-      gigMenu.lastChild.lastChild.getAttribute('data-rr-ui-dropdown-item')
-    ).toEqual('');
-    expect(gigMenu.lastChild.lastChild.getAttribute('href')).toEqual(
-      '/job-applications'
+    checkMenuItem(
+      gigMenu.lastChild.children[1],
+      '/jobs',
+      'Created Job Postings'
     );
-    expect(gigMenu.lastChild.lastChild).toHaveTextContent(
-      "Jobs I've Applied To"
+    checkMenuItem(
+      gigMenu.lastChild.children[2],
+      '/job-applications',
+      'Submitted Applications'
     );
   });
 
@@ -177,45 +161,42 @@ describe('snnap menu', () => {
     const userNav =
       container.firstChild.firstChild.lastChild.firstChild.children[1];
     expect(userNav.children).toHaveLength(2);
-    expect(userNav.lastChild.children).toHaveLength(4);
+    expect(userNav.lastChild.children).toHaveLength(5);
     expect(userNav.lastChild).toHaveClass('dropdown-menu show');
     expect(userNav.lastChild.getAttribute('aria-labelledby')).toEqual(
       'user-dropdown'
     );
     expect(userNav.lastChild.getAttribute('data-bs-popper')).toEqual('static');
 
-    expect(userNav.lastChild.firstChild).toHaveClass('dropdown-item');
-    expect(
-      userNav.lastChild.firstChild.getAttribute('data-rr-ui-dropdown-item')
-    ).toEqual('');
-    expect(userNav.lastChild.firstChild.getAttribute('href')).toEqual(
-      '/notifications'
+    checkMenuItem(
+      userNav.lastChild.firstChild,
+      '/notifications',
+      'Notifications'
     );
-    expect(userNav.lastChild.firstChild).toHaveTextContent('Notifications');
-
-    expect(userNav.lastChild.children[1]).toHaveClass('dropdown-item');
-    expect(
-      userNav.lastChild.children[1].getAttribute('data-rr-ui-dropdown-item')
-    ).toEqual('');
-    expect(userNav.lastChild.children[1].getAttribute('href')).toEqual(
-      '/profile'
+    checkMenuItem(
+      userNav.lastChild.children[1],
+      '/profile/msaperst',
+      'My Profile'
     );
-    expect(userNav.lastChild.children[1]).toHaveTextContent('Profile');
+    checkMenuItem(userNav.lastChild.children[2], '/settings', 'Settings');
 
-    expect(userNav.lastChild.children[2]).toHaveClass('dropdown-divider');
-    expect(userNav.lastChild.children[2].getAttribute('role')).toEqual(
+    expect(userNav.lastChild.children[3]).toHaveClass('dropdown-divider');
+    expect(userNav.lastChild.children[3].getAttribute('role')).toEqual(
       'separator'
     );
-    expect(userNav.lastChild.children[2]).toHaveTextContent('');
+    expect(userNav.lastChild.children[3]).toHaveTextContent('');
 
-    expect(userNav.lastChild.lastChild).toHaveClass('dropdown-item');
-    expect(
-      userNav.lastChild.lastChild.getAttribute('data-rr-ui-dropdown-item')
-    ).toEqual('');
+    checkMenuItem(userNav.lastChild.lastChild, '#', 'Logout');
     expect(userNav.lastChild.lastChild.getAttribute('role')).toEqual('button');
     expect(userNav.lastChild.lastChild.getAttribute('tabIndex')).toEqual('0');
-    expect(userNav.lastChild.lastChild).toHaveTextContent('Logout');
   });
+
+  function checkMenuItem(navItem, href, text) {
+    expect(navItem).toHaveClass('dropdown-item');
+    expect(navItem.getAttribute('data-rr-ui-dropdown-item')).toEqual('');
+    expect(navItem.getAttribute('href')).toEqual(href);
+    expect(navItem).toHaveTextContent(text);
+  }
 
   it('logs out when clicked', () => {
     let x = 0;
