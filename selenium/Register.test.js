@@ -164,6 +164,10 @@ describe('register page', () => {
     );
   });
 
+  // TODO - does not allow you to register with a short password
+  // TODO - does not allow you to register with a username with special characters
+  // TODO - does not allow you to register with a username without alphabetical characters
+
   async function register(
     firstName,
     lastName,

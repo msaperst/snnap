@@ -210,7 +210,7 @@ class Test {
         { value: 1, what: 'something' },
         { value: 2, what: 'other things' },
       ],
-      [{ value: 7 }, { value: 8 }],
+      [{ value: 1 }, { value: 2 }],
       [
         { link: 'link1.com', description: 'description 1' },
         { link: 'link2.com', description: 'description 2' },
