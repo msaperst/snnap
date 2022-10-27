@@ -124,10 +124,11 @@ describe('personal information', () => {
     );
     const form =
       container.firstChild.children[2].firstChild.firstChild.children[1];
+    expect(form.getAttribute('id')).toEqual('formCity');
     expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('text');
     expect(form.getAttribute('required')).toEqual('true');
-    // the rest is verified in SnnapFormInput.test.jsx
+    // the rest is verified in SnnapFormLocation.test.jsx
   });
 
   it('has 2 items in the last row', () => {

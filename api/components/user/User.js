@@ -48,7 +48,7 @@ const User = class {
       newUser.lon = location.lon;
       newUser.email = email;
       // setup our default user settings
-      await Mysql.query(`INSERT INTO settings (user) VALUE  (${newUser.id});`);
+      await Mysql.query(`INSERT INTO settings (user) VALUE (${newUser.id});`);
     })();
     return newUser;
   }

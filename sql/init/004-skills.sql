@@ -15,8 +15,8 @@ INSERT INTO skills (name) VALUES ('Posing');
 INSERT INTO skills (name) VALUES ('Pets');
 INSERT INTO skills (name) VALUES ('Children');
 
-DELETE FROM skills;
-INSERT INTO skills (name) VALUES ('Off Camera Flash');
-INSERT INTO skills (name) VALUES ('Solo Photography');
-INSERT INTO skills (name) VALUES ('Natural Light');
-INSERT INTO skills (name) VALUES ('Post Production Editing');
+DELETE FROM skills WHERE name = 'Photography' OR name = 'Retouch' OR name = 'Lighting' OR name = 'Posing' OR name = 'Pets' OR name = 'Children';
+INSERT INTO skills (id, name) VALUES (1, 'Off Camera Flash');
+INSERT INTO skills (id, name) VALUES (2, 'Solo Photography');
+INSERT INTO skills (id, name) VALUES (3, 'Natural Light');
+INSERT INTO skills (id, name) VALUES (4, 'Post Production Editing');
