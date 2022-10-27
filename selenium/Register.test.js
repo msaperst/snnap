@@ -41,7 +41,7 @@ describe('register page', () => {
       expect(await feedback[i].getText()).toEqual('');
       expect(await feedback[i].isDisplayed()).toBeFalsy();
     }
-    await driver.findElement(By.id('registerButton')).click();
+    await driver.findElement(By.id('createAccountButton')).click();
     expect(await feedback[0].getText()).toEqual(
       'Please provide a valid first name.'
     );
@@ -93,7 +93,7 @@ describe('register page', () => {
 
   it('does not allow you to register without a valid email', async () => {
     await driver.findElement(By.id('formEmail')).sendKeys('example');
-    driver.findElement(By.id('registerButton')).click();
+    driver.findElement(By.id('createAccountButton')).click();
     const feedback = await driver.findElements(
       By.className('invalid-feedback')
     );
@@ -191,6 +191,6 @@ describe('register page', () => {
     if (agree) {
       await driver.findElement(By.id('agreeToTerms')).click();
     }
-    driver.findElement(By.id('registerButton')).click();
+    driver.findElement(By.id('createAccountButton')).click();
   }
 });
