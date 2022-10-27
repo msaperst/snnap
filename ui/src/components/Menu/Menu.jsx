@@ -52,18 +52,12 @@ function Menu(props) {
         <Nav className="ml-auto">
           <NavDropdown title="My Jobs" id="gig-dropdown">
             <NewJob />
-            <NavDropdown.Item href="/jobs">My Jobs</NavDropdown.Item>
-            <NavDropdown.Item href="/job-applications">
-              Jobs I&apos;ve Applied To
+            <NavDropdown.Item href="/jobs">
+              Created Job Postings
             </NavDropdown.Item>
-            {/* <NavDropdown.Divider /> */}
-            {/* <NewRequestToWork /> */}
-            {/* <NavDropdown.Item href="/work-requests"> */}
-            {/*  My Work Requests */}
-            {/* </NavDropdown.Item> */}
-            {/* <NavDropdown.Item href="/work-request-applications"> */}
-            {/*  My Work Request Applications */}
-            {/* </NavDropdown.Item> */}
+            <NavDropdown.Item href="/job-applications">
+              Submitted Applications
+            </NavDropdown.Item>
           </NavDropdown>
           <NavDropdown
             title={`${currentUser.username}${bell}`}
@@ -72,7 +66,10 @@ function Menu(props) {
             <NavDropdown.Item href="/notifications">
               Notifications{notifications}
             </NavDropdown.Item>
-            <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+            <NavDropdown.Item href={`/profile/${currentUser.username}`}>
+              My Profile
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
           </NavDropdown>

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { fireEvent, render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import Register from './Register';
-import { hasError } from '../UserProfile/CommonTestComponents';
+import { hasError } from '../Settings/CommonTestComponents';
 import { selectFairfax } from '../CommonTestComponents';
 
 jest.mock('../../services/authentication.service');

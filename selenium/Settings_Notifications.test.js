@@ -3,7 +3,7 @@ const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
-describe('profile page', () => {
+describe('settings notifications page', () => {
   jest.setTimeout(15000);
 
   let test;
@@ -13,8 +13,8 @@ describe('profile page', () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    await test.loginUser('profileNotificationsUser');
-    await driver.get(`${Test.getApp()}/profile`);
+    await test.loginUser('settingsNotificationsUser');
+    await driver.get(`${Test.getApp()}/settings`);
   }, 10000);
 
   afterEach(async () => {
@@ -90,11 +90,11 @@ describe('profile page', () => {
 
     // ensure new value loads;
     await driver.navigate().refresh();
-    emailNotification = driver.wait(
+    emailNotification = await driver.wait(
       until.elementLocated(By.id('emailNotifications')),
       5000
     );
-    Test.sleep(200);
+    await Test.sleep(200);
     expect(await emailNotification.isSelected()).toBeTruthy();
   });
 });
