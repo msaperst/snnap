@@ -17,6 +17,10 @@ const signupValidation = [
     'username',
     'Username can only contain alpha numeric characters and underscores.'
   ).matches(/^\w+$/),
+  check(
+    'username',
+    'Username must contain at least one alphabetical character.'
+  ).matches(/[a-zA-Z]+/),
   check('password', 'Password must be 6 or more characters.').isLength({
     min: 6,
   }),
