@@ -177,6 +177,31 @@ describe('register', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
+  it('has agree to conditions in the seventh row', () => {
+    const { container } = render(<Register />);
+    expect(container.firstChild.children[7].firstChild).toHaveClass(
+      'form-check'
+    );
+    expect(container.firstChild.children[7].firstChild.children).toHaveLength(
+      3
+    );
+
+    const form = container.firstChild.children[7].lastChild.firstChild;
+    expect(form).toHaveClass('form-check-input');
+    expect(form.getAttribute('id')).toEqual('agreeToTerms');
+    expect(form.getAttribute('disabled')).toBeNull();
+    expect(form.getAttribute('checked')).toBeNull();
+    expect(form.getAttribute('type')).toEqual('checkbox');
+    expect(form.getAttribute('required')).toEqual('');
+
+    const label = container.firstChild.children[7].lastChild.children[1];
+    expect(label).toHaveClass('form-check-label');
+    expect(label.getAttribute('for')).toEqual('agreeToTerms');
+    expect(label.getAttribute('disabled')).toBeNull();
+    expect(label.getAttribute('title')).toEqual('');
+    expect(label).toHaveTextContent('Agree to terms and conditions');
+  });
+
   it('has 2 items in the last row', () => {
     const { container } = render(<Register />);
     expect(container.firstChild.lastChild).toHaveClass('mb-3 row');
