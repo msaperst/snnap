@@ -3,7 +3,8 @@
 
 name: Container Scanning
 
-on: [ pull_request ]
+on: [ push, pull_request ]
+
 jobs:
   api:
     name: API Container Scan
