@@ -1,0 +1,55 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Zap Scans
+
+on: [ pull_request ]
+
+jobs:
+  baseline:
+    name: Zap Baseline Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup env file ⚙
+        run: |
+          echo "# tool hosting information" > .env
+          echo "HTTP_PORT=70" >> .env
+          echo "DOMAIN=localhost" >> .env
+          echo "WS_PROTOCOL=ws" >> .env
+          echo "WS_PORT=70" >> .env
+          echo "" >> .env
+          echo "# database information" >> .env
+          echo "MYSQL_ROOT_PASSWORD=xFRcwhHSF4aHxpGv7n5DuzSz" >> .env
+          echo "MYSQL_PORT=3206" >> .env
+          echo "MYSQL_DATABASE=snnap" >> .env
+          echo "MYSQL_USER=snnap" >> .env
+          echo "MYSQL_PASSWORD=vGvmKAcPLeQpQ7gEKckN89dB" >> .env
+          echo "" >> .env
+          echo "# api information" >> .env
+          echo "API_PORT=3001" >> .env
+          echo "API_LIMIT=10000" >> .env
+          echo "" >> .env
+          echo "# third party information" >> .env
+          echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
+          echo "" >> .env
+          echo "# email info" >> .env
+          echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> .env
+          echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
+
+      - name: Setup key files ⚙
+        run: |
+          mkdir -p api/certs
+          echo "${{ secrets.KEY }}" > api/certs/key-rsa.pem
+          echo "${{ secrets.CERT }}" > api/certs/cert.pem
+
+      - name: Build Dockerfile 🐋
+        run: docker-compose -f docker-compose.yml up -d --build
+
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.7.0
+        with:
+          target: 'http://localhost:70'
