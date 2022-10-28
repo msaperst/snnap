@@ -1,0 +1,19 @@
+.nav-pills {
+    --bs-nav-pills-border-radius: 200px;
+}
+
+.nav-pills.nav-justified {
+    background-color: white;
+    border-radius: 200px;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #6a3ca5;
+    border-radius: 200px;
+    font-weight: bold;
+}
+
+.nav-pills .nav-link {
+    background-color: white;
+    color: black;
+}

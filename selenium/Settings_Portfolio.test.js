@@ -3,7 +3,7 @@ const { By, until, Key } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
-describe('profile page', () => {
+describe('settings portfolio page', () => {
   jest.setTimeout(10000);
 
   let test;
@@ -13,8 +13,8 @@ describe('profile page', () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    await test.loginUser('profilePortfolioUser');
-    await driver.get(`${Test.getApp()}/profile`);
+    await test.loginUser('settingsPortfolioUser');
+    await driver.get(`${Test.getApp()}/settings`);
     await driver.wait(until.elementLocated(By.css('h2')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     driver.wait(

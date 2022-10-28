@@ -4,7 +4,7 @@ const { resolve } = require('path');
 const Test = require('./common/Test');
 require('chromedriver');
 
-describe('profile page', () => {
+describe('settings account page', () => {
   jest.setTimeout(10000);
 
   let test;
@@ -15,8 +15,8 @@ describe('profile page', () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    user = await test.loginUser('profileAccountUser');
-    await driver.get(`${Test.getApp()}/profile`);
+    user = await test.loginUser('settingsAccountUser');
+    await driver.get(`${Test.getApp()}/settings`);
   }, 10000);
 
   afterEach(async () => {
@@ -86,7 +86,7 @@ describe('profile page', () => {
       5000
     );
     await test.waitUntilInputFilled(By.id('formUsername'));
-    expect(await username.getAttribute('value')).toEqual('profileAccountUser');
+    expect(await username.getAttribute('value')).toEqual('settingsAccountUser');
     expect(await username.getAttribute('disabled')).toEqual('true');
   });
 
@@ -94,7 +94,7 @@ describe('profile page', () => {
     const email = driver.wait(until.elementLocated(By.id('formEmail')), 5000);
     await test.waitUntilInputFilled(By.id('formEmail'));
     expect(await email.getAttribute('value')).toEqual(
-      'profileAccountUser@example.org'
+      'settingsAccountUser@example.org'
     );
     expect(await email.getAttribute('disabled')).toBeNull();
   });
@@ -141,13 +141,13 @@ describe('profile page', () => {
     await test.waitUntilInputFilled(By.id('formEmail'));
     await email.sendKeys('o');
     expect(await email.getAttribute('value')).toEqual(
-      'profileAccountUser@example.orgo'
+      'settingsAccountUser@example.orgo'
     );
     await updateAccountInfo();
     email = driver.wait(until.elementLocated(By.id('formEmail')), 5000);
     await test.waitUntilInputFilled(By.id('formEmail'));
     expect(await email.getAttribute('value')).toEqual(
-      'profileaccountuser@example.orgo'
+      'settingsaccountuser@example.orgo'
     );
   });
 
@@ -184,11 +184,11 @@ describe('profile page', () => {
   it('does not allow updating to a duplicate email', async () => {
     const test1 = new Test();
     try {
-      test1.addUser('profileUser1');
+      test1.addUser('settingsUser1');
       const email = driver.wait(until.elementLocated(By.id('formEmail')), 5000);
       await test.waitUntilInputFilled(By.id('formEmail'));
       email.clear();
-      email.sendKeys('profileUser1@example.org');
+      email.sendKeys('settingsUser1@example.org');
       await driver.findElement(By.id('saveAccountInformationButton')).click();
       const danger = driver.wait(
         until.elementLocated(By.className('alert-danger')),
