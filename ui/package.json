@@ -46,7 +46,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "lint": "eslint ./src/",
+    "lint": "eslint ./src/ -f @microsoft/eslint-formatter-sarif -o ui-results.sarif",
     "owasp": "owasp-dependency-check --scan package-lock.json --project 'number-muncher' -f HTML JSON",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
@@ -74,6 +74,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
+    "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
     "enzyme": "^3.11.0",
     "eslint": "8.25.0",

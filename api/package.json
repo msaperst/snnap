@@ -30,7 +30,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "lint": "eslint ./components ./services server.js",
+    "lint": "eslint ./components ./services ./routes server.js -f @microsoft/eslint-formatter-sarif -o api-results.sarif",
     "test": "jest --coverage",
     "owasp": "owasp-dependency-check --scan package-lock.json --project 'number-muncher' -f HTML JSON"
   },
@@ -52,6 +52,7 @@
     "ws": "8.9.0"
   },
   "devDependencies": {
+    "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "eslint": "8.26.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",

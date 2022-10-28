@@ -25,6 +25,13 @@ jobs:
       - name: Lint 🔍
         run: cd api; npm run lint
 
+      - name: Upload Lint Sarif 📊
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: api/api-results.sarif
+          category: api
+
       - name: Unit Test 🤞
         run: cd api; npm run test
 
@@ -57,6 +64,13 @@ jobs:
 
       - name: Lint 🔍
         run: cd ui; npm run lint
+
+      - name: Upload Lint Sarif 📊
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ui/ui-results.sarif
+          category: ui
 
       - name: Unit Test 🤞
         run: cd ui; npm run test
