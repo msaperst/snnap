@@ -3,7 +3,7 @@ const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
-describe('profile page', () => {
+describe('settings password page', () => {
   jest.setTimeout(10000);
 
   let test;
@@ -13,8 +13,8 @@ describe('profile page', () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    await test.loginUser('profilePasswordUser');
-    await driver.get(`${Test.getApp()}/profile`);
+    await test.loginUser('settingsPasswordUser');
+    await driver.get(`${Test.getApp()}/settings`);
   }, 10000);
 
   afterEach(async () => {
@@ -52,8 +52,8 @@ describe('profile page', () => {
 
   it('shows error when you update password blank information', async () => {
     driver.wait(until.elementLocated(By.css('h2')), 5000);
-    const profile = (await driver.findElements(By.css('form')))[1];
-    const feedbacks = await profile.findElements(
+    const settings = (await driver.findElements(By.css('form')))[1];
+    const feedbacks = await settings.findElements(
       By.className('invalid-feedback')
     );
     expect(feedbacks).toHaveLength(2);

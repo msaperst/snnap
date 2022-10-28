@@ -3,7 +3,7 @@ const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
-describe('profile page', () => {
+describe('settings personal page', () => {
   jest.setTimeout(10000);
 
   let test;
@@ -13,8 +13,8 @@ describe('profile page', () => {
     test = new Test();
     // load the default page
     driver = await test.getDriver();
-    await test.loginUser('profilePersonalUser');
-    await driver.get(`${Test.getApp()}/profile`);
+    await test.loginUser('settingsPersonalUser');
+    await driver.get(`${Test.getApp()}/settings`);
     await driver.wait(until.elementLocated(By.css('h2')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
     driver.wait(
@@ -66,9 +66,9 @@ describe('profile page', () => {
     expect(await city.getAttribute('disabled')).toBeNull();
   });
 
-  it('shows error when you update profile blank information', async () => {
-    const profile = (await driver.findElements(By.css('form')))[3];
-    const feedbacks = await profile.findElements(
+  it('shows error when you update settings blank information', async () => {
+    const settings = (await driver.findElements(By.css('form')))[3];
+    const feedbacks = await settings.findElements(
       By.className('invalid-feedback')
     );
     expect(feedbacks).toHaveLength(3);

@@ -11,7 +11,7 @@ const HomePage = lazy(() => import('./pages/Home/HomePage'));
 const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/Register/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
-const UserPage = lazy(() => import('./pages/User/UserPage'));
+const SettingsPage = lazy(() => import('./pages/Settings/SettingsPage'));
 const NotificationsPage = lazy(() =>
   import('./pages/Notifications/NotificationsPage')
 );
@@ -55,10 +55,10 @@ function App() {
               }
             />
             <Route
-              path="/profile"
+              path="/settings"
               element={
                 <PrivateRoute>
-                  <ProfilePage />
+                  <SettingsPage />
                 </PrivateRoute>
               }
             />
@@ -66,7 +66,7 @@ function App() {
               path="/profile/:username"
               element={
                 <PrivateRoute>
-                  <UserPage />
+                  <ProfilePage />
                 </PrivateRoute>
               }
             />
