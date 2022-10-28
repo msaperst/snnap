@@ -1,4 +1,4 @@
 ignore:
-  package:
-    name: mysql
-    version: 2.18.1
+  - package:
+      name: mysql
+      version: 2.18.1
