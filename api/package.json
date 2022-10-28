@@ -2,6 +2,10 @@
   "name": "api",
   "version": "1.0.0",
   "description": "Snnap back-end server",
+  "keywords": [],
+  "author": "Max Saperstone",
+  "license": "ISC",
+  "private": true,
   "jest": {
     "coverageThreshold": {
       "global": {
@@ -27,16 +31,22 @@
       ]
     ]
   },
-  "main": "index.js",
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "output": "junit.xml"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "scripts": {
     "start": "nodemon server.js",
     "lint": "eslint ./components ./services ./routes server.js -f @microsoft/eslint-formatter-sarif -o api-results.sarif",
     "test": "jest --coverage",
     "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap-api' -f ALL --failOnCVSS 8"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
@@ -67,11 +77,5 @@
     "nodemon": "^2.0.20",
     "owasp-dependency-check": "^0.0.21",
     "prettier": "^2.7.1"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   }
 }
