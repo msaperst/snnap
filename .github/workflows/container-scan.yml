@@ -26,7 +26,7 @@ jobs:
           image: "localbuild/snnap_api:latest"
           acs-report-enable: true
           fail-build: true
-          severity-cutoff: critical
+          severity-cutoff: high
 
       - name: Upload Anchore Scan SARIF Report 📊
         if: always()
@@ -55,7 +55,7 @@ jobs:
           image: "localbuild/snnap_ui:latest"
           acs-report-enable: true
           fail-build: true
-          severity-cutoff: critical
+          severity-cutoff: high
 
       - name: Upload Anchore Scan SARIF Report 📊
         if: always()
@@ -84,7 +84,7 @@ jobs:
           image: "localbuild/snnap_sql:latest"
           acs-report-enable: true
           fail-build: true
-          severity-cutoff: critical
+          severity-cutoff: high
 
       - name: Upload Anchore Scan SARIF Report 📊
         if: always()
