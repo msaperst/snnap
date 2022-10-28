@@ -11,22 +11,26 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-#      - name: Setup Node ☕
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: 14.x
-#
-#      - name: Install 🔧
-#        run: cd api; npm ci
+      - name: Setup Node ☕
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Install 🔧
+        run: cd api; npm ci
 
       - name: Dependency Check 🐛
         run: |
-          cd api
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.3.0/dependency-check-7.3.0-release.zip
-          unzip dependency-check-7.3.0-release.zip
-          dependency-check/bin/dependency-check.sh --out=./dependency-check-reports --scan package-lock.json -f HTML -f JSON --failOnCVSS 8 --project="snnap api" --data=/tmp/dependency-check-data
+          cd api; npm run owasp || true
 
-      - name: Publish Result
+      - name: Upload Lint Sarif 📊
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: api/dependency-check-reports/dependency-check-report.sarif
+          category: api
+
+      - name: Publish Result 📊
         if: always()
         uses: actions/upload-artifact@v3
         with:
@@ -41,22 +45,26 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-#      - name: Setup Node ☕
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: 14.x
-#
-#      - name: Install 🔧
-#        run: cd ui; npm ci
+      - name: Setup Node ☕
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Install 🔧
+        run: cd ui; npm ci
 
       - name: Dependency Check 🐛
         run: |
-          cd ui
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.3.0/dependency-check-7.3.0-release.zip
-          unzip dependency-check-7.3.0-release.zip
-          dependency-check/bin/dependency-check.sh --out=./dependency-check-reports --scan package-lock.json -f HTML -f JSON --failOnCVSS 8 --project="snnap ui" --data=/tmp/dependency-check-data
+          cd ui; npm run owasp || true
 
-      - name: Publish Result
+      - name: Upload Lint Sarif 📊
+        if: always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ui/dependency-check-reports/dependency-check-report.sarif
+          category: ui
+
+      - name: Publish Result 📊
         if: always()
         uses: actions/upload-artifact@v3
         with:
