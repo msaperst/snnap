@@ -42,7 +42,7 @@
   "scripts": {
     "start": "react-scripts start",
     "lint": "eslint ./src/ -f @microsoft/eslint-formatter-sarif -o ui-results.sarif",
-    "owasp": "owasp-dependency-check --scan package-lock.json --project 'number-muncher' -f HTML JSON",
+    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap-ui' -f HTML -f JSON --failOnCVSS 8",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
     "test:ci": "react-scripts test --coverage --watchAll=false",

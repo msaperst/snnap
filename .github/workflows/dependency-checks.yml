@@ -14,7 +14,7 @@ jobs:
       - name: Setup Node ☕
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
+          node-version: 14.x
 
       - name: Install 🔧
         run: cd api; npm ci
@@ -24,7 +24,7 @@ jobs:
           cd api
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.3.0/dependency-check-7.3.0-release.zip
           unzip dependency-check-7.3.0-release.zip
-          dependency-check/bin/dependency-check.sh --out=./dependency-check-reports --scan package-lock.json -f HTML -f JSON --failOnCVSS 8 --project="snnap api" --data=/tmp/dependency-check-data --suppression suppressions.xml
+          dependency-check/bin/dependency-check.sh --out=./dependency-check-reports --scan package-lock.json -f HTML -f JSON --failOnCVSS 8 --project="snnap api" --data=/tmp/dependency-check-data
 
       - name: Publish Result
         if: always()
@@ -44,7 +44,7 @@ jobs:
       - name: Setup Node ☕
         uses: actions/setup-node@v1
         with:
-          node-version: 16.x
+          node-version: 14.x
 
       - name: Install 🔧
         run: cd ui; npm ci

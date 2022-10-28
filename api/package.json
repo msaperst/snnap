@@ -32,7 +32,7 @@
     "start": "nodemon server.js",
     "lint": "eslint ./components ./services ./routes server.js -f @microsoft/eslint-formatter-sarif -o api-results.sarif",
     "test": "jest --coverage",
-    "owasp": "owasp-dependency-check --scan package-lock.json --project 'number-muncher' -f HTML JSON"
+    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap-api' -f HTML -f JSON --failOnCVSS 8"
   },
   "keywords": [],
   "author": "",
