@@ -16,7 +16,7 @@ jobs:
       - name: Build Dockerfile 🐋
         run: |
           cd api
-          docker build -t localbuild/snnap_api:latest
+          docker build -t localbuild/snnap_api:latest .
 
       - name: Scan Image 🕵️‍♂️
         id: scan-api
@@ -45,7 +45,7 @@ jobs:
       - name: Build Dockerfile 🐋
         run: |
           cd ui
-          docker build -t localbuild/snnap_ui:latest
+          docker build -t localbuild/snnap_ui:latest .
 
       - name: Scan Image 🕵️‍♂️
         id: scan-ui
