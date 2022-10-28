@@ -15,7 +15,7 @@ ENV REACT_APP_GEOAPIFY_API_KEY ${REACT_APP_GEOAPIFY_API_KEY}
 # setup our modules
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci --silent
+RUN npm ci --silent --production
 
 # copy in the files and build things
 COPY public ./public
