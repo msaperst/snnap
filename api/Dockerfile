@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 # Install dependencies
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm ci --silent
+RUN npm ci --silent --production
 
 # Bundle app source
 COPY server.js ./
