@@ -63,4 +63,4 @@ jobs:
           sarif_file: ${{ steps.scan-ui.outputs.sarif }}
           category: ui
 
-  sql:
+#  sql:
