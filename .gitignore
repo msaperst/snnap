@@ -3,11 +3,8 @@
 vendor/
 node_modules/
 npm-debug.log
-coverage/
-dependency-check*
-test-report.html
-jest-html-reporters-attach
 avatars/
+certs/
 
 # Laravel 4 specific
 bootstrap/compiled.php
@@ -27,5 +24,9 @@ Homestead.json
 .rocketeer/
 
 # test results
+coverage/
+dependency-check*
+test-report.html
+jest-html-reporters-attach
 /Selenium Test Results/
 *.sarif
