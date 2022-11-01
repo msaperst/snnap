@@ -25,6 +25,9 @@ jest.mock(
 jest.mock('../../services/user.service');
 const userService = require('../../services/user.service');
 
+jest.mock('../../services/company.service');
+const companyService = require('../../services/company.service');
+
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
@@ -46,9 +49,13 @@ describe('job', () => {
     jest.resetAllMocks();
     jobService.jobService.getJobApplications.mockResolvedValue([]);
     jobService.jobService.getJob.mockResolvedValue([]);
+    companyService.companyService.get.mockResolvedValue({
+      name: "Max's Company",
+    });
     userService.userService.get.mockResolvedValue({
       first_name: 'Max',
       last_name: 'Saperstone',
+      username: 'msaperst',
     });
 
     job = {
@@ -88,34 +95,85 @@ describe('job', () => {
     otherUser = { id: 5 };
   });
 
-  function checkTop(container) {
-    expect(container.children).toHaveLength(1);
-    expect(container.firstChild.children).toHaveLength(1);
-    expect(container.firstChild.firstChild.children).toHaveLength(1);
-    expect(container.firstChild.firstChild.firstChild.children).toHaveLength(1);
-
-    const cardContainer = container.firstChild.firstChild.firstChild.firstChild;
+  function checkCard(container, duration, buttonText) {
+    const cardContainer = container.firstChild;
     expect(cardContainer.children).toHaveLength(1);
-    expect(cardContainer.firstChild.children).toHaveLength(2);
+    expect(cardContainer.firstChild).toHaveClass('card-body');
+    expect(cardContainer.firstChild.children).toHaveLength(1);
 
-    expect(cardContainer.firstChild.firstChild.children).toHaveLength(2);
-    expect(
-      cardContainer.firstChild.firstChild.firstChild.children
-    ).toHaveLength(1);
-    expect(
-      cardContainer.firstChild.firstChild.firstChild.firstChild
-    ).toHaveClass('circle');
-    expect(cardContainer.firstChild.firstChild.lastChild.children).toHaveLength(
-      2
+    expect(cardContainer.firstChild.firstChild).toHaveClass('row');
+    expect(cardContainer.firstChild.firstChild.children).toHaveLength(3);
+    const avatarCell = cardContainer.firstChild.firstChild.firstChild;
+    const infoCell = cardContainer.firstChild.firstChild.children[1];
+    const buttonCell = cardContainer.firstChild.firstChild.lastChild;
+
+    expect(avatarCell).toHaveClass('col-md-2 col-6 offset-md-0 offset-3');
+    expect(avatarCell.children).toHaveLength(1);
+    expect(avatarCell.firstChild).toHaveClass('circle');
+    expect(avatarCell.firstChild.children).toHaveLength(1);
+    expect(avatarCell.firstChild.firstChild).toHaveTextContent('MS');
+
+    expect(infoCell).toHaveClass('col-md-7');
+    expect(infoCell.children).toHaveLength(2);
+    expect(infoCell.firstChild).toHaveClass('row');
+    expect(infoCell.firstChild.children).toHaveLength(3);
+    expect(infoCell.firstChild.firstChild).toHaveClass('col-md-4 col-6');
+    expect(infoCell.firstChild.firstChild.children).toHaveLength(2);
+    expect(infoCell.firstChild.firstChild.firstChild).toHaveClass(
+      'card-title h5'
+    );
+    expect(infoCell.firstChild.firstChild.firstChild).toHaveTextContent(
+      'Max Saperstone'
+    );
+    expect(infoCell.firstChild.firstChild.lastChild).toHaveClass(
+      'card-subtitle h6'
+    );
+    expect(infoCell.firstChild.firstChild.lastChild).toHaveTextContent(
+      "Max's Company"
     );
 
-    const data = cardContainer.firstChild.firstChild.lastChild;
-    expect(data.firstChild.children).toHaveLength(4);
-    expect(data.firstChild.children[0]).toHaveTextContent("B'nai Mitzvah");
-    expect(data.firstChild.children[1]).toHaveTextContent(
-      'Friday, March 04, 2022'
+    expect(infoCell.firstChild.children[1]).toHaveClass('col-md-4 col-6');
+    expect(infoCell.firstChild.children[1].children).toHaveLength(2);
+    expect(infoCell.firstChild.children[1].firstChild).toHaveClass(
+      'card-title h5'
     );
-    return { cardContainer, data };
+    expect(infoCell.firstChild.children[1].firstChild).toHaveTextContent(
+      "B'nai Mitzvah"
+    );
+    expect(infoCell.firstChild.children[1].lastChild).toHaveClass(
+      'card-subtitle h6'
+    );
+    expect(infoCell.firstChild.children[1].lastChild).toHaveTextContent(
+      'TBD - Coming with LA Fixes'
+    );
+
+    expect(infoCell.firstChild.lastChild).toHaveClass('col-md-4');
+    expect(infoCell.firstChild.lastChild.children).toHaveLength(2);
+    expect(infoCell.firstChild.lastChild.firstChild).toHaveClass('card-text');
+    expect(infoCell.firstChild.lastChild.firstChild).toHaveTextContent(
+      'Fairfax, VA'
+    );
+    expect(infoCell.firstChild.lastChild.lastChild).toHaveClass(
+      'font-italic card-text'
+    );
+    expect(infoCell.firstChild.lastChild.lastChild).toHaveTextContent(
+      `03/04/2022 for ${duration}`
+    );
+
+    expect(infoCell.lastChild).toHaveClass('mt-2 row');
+    expect(infoCell.lastChild.children).toHaveLength(1);
+    expect(infoCell.lastChild.firstChild).toHaveClass('col');
+    expect(infoCell.lastChild.firstChild.children).toHaveLength(1);
+    expect(infoCell.lastChild.firstChild.firstChild).toHaveClass('card-text');
+    expect(infoCell.lastChild.firstChild.firstChild).toHaveTextContent(
+      'Some details'
+    );
+
+    expect(buttonCell).toHaveClass('col-md-3');
+    expect(buttonCell.children).toHaveLength(1);
+    expect(buttonCell.firstChild).toHaveTextContent(buttonText);
+
+    return { cardContainer };
   }
 
   // expects in method
@@ -124,10 +182,11 @@ describe('job', () => {
     jobService.jobService.getJobApplications.mockResolvedValue([]);
     await loadJob(job, createUser);
     const { container } = requestForHire;
-    const { cardContainer, data } = checkTop(container);
-    checkData(cardContainer, data, '2 hours', 'Select Application');
+    checkCard(container, '2 hours', 'Select Application');
   });
 
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
   it('displays the already applied button', async () => {
     jobService.jobService.getJobApplications.mockResolvedValue([
       { user_id: 5 },
@@ -138,9 +197,7 @@ describe('job', () => {
     });
     await loadJob(job, otherUser);
     const { container } = requestForHire;
-    const cardContainer = container.firstChild.firstChild.firstChild.firstChild;
-    const data = cardContainer.firstChild.firstChild.lastChild;
-    expect(data.firstChild.children[3]).toHaveTextContent('Already Applied');
+    checkCard(container, '2 hours', 'Already Applied');
   });
 
   // expects in method
@@ -154,8 +211,7 @@ describe('job', () => {
     await loadJob(jobDuration, otherUser);
 
     const { container } = requestForHire;
-    const { cardContainer, data } = checkTop(container);
-    checkData(cardContainer, data, '2 to 3 hours', 'Submit For Job');
+    checkCard(container, '2 to 3 hours', 'Submit For Job');
   });
 
   it('reloads the applications when applied to', async () => {
@@ -182,14 +238,15 @@ describe('job', () => {
     });
   }
 
-  function checkData(cardContainer, data, duration, buttonText) {
-    expect(data.firstChild.children[2]).toHaveTextContent(duration);
-    expect(data.firstChild.children[3]).toHaveTextContent(buttonText);
-    expect(data.lastChild.children).toHaveLength(2);
-    expect(data.lastChild.children[0]).toHaveTextContent('Fairfax, VA');
-    expect(data.lastChild.children[1]).toHaveTextContent('$200 per hour');
-    expect(cardContainer.firstChild.lastChild).toHaveTextContent(
-      'Some details'
-    );
-  }
+  it('navigates us to the user profile when clicked', async () => {
+    jobService.jobService.getJobApplications.mockResolvedValue([]);
+    await loadJob(job, createUser);
+    const { container } = requestForHire;
+    const cardContainer = container.firstChild;
+    const avatarCell = cardContainer.firstChild.firstChild.firstChild;
+    await act(async () => {
+      fireEvent.click(avatarCell.firstChild.firstChild);
+    });
+    expect(mockedNavigate).toHaveBeenCalledWith('/profile/msaperst');
+  });
 });

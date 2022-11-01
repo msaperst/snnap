@@ -55,7 +55,7 @@ function Job(props) {
     <Card data-testid={`job-${job.id}`}>
       <Card.Body>
         <Row>
-          <Col md={2}>
+          <Col md={{ span: 2, offset: 0 }} xs={{ span: 6, offset: 3 }}>
             <Avatar
               avatar={user.avatar}
               firstname={user.first_name}
@@ -63,7 +63,7 @@ function Job(props) {
               onClick={() => navigate(`/profile/${user.username}`)}
             />
           </Col>
-          <Col>
+          <Col md={7}>
             <Row>
               <Col md={4} xs={6}>
                 <Card.Title>{`${user.first_name} ${user.last_name}`}</Card.Title>
@@ -99,42 +99,6 @@ function Job(props) {
         </Row>
       </Card.Body>
     </Card>
-    //   </Card.Body>
-    //     <Container>
-    //       <Row>
-    //         <Col md={11}>
-    //           <Row>
-    //             <Col md={3}>
-    //               <h4>{job.type}</h4>
-    //             </Col>
-    //             <Col md={3}>
-    //               {new Intl.DateTimeFormat('en-US', {
-    //                 weekday: 'long',
-    //                 year: 'numeric',
-    //                 month: 'long',
-    //                 day: '2-digit',
-    //               }).format(new Date(job.date_time))}
-    //             </Col>
-    //             <Col md={3}>
-    //               {job.duration}
-    //               {job.durationMax ? ` to ${job.durationMax}` : ''} hours
-    //             </Col>
-    //             <Col md={3}>{button}</Col>
-    //           </Row>
-    //           <Row>
-    //             <Col md={6}>
-    //               {job.loc.replace(', United States of America', '')}
-    //             </Col>
-    //             <Col md={3}>${job.pay} per hour</Col>
-    //           </Row>
-    //         </Col>
-    //       </Row>
-    //       <Row className="mt-3">
-    // X       <Col className="details">{job.details}</Col>
-    //       </Row>
-    //     </Container>
-    //   </Card.Title>
-    // </Card>
   );
 }
 
