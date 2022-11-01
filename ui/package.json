@@ -67,7 +67,7 @@
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
-    "react-select": "^5.5.4",
+    "react-select": "^5.5.8",
     "rxjs": "^7.5.7",
     "web-vitals": "^3.0.4"
   },
