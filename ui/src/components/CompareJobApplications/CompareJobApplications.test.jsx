@@ -18,14 +18,14 @@ jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
 jest.mock(
-  '../JobApplication/JobApplication',
+  '../Profile/ProfileAccordion',
   () =>
     function (props) {
-      const { radio } = props;
+      const { onClick } = props;
       return (
         <input
           onClick={() => {
-            radio(5);
+            onClick(5);
           }}
         />
       );
@@ -193,5 +193,30 @@ describe('compare job applications form', () => {
       modal.firstChild.lastChild.firstChild.children[5].firstChild;
     fireEvent.click(applications.firstChild);
     await noModal(modal);
+  });
+
+  it('multiple applications appear when provided', async () => {
+    job = hr;
+    job.id = 6;
+    jobService.jobService.getJob.mockResolvedValue(job);
+    jobService.jobService.getJobApplication.mockResolvedValue([
+      { id: 1, user_id: 5 },
+      { id: 2, user_id: 6 },
+    ]);
+    jobService.jobService.getJobApplications.mockResolvedValue([
+      { id: 1, user_id: 5 },
+      { id: 2, user_id: 6 },
+    ]);
+
+    const { container } = render(<CompareJobApplications job={job} />);
+    modal = await openModal(
+      container,
+      'Select Application',
+      'compareJobApplicationsModal-6'
+    );
+    const applications =
+      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+    expect(applications).toHaveClass('accordion');
+    expect(applications.children).toHaveLength(2);
   });
 });

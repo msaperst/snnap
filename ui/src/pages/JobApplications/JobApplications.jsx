@@ -1,9 +1,8 @@
 import React from 'react';
-import { Accordion, Col, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import { userService } from '../../services/user.service';
-import JobApplication from '../../components/JobApplication/JobApplication';
-import './JobApplications.css';
+import Profile from '../../components/Profile/Profile';
 
 class JobApplications extends React.Component {
   constructor(props) {
@@ -24,24 +23,20 @@ class JobApplications extends React.Component {
   render() {
     const { jobApplications, currentUser } = this.state;
     return (
-      <>
+      <Container className="skinny">
         <Row>
           <Col>
-            <h2>My Job Applications</h2>
+            <h2>Submitted Applications</h2>
           </Col>
         </Row>
         {jobApplications.map((jobApplication) => (
-          <Accordion
+          <Profile
             key={jobApplication.id}
-            defaultActiveKey={jobApplication.id}
-          >
-            <JobApplication
-              currentUser={currentUser}
-              jobApplication={jobApplication}
-            />
-          </Accordion>
+            user={currentUser}
+            company={jobApplication}
+          />
         ))}
-      </>
+      </Container>
     );
   }
 }
