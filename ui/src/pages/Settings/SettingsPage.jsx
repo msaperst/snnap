@@ -46,12 +46,12 @@ function SettingsPage() {
               <Notifications settings={settings} />
             </div>
           </Tab>
-          <Tab eventKey="personal" title="Personal Profile">
+          <Tab eventKey="personal" title="Personal ProfileCard">
             <div className="skinny">
               <PersonalInformation user={user} />
             </div>
           </Tab>
-          <Tab eventKey="company" title="Company Profile">
+          <Tab eventKey="company" title="Company ProfileCard">
             <div className="skinny">
               <CompanyInformation company={company} />
               <Row className="mb-5" />
