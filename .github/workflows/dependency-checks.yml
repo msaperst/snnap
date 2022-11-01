@@ -1,6 +1,10 @@
 name: Software Composition Analysis
 
-on: [ pull_request ]
+on:
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '23 22 * * 1'
 
 jobs:
   api:
