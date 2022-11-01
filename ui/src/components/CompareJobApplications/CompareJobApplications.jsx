@@ -1,11 +1,11 @@
 import React from 'react';
 import { Accordion, Button, Form, Row, Modal } from 'react-bootstrap';
 import { jobService } from '../../services/job.service';
-import './CompareJobApplications.css';
 import Submit from '../Submit/Submit';
 import JobDetail from '../Job/JobDetail';
-import JobApplication from '../JobApplication/JobApplication';
+import Profile from '../Profile/Profile';
 import { commonFormComponents } from '../CommonFormComponents';
+import './CompareJobApplications.css';
 
 class CompareJobApplications extends React.Component {
   constructor(props) {
@@ -125,10 +125,11 @@ class CompareJobApplications extends React.Component {
               <Row className="mb-3">
                 <Accordion>
                   {jobApplications.map((jobApplication) => (
-                    <JobApplication
+                    <Profile
                       key={jobApplication.id}
-                      jobApplication={jobApplication}
-                      radio={(id) => this.setState({ jobApplication: id })}
+                      type="accordion"
+                      company={jobApplication}
+                      onClick={(id) => this.setState({ jobApplication: id })}
                       selected={job.application_selected}
                     />
                   ))}
