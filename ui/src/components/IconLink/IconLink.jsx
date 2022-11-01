@@ -10,7 +10,7 @@ function IconLink(props) {
   }
   /* only display if this is set */
   return (
-    <Col>
+    <Col className="text-center">
       {/* if this doesn't start with an http, add one */}
       <a
         href={link.startsWith('http') ? link : `http://${link}`}

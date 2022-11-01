@@ -1,0 +1,16 @@
+.card {
+    color: black;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.no-card .card {
+    background-color: inherit;
+    color: white;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.accordion-header .col-md-2 {
+    max-width: 14%;
+}
