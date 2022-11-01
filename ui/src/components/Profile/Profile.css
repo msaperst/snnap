@@ -11,6 +11,9 @@
     padding: 20px;
 }
 
-.accordion-header .col-md-2 {
-    max-width: 14%;
+/*only at medium */
+@media (min-width: 992px) {
+    .accordion-header .col-md-2 {
+        max-width: 14%;
+    }
 }

@@ -12,7 +12,7 @@ function ProfileHeader(props) {
   let avatarNav = null;
   if (onClick) {
     radioButton = (
-      <Col md={1} className="text-center">
+      <Col md={1} xs={3} className="text-center">
         <Form.Check
           type="radio"
           disabled={selected}
@@ -29,7 +29,7 @@ function ProfileHeader(props) {
   return (
     <Row>
       {radioButton}
-      <Col md={2}>
+      <Col md={2} xs={6}>
         <Avatar
           avatar={user.avatar}
           firstname={user.first_name}

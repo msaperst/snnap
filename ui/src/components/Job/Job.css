@@ -3,3 +3,10 @@
   margin-bottom: 20px;
   padding: 20px;
 }
+
+/*only at medium */
+@media (min-width: 992px) {
+  .card .col-md-2 {
+    max-width: 12%;
+  }
+}

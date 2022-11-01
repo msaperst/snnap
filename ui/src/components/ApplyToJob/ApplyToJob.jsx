@@ -111,6 +111,7 @@ class ApplyToJob extends React.Component {
             id={`openApplyToJobButton-${job.id}`}
             job={job.id}
             onClick={() => this.setState({ show: true })}
+            className="btn-block"
           >
             Submit For Job
           </Button>
