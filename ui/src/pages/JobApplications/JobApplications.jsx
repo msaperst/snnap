@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import { userService } from '../../services/user.service';
-import ProfileCard from '../../components/Profile/ProfileCard';
+import Profile from '../../components/Profile/Profile';
 
 class JobApplications extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class JobApplications extends React.Component {
           </Col>
         </Row>
         {jobApplications.map((jobApplication) => (
-          <ProfileCard
+          <Profile
             key={jobApplication.id}
             user={currentUser}
             company={jobApplication}

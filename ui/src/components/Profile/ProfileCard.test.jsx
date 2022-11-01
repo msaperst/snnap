@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import ProfileCard from './ProfileCard';
+import Profile from './Profile';
 
 jest.mock('../../services/user.service');
 const userService = require('../../services/user.service');
@@ -44,7 +44,9 @@ describe('profile card', () => {
     });
 
     await act(async () => {
-      profileCard = render(<ProfileCard user={{}} company={application} />);
+      profileCard = render(
+        <Profile type="card" user={{}} company={application} />
+      );
       const { container } = profileCard;
       await waitFor(() => container.firstChild);
     });
@@ -61,7 +63,7 @@ describe('profile card', () => {
     const app = application;
     delete app.job_id;
     await act(async () => {
-      profileCard = render(<ProfileCard user={{}} company={app} />);
+      profileCard = render(<Profile type="card" user={{}} company={app} />);
       const { container } = profileCard;
       await waitFor(() => container.firstChild);
     });
@@ -193,7 +195,7 @@ describe('profile card', () => {
     jobService.jobService.getJobApplication.mockResolvedValue(app);
 
     await act(async () => {
-      profileCard = render(<ProfileCard company={application} />);
+      profileCard = render(<Profile company={application} />);
       const { container } = profileCard;
       await waitFor(() => container.firstChild);
     });

@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import ProfileAccordion from './ProfileAccordion';
+import Profile from './Profile';
 
 jest.mock('../../services/user.service');
 const userService = require('../../services/user.service');
@@ -45,7 +45,9 @@ describe('profile accordion', () => {
     });
 
     await act(async () => {
-      profileAccordion = render(<ProfileAccordion company={application} />);
+      profileAccordion = render(
+        <Profile type="accordion" company={application} />
+      );
       const { container } = profileAccordion;
       await waitFor(() => container.firstChild);
     });
@@ -62,7 +64,9 @@ describe('profile accordion', () => {
     const app = application;
     delete app.job_id;
     await act(async () => {
-      profileAccordion = render(<ProfileAccordion user={{}} company={app} />);
+      profileAccordion = render(
+        <Profile type="accordion" user={{}} company={app} />
+      );
       const { container } = profileAccordion;
       await waitFor(() => container.firstChild);
     });
@@ -91,7 +95,8 @@ describe('profile accordion', () => {
     let jobApplication;
     await act(async () => {
       jobApplication = render(
-        <ProfileAccordion
+        <Profile
+          type="accordion"
           onClick
           user={{ username: 'user' }}
           company={{ job_id: 1 }}
@@ -111,7 +116,7 @@ describe('profile accordion', () => {
   it('has radio in header', async () => {
     await act(async () => {
       profileAccordion = render(
-        <ProfileAccordion company={application} onClick="true" />
+        <Profile type="accordion" company={application} onClick="true" />
       );
       const { container } = profileAccordion;
       await waitFor(() => container.firstChild);
@@ -144,7 +149,7 @@ describe('profile accordion', () => {
     };
     await act(async () => {
       profileAccordion = render(
-        <ProfileAccordion company={application} onClick={updateX} />
+        <Profile type="accordion" company={application} onClick={updateX} />
       );
       const { container } = profileAccordion;
       await waitFor(() => container.firstChild);
@@ -274,7 +279,9 @@ describe('profile accordion', () => {
     jobService.jobService.getJobApplication.mockResolvedValue(app);
 
     await act(async () => {
-      profileAccordion = render(<ProfileAccordion company={application} />);
+      profileAccordion = render(
+        <Profile type="accordion" company={application} />
+      );
       const { container } = profileAccordion;
       await waitFor(() => container.firstChild);
     });
