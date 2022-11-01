@@ -56,6 +56,7 @@ function EditAvatar(props) {
         const dataurl = canvas.toDataURL(imageFile.type);
         setAvatar(dataurl);
         userService.uploadAvatar(dataurl);
+        // TODO - set avatar in localstorage
       };
       img.src = e.target.result;
     };
