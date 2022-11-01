@@ -5,7 +5,7 @@ import IconLink from '../IconLink/IconLink';
 import PortfolioLink from '../PortfolioLink/PortfolioLink';
 import './Profile.css';
 
-function ProfileCard(props) {
+function ProfileBody(props) {
   const { company } = props;
 
   const [portfolioItems, setPortfolioItems] = useState([]);
@@ -66,4 +66,4 @@ function ProfileCard(props) {
   );
 }
 
-export default ProfileCard;
+export default ProfileBody;

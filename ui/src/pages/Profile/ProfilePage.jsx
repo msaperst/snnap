@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import ProfileCard from '../../components/Profile/ProfileCard';
 import { userService } from '../../services/user.service';
 import { companyService } from '../../services/company.service';
+import Profile from '../../components/Profile/Profile';
 import NotFound from '../NotFound/NotFound';
 
 function ProfilePage() {
@@ -33,7 +33,7 @@ function ProfilePage() {
 
   return (
     <Container className="skinny no-card">
-      <ProfileCard user={user} company={company} />
+      <Profile user={user} company={company} />
     </Container>
   );
 }

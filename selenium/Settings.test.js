@@ -50,8 +50,8 @@ describe('settings page', () => {
     expect(await areas[0].getText()).toEqual('Account Information');
     expect(await areas[0].getAttribute('class')).toContain('active');
 
-    expect(await areas[1].getText()).toEqual('Personal ProfileCard');
-    expect(await areas[2].getText()).toEqual('Company ProfileCard');
+    expect(await areas[1].getText()).toEqual('Personal Profile');
+    expect(await areas[2].getText()).toEqual('Company Profile');
 
     // with 6 forms
     const forms = await driver.findElements(By.css('form'));
