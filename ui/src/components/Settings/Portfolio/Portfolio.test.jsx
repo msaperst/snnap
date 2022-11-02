@@ -1,16 +1,12 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import Portfolio from './Portfolio';
 import { hasError } from '../CommonTestComponents';
 
 jest.mock('../../../services/company.service');
 const companyService = require('../../../services/company.service');
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('portfolio', () => {
   jest.setTimeout(10000);

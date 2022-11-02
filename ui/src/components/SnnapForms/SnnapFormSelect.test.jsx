@@ -1,11 +1,7 @@
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormSelect from './SnnapFormSelect';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap form input', () => {
   let child;

@@ -5,8 +5,6 @@ import { act } from 'react-dom/test-utils';
 import AccountInformation from './AccountInformation';
 import { hasError } from '../CommonTestComponents';
 
-require('jest-localstorage-mock');
-
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');
 

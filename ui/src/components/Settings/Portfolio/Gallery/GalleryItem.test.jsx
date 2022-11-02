@@ -1,11 +1,7 @@
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import GalleryItem from './GalleryItem';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('portfolio item', () => {
   it('displays the basic portfolio inputs', () => {

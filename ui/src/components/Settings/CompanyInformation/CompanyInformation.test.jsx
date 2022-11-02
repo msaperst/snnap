@@ -1,8 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import CompanyInformation from './CompanyInformation';
 import { hasError } from '../CommonTestComponents';
@@ -12,8 +10,6 @@ const companyService = require('../../../services/company.service');
 
 jest.mock('../../../services/job.service');
 const jobService = require('../../../services/job.service');
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('Company information', () => {
   jest.setTimeout(10000);

@@ -1,11 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import Avatar from './Avatar';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('avatar', () => {
   it('renders an empty circle without an user information', () => {
@@ -58,7 +54,9 @@ describe('avatar', () => {
 
     expect(container.firstChild.children).toHaveLength(0);
     expect(container.firstChild).toHaveClass('circle');
-    expect(container.firstChild.getAttribute('style')).toEqual('background-image: url(pic.jpg);');
+    expect(container.firstChild.getAttribute('style')).toEqual(
+      'background-image: url(pic.jpg);'
+    );
   });
 
   it('allows clicking on the image', () => {
