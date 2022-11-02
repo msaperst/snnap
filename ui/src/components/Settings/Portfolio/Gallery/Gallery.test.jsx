@@ -1,11 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import Gallery from './Gallery';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('portfolio', () => {
   jest.setTimeout(10000);

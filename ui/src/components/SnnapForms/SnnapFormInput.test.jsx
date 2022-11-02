@@ -1,11 +1,7 @@
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormInput from './SnnapFormInput';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap form input', () => {
   // basic input field data
@@ -61,12 +57,14 @@ describe('snnap form input', () => {
       x = key;
       y = value;
     };
-    const component = mount(<SnnapFormInput name="123" onChange={updateX} />);
+    const { getByRole } = render(
+      <SnnapFormInput name="123" onChange={updateX} />
+    );
     const event = {
       preventDefault() {},
       target: { value: '1234' },
     };
-    component.find('.form-control').simulate('change', event);
+    fireEvent.change(getByRole('textbox'), event);
     expect(x).toEqual('123');
     expect(y).toEqual('1234');
   });
@@ -78,14 +76,14 @@ describe('snnap form input', () => {
       x = key;
       y = value;
     };
-    const component = mount(
+    const { getByRole } = render(
       <SnnapFormInput name="123" id="someId" onChange={updateX} />
     );
     const event = {
       preventDefault() {},
       target: { value: '1234' },
     };
-    component.find('.form-control').simulate('change', event);
+    fireEvent.change(getByRole('textbox'), event);
     expect(x).toEqual('someId');
     expect(y).toEqual('1234');
   });

@@ -1,16 +1,12 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import Password from './Password';
 import { hasError } from '../CommonTestComponents';
 
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('personal information', () => {
   jest.setTimeout(10000);

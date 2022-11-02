@@ -1,12 +1,8 @@
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormLocationInput from './SnnapFormLocationInput';
 import { selectFairfax } from '../CommonTestComponents';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap form input', () => {
   it('displays nothing when no name is provided', () => {
