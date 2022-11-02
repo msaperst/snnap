@@ -61,6 +61,7 @@ describe('job', () => {
     job = {
       id: 5,
       type: "B'nai Mitzvah",
+      subtype: 'Assistant',
       details: 'Some details',
       pay: 200,
       duration: 2,
@@ -70,6 +71,7 @@ describe('job', () => {
       skills: '',
       user: 4,
       typeId: 5,
+      subtypeId: 2,
       loc: 'Fairfax, VA, United States of America',
       lat: 5,
       lon: -71.2345,
@@ -77,6 +79,7 @@ describe('job', () => {
     jobDuration = {
       id: 5,
       type: "B'nai Mitzvah",
+      subtype: 'Assistant',
       details: 'Some details',
       pay: 200,
       duration: 2,
@@ -87,6 +90,7 @@ describe('job', () => {
       skills: '',
       user: 4,
       typeId: 5,
+      subtypeId: 2,
       loc: 'Fairfax, VA, United States of America',
       lat: 5,
       lon: -71.2345,
@@ -144,7 +148,7 @@ describe('job', () => {
       'card-subtitle h6'
     );
     expect(infoCell.firstChild.children[1].lastChild).toHaveTextContent(
-      'TBD - Coming with LA Fixes'
+      'Assistant'
     );
 
     expect(infoCell.firstChild.lastChild).toHaveClass('col-md-4');

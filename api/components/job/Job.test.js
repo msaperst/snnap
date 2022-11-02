@@ -49,6 +49,7 @@ describe('job', () => {
     const job = Job.create(
       1,
       5,
+      2,
       location,
       'Deetz',
       100,
@@ -64,7 +65,7 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -76,6 +77,7 @@ describe('job', () => {
     const job = Job.create(
       1,
       5,
+      3,
       location,
       'Deetz',
       100,
@@ -91,7 +93,7 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -103,6 +105,7 @@ describe('job', () => {
     const job = Job.create(
       1,
       5,
+      1,
       location,
       'Deetz',
       100,
@@ -122,7 +125,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -201,7 +204,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.date_time > NOW() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time > NOW() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -362,6 +365,32 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM job_types ORDER BY type;'
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('properly pulls and sorts the job subtype', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    const emailSpy = jest.spyOn(Email, 'sendMail');
+    Mysql.query.mockResolvedValueOnce([
+      { id: 2, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
+      { id: 3, type: 'Commercial Event', plural: 'Commercial Events' },
+      { id: 4, type: 'Other', plural: 'Other' },
+      { id: 6, type: 'Portrait', plural: 'Portraits' },
+      { id: 5, type: 'Studio Work', plural: 'Studio Work' },
+      { id: 1, type: 'Wedding', plural: 'Weddings' },
+    ]);
+    expect(await Job.getJobSubtypes()).toEqual([
+      { id: 2, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
+      { id: 3, type: 'Commercial Event', plural: 'Commercial Events' },
+      { id: 6, type: 'Portrait', plural: 'Portraits' },
+      { id: 5, type: 'Studio Work', plural: 'Studio Work' },
+      { id: 1, type: 'Wedding', plural: 'Weddings' },
+      { id: 4, type: 'Other', plural: 'Other' },
+    ]);
+    expect(sqlSpy).toHaveBeenCalledTimes(1);
+    expect(sqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM job_subtypes ORDER BY type;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });

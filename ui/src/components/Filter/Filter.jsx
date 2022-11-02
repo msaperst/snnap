@@ -22,12 +22,14 @@ function Filter(props) {
   const [allJobs, setAllJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
+  const [jobSubtypes, setJobSubtypes] = useState([]);
   const [equipment, setEquipment] = useState([]);
   const [skills, setSkills] = useState([]);
   const [distance, setDistance] = useState(distances[0]);
   const [location, setLocation] = useState(currentUser);
   const [currentLocation, setCurrentLocation] = useState({});
   const [selectedJobTypes, setSelectedJobTypes] = useState([]);
+  const [selectedJobSubtypes, setSelectedJobSubtypes] = useState([]);
 
   const [showOwnLocation, setShowOwnLocation] = useState(false);
 
@@ -47,12 +49,16 @@ function Filter(props) {
         }
       }
     }
-  }, [currentUser, ws.data]);
+  }, [allJobs.length, currentUser, ws.data]);
 
   useEffect(() => {
     jobService.getJobTypes().then((jobs) => {
       setJobTypes(jobs);
       setSelectedJobTypes(jobs.map((item) => item.id));
+    });
+    jobService.getJobSubtypes().then((jobs) => {
+      setJobSubtypes(jobs);
+      setSelectedJobSubtypes(jobs.map((item) => item.id));
     });
     jobService.getEquipment().then((e) => {
       setEquipment(e);
@@ -67,8 +73,31 @@ function Filter(props) {
   }, [longitude, latitude]);
 
   useEffect(() => {
-    updateResults();
-  }, [allJobs, filter, distance, location, selectedJobTypes, currentLocation]);
+    // start out with everything
+    let jobs = allJobs;
+    // remove elements not in our job type
+    if (filter) {
+      jobs = jobs.filter((job) =>
+        job.details.toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+    // remove jobs based on selected job types
+    jobs = jobs.filter((job) => selectedJobTypes.includes(job.typeId));
+    // remove jobs based on selected job subtypes
+    jobs = jobs.filter((job) => selectedJobSubtypes.includes(job.subtypeId));
+    // filter out ones outside our location
+    jobs = jobs.filter((job) => distance >= calculateDistance(location, job));
+    // set our new values;
+    setFilteredJobs(jobs);
+  }, [
+    allJobs,
+    filter,
+    distance,
+    location,
+    selectedJobTypes,
+    selectedJobSubtypes,
+    currentLocation,
+  ]);
 
   useEffect(() => {
     if (showOwnLocation) {
@@ -94,23 +123,6 @@ function Filter(props) {
       default:
         setLocation(currentUser); // also works for 'my home'
     }
-  };
-
-  const updateResults = () => {
-    // start out with everything
-    let jobs = allJobs;
-    // remove elements not in our job type
-    if (filter) {
-      jobs = jobs.filter((job) =>
-        job.details.toLowerCase().includes(filter.toLowerCase())
-      );
-    }
-    // remove jobs based on selected job types
-    jobs = jobs.filter((job) => selectedJobTypes.includes(job.typeId));
-    // filter out ones outside our location
-    jobs = jobs.filter((job) => distance >= calculateDistance(location, job));
-    // set our new values;
-    setFilteredJobs(jobs);
   };
 
   const calculateDistance = (p1, p2) => {
@@ -147,10 +159,26 @@ function Filter(props) {
     }
   };
 
+  const updateSubtypes = (value) => {
+    if (selectedJobSubtypes.includes(value)) {
+      for (let i = 0; i < selectedJobSubtypes.length; i++) {
+        if (selectedJobSubtypes[i] === value) {
+          setSelectedJobSubtypes([
+            ...selectedJobSubtypes.slice(0, i),
+            ...selectedJobSubtypes.slice(i + 1, selectedJobSubtypes.length),
+          ]);
+          break;
+        }
+      }
+    } else {
+      setSelectedJobSubtypes([...selectedJobSubtypes, value]);
+    }
+  };
+
   return (
     <>
       <Form>
-        <Row className="mb-5">
+        <Row className="mb-1">
           <Col>
             {jobTypes.map((type) => (
               <Button
@@ -160,6 +188,24 @@ function Filter(props) {
                   selectedJobTypes.includes(type.id) ? 'primary' : 'secondary'
                 }
                 onClick={() => updateTypes(type.id)}
+              >
+                {type.plural}
+              </Button>
+            ))}
+          </Col>
+        </Row>
+        <Row className="mb-5">
+          <Col>
+            {jobSubtypes.map((type) => (
+              <Button
+                className="btn-filter"
+                key={type.id}
+                variant={
+                  selectedJobSubtypes.includes(type.id)
+                    ? 'primary'
+                    : 'secondary'
+                }
+                onClick={() => updateSubtypes(type.id)}
               >
                 {type.plural}
               </Button>

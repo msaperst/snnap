@@ -34,6 +34,9 @@ class NewJob extends React.Component {
     jobService.getJobTypes().then((jobTypes) => {
       this.setState({ jobTypes });
     });
+    jobService.getJobSubtypes().then((jobSubtypes) => {
+      this.setState({ jobSubtypes });
+    });
     jobService.getEquipment().then((equipment) => {
       this.setState({ equipment });
     });
@@ -78,6 +81,7 @@ class NewJob extends React.Component {
       jobService
         .newJob(
           formData['Job Type'],
+          formData['Looking For'],
           {
             lat: formData.City.properties.lat,
             lon: formData.City.properties.lon,
@@ -124,6 +128,7 @@ class NewJob extends React.Component {
       validated,
       isSubmitting,
       jobTypes,
+      jobSubtypes,
       equipment,
       skills,
     } = this.state;
@@ -158,6 +163,13 @@ class NewJob extends React.Component {
                   name="Job Type"
                   onChange={this.updateForm}
                   options={jobTypes}
+                />
+              </Row>
+              <Row className="mb-3">
+                <SnnapFormSelect
+                  name="Looking For"
+                  onChange={this.updateForm}
+                  options={jobSubtypes}
                 />
               </Row>
               <Row className="mb-3">

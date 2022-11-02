@@ -3,6 +3,7 @@ import { handleResponse } from '../helpers/handle-response';
 
 export const jobService = {
   getJobTypes,
+  getJobSubtypes,
   getEquipment,
   getSkills,
   newJob,
@@ -19,6 +20,11 @@ function getJobTypes() {
   return fetch(`/api/jobs/types`, requestOptions).then(handleResponse);
 }
 
+function getJobSubtypes() {
+  const requestOptions = { method: 'GET', headers: authHeader() };
+  return fetch(`/api/jobs/subtypes`, requestOptions).then(handleResponse);
+}
+
 function getEquipment() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/jobs/equipment`, requestOptions).then(handleResponse);
@@ -31,6 +37,7 @@ function getSkills() {
 
 function newJob(
   type,
+  subtype,
   location,
   details,
   pay,
@@ -48,6 +55,7 @@ function newJob(
     headers,
     body: JSON.stringify({
       type,
+      subtype,
       location,
       details,
       pay,

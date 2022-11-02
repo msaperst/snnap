@@ -76,7 +76,7 @@ function Job(props) {
               <Col md={4} xs={6}>
                 <Card.Title id={`job-${job.id}-type`}>{job.type}</Card.Title>
                 <Card.Subtitle id={`job-${job.id}-subtype`}>
-                  TBD - Coming with LA Fixes
+                  {job.subtype}
                 </Card.Subtitle>
               </Col>
               <Col md={4}>
