@@ -1,23 +1,48 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import AccountInformation from './AccountInformation';
 import { hasError } from '../CommonTestComponents';
 
+require('jest-localstorage-mock');
+
 jest.mock('../../../services/user.service');
 const userService = require('../../../services/user.service');
 
-Enzyme.configure({ adapter: new Adapter() });
+const fakeLocalStorage = (function () {
+  let store = {};
+
+  return {
+    getItem(key) {
+      return store[key] || null;
+    },
+    setItem(key, value) {
+      store[key] = value.toString();
+    },
+    removeItem(key) {
+      delete store[key];
+    },
+    clear() {
+      store = {};
+    },
+  };
+})();
 
 describe('account information', () => {
   jest.setTimeout(10000);
 
+  beforeAll(() => {
+    Object.defineProperty(window, 'localStorage', {
+      value: fakeLocalStorage,
+    });
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+
+    localStorage.setItem('currentUser', JSON.stringify({}));
   });
 
   it('renders nothing when no values are passed', () => {
