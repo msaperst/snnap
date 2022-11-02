@@ -30,8 +30,9 @@ ALTER TABLE hire_requests DROP COLUMN location;
 ALTER TABLE hire_requests ADD COLUMN loc mediumtext NOT NULL;
 ALTER TABLE hire_requests ADD COLUMN lat long NOT NULL;
 ALTER TABLE hire_requests ADD COLUMN lon long NOT NULL;
+
 ALTER TABLE hire_requests RENAME jobs;
 
-ALTER TABLE hire_requests MODIFY COLUMN lat DOUBLE;
-ALTER TABLE hire_requests MODIFY COLUMN lon DOUBLE;
-
+ALTER TABLE jobs MODIFY COLUMN lat DOUBLE;
+ALTER TABLE jobs MODIFY COLUMN lon DOUBLE;
+ALTER TABLE jobs ADD COLUMN subtype int(11) NOT NULL;

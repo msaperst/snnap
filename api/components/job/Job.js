@@ -13,6 +13,7 @@ const Job = class {
   static create(
     user,
     type,
+    subtype,
     location,
     details,
     pay,
@@ -26,11 +27,13 @@ const Job = class {
     newJob.instancePromise = (async () => {
       const dateTime = `${date} 00:00:00`;
       const result = await Mysql.query(
-        `INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${parseIntAndDbEscape(
+        `INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${parseIntAndDbEscape(
           user
-        )}, ${parseIntAndDbEscape(type)}, ${db.escape(details)}, ${parseFloat(
-          pay
-        )}, ${parseIntAndDbEscape(duration)}, ${
+        )}, ${parseIntAndDbEscape(type)}, ${parseIntAndDbEscape(
+          subtype
+        )}, ${db.escape(details)}, ${parseFloat(pay)}, ${parseIntAndDbEscape(
+          duration
+        )}, ${
           durationMax ? parseIntAndDbEscape(durationMax) : null
         }, ${db.escape(dateTime)}, ${db.escape(location.loc)}, ${parseFloat(
           location.lat
@@ -74,7 +77,7 @@ const Job = class {
 
   static async getJobs() {
     return Mysql.query(
-      `SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.date_time > NOW() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;`
+      `SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time > NOW() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;`
     );
   }
 
@@ -106,6 +109,20 @@ const Job = class {
     }
     const other = jobTypes.splice(i, 1);
     return [...jobTypes, ...other];
+  }
+
+  static async getJobSubtypes() {
+    const jobSubtypes = await Mysql.query(
+      `SELECT * FROM job_subtypes ORDER BY type;`
+    );
+    let i = 0;
+    for (i; i < jobSubtypes.length; i++) {
+      if (jobSubtypes[i].type === 'Other') {
+        break;
+      }
+    }
+    const other = jobSubtypes.splice(i, 1);
+    return [...jobSubtypes, ...other];
   }
 
   async getInfo() {
