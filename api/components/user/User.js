@@ -2,6 +2,7 @@ const db = require('mysql');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Mysql = require('../../services/Mysql');
+const parseIntAndDbEscape = require('../Common');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-jwt-token';
 
@@ -47,8 +48,10 @@ const User = class {
       newUser.lat = location.lat;
       newUser.lon = location.lon;
       newUser.email = email;
-      // setup our default user settings
+      // set up our default user settings
       await Mysql.query(`INSERT INTO settings (user) VALUE (${newUser.id});`);
+      // set up our default user company
+      await Mysql.query(`INSERT INTO companies (user) VALUE (${newUser.id});`);
     })();
     return newUser;
   }
@@ -203,9 +206,8 @@ const User = class {
   async markNotificationRead(notification) {
     const id = await this.getId();
     await Mysql.query(
-      `UPDATE notifications SET reviewed = true WHERE id = ${parseInt(
-        notification,
-        10
+      `UPDATE notifications SET reviewed = true WHERE id = ${parseIntAndDbEscape(
+        notification
       )} AND to_user = ${id};`
     );
   }
@@ -261,13 +263,16 @@ const User = class {
   }
 
   static async getBasicUserInfo(user) {
-    let userId = parseInt(user, 10);
-    if (Number.isNaN(userId)) {
-      userId = 0;
-    }
     const username = user.toString().replace(/\W/gi, '');
+    let id;
+    try {
+      id = parseIntAndDbEscape(user);
+    } catch (e) {
+      id = "'NaN'";
+    }
+
     return Mysql.query(
-      `SELECT id, username, first_name, last_name, avatar FROM users WHERE id = ${userId} OR username = '${username}';`
+      `SELECT id, username, first_name, last_name, avatar FROM users WHERE id = ${id} OR username = '${username}';`
     );
   }
 

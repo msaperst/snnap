@@ -12,12 +12,13 @@ function ProfileHeader(props) {
   let avatarNav = null;
   if (onClick) {
     radioButton = (
-      <Col md={1} className="text-center">
+      <Col md={1} xs={3} className="text-center">
         <Form.Check
+          id={`select-job-application-${company.id}`}
           type="radio"
           disabled={selected}
-          aria-label={`jobApplication-${company.id}`}
-          name={`jobApplications-${company.job_id}`}
+          aria-label={`job-application-${company.id}`}
+          name={`job-applications-${company.job_id}`}
           onClick={() => onClick(company.id)}
           defaultChecked={selected === company.id}
         />
@@ -29,7 +30,7 @@ function ProfileHeader(props) {
   return (
     <Row>
       {radioButton}
-      <Col md={2}>
+      <Col md={2} xs={6}>
         <Avatar
           avatar={user.avatar}
           firstname={user.first_name}
@@ -40,13 +41,13 @@ function ProfileHeader(props) {
       <Col>
         <Row>
           <Col>
-            <h2>
+            <h2 id={`job-application-${company.id}-name`}>
               {company.user_name || `${user.first_name} ${user.last_name}`}
             </h2>
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col id={`job-application-${company.id}-company`}>
             <h3>{company.company_name || company.name}</h3>
           </Col>
         </Row>

@@ -95,6 +95,7 @@ class CompareJobApplications extends React.Component {
             id={`openCompareJobApplicationsModal-${job.id}`}
             job={job.id}
             onClick={() => this.setState({ show: true })}
+            className="btn-block"
           >
             {buttonText}
             <span

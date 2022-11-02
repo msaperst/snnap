@@ -541,7 +541,7 @@ describe('User', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     // issue #574 addresses this issue with username/id overlap
     expect(spy).toHaveBeenCalledWith(
-      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 0 OR username = 'max';"
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max';"
     );
   });
 
@@ -562,7 +562,7 @@ describe('User', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     // issue #574 addresses this issue with username/id overlap
     expect(spy).toHaveBeenCalledWith(
-      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 0 OR username = 'max1';"
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';"
     );
   });
 });

@@ -41,6 +41,13 @@ describe('apply to job', () => {
       until.elementLocated(By.id('compareJobApplicationsForm')),
       5000
     );
+    await driver.wait(
+      until.elementLocated(
+        By.css(
+          `[data-testid="jobApplication-${await applicationsForJobs[1].getId()}"]`
+        )
+      )
+    );
   }, 10000);
 
   afterEach(async () => {
@@ -66,8 +73,12 @@ describe('apply to job', () => {
       await modal.findElement(By.className('modal-title')).getText()
     ).toEqual('Applications for the Wedding Session');
     const rows = await modal.findElements(By.className('mb-3 row'));
-    expect(rows).toHaveLength(7);
+    expect(rows).toHaveLength(13);
     await modal.findElement(By.className('btn-close')).click();
+    await test.waitUntilNotPresent(By.className('modal-dialog'));
+    expect(
+      await driver.findElements(By.className('modal-dialog'))
+    ).toHaveLength(0);
   });
 
   // checks are in the method
@@ -83,7 +94,7 @@ describe('apply to job', () => {
     ).toHaveLength(2);
     expect(
       await driver.findElements(
-        By.name(`jobApplications-${await jobs[0].getId()}`)
+        By.name(`job-applications-${await jobs[0].getId()}`)
       )
     ).toHaveLength(2);
 
@@ -91,21 +102,37 @@ describe('apply to job', () => {
       await accordion
         .findElement(
           By.css(
-            `[aria-label="jobApplication-${await applicationsForJobs[0].getId()}"]`
+            `[aria-label="job-application-${await applicationsForJobs[0].getId()}"]`
           )
         )
         .isDisplayed()
     ).toBeTruthy();
+    const avatar = accordion.findElement(By.className('circle'));
+    await driver.wait(until.elementTextIs(avatar, 'TU'), 5000);
+    expect(await avatar.getText()).toEqual('TU');
     expect(
-      await accordion.findElement(By.className('col-md-5')).getText()
+      await accordion
+        .findElement(
+          By.id(`job-application-${await applicationsForJobs[0].getId()}-name`)
+        )
+        .getText()
     ).toEqual('Test User');
     expect(
-      await accordion.findElement(By.className('col-md-6')).getText()
+      await accordion
+        .findElement(
+          By.id(
+            `job-application-${await applicationsForJobs[0].getId()}-company`
+          )
+        )
+        .getText()
     ).toEqual('Company');
   });
 
   it('each application can be expanded', async () => {
-    const accordianBody = driver.findElement(By.className('accordion-body'));
+    const accordianBody = driver.wait(
+      until.elementLocated(By.className('accordion-body'))
+    );
+    await driver.wait(until.elementIsNotVisible(accordianBody), 5000);
     expect(await accordianBody.isDisplayed()).toBeFalsy();
     const header = driver.findElement(By.className('accordion-header'));
     await header.click();
@@ -117,75 +144,106 @@ describe('apply to job', () => {
   });
 
   it('empty application has expected details listed', async () => {
+    const applicationId = await applicationsForJobs[0].getId();
     const accordion = driver.findElement(
-      By.css(
-        `[data-testid="jobApplication-${await applicationsForJobs[0].getId()}"]`
-      )
+      By.css(`[data-testid="jobApplication-${applicationId}"]`)
     );
-    const rows = await accordion.findElements(By.className('mt-3 row'));
-    expect(rows).toHaveLength(4);
-    const avatar = accordion.findElement(By.className('circle'));
     const icons = await accordion.findElements(By.className('icon'));
+    const experience = driver.findElement(
+      By.id(`job-application-${applicationId}-experience`)
+    );
+    const equipment = driver.findElement(
+      By.id(`job-application-${applicationId}-equipment`)
+    );
+    const skills = driver.findElement(
+      By.id(`job-application-${applicationId}-skills`)
+    );
+    const portfolio = driver.findElement(
+      By.id(`job-application-${applicationId}-portfolio`)
+    );
+    // wait until it's all hidden/ready
+    await driver.wait(until.elementIsNotVisible(equipment), 5000);
     expect(icons).toHaveLength(0);
-    expect(await rows[1].getText()).toEqual('');
-    expect(await rows[2].getText()).toEqual('');
-    expect(await rows[3].getText()).toEqual('');
-    // all things initially are hidden
-    expect(await avatar.isDisplayed()).toBeFalsy();
+    expect(await experience.getText()).toEqual('');
+    expect(await equipment.getText()).toEqual('');
+    expect(await skills.getText()).toEqual('');
+    expect(await portfolio.getText()).toEqual('');
     // make visible
     await accordion.findElement(By.className('accordion-header')).click();
-    await driver.wait(until.elementIsVisible(avatar), 5000);
+    await driver.wait(until.elementIsVisible(equipment), 5000);
     // all things are now shown
-    expect(await avatar.isDisplayed()).toBeTruthy();
-    expect(await rows[1].getText()).toEqual('');
-    expect(await rows[2].getText()).toEqual('Equipment\nSkills');
-    expect(await rows[3].getText()).toEqual('');
+    expect(await experience.getText()).toEqual('');
+    expect(await equipment.getText()).toEqual('Equipment');
+    expect(await skills.getText()).toEqual('Skills');
+    expect(await portfolio.getText()).toEqual('Portfolio');
   });
 
   it('full application has all details listed', async () => {
+    const applicationId = await applicationsForJobs[1].getId();
     const accordion = driver.findElement(
-      By.css(
-        `[data-testid="jobApplication-${await applicationsForJobs[1].getId()}"]`
-      )
+      By.css(`[data-testid="jobApplication-${applicationId}"]`)
     );
-    const rows = await accordion.findElements(By.className('mt-3 row'));
-    expect(rows).toHaveLength(4);
-    const avatar = accordion.findElement(By.className('circle'));
     const icons = await accordion.findElements(By.className('icon'));
+    const experience = driver.findElement(
+      By.id(`job-application-${applicationId}-experience`)
+    );
+    const equipment = driver.findElement(
+      By.id(`job-application-${applicationId}-equipment`)
+    );
+    const skills = driver.findElement(
+      By.id(`job-application-${applicationId}-skills`)
+    );
+    const portfolio = driver.findElement(
+      By.id(`job-application-${applicationId}-portfolio`)
+    );
+    // wait until it's all hidden/ready
+    await driver.wait(until.elementIsNotVisible(equipment), 5000);
     expect(icons).toHaveLength(3);
     // all things initially are hidden
-    expect(await avatar.isDisplayed()).toBeFalsy();
     for (const icon of icons) {
       expect(await icon.isDisplayed()).toBeFalsy();
     }
-    expect(await rows[1].getText()).toEqual('');
-    expect(await rows[2].getText()).toEqual('');
-    expect(await rows[3].getText()).toEqual('');
+    expect(await experience.getText()).toEqual('');
+    expect(await equipment.getText()).toEqual('');
+    expect(await skills.getText()).toEqual('');
+    expect(await portfolio.getText()).toEqual('');
     // make visible
     await accordion.findElement(By.className('accordion-header')).click();
-    await driver.wait(until.elementIsVisible(avatar), 5000);
+    await driver.wait(until.elementIsVisible(equipment), 5000);
     // all things are now shown
-    expect(await avatar.isDisplayed()).toBeTruthy();
     for (const icon of icons) {
       expect(await icon.isDisplayed()).toBeTruthy();
     }
-    await Test.sleep(500);
-    expect(await rows[1].getText()).toEqual('some experience');
+    expect(await experience.getText()).toEqual('some experience');
     // kludge as this is sometimes out of order
-    const equipmentSkillText = await rows[2].getText();
-    expect(equipmentSkillText).toHaveLength(88);
-    expect(equipmentSkillText).toMatch(/^Equipment\n/);
-    expect(equipmentSkillText).toMatch(/Flash: other things\n/);
-    expect(equipmentSkillText).toMatch(/Camera: something\n/);
-    expect(equipmentSkillText).toMatch(/Skills\n/);
-    expect(equipmentSkillText).toMatch(/Off Camera Flash/);
-    expect(equipmentSkillText).toMatch(/Solo Photography/);
+    const equipmentText = await equipment.getText();
+    expect(equipmentText).toHaveLength(47);
+    expect(equipmentText).toMatch(/^Equipment\n/);
+    expect(equipmentText).toMatch(/Flash: other things/);
+    expect(equipmentText).toMatch(/Camera: something/);
+    const skillText = await skills.getText();
+    expect(skillText).toMatch(/Skills\n/);
+    expect(skillText).toMatch(/Off Camera Flash/);
+    expect(skillText).toMatch(/Solo Photography/);
     // kludge as this is sometimes out of order
-    const descriptionText = await rows[3].getText();
-    expect(descriptionText).toHaveLength(41);
-    expect(descriptionText).toMatch(/description 1/);
-    expect(descriptionText).toMatch(/description 2/);
-    expect(descriptionText).toMatch(/description 3/);
+    const portfolioText = await portfolio.getText();
+    expect(portfolioText).toHaveLength(51);
+    expect(portfolioText).toMatch(/^Portfolio\n/);
+    expect(
+      await portfolio
+        .findElement(By.linkText('description 1'))
+        .getAttribute('href')
+    ).toEqual('http://link1.com/');
+    expect(
+      await portfolio
+        .findElement(By.linkText('description 2'))
+        .getAttribute('href')
+    ).toEqual('http://link2.com/');
+    expect(
+      await portfolio
+        .findElement(By.linkText('description 3'))
+        .getAttribute('href')
+    ).toEqual('http://link3.com/');
   });
 
   it('unable to submit without choosing an application', async () => {
@@ -204,7 +262,7 @@ describe('apply to job', () => {
     await driver
       .findElement(
         By.css(
-          `input[aria-label="jobApplication-${await applicationsForJobs[0].getId()}"]`
+          `input[aria-label="job-application-${await applicationsForJobs[0].getId()}"]`
         )
       )
       .click();
@@ -233,7 +291,7 @@ describe('apply to job', () => {
     await driver
       .findElement(
         By.css(
-          `input[aria-label="jobApplication-${await applicationsForJobs[0].getId()}"]`
+          `input[aria-label="job-application-${await applicationsForJobs[0].getId()}"]`
         )
       )
       .click();
@@ -250,7 +308,7 @@ describe('apply to job', () => {
         driver
           .findElements(
             By.css(
-              `input[aria-label="jobApplication-${await applicationsForJobs[0].getId()}"]`
+              `input[aria-label="job-application-${await applicationsForJobs[0].getId()}"]`
             )
           )
           .then((elements) => elements.length === 0),
@@ -259,7 +317,7 @@ describe('apply to job', () => {
     expect(
       await driver.findElements(
         By.css(
-          `input[aria-label="jobApplication-${await applicationsForJobs[0].getId()}"]`
+          `input[aria-label="job-application-${await applicationsForJobs[0].getId()}"]`
         )
       )
     ).toHaveLength(0);

@@ -1,9 +1,10 @@
 const db = require('mysql');
 const Mysql = require('../../services/Mysql');
+const parseIntAndDbEscape = require('../Common');
 
 class Company {
   constructor(userId) {
-    this.userId = parseInt(userId, 10);
+    this.userId = parseIntAndDbEscape(userId);
     this.initialize = this.initializeCompany();
   }
 
@@ -85,7 +86,7 @@ class Company {
       await Mysql.query(
         `INSERT INTO company_equipment (company, equipment, what) VALUES (${
           this.companyId
-        }, ${parseInt(equip.value, 10)}, ${db.escape(equip.what)});`
+        }, ${parseIntAndDbEscape(equip.value)}, ${db.escape(equip.what)});`
       );
     });
     // wipe out all old skills
@@ -97,7 +98,7 @@ class Company {
       await Mysql.query(
         `INSERT INTO company_skills (company, skill) VALUES (${
           this.companyId
-        }, ${parseInt(skill.value, 10)});`
+        }, ${parseIntAndDbEscape(skill.value, 10)});`
       );
     });
   }

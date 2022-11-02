@@ -2,10 +2,13 @@ const db = require('mysql');
 const htmlEncode = require('js-htmlencode');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');
+const parseIntAndDbEscape = require('../Common');
 
 const JobApplication = class {
   constructor(id) {
-    this.id = parseInt(id, 10);
+    if (id) {
+      this.id = parseIntAndDbEscape(id);
+    }
   }
 
   static create(
@@ -25,27 +28,26 @@ const JobApplication = class {
     const newJobApplication = new JobApplication();
     newJobApplication.instancePromise = (async () => {
       const result = await Mysql.query(
-        `INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (${parseInt(
-          jobId,
-          10
-        )}, ${parseInt(userId, 10)}, ${parseInt(companyId, 10)}, ${db.escape(
-          userName
-        )}, ${db.escape(companyName)}, ${db.escape(website)}, ${db.escape(
-          insta
-        )}, ${db.escape(fb)}, ${db.escape(experience)});`
+        `INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (${parseIntAndDbEscape(
+          jobId
+        )}, ${parseIntAndDbEscape(userId)}, ${parseIntAndDbEscape(
+          companyId
+        )}, ${db.escape(userName)}, ${db.escape(companyName)}, ${db.escape(
+          website
+        )}, ${db.escape(insta)}, ${db.escape(fb)}, ${db.escape(experience)});`
       );
       equipment.map(async (equip) => {
         await Mysql.query(
           `INSERT INTO job_applications_equipment (job_application, equipment, what) VALUES (${
             result.insertId
-          }, ${parseInt(equip.value, 10)}, ${db.escape(equip.what)});`
+          }, ${parseIntAndDbEscape(equip.value)}, ${db.escape(equip.what)});`
         );
       });
       skills.map(async (skill) => {
         await Mysql.query(
           `INSERT INTO job_applications_skills (job_application, skill) VALUES (${
             result.insertId
-          }, ${parseInt(skill.value, 10)});`
+          }, ${parseIntAndDbEscape(skill.value)});`
         );
       });
       if (portfolio && Array.isArray(portfolio)) {
@@ -65,13 +67,13 @@ const JobApplication = class {
       newJobApplication.id = result.insertId;
       // set the notification
       const job = await Mysql.query(
-        `SELECT * FROM jobs WHERE id = ${parseInt(jobId, 10)};`
+        `SELECT * FROM jobs WHERE id = ${parseIntAndDbEscape(jobId)};`
       );
       if (job && job.length) {
         await Mysql.query(
           `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${
             job[0].user
-          }, 'applied', ${parseInt(jobId, 10)}, ${result.insertId});`
+          }, 'applied', ${parseIntAndDbEscape(jobId)}, ${result.insertId});`
         );
         // send out the email
         const user = await Mysql.query(
@@ -81,17 +83,15 @@ const JobApplication = class {
           Email.sendMail(
             user[0].email,
             'SNNAP: New Job Application',
-            `${userName} applied to your job\nhttps://snnap.app/jobs#${parseInt(
-              jobId,
-              10
+            `${userName} applied to your job\nhttps://snnap.app/jobs#${parseIntAndDbEscape(
+              jobId
             )}`,
             `<a href='https://snnap.app/profile/${
               user[0].username
             }'>${htmlEncode(
               userName
-            )}</a> applied to your <a href='https://snnap.app/jobs#${parseInt(
-              jobId,
-              10
+            )}</a> applied to your <a href='https://snnap.app/jobs#${parseIntAndDbEscape(
+              jobId
             )}'>job</a>`
           );
         }
@@ -107,15 +107,17 @@ const JobApplication = class {
 
   static async getApplications(jobId) {
     return Mysql.query(
-      `SELECT * FROM job_applications WHERE job_id = ${parseInt(jobId, 10)};`
+      `SELECT * FROM job_applications WHERE job_id = ${parseIntAndDbEscape(
+        jobId,
+        10
+      )};`
     );
   }
 
   static async getUserApplications(user) {
     return Mysql.query(
-      `SELECT * FROM job_applications WHERE job_applications.user_id = ${parseInt(
-        user,
-        10
+      `SELECT * FROM job_applications WHERE job_applications.user_id = ${parseIntAndDbEscape(
+        user
       )};`
     );
   }

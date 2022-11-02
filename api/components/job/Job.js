@@ -1,10 +1,13 @@
 const db = require('mysql');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');
+const parseIntAndDbEscape = require('../Common');
 
 const Job = class {
   constructor(id) {
-    this.id = parseInt(id, 10);
+    if (id) {
+      this.id = parseIntAndDbEscape(id, 10);
+    }
   }
 
   static create(
@@ -23,13 +26,12 @@ const Job = class {
     newJob.instancePromise = (async () => {
       const dateTime = `${date} 00:00:00`;
       const result = await Mysql.query(
-        `INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${parseInt(
-          user,
-          10
-        )}, ${parseInt(type, 10)}, ${db.escape(details)}, ${parseFloat(
+        `INSERT INTO jobs (user, type, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${parseIntAndDbEscape(
+          user
+        )}, ${parseIntAndDbEscape(type)}, ${db.escape(details)}, ${parseFloat(
           pay
-        )}, ${parseInt(duration, 10)}, ${
-          durationMax ? parseInt(durationMax, 10) : null
+        )}, ${parseIntAndDbEscape(duration)}, ${
+          durationMax ? parseIntAndDbEscape(durationMax) : null
         }, ${db.escape(dateTime)}, ${db.escape(location.loc)}, ${parseFloat(
           location.lat
         )},${parseFloat(location.lon)});`
@@ -38,14 +40,14 @@ const Job = class {
         await Mysql.query(
           `INSERT INTO job_equipment (job, equipment) VALUES (${
             result.insertId
-          }, ${parseInt(equip.value, 10)});`
+          }, ${parseIntAndDbEscape(equip.value)});`
         );
       });
       skills.map(async (skill) => {
         await Mysql.query(
           `INSERT INTO job_skills (job, skill) VALUES (${
             result.insertId
-          }, ${parseInt(skill.value, 10)});`
+          }, ${parseIntAndDbEscape(skill.value)});`
         );
       });
       newJob.id = result.insertId;
@@ -78,9 +80,8 @@ const Job = class {
 
   static async getUserJobs(user) {
     return Mysql.query(
-      `SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = ${parseInt(
-        user,
-        10
+      `SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = ${parseIntAndDbEscape(
+        user
       )} ORDER BY jobs.date_time;`
     );
   }
@@ -128,9 +129,8 @@ const Job = class {
   async selectApplication(jobApplication) {
     await this.instancePromise;
     await Mysql.query(
-      `UPDATE jobs SET jobs.application_selected = ${parseInt(
-        jobApplication,
-        10
+      `UPDATE jobs SET jobs.application_selected = ${parseIntAndDbEscape(
+        jobApplication
       )}, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = ${
         this.id
       };`
@@ -138,17 +138,15 @@ const Job = class {
     // set the notification
     const jobApp = (
       await Mysql.query(
-        `SELECT * FROM job_applications WHERE id = ${parseInt(
-          jobApplication,
-          10
+        `SELECT * FROM job_applications WHERE id = ${parseIntAndDbEscape(
+          jobApplication
         )};`
       )
     )[0];
     await Mysql.query(
-      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${parseInt(
-        jobApp.user_id,
-        10
-      )}, 'selected', ${this.id}, ${parseInt(jobApplication, 10)});`
+      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${parseIntAndDbEscape(
+        jobApp.user_id
+      )}, 'selected', ${this.id}, ${parseIntAndDbEscape(jobApplication)});`
     );
     const jobUserId = (await this.getInfo()).user;
     if ((await Job.getUserSettings(jobUserId)).email_notifications) {
@@ -164,17 +162,15 @@ const Job = class {
         'SNNAP: Job Application Selected',
         `${jobUser[0].first_name} ${
           jobUser[0].last_name
-        } selected your job application\nhttps://snnap.app/job-applications#${parseInt(
-          jobApplication,
-          10
+        } selected your job application\nhttps://snnap.app/job-applications#${parseIntAndDbEscape(
+          jobApplication
         )}`,
         `<a href='https://snnap.app/profile/${jobUser[0].username}'>${
           jobUser[0].first_name
         } ${
           jobUser[0].last_name
-        }</a> selected your <a href='https://snnap.app/job-applications#${parseInt(
-          jobApplication,
-          10
+        }</a> selected your <a href='https://snnap.app/job-applications#${parseIntAndDbEscape(
+          jobApplication
         )}'>job application</a>`
       );
     }
@@ -182,7 +178,7 @@ const Job = class {
 
   static async getUserSettings(jobUser) {
     const settings = await Mysql.query(
-      `SELECT * FROM settings WHERE user = ${parseInt(jobUser, 10)};`
+      `SELECT * FROM settings WHERE user = ${parseIntAndDbEscape(jobUser)};`
     );
     return settings[0];
   }

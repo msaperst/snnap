@@ -133,10 +133,10 @@ describe('profile accordion', () => {
     );
     expect(
       headers.firstChild.firstChild.firstChild.getAttribute('aria-label')
-    ).toEqual('jobApplication-3');
+    ).toEqual('job-application-3');
     expect(
       headers.firstChild.firstChild.firstChild.getAttribute('name')
-    ).toEqual('jobApplications-2');
+    ).toEqual('job-applications-2');
     expect(
       headers.firstChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('radio');
