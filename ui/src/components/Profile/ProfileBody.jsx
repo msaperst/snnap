@@ -30,16 +30,21 @@ function ProfileBody(props) {
 
   return (
     <>
-      <Row className="mb-3">
+      <Row id={`job-application-${company.id}-links`} className="mb-3">
         <IconLink link={company.website} icon={<Globe className="icon" />} />
         <IconLink link={company.insta} icon={<Instagram className="icon" />} />
         <IconLink link={company.fb} icon={<Facebook className="icon" />} />
       </Row>
       <Row className="mb-3">
-        <Col className="text-justify">{company.experience}</Col>
+        <Col
+          id={`job-application-${company.id}-experience`}
+          className="text-justify"
+        >
+          {company.experience}
+        </Col>
       </Row>
       <Row className="mb-3">
-        <Col md={8}>
+        <Col id={`job-application-${company.id}-equipment`} md={8}>
           <h4>Equipment</h4>
           {equipmentItems.map((option) => (
             <div key={option.value}>
@@ -47,14 +52,14 @@ function ProfileBody(props) {
             </div>
           ))}
         </Col>
-        <Col md={4}>
+        <Col id={`job-application-${company.id}-skills`} md={4}>
           <h4>Skills</h4>
           {skillItems.map((option) => (
             <div key={option.value}>{option.name}</div>
           ))}
         </Col>
       </Row>
-      <Row>
+      <Row id={`job-application-${company.id}-portfolio`}>
         <h4>Portfolio</h4>
         <Col>
           {portfolioItems.map((portfolioItem) => (

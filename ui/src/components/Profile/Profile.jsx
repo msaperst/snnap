@@ -12,7 +12,7 @@ function Profile(props) {
 
   useEffect(() => {
     if (company.job_id) {
-      userService.get(company.user).then((u) => {
+      userService.get(company.user_id).then((u) => {
         setFullUser(u);
       });
       jobService.getJobApplication(company.id).then((c) => {
