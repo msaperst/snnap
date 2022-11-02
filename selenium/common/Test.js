@@ -149,10 +149,11 @@ class Test {
     return company.getInfo();
   }
 
-  static async addFullJob(user, type, date, location, details) {
+  static async addFullJob(user, type, subtype, date, location, details) {
     return Job.create(
       user,
       type,
+      subtype,
       location,
       details,
       200,
@@ -168,6 +169,7 @@ class Test {
     return this.addFullJob(
       user,
       type,
+      1,
       date,
       {
         lat: 38.8461234,

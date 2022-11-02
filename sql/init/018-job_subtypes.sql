@@ -11,6 +11,6 @@ CREATE TABLE IF NOT EXISTS job_subtypes
 
 INSERT INTO job_subtypes (type, plural) VALUES ('Second Photographer', 'Second Photographers');
 INSERT INTO job_subtypes (type, plural) VALUES ('Lead Photographer', 'Lead Photographers');
-INSERT INTO job_subtypes (type, plural) VALUES ('Assistant', 'Assistant');
-INSERT INTO job_subtypes (type, plural) VALUES ('Photobooth Attendant', 'Photobooth Attendant');
+INSERT INTO job_subtypes (type, plural) VALUES ('Assistant', 'Assistants');
+INSERT INTO job_subtypes (type, plural) VALUES ('Photobooth Attendant', 'Photobooth Attendants');
 INSERT INTO job_subtypes (type, plural) VALUES ('Other', 'Other');
