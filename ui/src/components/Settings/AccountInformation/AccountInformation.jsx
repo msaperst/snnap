@@ -40,6 +40,10 @@ function AccountInformation(props) {
             setValidated,
             'Account Information Updated'
           );
+          // update email in localstorage
+          const storage = JSON.parse(localStorage.getItem('currentUser'));
+          storage.email = formData.Email;
+          localStorage.setItem('currentUser', JSON.stringify(storage));
         },
         (error) => {
           setIsSubmitting(false);

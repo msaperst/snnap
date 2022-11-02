@@ -76,6 +76,14 @@ function PersonalInformation(props) {
               setValidated,
               'Personal Information Updated'
             );
+            // update avatar in localstorage
+            const storage = JSON.parse(localStorage.getItem('currentUser'));
+            storage.firstName = formData['First Name'];
+            storage.lastName = formData['Last Name'];
+            storage.lat = formData.City.properties.lat;
+            storage.lon = formData.City.properties.lon;
+            storage.loc = formData.City.properties.formatted;
+            localStorage.setItem('currentUser', JSON.stringify(storage));
           },
           (error) => {
             setIsSubmitting(false);
