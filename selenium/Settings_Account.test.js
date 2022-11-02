@@ -40,9 +40,9 @@ describe('settings account page', () => {
 
   it('by default the user initials are shown as the avatar', async () => {
     driver.wait(until.elementLocated(By.css('h2')), 5000);
-    expect(
-      await driver.findElement(By.className('initials')).getText()
-    ).toEqual('TU');
+    const avatar = driver.findElement(By.className('initials'));
+    await driver.wait(until.elementTextIs(avatar, 'TU'), 5000);
+    expect(await avatar.getText()).toEqual('TU');
     expect(
       await driver.findElement(By.className('circle')).getAttribute('style')
     ).toEqual('');
