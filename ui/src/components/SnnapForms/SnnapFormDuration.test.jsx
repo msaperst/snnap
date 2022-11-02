@@ -1,11 +1,7 @@
 import React from 'react';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount } from 'enzyme';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SnnapFormDuration from './SnnapFormDuration';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 describe('snnap form input', () => {
   // basic input field data
@@ -47,14 +43,14 @@ describe('snnap form input', () => {
     const updateX = (key, value) => {
       x = value;
     };
-    const component = mount(
+    const { container } = render(
       <SnnapFormDuration name="123" onChange={updateX} />
     );
     const event = {
       preventDefault() {},
       target: { value: '1234' },
     };
-    component.find('.form-control').simulate('change', event);
+    fireEvent.change(container.firstChild.firstChild.firstChild, event);
     expect(x).toEqual('1234');
   });
 
@@ -148,18 +144,19 @@ describe('snnap form input', () => {
       x = key;
       y = value;
     };
-    const component = mount(
+    const { getAllByRole } = render(
       <SnnapFormDuration name="123" onChange={updateX} />
     );
-    component.find('button').simulate('click');
+    fireEvent.click(getAllByRole('button')[0]);
     const event = {
       preventDefault() {},
       target: { value: '1234' },
     };
-    component.find('.form-control').at(0).simulate('change', event);
+    // expect(container.children).toHaveLength(109);
+    fireEvent.change(getAllByRole('spinbutton')[0], event);
     expect(x).toEqual('123');
     expect(y).toEqual('1234');
-    component.find('.form-control').at(1).simulate('change', event);
+    fireEvent.change(getAllByRole('spinbutton')[1], event);
     expect(x).toEqual('123Range');
     expect(y).toEqual('1234');
   });
@@ -285,11 +282,11 @@ describe('snnap form input', () => {
       x = key;
       y = value;
     };
-    const component = mount(
+    const { getByRole } = render(
       <SnnapFormDuration name="123" onChange={updateX} />
     );
-    component.find('button').simulate('click');
-    component.find('button').simulate('click');
+    fireEvent.click(getByRole('button'));
+    fireEvent.click(getByRole('button'));
     expect(x).toEqual('123Range');
     expect(y).toBeNull();
   });
