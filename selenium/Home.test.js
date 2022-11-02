@@ -196,8 +196,10 @@ describe('home page', () => {
   async function getCardDate(i) {
     driver.wait(until.elementsLocated(By.className('card')), 5000);
     const cards = await driver.findElements(By.className('card'));
-    const first = await cards[i].findElements(By.className('col-md-3'));
-    const firstDate = await first[1].getText();
-    return Date.parse(firstDate);
+    const dateTime = await (
+      await cards[i].findElement(By.className('font-italic'))
+    ).getText();
+    const date = dateTime.split(' ')[0];
+    return Date.parse(date);
   }
 });

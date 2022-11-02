@@ -66,18 +66,27 @@ function Job(props) {
           <Col md={7}>
             <Row>
               <Col md={4} xs={6}>
-                <Card.Title>{`${user.first_name} ${user.last_name}`}</Card.Title>
-                <Card.Subtitle>{company.name}</Card.Subtitle>
+                <Card.Title
+                  id={`job-${job.id}-name`}
+                >{`${user.first_name} ${user.last_name}`}</Card.Title>
+                <Card.Subtitle id={`job-${job.id}-company`}>
+                  {company.name}
+                </Card.Subtitle>
               </Col>
               <Col md={4} xs={6}>
-                <Card.Title>{job.type}</Card.Title>
-                <Card.Subtitle>TBD - Coming with LA Fixes</Card.Subtitle>
+                <Card.Title id={`job-${job.id}-type`}>{job.type}</Card.Title>
+                <Card.Subtitle id={`job-${job.id}-subtype`}>
+                  TBD - Coming with LA Fixes
+                </Card.Subtitle>
               </Col>
               <Col md={4}>
-                <Card.Text>
+                <Card.Text id={`job-${job.id}-location`}>
                   {job.loc.replace(', United States of America', '')}
                 </Card.Text>
-                <Card.Text className="font-italic">
+                <Card.Text
+                  className="font-italic"
+                  id={`job-${job.id}-date-time`}
+                >
                   {new Intl.DateTimeFormat('en-US', {
                     // weekday: 'long',
                     year: 'numeric',
@@ -91,7 +100,9 @@ function Job(props) {
             </Row>
             <Row className="mt-2">
               <Col>
-                <Card.Text>{job.details}</Card.Text>
+                <Card.Text id={`job-${job.id}-details`}>
+                  {job.details}
+                </Card.Text>
               </Col>
             </Row>
           </Col>
