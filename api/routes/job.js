@@ -9,6 +9,7 @@ const Common = require('./common');
 
 const newJobValidation = [
   check('type', 'Please provide a valid job type.').isNumeric(),
+  check('subtype', 'Please provide a valid looking for.').isNumeric(),
   check('location', 'Please select a valid city from the drop down.')
     .not()
     .isEmpty(),
@@ -33,6 +34,7 @@ router.post('/new-job', newJobValidation, async (req, res) => {
     Job.create(
       await user.getId(),
       req.body.type,
+      req.body.subtype,
       req.body.location,
       req.body.details,
       req.body.pay,
@@ -142,6 +144,12 @@ router.get('/job-applications/:id', async (req, res) => {
 router.get('/types', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () =>
     res.send(await Job.getJobTypes())
+  );
+});
+
+router.get('/subtypes', async (req, res) => {
+  await Common.basicAuthExecuteAndReturn(req, res, async () =>
+    res.send(await Job.getJobSubtypes())
   );
 });
 

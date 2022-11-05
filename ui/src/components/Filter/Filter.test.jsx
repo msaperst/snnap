@@ -34,6 +34,11 @@ describe('filter', () => {
     { id: 2, type: 'Misc', plural: 'Misc' },
     { id: 3, type: 'Other', plural: 'Others' },
   ];
+  const subtypes = [
+    { id: 1, type: 'Assistant', plural: 'Assistants' },
+    { id: 2, type: 'Second', plural: 'Seconds' },
+    { id: 3, type: 'Other', plural: 'Others' },
+  ];
   const jobs = [
     {
       id: 1,
@@ -41,6 +46,7 @@ describe('filter', () => {
       lon: '-77.3063733',
       details: 'some details',
       typeId: 1,
+      subtypeId: 1,
     },
     {
       id: 2,
@@ -48,6 +54,7 @@ describe('filter', () => {
       lon: '-77.0470229',
       details: 'other details',
       typeId: 2,
+      subtypeId: 2,
     },
     {
       id: 3,
@@ -55,6 +62,7 @@ describe('filter', () => {
       lon: '-77.43540260778344',
       details: 'third details',
       typeId: 2,
+      subtypeId: 2,
     },
     {
       id: 4,
@@ -62,6 +70,7 @@ describe('filter', () => {
       lon: '-77.3063733',
       details: 'fourth details',
       typeId: 2,
+      subtypeId: 2,
     },
     {
       id: 5,
@@ -69,6 +78,7 @@ describe('filter', () => {
       lon: '-72.5467790',
       details: 'fifth',
       typeId: 2,
+      subtypeId: 2,
     },
   ];
 
@@ -76,6 +86,7 @@ describe('filter', () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
     jobService.jobService.getJobTypes.mockResolvedValue(types);
+    jobService.jobService.getJobSubtypes.mockResolvedValue(subtypes);
     jobService.jobService.getEquipment.mockResolvedValue([]);
     jobService.jobService.getSkills.mockResolvedValue([]);
     const data = { message: jobs };
@@ -103,12 +114,16 @@ describe('filter', () => {
   it('loads our filtering buttons', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(3);
+    expect(buttons).toHaveLength(6);
 
     for (let i = 0; i < buttons.length; i++) {
       expect(buttons[i]).toHaveClass('btn-filter btn btn-primary');
       expect(buttons[i].getAttribute('type')).toEqual('button');
-      expect(buttons[i]).toHaveTextContent(types[i].plural);
+      if (i < types.length) {
+        expect(buttons[i]).toHaveTextContent(types[i].plural);
+      } else {
+        expect(buttons[i]).toHaveTextContent(subtypes[i - types.length].plural);
+      }
     }
   });
 
@@ -149,6 +164,7 @@ describe('filter', () => {
           lat: '38.8462236',
           lon: '-77.3063733',
           typeId: 1,
+          subtypeId: 1,
         },
       ],
     };
@@ -229,6 +245,18 @@ describe('filter', () => {
     expectOneMatch();
   });
 
+  it('updates displayed jobs based on selected sub filter button', async () => {
+    await basicFilter();
+    const buttons = screen.getAllByRole('button');
+    act(() => {
+      fireEvent.click(buttons[3]);
+    });
+    expect(buttons[3]).toHaveClass('btn-filter btn btn-secondary');
+    expect(buttons[1]).toHaveClass('btn-filter btn btn-primary');
+
+    expectOneMatch();
+  });
+
   it('updates displayed jobs based on all selected filter button', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
@@ -240,6 +268,24 @@ describe('filter', () => {
     });
     expect(buttons[0]).toHaveClass('btn-filter btn btn-secondary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-secondary');
+
+    const header = screen.getByRole('heading', { level: 3 });
+    expect(header.textContent).toEqual('Found 0 Jobs');
+    const cards = screen.queryByText('job card');
+    expect(cards).toBeNull();
+  });
+
+  it('updates displayed jobs based on all selected sub filter button', async () => {
+    await basicFilter();
+    const buttons = screen.getAllByRole('button');
+    act(() => {
+      fireEvent.click(buttons[4]);
+    });
+    act(() => {
+      fireEvent.click(buttons[3]);
+    });
+    expect(buttons[3]).toHaveClass('btn-filter btn btn-secondary');
+    expect(buttons[4]).toHaveClass('btn-filter btn btn-secondary');
 
     const header = screen.getByRole('heading', { level: 3 });
     expect(header.textContent).toEqual('Found 0 Jobs');
@@ -261,6 +307,24 @@ describe('filter', () => {
     });
     expect(buttons[0]).toHaveClass('btn-filter btn btn-primary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-secondary');
+
+    expectOneMatch();
+  });
+
+  it('updates displayed jobs based on unselected selected sub filter button', async () => {
+    await basicFilter();
+    const buttons = screen.getAllByRole('button');
+    act(() => {
+      fireEvent.click(buttons[3]);
+    });
+    act(() => {
+      fireEvent.click(buttons[4]);
+    });
+    act(() => {
+      fireEvent.click(buttons[3]);
+    });
+    expect(buttons[3]).toHaveClass('btn-filter btn btn-primary');
+    expect(buttons[4]).toHaveClass('btn-filter btn btn-secondary');
 
     expectOneMatch();
   });

@@ -19,6 +19,7 @@ describe('home page', () => {
     await Test.addFullJob(
       jobCreatorId,
       2,
+      1,
       '2023-03-12',
       {
         lat: 38.8051095,
@@ -72,13 +73,19 @@ describe('home page', () => {
       until.elementsLocated(By.className('btn-filter')),
       5000
     );
-    expect(filterButtons).toHaveLength(6);
+    expect(filterButtons).toHaveLength(11);
     expect(await filterButtons[0].getText()).toEqual("B'nai Mitzvahs");
     expect(await filterButtons[1].getText()).toEqual('Commercial Events');
     expect(await filterButtons[2].getText()).toEqual('Portraits');
     expect(await filterButtons[3].getText()).toEqual('Studio Work');
     expect(await filterButtons[4].getText()).toEqual('Weddings');
     expect(await filterButtons[5].getText()).toEqual('Other');
+
+    expect(await filterButtons[6].getText()).toEqual('Assistants');
+    expect(await filterButtons[7].getText()).toEqual('Lead Photographers');
+    expect(await filterButtons[8].getText()).toEqual('Photobooth Attendants');
+    expect(await filterButtons[9].getText()).toEqual('Second Photographers');
+    expect(await filterButtons[10].getText()).toEqual('Other');
   });
 
   it('displays all entries unfiltered', async () => {

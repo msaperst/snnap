@@ -57,8 +57,8 @@ describe('new job', () => {
 
   it('shows no error messages upon opening the form', async () => {
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
-    expect(feedbacks).toHaveLength(6);
-    for (let i = 0; i < 6; i++) {
+    expect(feedbacks).toHaveLength(7);
+    for (let i = 0; i < 7; i++) {
       expect(await feedbacks[i].isDisplayed()).toBeFalsy();
     }
     const alerts = await modal.findElements(By.className('alert-danger'));
@@ -68,34 +68,37 @@ describe('new job', () => {
   it('shows errors when submitting an empty form', async () => {
     (await modal.findElement(By.id('createNewRequestButton'))).click();
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
       expect(await feedbacks[i].isDisplayed()).toBeTruthy();
     }
     expect(await feedbacks[0].getText()).toEqual(
       'Please provide a valid job type.'
     );
     expect(await feedbacks[1].getText()).toEqual(
-      'Please select a valid city from the drop down.'
+      'Please provide a valid looking for.'
     );
     expect(await feedbacks[2].getText()).toEqual(
-      'Please provide a valid date.'
+      'Please select a valid city from the drop down.'
     );
     expect(await feedbacks[3].getText()).toEqual(
-      'Please provide a valid job details.'
+      'Please provide a valid date.'
     );
     expect(await feedbacks[4].getText()).toEqual(
+      'Please provide a valid job details.'
+    );
+    expect(await feedbacks[5].getText()).toEqual(
       'Please provide a valid duration.'
     );
-    expect(await feedbacks[5].getText()).toEqual('Please provide a valid pay.');
+    expect(await feedbacks[6].getText()).toEqual('Please provide a valid pay.');
     const alerts = await modal.findElements(By.className('alert-danger'));
     expect(alerts).toHaveLength(0);
   });
 
   it('shows errors upon submitting when selecting previous day', async () => {
-    await enterData(2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
+    await enterData(2, 2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
     for (let i = 0; i < 6; i++) {
-      if (i === 2) {
+      if (i === 3) {
         expect(await feedbacks[i].isDisplayed()).toBeTruthy();
         expect(await feedbacks[i].getText()).toEqual(
           'Please provide a valid date.'
@@ -112,7 +115,7 @@ describe('new job', () => {
   });
 
   it('allows clearing of response alert', async () => {
-    await enterData(2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
+    await enterData(2, 2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
     await driver
       .wait(until.elementLocated(By.css('[aria-label="Close alert"]')))
       .click();
@@ -122,7 +125,7 @@ describe('new job', () => {
 
   it('closes modal with successful submission of the form', async () => {
     const cards = (await driver.findElements(By.className('card'))).length;
-    await enterData(2, 'Fairfax', 'New Deetz', '100', '100', '10/13/2031');
+    await enterData(2, 1, 'Fairfax', 'New Deetz', '100', '100', '10/13/2031');
     await driver.wait(
       () =>
         driver
@@ -143,13 +146,26 @@ describe('new job', () => {
     );
   });
 
-  async function enterData(option, location, details, pay, duration, date) {
+  async function enterData(
+    type,
+    subtype,
+    location,
+    details,
+    pay,
+    duration,
+    date
+  ) {
     const select = driver.wait(
       until.elementLocated(By.id('formJobType')),
       5000
     );
     await driver.wait(until.elementIsEnabled(select), 5000);
-    await (await select.findElements(By.css('option')))[option].click();
+    await (await select.findElements(By.css('option')))[type].click();
+    const select2 = driver.wait(
+      until.elementLocated(By.id('formLookingFor')),
+      5000
+    );
+    await (await select2.findElements(By.css('option')))[subtype].click();
     await (
       await modal.findElement(By.css('[placeholder="City"]'))
     ).sendKeys(location);
