@@ -26,12 +26,6 @@ const signupValidation = [
   }),
 ];
 
-const loginValidation = [
-  check('username', 'Please include a valid username.').not().isEmpty(),
-  check('password', 'Please include a valid password.').not().isEmpty(),
-  check('rememberMe', 'Remember me must be true or false.').isBoolean(),
-];
-
 router.post('/register', signupValidation, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -65,6 +59,12 @@ router.post('/register', signupValidation, async (req, res) => {
   }
 });
 
+const loginValidation = [
+  check('username', 'Please include a valid username.').not().isEmpty(),
+  check('password', 'Please include a valid password.').not().isEmpty(),
+  check('rememberMe', 'Remember me must be true or false.').isBoolean(),
+];
+
 router.post('/login', loginValidation, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -90,6 +90,60 @@ router.post('/login', loginValidation, async (req, res) => {
           msg: error.message,
         });
     }
+  }
+});
+
+const forgotValidation = [
+  check('email', 'Please provide a valid email.')
+    .isEmail()
+    .normalizeEmail({ gmail_remove_dots: true }),
+];
+
+router.post('/forgot', forgotValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
+  try {
+    await User.forgot(req.body.email);
+    return res.status(200).send({
+      msg: 'successfully sent reset code',
+    });
+  } catch (error) {
+    return res.status(409).send({
+      msg: error.message,
+    });
+  }
+});
+
+const resetValidation = [
+  check('email', 'Please provide a valid email.')
+    .isEmail()
+    .normalizeEmail({ gmail_remove_dots: true }),
+  check('code', 'Please provide a valid code.').not().isEmpty(),
+  check('password', 'Password must be 6 or more characters.').isLength({
+    min: 6,
+  }),
+];
+
+router.post('/reset', resetValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send(errors.errors[0]);
+  }
+  try {
+    const username = await User.reset(
+      req.body.email,
+      req.body.code,
+      req.body.password
+    );
+    return res.status(200).send({
+      username,
+    });
+  } catch (error) {
+    return res.status(409).send({
+      msg: error.message,
+    });
   }
 });
 

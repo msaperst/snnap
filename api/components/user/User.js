@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Mysql = require('../../services/Mysql');
 const parseIntAndDbEscape = require('../Common');
+const Email = require('../../services/Email');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-jwt-token';
 
@@ -192,6 +193,56 @@ const User = class {
     } else {
       throw new Error("Current password doesn't match existing password.");
     }
+  }
+
+  static async forgot(email) {
+    const user = await Mysql.query(
+      `SELECT id, email FROM users WHERE email = ${db.escape(email)}`
+    );
+    if (user && user.length) {
+      const n = (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6);
+      await Mysql.query(
+        `UPDATE users SET password_reset_code = ${db.escape(
+          n
+        )}, password_reset_count = 0 WHERE id = ${user[0].id}`
+      );
+      setTimeout(() => {
+        Mysql.query(
+          `UPDATE users SET password_reset_code = NULL WHERE id = ${user[0].id}`
+        );
+      }, 600000);
+      Email.sendMail(
+        user[0].email,
+        'SNNAP: Password Reset',
+        `We just recieved a password reset request from you.\nEnter the below code into the form.\n${n}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`,
+        `We just recieved a password reset request from you.<br/>Enter the below code into the form.<br/><b>${n}</b><br/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`
+      );
+    }
+  }
+
+  static async reset(email, code, password) {
+    await Mysql.query(
+      `UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = ${db.escape(
+        email
+      )}`
+    );
+    const user = await Mysql.query(
+      `SELECT id, username FROM users WHERE email = ${db.escape(
+        email
+      )} AND password_reset_code = ${db.escape(
+        code
+      )} AND password_reset_count < 4`
+    );
+    if (user && user.length) {
+      const hash = await bcrypt.hash(password, 10);
+      await Mysql.query(
+        `UPDATE users SET password = ${db.escape(
+          hash
+        )}, password_reset_code = NULL WHERE id = ${user[0].id}`
+      );
+      return user[0].username;
+    }
+    throw new Error('Supplied code does not match!');
   }
 
   async updateNotificationSettings(email, push) {
