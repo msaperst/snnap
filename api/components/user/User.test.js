@@ -6,6 +6,9 @@ const User = require('./User');
 jest.mock('../../services/Mysql');
 const Mysql = require('../../services/Mysql');
 
+jest.mock('../../services/Email');
+const Email = require('../../services/Email');
+
 describe('User', () => {
   const location = {
     loc: 'Fairfax, VA, United States of America',
@@ -13,25 +16,42 @@ describe('User', () => {
     lon: -71.2345,
   };
   const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+  let hash;
+  let mysqlSpy;
+  let emailSpy;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+
+    mysqlSpy = jest.spyOn(Mysql, 'query');
+    emailSpy = jest.spyOn(Email, 'sendMail');
+    hash = await bcrypt.hash('password', 10);
   });
 
   it('throws an error looking up the user via login', async () => {
     Mysql.query.mockResolvedValue([]);
 
-    await expect(User.login('Bob', 'password').getUsername()).rejects.toEqual(
-      new Error('Username or password is incorrect!')
+    await expect(
+      User.login('Bob123@#$', 'password').getUsername()
+    ).rejects.toEqual(new Error('Username or password is incorrect!'));
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE username = 'Bob123';"
     );
   });
 
   it('throws an error when no password is provided via login', async () => {
-    Mysql.query.mockResolvedValue([{ username: 'Bob' }]);
+    Mysql.query.mockResolvedValue([{ username: 'Bob123' }]);
 
-    await expect(User.login('Bob', 'password').getUsername()).rejects.toEqual(
-      new Error('Username or password is incorrect!')
+    await expect(
+      User.login('Bob123', 'password').getUsername()
+    ).rejects.toEqual(new Error('Username or password is incorrect!'));
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE username = 'Bob123';"
     );
   });
 
@@ -41,10 +61,14 @@ describe('User', () => {
     await expect(User.login('Bob', 'password').getUsername()).rejects.toEqual(
       new Error('Username or password is incorrect!')
     );
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE username = 'Bob';"
+    );
   });
 
   it('sets the user values on valid credentials via login', async () => {
-    const hash = await bcrypt.hash('password', 10);
     Mysql.query.mockResolvedValue([
       {
         id: '1',
@@ -73,10 +97,22 @@ describe('User', () => {
       username: 'Bob',
       zip: undefined,
     });
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE username = 'Bob';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE users SET last_login = now() WHERE id = '1'"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      "SELECT * FROM users WHERE id = '1'"
+    );
   });
 
   it('sets the user values on valid credentials via login with remember me', async () => {
-    const hash = await bcrypt.hash('password', 10);
     Mysql.query.mockResolvedValue([
       {
         id: '1',
@@ -105,10 +141,22 @@ describe('User', () => {
       username: 'Bob',
       zip: undefined,
     });
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE username = 'Bob';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE users SET last_login = now() WHERE id = '1'"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      "SELECT * FROM users WHERE id = '1'"
+    );
   });
 
   it('sets the user values on valid credentials via login without remember me', async () => {
-    const hash = await bcrypt.hash('password', 10);
     Mysql.query.mockResolvedValue([
       {
         id: '1',
@@ -137,6 +185,19 @@ describe('User', () => {
       username: 'Bob',
       zip: undefined,
     });
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE username = 'Bob';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE users SET last_login = now() WHERE id = '1'"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      "SELECT * FROM users WHERE id = '1'"
+    );
   });
 
   it('throws an error when the email is already in the system via register', async () => {
@@ -154,6 +215,11 @@ describe('User', () => {
         'This email is already in our system. Try resetting your password.'
       )
     );
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@gmail.com');"
+    );
   });
 
   it('throws an error when the user is already in the system via register', async () => {
@@ -169,6 +235,15 @@ describe('User', () => {
         ''
       ).getUsername()
     ).rejects.toEqual(new Error('Sorry, that username is already in use.'));
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@gmail.com');"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "SELECT * FROM users WHERE LOWER(username) = LOWER('Robert');"
+    );
   });
 
   it('sets the user values on valid credentials via register', async () => {
@@ -199,6 +274,29 @@ describe('User', () => {
       loc: 'Fairfax, VA, United States of America',
       lon: -71.2345,
     });
+    expect(mysqlSpy).toHaveBeenCalledTimes(5);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@example.org');"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "SELECT * FROM users WHERE LOWER(username) = LOWER('Bobert');"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      expect.stringMatching(
+        /^INSERT INTO users \(first_name, last_name, email, username, password, loc, lat, lon\) VALUES \('Bob', 'Robert', 'bobert@example.org', 'Bobert', '.*', 'Fairfax, VA, United States of America', 5, -71.2345\);/
+      )
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      4,
+      'INSERT INTO settings (user) VALUE (15);'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      5,
+      'INSERT INTO companies (user) VALUE (15);'
+    );
   });
 
   it('fails if no token is set', () => {
@@ -263,6 +361,11 @@ describe('User', () => {
       username: 'Bob',
       zip: undefined,
     });
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
   });
 
   it('recognizes an invalid token and rejects with an error', async () => {
@@ -284,6 +387,11 @@ describe('User', () => {
       },
     ]);
     expect(await User.isAuth(`Bearer ${token}`)).toEqual(token);
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
   });
 
   it('updates the avatar in the db', async () => {
@@ -300,6 +408,15 @@ describe('User', () => {
     ]);
     const user = await User.auth(token);
     expect(await user.setAvatar('123')).toBeUndefined();
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE users SET avatar = '123' WHERE id = 1"
+    );
   });
 
   it('will not update account information if the email already exists', async () => {
@@ -308,6 +425,15 @@ describe('User', () => {
     await expect(
       user.setAccountInformation('msaperst@gmail.com', '1234567890')
     ).rejects.toEqual(new Error('This email is already in our system.'));
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('msaperst@gmail.com') AND id != undefined;"
+    );
   });
 
   it('updates the account information in the db', async () => {
@@ -328,6 +454,19 @@ describe('User', () => {
     expect(
       await user.setAccountInformation('msaperst@gmail.com', '1234567890')
     ).toBeUndefined();
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('msaperst@gmail.com') AND id != 1;"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      "UPDATE users SET email  = 'msaperst@gmail.com' WHERE id = 1"
+    );
   });
 
   it('updates the personal information in the db', async () => {
@@ -354,6 +493,15 @@ describe('User', () => {
         '22030'
       )
     ).toBeUndefined();
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE users SET first_name = 'Max', last_name = 'Saperstone', loc = NULL, lat = NaN, lon = NaN WHERE id = 1"
+    );
   });
 
   it('throws an error when the password has an error via update password', async () => {
@@ -371,12 +519,19 @@ describe('User', () => {
       ])
       .mockResolvedValue([]);
     const user = await User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValue([{ username: 'password' }]);
     await expect(user.updatePassword('Bob', 'password')).rejects.toEqual(
       new Error("Current password doesn't match existing password.")
     );
-    expect(spy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT password FROM users WHERE id = 1;'
+    );
   });
 
   it('throws an error when the password does not match via update password', async () => {
@@ -394,12 +549,19 @@ describe('User', () => {
       ])
       .mockResolvedValue([]);
     const user = await User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValue([{ password: 'password' }]);
     await expect(user.updatePassword('Bob', 'password')).rejects.toEqual(
       new Error("Current password doesn't match existing password.")
     );
-    expect(spy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT password FROM users WHERE id = 1;'
+    );
   });
 
   it('sets the password on valid credentials', async () => {
@@ -418,27 +580,36 @@ describe('User', () => {
       .mockResolvedValue([]);
     const user = User.auth(token);
     const hash = await bcrypt.hash('password', 10);
-    const spy = jest.spyOn(Mysql, 'query');
     Mysql.query.mockResolvedValue([{ password: hash }]);
     await user.updatePassword('password', 'password');
-    expect(spy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT password FROM users WHERE id = 1;'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      expect.stringMatching(/UPDATE users SET password = '.*' WHERE id = 1/)
+    );
   });
 
   it('gets nothing with bad id', async () => {
     Mysql.query.mockResolvedValueOnce([]);
     const user = User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getNotifications()).toEqual([]);
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
   });
 
   it('can get all notifications', async () => {
     Mysql.query.mockResolvedValueOnce([{ id: 1 }]).mockResolvedValue([1, 2]);
     const user = User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getNotifications()).toEqual([1, 2]);
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toHaveBeenNthCalledWith(
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
       'SELECT * FROM notifications WHERE to_user = 1 ORDER BY timestamp desc;'
     );
@@ -447,15 +618,14 @@ describe('User', () => {
   it('updates notification settings', async () => {
     Mysql.query.mockResolvedValueOnce([{ id: 1 }]);
     const user = User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     await user.updateNotificationSettings(1, false);
     await user.updateNotificationSettings('cheese', 0);
-    expect(spy).toHaveBeenCalledTimes(3);
-    expect(spy).toHaveBeenNthCalledWith(
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
       'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;'
     );
-    expect(spy).toHaveBeenNthCalledWith(
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
       'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;'
     );
@@ -464,10 +634,9 @@ describe('User', () => {
   it('marks a notification as read', async () => {
     Mysql.query.mockResolvedValueOnce([{ id: 1 }]);
     const user = User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     await user.markNotificationRead(5);
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toHaveBeenNthCalledWith(
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
       'UPDATE notifications SET reviewed = true WHERE id = 5 AND to_user = 1;'
     );
@@ -482,14 +651,13 @@ describe('User', () => {
       },
     ]);
     const user = User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getSettings()).toEqual({
       user: 1,
       email_notifications: 0,
       push_notifications: 1,
     });
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(spy).toHaveBeenNthCalledWith(
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
       'SELECT * FROM settings WHERE user = 1;'
     );
@@ -498,9 +666,12 @@ describe('User', () => {
   it('does not gets notification settings without id', async () => {
     Mysql.query.mockResolvedValueOnce([]);
     const user = User.auth(token);
-    const spy = jest.spyOn(Mysql, 'query');
     expect(await user.getSettings()).toEqual({});
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123'
+    );
   });
 
   it('gets basic user info as int', async () => {
@@ -510,16 +681,15 @@ describe('User', () => {
         first_name: 'max',
       },
     ]);
-    const spy = jest.spyOn(Mysql, 'query');
     expect(await User.getBasicUserInfo(1)).toEqual([
       {
         id: 1,
         first_name: 'max',
       },
     ]);
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
     // issue #574 addresses this issue with username/id overlap
-    expect(spy).toHaveBeenCalledWith(
+    expect(mysqlSpy).toHaveBeenCalledWith(
       "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 1 OR username = '1';"
     );
   });
@@ -531,16 +701,15 @@ describe('User', () => {
         first_name: 'max',
       },
     ]);
-    const spy = jest.spyOn(Mysql, 'query');
     expect(await User.getBasicUserInfo('max')).toEqual([
       {
         id: 1,
         first_name: 'max',
       },
     ]);
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
     // issue #574 addresses this issue with username/id overlap
-    expect(spy).toHaveBeenCalledWith(
+    expect(mysqlSpy).toHaveBeenCalledWith(
       "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max';"
     );
   });
@@ -552,17 +721,129 @@ describe('User', () => {
         first_name: 'max',
       },
     ]);
-    const spy = jest.spyOn(Mysql, 'query');
     expect(await User.getBasicUserInfo('*max1')).toEqual([
       {
         id: 1,
         first_name: 'max',
       },
     ]);
-    expect(spy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
     // issue #574 addresses this issue with username/id overlap
-    expect(spy).toHaveBeenCalledWith(
+    expect(mysqlSpy).toHaveBeenCalledWith(
       "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';"
+    );
+  });
+
+  it('does not set forget if nothing is not found', async () => {
+    Mysql.query.mockResolvedValueOnce();
+    await User.forgot('someemail@email.email');
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT id, email FROM users WHERE email = 'someemail@email.email';"
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('does not set forget if no user is found', async () => {
+    Mysql.query.mockResolvedValueOnce([]);
+    await User.forgot('someemail@email.email');
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT id, email FROM users WHERE email = 'someemail@email.email';"
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('sets forget if user is found', async () => {
+    jest.useFakeTimers();
+    Mysql.query.mockResolvedValueOnce([
+      { id: 4, email: 'someemail@email.email' },
+    ]);
+    await User.forgot('someemail@email.email');
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT id, email FROM users WHERE email = 'someemail@email.email';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      expect.stringMatching(
+        /UPDATE users SET password_reset_code = '[a-f0-9]{6}', password_reset_count = 0 WHERE id = 4;/
+      )
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(1);
+    expect(emailSpy).toHaveBeenNthCalledWith(
+      1,
+      'someemail@email.email',
+      'SNNAP: Password Reset',
+      expect.stringMatching(
+        /We just recieved a password reset request from you.\nEnter the below code into the form.\n[a-f0-9]{6}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
+      ),
+      expect.stringMatching(
+        /We just recieved a password reset request from you.<br\/>Enter the below code into the form.<br\/><b>[a-f0-9]{6}<\/b><br\/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
+      )
+    );
+    jest.runOnlyPendingTimers();
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      'UPDATE users SET password_reset_code = NULL WHERE id = 4;'
+    );
+  });
+
+  it('does not set reset if nothing is not found', async () => {
+    Mysql.query.mockResolvedValue();
+    await expect(
+      User.reset('someemail@email.email', '123456', 'password')
+    ).rejects.toEqual(new Error('Supplied code does not match!'));
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;"
+    );
+  });
+
+  it('does not set reset if no user is found - bad code or high count', async () => {
+    Mysql.query.mockResolvedValue([]);
+    await expect(
+      User.reset('someemail@email.email', '123456', 'password')
+    ).rejects.toEqual(new Error('Supplied code does not match!'));
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;"
+    );
+  });
+
+  it('resets password when correct information provided', async () => {
+    Mysql.query.mockResolvedValue([{ id: 4, username: 'someuser' }]);
+    expect(
+      await User.reset('someemail@email.email', '123456', 'password')
+    ).toEqual('someuser');
+    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      3,
+      expect.stringMatching(
+        /UPDATE users SET password = '.*', password_reset_code = NULL WHERE id = 4;/
+      )
     );
   });
 });
