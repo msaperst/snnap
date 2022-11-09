@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const Email = class {
-  static sendMail(t, subject, text, html) {
+  static async sendMail(t, subject, text, html) {
     let to = t;
     // stack the emails if needed
     if (Array.isArray(t)) {
