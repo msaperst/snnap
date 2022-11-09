@@ -33,7 +33,11 @@ const Email = class {
     };
 
     // send the email
-    transporter.sendMail(mailOptions);
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 };
 
