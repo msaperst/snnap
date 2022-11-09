@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import Submit from '../Submit/Submit';
@@ -10,6 +10,7 @@ function ForgotPassword() {
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
   const [showReset, setShowReset] = useState(false);
+  const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
@@ -21,6 +22,7 @@ function ForgotPassword() {
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
+      setEmail(formData.Email);
       authenticationService.forgot(formData.Email).then(
         () => {
           setIsSubmitting(false);
@@ -79,6 +81,12 @@ function ForgotPassword() {
             <Row className="mb-3">
               <SnnapFormInput name="Email" type="email" onChange={updateForm} />
             </Row>
+            <Row className="mb-3">
+              <Col>
+                A reset code will be sent to the above email address if it has
+                an account registered to it
+              </Col>
+            </Row>
             <Submit
               buttonText="Request Reset Password"
               isSubmitting={isSubmitting}
@@ -90,7 +98,7 @@ function ForgotPassword() {
           </Form>
         </Modal.Body>
       </Modal>
-      <ResetPassword display={showReset} />
+      <ResetPassword display={showReset} email={email} />
     </>
   );
 }

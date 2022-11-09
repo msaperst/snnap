@@ -10,18 +10,18 @@ import SnnapFormPassword from '../SnnapForms/SnnapFormPassword';
 function ResetPassword(props) {
   const navigate = useNavigate();
 
-  const { display } = props;
+  const { display, email } = props;
 
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
-  const [update, setUpdate] = useState(null);
-  const [formData, setFormData] = useState({ rememberMe: true });
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     setShow(display);
-  }, [display]);
+    setFormData({ Email: email });
+  }, [display, email]);
 
   const location = useLocation();
 
@@ -73,7 +73,12 @@ function ResetPassword(props) {
           onSubmit={handleSubmit}
         >
           <Row className="mb-3">
-            <SnnapFormInput name="Email" type="email" onChange={updateForm} />
+            <SnnapFormInput
+              name="Email"
+              type="email"
+              value={email}
+              onChange={updateForm}
+            />
           </Row>
           <Row className="mb-3">
             <SnnapFormInput name="Code" onChange={updateForm} />
@@ -86,8 +91,6 @@ function ResetPassword(props) {
             isSubmitting={isSubmitting}
             error={status}
             updateError={setStatus}
-            success={update}
-            updateSuccess={setUpdate}
           />
         </Form>
       </Modal.Body>

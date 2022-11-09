@@ -128,7 +128,6 @@ describe('login', () => {
     expect(container.firstChild.children[3].lastChild.children).toHaveLength(1);
     const link = container.firstChild.children[3].lastChild.firstChild;
     expect(link.getAttribute('disabled')).toBeNull();
-    expect(link.getAttribute('href')).toEqual('/passwordReset');
     expect(link).toHaveTextContent('Forgot Password');
   });
 
