@@ -174,7 +174,7 @@ describe('register', () => {
     expect(form.getAttribute('disabled')).toBeNull();
     expect(form.getAttribute('type')).toEqual('password');
     expect(form.getAttribute('required')).toEqual('');
-    // the rest is verified in SnnapFormInput.test.jsx
+    // the rest is verified in SnnapFormPassword.test.jsx
   });
 
   it('has agree to conditions in the seventh row', () => {

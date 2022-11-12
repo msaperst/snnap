@@ -9,7 +9,9 @@ const currentUserSubject = new BehaviorSubject(
 
 export const authenticationService = {
   register,
+  forgot,
   login,
+  reset,
   logout,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue() {
@@ -36,6 +38,16 @@ function register(firstName, lastName, location, email, username, password) {
     .then(() => login(username, password, true));
 }
 
+function forgot(email) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  };
+
+  return fetch(`/api/auth/forgot`, requestOptions).then(handleResponse);
+}
+
 function login(username, password, rememberMe) {
   const requestOptions = {
     method: 'POST',
@@ -51,6 +63,20 @@ function login(username, password, rememberMe) {
       currentUserSubject.next(user);
 
       return user;
+    });
+}
+
+function reset(email, code, password) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, code, password }),
+  };
+
+  return fetch(`/api/auth/reset`, requestOptions)
+    .then(handleResponse)
+    .then((res) => {
+      login(res.username, password, true);
     });
 }
 

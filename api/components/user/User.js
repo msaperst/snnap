@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Mysql = require('../../services/Mysql');
 const parseIntAndDbEscape = require('../Common');
+const Email = require('../../services/Email');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-jwt-token';
 
@@ -11,9 +12,7 @@ const User = class {
     const newUser = new User();
     newUser.instancePromise = (async () => {
       let exists = await Mysql.query(
-        `SELECT *
-         FROM users
-         WHERE LOWER(email) = LOWER(${db.escape(email)});`
+        `SELECT * FROM users WHERE LOWER(email) = LOWER(${db.escape(email)});`
       );
       if (exists.length) {
         throw new Error(
@@ -21,24 +20,22 @@ const User = class {
         );
       }
       exists = await Mysql.query(
-        `SELECT *
-         FROM users
-         WHERE LOWER(username) = LOWER('${username
-           .toString()
-           .replace(/\W/gi, '')}');`
+        `SELECT * FROM users WHERE LOWER(username) = LOWER('${username
+          .toString()
+          .replace(/\W/gi, '')}');`
       );
       if (exists.length) {
         throw new Error('Sorry, that username is already in use.');
       }
       const hash = await bcrypt.hash(password, 10);
       const result = await Mysql.query(
-        `INSERT INTO users (first_name, last_name, email, username, password, loc, lat, lon)
-         VALUES (${db.escape(firstName)}, ${db.escape(lastName)},
-                 ${db.escape(email)}, '${username
+        `INSERT INTO users (first_name, last_name, email, username, password, loc, lat, lon) VALUES (${db.escape(
+          firstName
+        )}, ${db.escape(lastName)}, ${db.escape(email)}, '${username
           .toString()
-          .replace(/\W/gi, '')}', 
-                 ${db.escape(hash)}, ${db.escape(location.loc)},
-                 ${parseFloat(location.lat)}, ${parseFloat(location.lon)});`
+          .replace(/\W/gi, '')}', ${db.escape(hash)}, ${db.escape(
+          location.loc
+        )}, ${parseFloat(location.lat)}, ${parseFloat(location.lon)});`
       );
       newUser.id = result.insertId;
       newUser.username = username;
@@ -60,9 +57,9 @@ const User = class {
     const newUser = new User();
     newUser.instancePromise = (async () => {
       const user = await Mysql.query(
-        `SELECT *
-         FROM users
-         WHERE username = '${username.toString().replace(/\W/gi, '')}';`
+        `SELECT * FROM users WHERE username = '${username
+          .toString()
+          .replace(/\W/gi, '')}';`
       );
       if (!user.length) {
         throw new Error('Username or password is incorrect!');
@@ -81,14 +78,10 @@ const User = class {
         }
         newUser.token = jwt.sign({ id: newUser.id }, JWT_SECRET, options);
         await Mysql.query(
-          `UPDATE users
-           SET last_login = now()
-           WHERE id = '${newUser.id}'`
+          `UPDATE users SET last_login = now() WHERE id = '${newUser.id}'`
         );
         const u = await Mysql.query(
-          `SELECT *
-           FROM users
-           WHERE id = '${newUser.id}'`
+          `SELECT * FROM users WHERE id = '${newUser.id}'`
         );
         newUser.id = u[0].id;
         newUser.username = u[0].username;
@@ -111,9 +104,9 @@ const User = class {
     newUser.token = token;
     const decoded = jwt.verify(newUser.token, JWT_SECRET);
     newUser.instancePromise = (async () => {
-      const user = await Mysql.query(`SELECT *
-                                      FROM users
-                                      where id = ${decoded.id}`);
+      const user = await Mysql.query(
+        `SELECT * FROM users WHERE id = ${decoded.id}`
+      );
       if (user.length) {
         newUser.id = user[0].id;
         newUser.username = user[0].username;
@@ -137,18 +130,17 @@ const User = class {
 
   async setAvatar(file) {
     await Mysql.query(
-      `UPDATE users
-       SET avatar = ${db.escape(file)}
-       WHERE id = ${await this.getId()}`
+      `UPDATE users SET avatar = ${db.escape(
+        file
+      )} WHERE id = ${await this.getId()}`
     );
   }
 
   async setAccountInformation(email) {
     const exists = await Mysql.query(
-      `SELECT *
-       FROM users
-       WHERE LOWER(email) = LOWER(${db.escape(email)})
-         AND id != ${await this.getId()};`
+      `SELECT * FROM users WHERE LOWER(email) = LOWER(${db.escape(
+        email
+      )}) AND id != ${await this.getId()};`
     );
     if (exists.length) {
       throw new Error('This email is already in our system.');
@@ -162,13 +154,13 @@ const User = class {
 
   async setPersonalInformation(firstName, lastName, location) {
     await Mysql.query(
-      `UPDATE users
-       SET first_name = ${db.escape(firstName)},
-           last_name  = ${db.escape(lastName)},
-           loc       = ${db.escape(location.loc)},
-           lat       = ${parseFloat(location.lat)},
-           lon       = ${parseFloat(location.lon)}
-       WHERE id = ${await this.getId()}`
+      `UPDATE users SET first_name = ${db.escape(
+        firstName
+      )}, last_name = ${db.escape(lastName)}, loc = ${db.escape(
+        location.loc
+      )}, lat = ${parseFloat(location.lat)}, lon = ${parseFloat(
+        location.lon
+      )} WHERE id = ${await this.getId()}`
     );
   }
 
@@ -185,13 +177,63 @@ const User = class {
     if (bcryptResult) {
       const hash = await bcrypt.hash(newPassword, 10);
       await Mysql.query(
-        `UPDATE users
-         SET password = ${db.escape(hash)}
-         WHERE id = ${await this.getId()}`
+        `UPDATE users SET password = ${db.escape(
+          hash
+        )} WHERE id = ${await this.getId()}`
       );
     } else {
       throw new Error("Current password doesn't match existing password.");
     }
+  }
+
+  static async forgot(email) {
+    const user = await Mysql.query(
+      `SELECT id, email FROM users WHERE email = ${db.escape(email)};`
+    );
+    if (user && user.length) {
+      const n = (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6);
+      await Mysql.query(
+        `UPDATE users SET password_reset_code = ${db.escape(
+          n
+        )}, password_reset_count = 0 WHERE id = ${user[0].id};`
+      );
+      setTimeout(async () => {
+        await Mysql.query(
+          `UPDATE users SET password_reset_code = NULL WHERE id = ${user[0].id};`
+        );
+      }, 600000);
+      Email.sendMail(
+        user[0].email,
+        'SNNAP: Password Reset',
+        `We just recieved a password reset request from you.\nEnter the below code into the form.\n${n}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`,
+        `We just recieved a password reset request from you.<br/>Enter the below code into the form.<br/><b>${n}</b><br/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`
+      );
+    }
+  }
+
+  static async reset(email, code, password) {
+    await Mysql.query(
+      `UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = ${db.escape(
+        email
+      )};`
+    );
+    const user = await Mysql.query(
+      `SELECT id, username FROM users WHERE email = ${db.escape(
+        email
+      )} AND password_reset_code = ${db.escape(
+        code
+      )} AND password_reset_count < 4;`
+    );
+    if (user && user.length) {
+      const hash = await bcrypt.hash(password, 10);
+      await Mysql.query(
+        `UPDATE users SET password = ${db.escape(
+          hash
+        )}, password_reset_code = NULL WHERE id = ${user[0].id};`
+      );
+      return user[0].username;
+    }
+    throw new Error('Supplied code does not match!');
   }
 
   async updateNotificationSettings(email, push) {

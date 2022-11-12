@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Col, Form, Row } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import Submit from '../Submit/Submit';
+import ForgotPassword from '../ForgotPassword/ForgotPassword';
 
 function Login() {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ function Login() {
           />
         </Col>
         <Col xs={7} className="text-end">
-          <Link to="/passwordReset">Forgot Password</Link>
+          <ForgotPassword />
         </Col>
       </Row>
       <Submit

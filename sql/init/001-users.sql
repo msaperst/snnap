@@ -33,3 +33,6 @@ ALTER TABLE users ADD COLUMN lon long NOT NULL;
 ALTER TABLE users MODIFY COLUMN lat DOUBLE;
 ALTER TABLE users MODIFY COLUMN lon DOUBLE;
 
+ALTER TABLE users ADD COLUMN password_reset_code varchar(6) COLLATE utf8mb4_unicode_ci;
+ALTER TABLE users ADD COLUMN password_reset_count int;
+
