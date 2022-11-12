@@ -18,5 +18,10 @@ export function handleResponse(response) {
     });
   }
   // otherwise must be an error
-  return response.text().then((text) => Promise.reject(text));
+  return response.text().then((text) => {
+    if (!response.ok) {
+      return Promise.reject(text);
+    }
+    return text;
+  });
 }
