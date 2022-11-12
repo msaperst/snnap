@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "jest-html-reporters": "^3.0.11",
-    "selenium-webdriver": "^4.6.0"
+    "selenium-webdriver": "^4.6.0",
+    "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
     "chromedriver": "^107.0.3",

@@ -226,12 +226,12 @@ class Test {
     await job.selectApplication(applicationId);
   }
 
-  async waitUntilNotPresent(locator) {
+  async waitUntilNotPresent(locator, wait = 5000) {
     const { driver } = this;
     await driver.wait(
       () =>
         driver.findElements(locator).then((elements) => elements.length === 0),
-      5000
+      wait
     );
   }
 

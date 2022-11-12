@@ -31,7 +31,8 @@ function ForgotPassword() {
           );
           setTimeout(() => {
             setUpdate(null);
-            setShow(null);
+            setStatus(null);
+            setShow(false);
             setShowReset(true);
           }, 5000);
         },
@@ -56,6 +57,8 @@ function ForgotPassword() {
           variant="link"
           onClick={() => {
             setValidated(false);
+            setStatus(null);
+            setUpdate(null);
             setShow(true);
           }}
         >
