@@ -26,6 +26,8 @@ class CompareJobApplications extends React.Component {
   }
 
   componentDidMount() {
+    // TODO - https://stackoverflow.com/questions/53949393/cant-perform-a-react-state-update-on-an-unmounted-component
+    // will solve one of the errors (based on how commenting this out removes one)
     const { job } = this.state;
     jobService.getJob(job.id).then((hr) => {
       this.setState({ job: hr });

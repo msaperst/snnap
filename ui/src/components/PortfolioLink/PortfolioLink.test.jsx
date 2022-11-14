@@ -3,6 +3,12 @@ import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import PortfolioLink from './PortfolioLink';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
+  Link: (props) => <a {...props} href={props.to} />,
+}));
+
 describe('portfolio link', () => {
   it('displays nothing when no portfolio', () => {
     const { container } = render(<PortfolioLink />);
