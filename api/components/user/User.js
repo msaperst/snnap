@@ -304,6 +304,20 @@ const User = class {
     return {};
   }
 
+  async getNeededRates() {
+    const id = await this.getId();
+    return Mysql.query(
+      `SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = ${id} AND job_date < CURRENT_DATE AND rating IS NULL;`
+    );
+  }
+
+  // eslint-disable-next-line class-methods-use-this,no-unused-vars
+  async rate(id, rating) {
+    await Mysql.query(
+      `UPDATE ratings SET rating = ${rating}, date_rated = CURRENT_TIMESTAMP WHERE id = ${id};`
+    );
+  }
+
   static async getBasicUserInfo(user) {
     const username = user.toString().replace(/\W/gi, '');
     let id;

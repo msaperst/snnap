@@ -7,6 +7,7 @@ import './Menu.css';
 import snnapLogo from './SNNAP.png';
 import NewJob from '../NewJob/NewJob';
 import useWebSocketLite from '../../helpers/useWebSocketLite';
+import Rate from '../Rate/Rate';
 
 function Menu(props) {
   let collapse = null;
@@ -15,9 +16,15 @@ function Menu(props) {
   const [token, setToken] = useState('');
   const [notifications, setNotifications] = useState('');
   const [bell, setBell] = useState('');
+  const [rates, setRates] = useState('');
 
-  const ws = useWebSocketLite({
+  const wsNotifications = useWebSocketLite({
     socketUrl: `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/unreadNotifications`,
+    token,
+  });
+
+  const wsRates = useWebSocketLite({
+    socketUrl: `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/neededRatings`,
     token,
   });
 
@@ -25,8 +32,8 @@ function Menu(props) {
     if (currentUser) {
       setToken(currentUser.token);
     }
-    if (ws.data) {
-      const { message } = ws.data;
+    if (wsNotifications.data) {
+      const { message } = wsNotifications.data;
       if (message > 0) {
         const not = (
           <span
@@ -43,7 +50,22 @@ function Menu(props) {
         setBell('');
       }
     }
-  }, [currentUser, ws.data]);
+    if (wsRates.data) {
+      const { message } = wsRates.data;
+      if (Array.isArray(message)) {
+        setRates(
+          message.map((rate) => (
+            <Rate
+              key={rate.id}
+              id={rate.id}
+              userId={rate.userId}
+              jobId={rate.jobId}
+            />
+          ))
+        );
+      }
+    }
+  }, [currentUser, wsNotifications.data, wsRates.data]);
 
   if (currentUser) {
     collapse = <Navbar.Toggle aria-controls="responsive-navbar-nav" />;
@@ -79,19 +101,22 @@ function Menu(props) {
   }
 
   return (
-    <Navbar variant="dark" expand="lg">
-      <Container>
-        <Navbar.Brand href="/">
-          <img
-            alt="SNNAP"
-            src={snnapLogo}
-            className="d-inline-block align-top logo"
-          />
-        </Navbar.Brand>
-        {collapse}
-        {menu}
-      </Container>
-    </Navbar>
+    <>
+      <Navbar variant="dark" expand="lg">
+        <Container>
+          <Navbar.Brand href="/">
+            <img
+              alt="SNNAP"
+              src={snnapLogo}
+              className="d-inline-block align-top logo"
+            />
+          </Navbar.Brand>
+          {collapse}
+          {menu}
+        </Container>
+      </Navbar>
+      {rates}
+    </>
   );
 }
 

@@ -13,6 +13,7 @@ export const userService = {
   uploadAvatar,
   updatePassword,
   updateNotificationSettings,
+  rate,
 };
 
 function get(id) {
@@ -125,4 +126,16 @@ async function updateNotificationSettings(email, push) {
   return fetch(`/api/user/update-notification-settings`, requestOptions).then(
     handleResponse
   );
+}
+
+async function rate(id, rating) {
+  const headers = authHeader();
+  headers['Content-Type'] = 'application/json';
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ id, rating }),
+  };
+
+  return fetch(`/api/user/rate`, requestOptions).then(handleResponse);
 }

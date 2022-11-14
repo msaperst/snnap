@@ -209,4 +209,25 @@ router.post(
   }
 );
 
+const rateValidation = [
+  check('id', 'id must be an integer').isNumeric(),
+  check('rating', 'Rating must be true or false').isBoolean(),
+];
+
+router.post('/rate', rateValidation, async (req, res) => {
+  const token = await Common.checkInput(req, res);
+  if (typeof token !== 'string' && !(token instanceof String)) {
+    return token;
+  }
+  try {
+    const user = User.auth(token);
+    await user.rate(req.body.id, req.body.rating);
+    return res.status(200).send();
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
+});
+
 module.exports = router;

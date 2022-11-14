@@ -6,7 +6,7 @@ const parseIntAndDbEscape = require('../Common');
 const Job = class {
   constructor(id) {
     if (id) {
-      this.id = parseIntAndDbEscape(id, 10);
+      this.id = parseIntAndDbEscape(id);
     }
   }
 
@@ -191,6 +191,21 @@ const Job = class {
         )}'>job application</a>`
       );
     }
+    // create an entry for the rating of the job
+    await Mysql.query(
+      `INSERT INTO ratings (job, job_date, ratee, rater) VALUES (${
+        this.id
+      }, ${db.escape((await this.getInfo()).date_time)}, ${
+        jobApp.user_id
+      }, ${jobUserId})`
+    );
+    await Mysql.query(
+      `INSERT INTO ratings (job, job_date, ratee, rater) VALUES (${
+        this.id
+      }, ${db.escape((await this.getInfo()).date_time)}, ${jobUserId}, ${
+        jobApp.user_id
+      })`
+    );
   }
 
   static async getUserSettings(jobUser) {
