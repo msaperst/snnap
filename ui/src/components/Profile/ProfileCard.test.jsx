@@ -14,6 +14,8 @@ const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedNavigate,
+  // eslint-disable-next-line react/destructuring-assignment,jsx-a11y/anchor-has-content
+  Link: (props) => <a {...props} href={props.to} />,
 }));
 
 describe('profile card', () => {

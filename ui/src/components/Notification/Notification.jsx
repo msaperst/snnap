@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import { EnvelopeExclamationFill } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { userService } from '../../services/user.service';
-import './Notification.css';
 import { jobService } from '../../services/job.service';
+import './Notification.css';
 
 function Notification(props) {
   const { notification } = props;
@@ -19,13 +20,15 @@ function Notification(props) {
             userService.get(job.user).then((user) => {
               setMessage(
                 <>
-                  <a href={`/profile/${user.username}`}>
+                  <Link to={`/profile/${user.username}`}>
                     {user.first_name} {user.last_name}
-                  </a>{' '}
+                  </Link>{' '}
                   selected your{' '}
-                  <a href={`/job-applications#${notification.job_application}`}>
+                  <Link
+                    to={`/job-applications#${notification.job_application}`}
+                  >
                     job application
-                  </a>
+                  </Link>
                 </>
               );
             });
@@ -33,10 +36,11 @@ function Notification(props) {
             userService.get(jobApplication.user_id).then((user) => {
               setMessage(
                 <>
-                  <a href={`/profile/${user.username}`}>
+                  <Link to={`/profile/${user.username}`}>
                     {jobApplication.user_name}
-                  </a>{' '}
-                  applied to your <a href={`/jobs#${notification.job}`}>job</a>
+                  </Link>{' '}
+                  applied to your{' '}
+                  <Link to={`/jobs#${notification.job}`}>job</Link>
                 </>
               );
             });
