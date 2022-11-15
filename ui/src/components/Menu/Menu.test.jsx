@@ -7,6 +7,14 @@ import useWebSocketLite from '../../helpers/useWebSocketLite';
 
 jest.mock('../../helpers/useWebSocketLite');
 
+jest.mock(
+  '../Rate/Rate',
+  () =>
+    function () {
+      return <div>Rate Me</div>;
+    }
+);
+
 describe('snnap menu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -211,14 +219,21 @@ describe('snnap menu', () => {
 
   it('shows no notification icon when no notifications', async () => {
     const message = 0;
-    const userNav = await renderWithSockets(message, 'msaperst');
+    const userNav = await checkUsernameMenu(message, 'msaperst');
     expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications');
   });
 
   it('shows notifications icon when notifications', async () => {
     const message = 2;
-    const userNav = await renderWithSockets(message, 'msaperst 🔔');
+    const userNav = await checkUsernameMenu(message, 'msaperst 🔔');
     expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications2');
+  });
+
+  it('shows no rates when no ratings needed', async () => {
+    const message = [];
+    const userNav = await renderWithSockets(message);
+    expect(userNav.children).toHaveLength(1);
+    // the actual modal is verified in Rate.test.jsx
   });
 
   function checkMainBrand(container) {
@@ -237,7 +252,7 @@ describe('snnap menu', () => {
     return true;
   }
 
-  async function renderWithSockets(message, username) {
+  async function renderWithSockets(message) {
     const data = { message };
     useWebSocketLite.mockReturnValue({ data });
 
@@ -248,7 +263,11 @@ describe('snnap menu', () => {
       await waitFor(() => container.firstChild);
     });
     const { container } = menu;
+    return container;
+  }
 
+  async function checkUsernameMenu(message, username) {
+    const container = await renderWithSockets(message);
     fireEvent.click(screen.getByText(username));
     return container.firstChild.firstChild.lastChild.firstChild.children[1];
   }

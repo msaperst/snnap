@@ -165,11 +165,11 @@ const Job = class {
         jobApp.user_id
       )}, 'selected', ${this.id}, ${parseIntAndDbEscape(jobApplication)});`
     );
-    const jobUserId = (await this.getInfo()).user;
-    if ((await Job.getUserSettings(jobUserId)).email_notifications) {
+    const jobInfo = await this.getInfo();
+    if ((await Job.getUserSettings(jobInfo.user)).email_notifications) {
       // send out the email
       const jobUser = await Mysql.query(
-        `SELECT * FROM users WHERE id = ${jobUserId};`
+        `SELECT * FROM users WHERE id = ${jobInfo.user};`
       );
       const applicationUser = await Mysql.query(
         `SELECT * FROM users WHERE id = ${jobApp.user_id};`
@@ -195,16 +195,12 @@ const Job = class {
     await Mysql.query(
       `INSERT INTO ratings (job, job_date, ratee, rater) VALUES (${
         this.id
-      }, ${db.escape((await this.getInfo()).date_time)}, ${
-        jobApp.user_id
-      }, ${jobUserId})`
+      }, ${db.escape(jobInfo.date_time)}, ${jobApp.user_id}, ${jobInfo.user});`
     );
     await Mysql.query(
       `INSERT INTO ratings (job, job_date, ratee, rater) VALUES (${
         this.id
-      }, ${db.escape((await this.getInfo()).date_time)}, ${jobUserId}, ${
-        jobApp.user_id
-      })`
+      }, ${db.escape(jobInfo.date_time)}, ${jobInfo.user}, ${jobApp.user_id});`
     );
   }
 

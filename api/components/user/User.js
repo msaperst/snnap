@@ -78,10 +78,10 @@ const User = class {
         }
         newUser.token = jwt.sign({ id: newUser.id }, JWT_SECRET, options);
         await Mysql.query(
-          `UPDATE users SET last_login = now() WHERE id = '${newUser.id}'`
+          `UPDATE users SET last_login = now() WHERE id = ${newUser.id};`
         );
         const u = await Mysql.query(
-          `SELECT * FROM users WHERE id = '${newUser.id}'`
+          `SELECT * FROM users WHERE id = ${newUser.id};`
         );
         newUser.id = u[0].id;
         newUser.username = u[0].username;
@@ -105,7 +105,7 @@ const User = class {
     const decoded = jwt.verify(newUser.token, JWT_SECRET);
     newUser.instancePromise = (async () => {
       const user = await Mysql.query(
-        `SELECT * FROM users WHERE id = ${decoded.id}`
+        `SELECT * FROM users WHERE id = ${decoded.id};`
       );
       if (user.length) {
         newUser.id = user[0].id;
@@ -311,10 +311,9 @@ const User = class {
     );
   }
 
-  // eslint-disable-next-line class-methods-use-this,no-unused-vars
   async rate(id, rating) {
     await Mysql.query(
-      `UPDATE ratings SET rating = ${rating}, date_rated = CURRENT_TIMESTAMP WHERE id = ${id};`
+      `UPDATE ratings SET rating = ${rating}, date_rated = CURRENT_TIMESTAMP WHERE id = ${id} AND rater = ${await this.getId()};`
     );
   }
 

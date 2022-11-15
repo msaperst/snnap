@@ -62,6 +62,7 @@ function Rate(props) {
         <Row className="mb-3">
           <Col className="text-center">
             <HandThumbsUp
+              data-testid={`rate-job-${job.id}-good`}
               style={{ cursor: 'pointer' }}
               onClick={() => handleSubmit(true)}
               size={24}
@@ -69,6 +70,7 @@ function Rate(props) {
           </Col>
           <Col className="text-center">
             <HandThumbsDown
+              data-testid={`rate-job-${job.id}-bad`}
               style={{ cursor: 'pointer' }}
               onClick={() => handleSubmit(false)}
               size={24}

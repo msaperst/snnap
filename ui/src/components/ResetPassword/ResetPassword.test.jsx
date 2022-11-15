@@ -40,7 +40,7 @@ describe('reset password modal', () => {
     modal = await waitFor(() => screen.getByTestId('resetPasswordModal'));
   });
 
-  it('clicking the button shows the modal', () => {
+  it('shows the modal', () => {
     expect(modal).toBeVisible();
   });
 
