@@ -10,6 +10,12 @@ const userService = require('../../services/user.service');
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
+  Link: (props) => <a {...props} href={props.to} />,
+}));
+
 describe('notification', () => {
   let job;
   let application;
