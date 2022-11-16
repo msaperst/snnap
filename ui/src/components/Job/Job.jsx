@@ -2,6 +2,7 @@ import { Button, Card, Col, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './Job.css';
 import { useNavigate } from 'react-router-dom';
+import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
 import { userService } from '../../services/user.service';
 import { jobService } from '../../services/job.service';
 import Avatar from '../Avatar/Avatar';
@@ -64,6 +65,15 @@ function Job(props) {
     }
   }, [applications, currentUser, equipment, job, skills, applied]);
 
+  let rating = '';
+  if (user.rating !== null) {
+    rating = user.rating ? (
+      <HandThumbsUp title="Thumbs Up" />
+    ) : (
+      <HandThumbsDown title="Thumbs Down" />
+    );
+  }
+
   return (
     <Card data-testid={`job-${job.id}`}>
       <Card.Body>
@@ -75,6 +85,7 @@ function Job(props) {
               lastname={user.last_name}
               onClick={() => navigate(`/profile/${user.username}`)}
             />
+            <span className="rating">{rating}</span>
           </Col>
           <Col md={7}>
             <Row>

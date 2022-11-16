@@ -88,6 +88,7 @@ describe('User', () => {
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getInfo()).resolves.toEqual({
       city: undefined,
+      avatar: undefined,
       email: 'bobert@gmail.com',
       firstName: 'Bob',
       id: '1',
@@ -96,8 +97,12 @@ describe('User', () => {
       state: undefined,
       username: 'Bob',
       zip: undefined,
+      lat: undefined,
+      loc: undefined,
+      lon: undefined,
+      rating: null,
     });
-    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenCalledTimes(4);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
       "SELECT * FROM users WHERE username = 'Bob';"
@@ -109,6 +114,10 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
       'SELECT * FROM users WHERE id = 1;'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      4,
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
     );
   });
 
@@ -132,6 +141,7 @@ describe('User', () => {
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getInfo()).resolves.toEqual({
       city: undefined,
+      avatar: undefined,
       email: 'bobert@gmail.com',
       firstName: 'Bob',
       id: '1',
@@ -140,8 +150,12 @@ describe('User', () => {
       state: undefined,
       username: 'Bob',
       zip: undefined,
+      lat: undefined,
+      loc: undefined,
+      lon: undefined,
+      rating: null,
     });
-    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenCalledTimes(4);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
       "SELECT * FROM users WHERE username = 'Bob';"
@@ -153,6 +167,10 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
       'SELECT * FROM users WHERE id = 1;'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      4,
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
     );
   });
 
@@ -176,6 +194,7 @@ describe('User', () => {
     await expect(user.getUsername()).resolves.toEqual('Bob');
     await expect(user.getInfo()).resolves.toEqual({
       city: undefined,
+      avatar: undefined,
       email: 'bobert@gmail.com',
       firstName: 'Bob',
       id: '1',
@@ -184,8 +203,12 @@ describe('User', () => {
       state: undefined,
       username: 'Bob',
       zip: undefined,
+      lat: undefined,
+      loc: undefined,
+      lon: undefined,
+      rating: null,
     });
-    expect(mysqlSpy).toHaveBeenCalledTimes(3);
+    expect(mysqlSpy).toHaveBeenCalledTimes(4);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
       "SELECT * FROM users WHERE username = 'Bob';"
@@ -197,6 +220,10 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
       'SELECT * FROM users WHERE id = 1;'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      4,
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
     );
   });
 
@@ -250,7 +277,10 @@ describe('User', () => {
     Mysql.query
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
-      .mockResolvedValue({ insertId: 15 });
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce([]);
 
     const user = User.register(
       'Bob',
@@ -273,8 +303,9 @@ describe('User', () => {
       lat: 5,
       loc: 'Fairfax, VA, United States of America',
       lon: -71.2345,
+      rating: null,
     });
-    expect(mysqlSpy).toHaveBeenCalledTimes(5);
+    expect(mysqlSpy).toHaveBeenCalledTimes(6);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
       "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@example.org');"
@@ -296,6 +327,10 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       5,
       'INSERT INTO companies (user) VALUE (15);'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      6,
+      'SELECT * FROM ratings WHERE ratee = 15 AND rating IS NOT NULL;'
     );
   });
 
@@ -360,11 +395,19 @@ describe('User', () => {
       state: undefined,
       username: 'Bob',
       zip: undefined,
+      lat: undefined,
+      loc: undefined,
+      lon: undefined,
+      rating: null,
     });
-    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
       'SELECT * FROM users WHERE id = 123;'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
     );
   });
 
@@ -675,62 +718,80 @@ describe('User', () => {
   });
 
   it('gets basic user info as int', async () => {
-    Mysql.query.mockResolvedValueOnce([
-      {
-        id: 1,
-        first_name: 'max',
-      },
-    ]);
-    expect(await User.getBasicUserInfo(1)).toEqual([
-      {
-        id: 1,
-        first_name: 'max',
-      },
-    ]);
-    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'max',
+        },
+      ])
+      .mockResolvedValueOnce([]);
+    expect(await User.getBasicUserInfo(1)).toEqual({
+      id: 1,
+      first_name: 'max',
+      rating: null,
+    });
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
     // issue #574 addresses this issue with username/id overlap
-    expect(mysqlSpy).toHaveBeenCalledWith(
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
       "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 1 OR username = '1';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
     );
   });
 
   it('gets basic user info as string', async () => {
-    Mysql.query.mockResolvedValueOnce([
-      {
-        id: 1,
-        first_name: 'max',
-      },
-    ]);
-    expect(await User.getBasicUserInfo('max')).toEqual([
-      {
-        id: 1,
-        first_name: 'max',
-      },
-    ]);
-    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'max',
+        },
+      ])
+      .mockResolvedValue([]);
+    expect(await User.getBasicUserInfo('max')).toEqual({
+      id: 1,
+      first_name: 'max',
+      rating: null,
+    });
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
     // issue #574 addresses this issue with username/id overlap
-    expect(mysqlSpy).toHaveBeenCalledWith(
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
       "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
     );
   });
 
   it('gets basic user info as mixed', async () => {
-    Mysql.query.mockResolvedValueOnce([
-      {
-        id: 1,
-        first_name: 'max',
-      },
-    ]);
-    expect(await User.getBasicUserInfo('*max1')).toEqual([
-      {
-        id: 1,
-        first_name: 'max',
-      },
-    ]);
-    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 1,
+          first_name: 'max',
+        },
+      ])
+      .mockResolvedValueOnce([]);
+    expect(await User.getBasicUserInfo('*max1')).toEqual({
+      id: 1,
+      first_name: 'max',
+      rating: null,
+    });
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
     // issue #574 addresses this issue with username/id overlap
-    expect(mysqlSpy).toHaveBeenCalledWith(
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
       "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';"
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
     );
   });
 
@@ -881,6 +942,79 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
       'UPDATE ratings SET rating = true, date_rated = CURRENT_TIMESTAMP WHERE id = 12 AND rater = 123;'
+    );
+  });
+
+  it('returns null when no ratings exist for a user', async () => {
+    Mysql.query.mockResolvedValue([]);
+    expect(await User.getRating(2)).toBeNull();
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+    );
+  });
+
+  it('returns null when 4 ratings exist for a user', async () => {
+    Mysql.query.mockResolvedValue([
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 0 },
+    ]);
+    expect(await User.getRating(2)).toBeNull();
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+    );
+  });
+
+  it('returns false when 3 bad, 2 good ratings exist for a user', async () => {
+    Mysql.query.mockResolvedValue([
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 1 },
+      { rating: 1 },
+    ]);
+    expect(await User.getRating(2)).toBeFalsy();
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+    );
+  });
+
+  it('returns true when 2 bad, 3 good ratings exist for a user', async () => {
+    Mysql.query.mockResolvedValue([
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 1 },
+      { rating: 1 },
+      { rating: 1 },
+    ]);
+    expect(await User.getRating(2)).toBeTruthy();
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+    );
+  });
+
+  it('returns true when 5 bad, 5 good ratings exist for a user', async () => {
+    Mysql.query.mockResolvedValue([
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 0 },
+      { rating: 1 },
+      { rating: 1 },
+      { rating: 1 },
+      { rating: 1 },
+      { rating: 1 },
+    ]);
+    expect(await User.getRating(2)).toBeTruthy();
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
     );
   });
 });
