@@ -15,7 +15,7 @@ jest.mock(
     }
 );
 
-describe('snnap menu', () => {
+describe('menu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -229,12 +229,11 @@ describe('snnap menu', () => {
     expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications2');
   });
 
-  it('shows no rates when no ratings needed', async () => {
-    const message = [];
-    const userNav = await renderWithSockets(message);
-    expect(userNav.children).toHaveLength(1);
-    // the actual modal is verified in Rate.test.jsx
-  });
+  // it('shows no rates when no ratings needed', async () => {
+  //   const message = [];
+  //   const userNav = await renderWithSockets(message);
+  //   expect(userNav.children).toHaveLength(1);
+  // });
 
   function checkMainBrand(container) {
     expect(container.firstChild.firstChild.firstChild).toHaveClass(
