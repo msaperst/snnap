@@ -337,9 +337,7 @@ describe('account information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     await act(async () => {

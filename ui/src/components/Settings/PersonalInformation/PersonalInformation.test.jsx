@@ -265,9 +265,7 @@ describe('personal information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith('Max', 'Saperstone', {
       lat: 7,
@@ -293,14 +291,14 @@ describe('personal information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    await fireEvent.click(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild
-    );
+    await act(async () => {
+      fireEvent.click(
+        container.firstChild.lastChild.lastChild.firstChild.firstChild
+      );
+    });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
@@ -324,9 +322,7 @@ describe('personal information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenCalledWith('Max', 'Saperstone', {
       lat: 7,
@@ -378,14 +374,14 @@ describe('personal information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
-    await fireEvent.click(
-      container.firstChild.lastChild.lastChild.firstChild.firstChild
-    );
+    await act(async () => {
+      fireEvent.click(
+        container.firstChild.lastChild.lastChild.firstChild.firstChild
+      );
+    });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
@@ -405,9 +401,7 @@ describe('personal information', () => {
       />
     );
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
-      );
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     await act(async () => {
@@ -436,25 +430,22 @@ describe('personal information', () => {
         }}
       />
     );
-    await fireEvent.change(
-      container.firstChild.children[1].firstChild.firstChild.firstChild,
-      { target: { value: 'George' } }
-    );
-    await fireEvent.change(
-      container.firstChild.children[2].firstChild.firstChild.children[1],
-      { target: { value: '' } }
-    );
-    const selectItem = selectFairfax(getByText);
-    await selectItem(
-      container.firstChild.children[2].firstChild.firstChild.children[1]
-    );
-    // eslint-disable-next-line no-promise-executor-return
-    await new Promise((r) => setTimeout(r, 1000));
-
     await act(async () => {
-      await fireEvent.click(
-        container.firstChild.lastChild.firstChild.firstChild
+      fireEvent.change(
+        container.firstChild.children[1].firstChild.firstChild.firstChild,
+        { target: { value: 'George' } }
       );
+      fireEvent.change(
+        container.firstChild.children[2].firstChild.firstChild.children[1],
+        { target: { value: '' } }
+      );
+      const selectItem = selectFairfax(getByText);
+      await selectItem(
+        container.firstChild.children[2].firstChild.firstChild.children[1]
+      );
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 1000));
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenNthCalledWith(2, 'George', 'Saperstone', {
       loc: 'Fairfax, VA, United States of America',

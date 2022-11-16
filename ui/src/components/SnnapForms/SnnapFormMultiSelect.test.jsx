@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { act } from 'react-dom/test-utils';
 import SnnapFormMultiSelect from './SnnapFormMultiSelect';
 
 describe('snnap form input', () => {
@@ -131,9 +132,11 @@ describe('snnap form input', () => {
       container.firstChild.firstChild.lastChild.firstChild.firstChild;
     expect(input.children).toHaveLength(1);
     expect(input.firstChild).toHaveTextContent('Lights');
-    fireEvent.click(getByLabelText('Remove Lights'));
-    // eslint-disable-next-line no-promise-executor-return
-    await new Promise((r) => setTimeout(r, 500));
+    await act(async () => {
+      fireEvent.click(getByLabelText('Remove Lights'));
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 500));
+    });
     expect(x).toEqual(1);
     expect(
       container.firstChild.firstChild.lastChild.firstChild.firstChild.children
@@ -157,9 +160,11 @@ describe('snnap form input', () => {
       container.firstChild.firstChild.lastChild.firstChild.firstChild;
     expect(input.children).toHaveLength(1);
     expect(input.firstChild).toHaveTextContent('Lights');
-    fireEvent.click(getByLabelText('Remove Lights'));
-    // eslint-disable-next-line no-promise-executor-return
-    await new Promise((r) => setTimeout(r, 500));
+    await act(async () => {
+      fireEvent.click(getByLabelText('Remove Lights'));
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 500));
+    });
     expect(
       container.firstChild.firstChild.lastChild.firstChild.firstChild.children
     ).toHaveLength(0);
@@ -197,8 +202,10 @@ describe('snnap form input', () => {
       />
     );
     const child = await waitFor(() => container.firstChild);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 500);
+      });
     });
     expect(child.firstChild.lastChild.firstChild.children).toHaveLength(2);
     expect(child.firstChild.lastChild.firstChild.firstChild).toHaveTextContent(

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
@@ -15,6 +15,14 @@ function ForgotPassword() {
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
   const [formData, setFormData] = useState({ rememberMe: true });
+  const isMountedVal = useRef(true);
+
+  useEffect(() => {
+    isMountedVal.current = true;
+    return () => {
+      isMountedVal.current = false;
+    };
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -30,10 +38,12 @@ function ForgotPassword() {
             'A reset code was sent to your email. This code is only valid for 10 minutes.'
           );
           setTimeout(() => {
-            setUpdate(null);
-            setStatus(null);
-            setShow(false);
-            setShowReset(true);
+            if (isMountedVal.current) {
+              setUpdate(null);
+              setStatus(null);
+              setShow(false);
+              setShowReset(true);
+            }
           }, 5000);
         },
         (error) => {

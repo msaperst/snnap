@@ -14,6 +14,7 @@ import { commonFormComponents } from '../CommonFormComponents';
 class NewJob extends React.Component {
   constructor(props) {
     super(props);
+    this.isMountedVal = false;
 
     this.state = {
       show: false,
@@ -31,6 +32,7 @@ class NewJob extends React.Component {
   }
 
   componentDidMount() {
+    this.isMountedVal = true;
     jobService.getJobTypes().then((jobTypes) => {
       this.setState({ jobTypes });
     });
@@ -43,6 +45,10 @@ class NewJob extends React.Component {
     jobService.getSkills().then((skills) => {
       this.setState({ skills });
     });
+  }
+
+  componentWillUnmount() {
+    this.isMountedVal = false;
   }
 
   handleSubmit(event) {
@@ -98,10 +104,11 @@ class NewJob extends React.Component {
         )
         .then(
           () => {
-            commonFormComponents.setRedrawSuccess(
-              (state) => this.setState(state),
-              'New Job Submitted'
-            );
+            commonFormComponents.setRedrawSuccess((state) => {
+              if (this.isMountedVal) {
+                this.setState(state);
+              }
+            }, 'New Job Submitted');
           },
           (error) => {
             this.setState({

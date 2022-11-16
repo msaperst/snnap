@@ -29,13 +29,21 @@ describe('Company information', () => {
     ]);
   });
 
-  it('renders nothing when no values are passed', () => {
-    const { container } = render(<CompanyInformation />);
+  it('renders nothing when no values are passed', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation />);
+    });
+    const { container } = company;
     expect(container.children).toHaveLength(0);
   });
 
-  it('renders header properly', () => {
-    const { container } = render(<CompanyInformation company={{}} />);
+  it('renders header properly', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{}} />);
+    });
+    const { container } = company;
     expect(container.children).toHaveLength(1);
     expect(container.firstChild.getAttribute('noValidate')).toEqual('');
     expect(container.firstChild.children).toHaveLength(8);
@@ -44,8 +52,12 @@ describe('Company information', () => {
     );
   });
 
-  it('has empty name in the first row', () => {
-    const { container } = render(<CompanyInformation company={{}} />);
+  it('has empty name in the first row', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{}} />);
+    });
+    const { container } = company;
     expect(container.firstChild.children[1]).toHaveClass('mb-3 row');
     expect(container.firstChild.children[1].children).toHaveLength(1);
     expect(container.firstChild.children[1].firstChild).toHaveClass(
@@ -67,10 +79,12 @@ describe('Company information', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has name in the first row', () => {
-    const { container } = render(
-      <CompanyInformation company={{ name: 'Max' }} />
-    );
+  it('has name in the first row', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{ name: 'Max' }} />);
+    });
+    const { container } = company;
     expect(container.firstChild.children[1]).toHaveClass('mb-3 row');
     expect(container.firstChild.children[1].children).toHaveLength(1);
     expect(container.firstChild.children[1].firstChild).toHaveClass(
@@ -91,10 +105,14 @@ describe('Company information', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has website in the second row', () => {
-    const { container } = render(
-      <CompanyInformation company={{ website: 'Saperstone' }} />
-    );
+  it('has website in the second row', async () => {
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation company={{ website: 'Saperstone' }} />
+      );
+    });
+    const { container } = company;
     expect(container.firstChild.children[2]).toHaveClass('mb-3 row');
     expect(container.firstChild.children[2].children).toHaveLength(2);
     expect(container.firstChild.children[2].firstChild).toHaveClass('col-md-2');
@@ -116,10 +134,12 @@ describe('Company information', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has instagram in the third row', () => {
-    const { container } = render(
-      <CompanyInformation company={{ insta: 'Fairfax' }} />
-    );
+  it('has instagram in the third row', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{ insta: 'Fairfax' }} />);
+    });
+    const { container } = company;
     expect(container.firstChild.children[3]).toHaveClass('mb-3 row');
     expect(container.firstChild.children[3].children).toHaveLength(2);
     expect(container.firstChild.children[3].firstChild).toHaveClass('col-md-2');
@@ -141,10 +161,12 @@ describe('Company information', () => {
     // the rest is verified in SnnapFormInput.test.jsx
   });
 
-  it('has facebook in the fourth row', () => {
-    const { container } = render(
-      <CompanyInformation company={{ fb: 'Fairfax' }} />
-    );
+  it('has facebook in the fourth row', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{ fb: 'Fairfax' }} />);
+    });
+    const { container } = company;
     expect(container.firstChild.children[4]).toHaveClass('mb-3 row');
     expect(container.firstChild.children[4].children).toHaveLength(2);
     expect(container.firstChild.children[4].firstChild).toHaveClass('col-md-2');
@@ -168,14 +190,22 @@ describe('Company information', () => {
 
   // TODO - multiselects
 
-  it('has 2 items in the last row', () => {
-    const { container } = render(<CompanyInformation company={{}} />);
+  it('has 2 items in the last row', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{}} />);
+    });
+    const { container } = company;
     expect(container.firstChild.lastChild).toHaveClass('mb-3 row');
     expect(container.firstChild.lastChild.children).toHaveLength(2);
   });
 
-  it('has save information button in the last row', () => {
-    const { container } = render(<CompanyInformation company={{}} />);
+  it('has save information button in the last row', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{}} />);
+    });
+    const { container } = company;
     expect(container.firstChild.lastChild.firstChild).toHaveClass('col');
     expect(container.firstChild.lastChild.firstChild.firstChild).toHaveClass(
       'btn btn-primary'
@@ -191,23 +221,34 @@ describe('Company information', () => {
     ).toHaveTextContent('Save Company Information');
   });
 
-  it('has no alert or update present in the last row', () => {
-    const { container } = render(<CompanyInformation company={{}} />);
+  it('has no alert or update present in the last row', async () => {
+    let company;
+    await act(async () => {
+      company = render(<CompanyInformation company={{}} />);
+    });
+    const { container } = company;
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
   it('does not submit if camera is selected but no information is present', async () => {
-    const company = {
-      experience: 'Max',
-      equipment: [
-        {
-          value: 2,
-          name: 'Flash',
-        },
-      ],
-    };
-    const { container } = render(<CompanyInformation company={company} />);
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation
+          company={{
+            experience: 'Max',
+            equipment: [
+              {
+                value: 2,
+                name: 'Flash',
+              },
+            ],
+          }}
+        />
+      );
+    });
+    const { container } = company;
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
@@ -223,14 +264,18 @@ describe('Company information', () => {
     companyService.companyService.updateCompanyInformation.mockRejectedValue(
       'Some Error'
     );
-    const { container } = render(
-      <CompanyInformation
-        company={{
-          name: 'Max',
-          website: 'Saperstone',
-        }}
-      />
-    );
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation
+          company={{
+            name: 'Max',
+            website: 'Saperstone',
+          }}
+        />
+      );
+    });
+    const { container } = company;
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
@@ -249,14 +294,18 @@ describe('Company information', () => {
     companyService.companyService.updateCompanyInformation.mockRejectedValue(
       'Some Error'
     );
-    const { container } = render(
-      <CompanyInformation
-        company={{
-          name: 'Max',
-          website: 'Saperstone',
-        }}
-      />
-    );
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation
+          company={{
+            name: 'Max',
+            website: 'Saperstone',
+          }}
+        />
+      );
+    });
+    const { container } = company;
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
@@ -275,14 +324,18 @@ describe('Company information', () => {
     companyService.companyService.updateCompanyInformation.mockResolvedValue(
       'Some Success'
     );
-    const { container } = render(
-      <CompanyInformation
-        company={{
-          insta: 'Max',
-          fb: 'Saperstone',
-        }}
-      />
-    );
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation
+          company={{
+            insta: 'Max',
+            fb: 'Saperstone',
+          }}
+        />
+      );
+    });
+    const { container } = company;
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
@@ -328,14 +381,18 @@ describe('Company information', () => {
     companyService.companyService.updateCompanyInformation.mockResolvedValue(
       'Some Success'
     );
-    const { container } = render(
-      <CompanyInformation
-        company={{
-          name: 'Max',
-          website: 'Saperstone',
-        }}
-      />
-    );
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation
+          company={{
+            name: 'Max',
+            website: 'Saperstone',
+          }}
+        />
+      );
+    });
+    const { container } = company;
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
@@ -351,14 +408,18 @@ describe('Company information', () => {
     companyService.companyService.updateCompanyInformation.mockResolvedValue(
       'Some Success'
     );
-    const { container } = render(
-      <CompanyInformation
-        company={{
-          name: 'Max',
-          website: 'Saperstone',
-        }}
-      />
-    );
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation
+          company={{
+            name: 'Max',
+            website: 'Saperstone',
+          }}
+        />
+      );
+    });
+    const { container } = company;
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
@@ -378,14 +439,18 @@ describe('Company information', () => {
     companyService.companyService.updateCompanyInformation.mockResolvedValue(
       'Some Success'
     );
-    const { container } = render(
-      <CompanyInformation
-        company={{
-          name: 'Max',
-          website: 'Saperstone',
-        }}
-      />
-    );
+    let company;
+    await act(async () => {
+      company = render(
+        <CompanyInformation
+          company={{
+            name: 'Max',
+            website: 'Saperstone',
+          }}
+        />
+      );
+    });
+    const { container } = company;
     fireEvent.change(
       container.firstChild.children[1].firstChild.firstChild.firstChild,
       { target: { value: 'City' } }

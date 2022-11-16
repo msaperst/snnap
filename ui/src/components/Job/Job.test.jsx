@@ -228,7 +228,7 @@ describe('job', () => {
     await loadJob(jobDuration, otherUser);
     const { getByText } = requestForHire;
     expect(spy).toHaveBeenCalledTimes(1);
-    act(() => {
+    await act(async () => {
       fireEvent.click(getByText('Submit For Job'));
     });
     expect(spy).toHaveBeenCalledTimes(2);

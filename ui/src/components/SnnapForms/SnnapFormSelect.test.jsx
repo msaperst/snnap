@@ -5,10 +5,14 @@ import SnnapFormSelect from './SnnapFormSelect';
 
 describe('snnap form input', () => {
   let child;
+  const options = [
+    { id: 1, type: 'Option 1' },
+    { id: 2, type: 'Option 2' },
+  ];
 
   beforeEach(async () => {
     const { container } = render(
-      <SnnapFormSelect name="123" options={['Option 1', 'Option 2']} />
+      <SnnapFormSelect name="123" options={options} />
     );
     child = await waitFor(() => container.firstChild);
   });
@@ -35,14 +39,14 @@ describe('snnap form input', () => {
 
   it('uses a digit column field when provided', () => {
     const { container } = render(
-      <SnnapFormSelect size={5} options={['Option 1', 'Option 2']} name="123" />
+      <SnnapFormSelect size={5} options={options} name="123" />
     );
     expect(container.firstChild).toHaveClass('col-md-5');
   });
 
   it('uses a string column field when provided', () => {
     const { container } = render(
-      <SnnapFormSelect size="5" options={['Option 1', 'Option 2']} name="123" />
+      <SnnapFormSelect size="5" options={options} name="123" />
     );
     expect(container.firstChild).toHaveClass('col-md-5');
   });
@@ -57,11 +61,7 @@ describe('snnap form input', () => {
 
   it('uses an onchange when provided', () => {
     const { container } = render(
-      <SnnapFormSelect
-        name="123"
-        options={['Option 1', 'Option 2']}
-        onChange="method"
-      />
+      <SnnapFormSelect name="123" options={options} onChange="method" />
     );
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('id')
