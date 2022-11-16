@@ -211,7 +211,9 @@ router.post(
 
 const rateValidation = [
   check('id', 'id must be an integer').isNumeric(),
-  check('rating', 'Rating must be true or false').isBoolean(),
+  check('rating', 'Rating must be true or false')
+    .isBoolean()
+    .optional({ nullable: true }),
 ];
 
 router.post('/rate', rateValidation, async (req, res) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Col, Modal, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Modal, Row } from 'react-bootstrap';
 import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { userService } from '../../services/user.service';
@@ -78,6 +78,13 @@ function Rate(props) {
           </Col>
         </Row>
         <Row className="mb-3">
+          <Col className="text-center">
+            <Button variant="link" onClick={() => handleSubmit(null)}>
+              I didn&apos;t work this job
+            </Button>
+          </Col>
+        </Row>
+        <Row>
           <Col>
             {status && (
               <Alert

@@ -865,7 +865,7 @@ describe('User', () => {
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = 123 AND job_date < CURRENT_DATE AND rating IS NULL;'
+      'SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = 123 AND job_date < CURRENT_DATE AND date_rated IS NULL;'
     );
   });
 

@@ -17,7 +17,7 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a {...props} href={props.to} />,
 }));
 
-describe('snnap menu', () => {
+describe('rate', () => {
   let modal;
   let spy;
 
@@ -59,7 +59,7 @@ describe('snnap menu', () => {
 
   it('has the correct layout for the modal content', async () => {
     const modalForm = modal.firstChild.lastChild;
-    expect(modalForm.children).toHaveLength(3);
+    expect(modalForm.children).toHaveLength(4);
   });
 
   it('modal has the correct text', () => {
@@ -76,6 +76,13 @@ describe('snnap menu', () => {
     );
   });
 
+  it("modal has didn't work button", () => {
+    const modalButton =
+      modal.firstChild.lastChild.children[2].firstChild.firstChild;
+    expect(modalButton).toHaveTextContent("I didn't work this job");
+    expect(modalButton.getAttribute('type')).toEqual('button');
+  });
+
   it('clicking thumbs up submits a "true"', async () => {
     userService.userService.rate.mockRejectedValue('Some Error');
     await act(async () => {
@@ -90,6 +97,14 @@ describe('snnap menu', () => {
       await fireEvent.click(screen.getByTestId('rate-job-5-bad'));
     });
     expect(spy).toHaveBeenCalledWith(12, false);
+  });
+
+  it('clicking did not work submits a "null"', async () => {
+    userService.userService.rate.mockRejectedValue('Some Error');
+    await act(async () => {
+      await fireEvent.click(screen.getAllByRole('button')[1]);
+    });
+    expect(spy).toHaveBeenCalledWith(12, null);
   });
 
   // expects in method

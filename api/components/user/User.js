@@ -307,7 +307,7 @@ const User = class {
   async getNeededRates() {
     const id = await this.getId();
     return Mysql.query(
-      `SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = ${id} AND job_date < CURRENT_DATE AND rating IS NULL;`
+      `SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = ${id} AND job_date < CURRENT_DATE AND date_rated IS NULL;`
     );
   }
 
