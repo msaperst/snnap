@@ -46,7 +46,7 @@ describe('apply to job form', () => {
       id: 1,
       user: 1,
       name: 'Butts R Us',
-      website: 'butts.com',
+      website: null,
       insta: null,
       fb: null,
       experience: "None really, but somebody's gotta work this bitch",
@@ -166,7 +166,7 @@ describe('apply to job form', () => {
     expect(websiteInput.getAttribute('placeholder')).toEqual('Website');
     expect(websiteInput.getAttribute('disabled')).toBeNull();
     expect(websiteInput.getAttribute('type')).toEqual('text');
-    expect(websiteInput.getAttribute('value')).toEqual('butts.com');
+    expect(websiteInput.getAttribute('value')).toEqual('');
 
     expect(modalForm.children[7].children[2]).toHaveClass('col-md-1');
     expect(modalForm.children[7].children[2].firstChild).toHaveClass('icon');
@@ -309,7 +309,7 @@ describe('apply to job form', () => {
       1,
       'Max Saperstone',
       'Butts R Us',
-      'butts.com',
+      undefined,
       undefined,
       undefined,
       "None really, but somebody's gotta work this bitch",
@@ -353,7 +353,7 @@ describe('apply to job form', () => {
       1,
       'Max Saperstone',
       'Butts R Us',
-      'butts.com',
+      undefined,
       undefined,
       undefined,
       "None really, but somebody's gotta work this bitch",

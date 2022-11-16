@@ -231,10 +231,12 @@ describe('Company information', () => {
     const input = verifyInputField(equipmentSelect);
     expect(input.value).toEqual('');
     // the removal
-    await waitFor(() => getByLabelText('Remove Camera'));
-    fireEvent.click(getByLabelText('Remove Camera'));
-    // eslint-disable-next-line no-promise-executor-return
-    await new Promise((r) => setTimeout(r, 500));
+    await act(async () => {
+      await waitFor(() => getByLabelText('Remove Camera'));
+      fireEvent.click(getByLabelText('Remove Camera'));
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 500));
+    });
     expect(container.children).toHaveLength(1);
     expect(x).toEqual([]);
   });

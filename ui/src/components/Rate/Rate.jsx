@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, Col, Modal, Row } from 'react-bootstrap';
 import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,14 @@ function Rate(props) {
   const [show, setShow] = useState(true);
   const [status, setStatus] = useState(null);
   const [update, setUpdate] = useState(null);
+  const isMountedVal = useRef(true);
+
+  useEffect(() => {
+    isMountedVal.current = true;
+    return () => {
+      isMountedVal.current = false;
+    };
+  });
 
   useEffect(() => {
     userService.get(userId).then((user) => {
@@ -27,9 +35,11 @@ function Rate(props) {
       () => {
         setUpdate('Thank you for submitting your rating.');
         setTimeout(() => {
-          setUpdate(null);
-          setStatus(null);
-          setShow(false);
+          if (isMountedVal.current) {
+            setUpdate(null);
+            setStatus(null);
+            setShow(false);
+          }
         }, 2000);
       },
       (error) => {

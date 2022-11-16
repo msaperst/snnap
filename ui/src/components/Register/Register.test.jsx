@@ -252,7 +252,9 @@ describe('register', () => {
 
   it('does not submit if values are not present/valid', async () => {
     const { container } = render(<Register />);
-    await fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    await act(async () => {
+      fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
+    });
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
@@ -471,34 +473,48 @@ describe('register', () => {
     password,
     getByText = null
   ) {
-    await fireEvent.change(form.children[1].firstChild.firstChild.firstChild, {
-      target: { value: 'Max' },
-    });
-    await fireEvent.change(form.children[1].lastChild.firstChild.firstChild, {
-      target: { value: 'Saperstone' },
-    });
-    if (getByText) {
-      const selectItem = selectFairfax(getByText);
-      await selectItem(form.children[2].firstChild.firstChild.children[1]);
-      // eslint-disable-next-line no-promise-executor-return
-      await new Promise((r) => setTimeout(r, 1000));
-    } else {
-      fireEvent.change(form.children[2].firstChild.firstChild.children[1], {
-        target: { value: 'fairfax' },
-      });
-    }
-    await fireEvent.change(form.children[3].lastChild.firstChild.firstChild, {
-      target: { value: email },
-    });
-    await fireEvent.change(form.children[5].lastChild.firstChild.firstChild, {
-      target: { value: username },
-    });
-    await fireEvent.change(form.children[6].lastChild.firstChild.firstChild, {
-      target: { value: password },
-    });
-    await fireEvent.click(form.children[7].firstChild.firstChild);
     await act(async () => {
-      await fireEvent.click(form.lastChild.firstChild.firstChild);
+      fireEvent.change(form.children[1].firstChild.firstChild.firstChild, {
+        target: { value: 'Max' },
+      });
+    });
+    await act(async () => {
+      fireEvent.change(form.children[1].lastChild.firstChild.firstChild, {
+        target: { value: 'Saperstone' },
+      });
+    });
+    await act(async () => {
+      if (getByText) {
+        const selectItem = selectFairfax(getByText);
+        await selectItem(form.children[2].firstChild.firstChild.children[1]);
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((r) => setTimeout(r, 1000));
+      } else {
+        fireEvent.change(form.children[2].firstChild.firstChild.children[1], {
+          target: { value: 'fairfax' },
+        });
+      }
+    });
+    await act(async () => {
+      fireEvent.change(form.children[3].lastChild.firstChild.firstChild, {
+        target: { value: email },
+      });
+    });
+    await act(async () => {
+      fireEvent.change(form.children[5].lastChild.firstChild.firstChild, {
+        target: { value: username },
+      });
+    });
+    await act(async () => {
+      fireEvent.change(form.children[6].lastChild.firstChild.firstChild, {
+        target: { value: password },
+      });
+    });
+    await act(async () => {
+      fireEvent.click(form.children[7].firstChild.firstChild);
+    });
+    await act(async () => {
+      fireEvent.click(form.lastChild.firstChild.firstChild);
     });
   }
 });

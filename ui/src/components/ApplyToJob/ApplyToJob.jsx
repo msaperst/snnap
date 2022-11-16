@@ -15,6 +15,7 @@ import { commonFormComponents } from '../CommonFormComponents';
 class ApplyToJob extends React.Component {
   constructor(props) {
     super(props);
+    this.isMountedVal = false;
 
     const { job } = this.props;
     this.state = {
@@ -33,6 +34,7 @@ class ApplyToJob extends React.Component {
   }
 
   componentDidMount() {
+    this.isMountedVal = true;
     const { job } = this.state;
     companyService.get().then((company) => {
       this.setState({ company });
@@ -41,6 +43,10 @@ class ApplyToJob extends React.Component {
     jobService.getJob(job.id).then((hr) => {
       this.setState({ job: hr });
     });
+  }
+
+  componentWillUnmount() {
+    this.isMountedVal = false;
   }
 
   handleSubmit(event) {
@@ -70,10 +76,11 @@ class ApplyToJob extends React.Component {
         )
         .then(
           () => {
-            commonFormComponents.setRedrawSuccess(
-              (state) => this.setState(state),
-              'Job Filing Submitted'
-            );
+            commonFormComponents.setRedrawSuccess((state) => {
+              if (this.isMountedVal) {
+                this.setState(state);
+              }
+            }, 'Job Filing Submitted');
             setTimeout(applied, 5000);
           },
           (error) => {

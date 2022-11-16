@@ -10,6 +10,7 @@ import './CompareJobApplications.css';
 class CompareJobApplications extends React.Component {
   constructor(props) {
     super(props);
+    this.isMountedVal = false;
 
     const { job } = this.props;
     this.state = {
@@ -26,8 +27,7 @@ class CompareJobApplications extends React.Component {
   }
 
   componentDidMount() {
-    // TODO - https://stackoverflow.com/questions/53949393/cant-perform-a-react-state-update-on-an-unmounted-component
-    // will solve one of the errors (based on how commenting this out removes one)
+    this.isMountedVal = true;
     const { job } = this.state;
     jobService.getJob(job.id).then((hr) => {
       this.setState({ job: hr });
@@ -35,6 +35,10 @@ class CompareJobApplications extends React.Component {
     jobService.getJobApplications(job.id).then((hra) => {
       this.setState({ jobApplications: hra });
     });
+  }
+
+  componentWillUnmount() {
+    this.isMountedVal = false;
   }
 
   handleSubmit(event) {
@@ -49,10 +53,11 @@ class CompareJobApplications extends React.Component {
         )
         .then(
           () => {
-            commonFormComponents.setRedrawSuccess(
-              (state) => this.setState(state),
-              'Job Application Chosen'
-            );
+            commonFormComponents.setRedrawSuccess((state) => {
+              if (this.isMountedVal) {
+                this.setState(state);
+              }
+            }, 'Job Application Chosen');
           },
           (error) => {
             this.setState({
