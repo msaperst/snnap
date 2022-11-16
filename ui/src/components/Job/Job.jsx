@@ -17,40 +17,53 @@ function Job(props) {
   const [company, setCompany] = useState({});
   const [applied, setApplied] = useState(false);
   const [applications, setApplications] = useState([]);
+  const [button, setButton] = useState('');
 
   useEffect(() => {
+    let isMounted = true;
     userService.get(job.user).then((u) => {
-      setUser(u);
-      companyService.get(u.id).then((comp) => {
-        setCompany(comp);
-      });
+      if (isMounted) {
+        setUser(u);
+        companyService.get(u.id).then((comp) => {
+          if (isMounted) {
+            setCompany(comp);
+          }
+        });
+      }
     });
     jobService.getJobApplications(job.id).then((apps) => {
-      setApplications(apps);
+      if (isMounted) {
+        setApplications(apps);
+      }
     });
-  }, [job.user, job.id, applied]);
+    return () => {
+      isMounted = false;
+    };
+  }, [job, applied]);
 
-  // determine which button we want (if mine, show applications; if applied for, disabled; else, apply for)
-  let button;
-  if (job.user === currentUser.id) {
-    button = <CompareJobApplications job={job} />;
-  } else if (applications.some((e) => e.user_id === currentUser.id)) {
-    button = (
-      <Button job={job.id} disabled className="btn-block">
-        Already Applied
-      </Button>
-    );
-  } else {
-    button = (
-      <ApplyToJob
-        job={job}
-        user={currentUser}
-        equipment={equipment}
-        skills={skills}
-        applied={() => setApplied(true)}
-      />
-    );
-  }
+  useEffect(() => {
+    // determine which button we want (if mine, show applications; if applied for, disabled; else, apply for)
+    if (job.user === currentUser.id) {
+      setButton(<CompareJobApplications job={job} />);
+    } else if (applications.some((e) => e.user_id === currentUser.id)) {
+      setButton(
+        <Button job={job.id} disabled className="btn-block">
+          Already Applied
+        </Button>
+      );
+    } else {
+      setButton(
+        <ApplyToJob
+          job={job}
+          user={currentUser}
+          equipment={equipment}
+          skills={skills}
+          applied={() => setApplied(true)}
+        />
+      );
+    }
+  }, [applications, currentUser, equipment, job, skills, applied]);
+
   return (
     <Card data-testid={`job-${job.id}`}>
       <Card.Body>
