@@ -230,7 +230,7 @@ describe('job', () => {
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([{ user_id: 5 }])
       .mockResolvedValueOnce()
-      .mockResolvedValueOnce([{ user: 6 }])
+      .mockResolvedValueOnce([{ user: 6, date_time: 'time' }])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([{ email_notifications: 1 }])
@@ -241,7 +241,7 @@ describe('job', () => {
 
     const job = new Job(4);
     await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(9);
+    expect(sqlSpy).toHaveBeenCalledTimes(11);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       'UPDATE jobs SET jobs.application_selected = 3, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = 4;'
@@ -278,6 +278,14 @@ describe('job', () => {
       9,
       'SELECT * FROM users WHERE id = 5;'
     );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      10,
+      "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 5, 6);"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      11,
+      "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 6, 5);"
+    );
     expect(emailSpy).toHaveBeenCalledTimes(1);
     expect(emailSpy).toHaveBeenCalledWith(
       'email@address.com',
@@ -294,14 +302,14 @@ describe('job', () => {
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([{ user_id: 5 }])
       .mockResolvedValueOnce()
-      .mockResolvedValueOnce([{ user: 6 }])
+      .mockResolvedValueOnce([{ user: 6, date_time: '2022-11-15 00:00:00' }])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([{ email_notifications: 0 }]);
 
     const job = new Job(4);
     await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(7);
+    expect(sqlSpy).toHaveBeenCalledTimes(9);
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 

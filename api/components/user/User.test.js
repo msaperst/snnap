@@ -104,11 +104,11 @@ describe('User', () => {
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE users SET last_login = now() WHERE id = '1'"
+      'UPDATE users SET last_login = now() WHERE id = 1;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      "SELECT * FROM users WHERE id = '1'"
+      'SELECT * FROM users WHERE id = 1;'
     );
   });
 
@@ -148,11 +148,11 @@ describe('User', () => {
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE users SET last_login = now() WHERE id = '1'"
+      'UPDATE users SET last_login = now() WHERE id = 1;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      "SELECT * FROM users WHERE id = '1'"
+      'SELECT * FROM users WHERE id = 1;'
     );
   });
 
@@ -192,11 +192,11 @@ describe('User', () => {
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE users SET last_login = now() WHERE id = '1'"
+      'UPDATE users SET last_login = now() WHERE id = 1;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      "SELECT * FROM users WHERE id = '1'"
+      'SELECT * FROM users WHERE id = 1;'
     );
   });
 
@@ -364,7 +364,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
   });
 
@@ -390,7 +390,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
   });
 
@@ -411,7 +411,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -428,7 +428,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -457,7 +457,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(3);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -496,7 +496,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -526,7 +526,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -556,7 +556,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -585,7 +585,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(3);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -670,7 +670,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123'
+      'SELECT * FROM users WHERE id = 123;'
     );
   });
 
@@ -844,6 +844,43 @@ describe('User', () => {
       expect.stringMatching(
         /UPDATE users SET password = '.*', password_reset_code = NULL WHERE id = 4;/
       )
+    );
+  });
+
+  it('allows retrieving all jobs requiring being rated', async () => {
+    const results = [{ id: 1, userId: 2, jobId: 3 }];
+    Mysql.query
+      .mockResolvedValueOnce([
+        {
+          id: 123,
+        },
+      ])
+      .mockResolvedValueOnce(results);
+    const user = User.auth(token);
+    expect(await user.getNeededRates()).toEqual(results);
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123;'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = 123 AND job_date < CURRENT_DATE AND date_rated IS NULL;'
+    );
+  });
+
+  it('allows setting a rating for the user', async () => {
+    Mysql.query.mockResolvedValue([{ id: 123 }]);
+    const user = User.auth(token);
+    await user.rate(12, true);
+    expect(mysqlSpy).toHaveBeenCalledTimes(2);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123;'
+    );
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      2,
+      'UPDATE ratings SET rating = true, date_rated = CURRENT_TIMESTAMP WHERE id = 12 AND rater = 123;'
     );
   });
 });

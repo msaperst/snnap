@@ -6,7 +6,7 @@ const parseIntAndDbEscape = require('../Common');
 const Job = class {
   constructor(id) {
     if (id) {
-      this.id = parseIntAndDbEscape(id, 10);
+      this.id = parseIntAndDbEscape(id);
     }
   }
 
@@ -165,11 +165,11 @@ const Job = class {
         jobApp.user_id
       )}, 'selected', ${this.id}, ${parseIntAndDbEscape(jobApplication)});`
     );
-    const jobUserId = (await this.getInfo()).user;
-    if ((await Job.getUserSettings(jobUserId)).email_notifications) {
+    const jobInfo = await this.getInfo();
+    if ((await Job.getUserSettings(jobInfo.user)).email_notifications) {
       // send out the email
       const jobUser = await Mysql.query(
-        `SELECT * FROM users WHERE id = ${jobUserId};`
+        `SELECT * FROM users WHERE id = ${jobInfo.user};`
       );
       const applicationUser = await Mysql.query(
         `SELECT * FROM users WHERE id = ${jobApp.user_id};`
@@ -191,6 +191,17 @@ const Job = class {
         )}'>job application</a>`
       );
     }
+    // create an entry for the rating of the job
+    await Mysql.query(
+      `INSERT INTO ratings (job, job_date, ratee, rater) VALUES (${
+        this.id
+      }, ${db.escape(jobInfo.date_time)}, ${jobApp.user_id}, ${jobInfo.user});`
+    );
+    await Mysql.query(
+      `INSERT INTO ratings (job, job_date, ratee, rater) VALUES (${
+        this.id
+      }, ${db.escape(jobInfo.date_time)}, ${jobInfo.user}, ${jobApp.user_id});`
+    );
   }
 
   static async getUserSettings(jobUser) {

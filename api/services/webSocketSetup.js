@@ -3,6 +3,7 @@ const url = require('url');
 const { getUnreadMessageCount } = require('./webSocketNotifications');
 const User = require('../components/user/User');
 const { getJobs } = require('./webSocketJobs');
+const { getNeededRatings } = require('./webSocketRate');
 
 // available as part of nodejs
 
@@ -65,11 +66,15 @@ function webSocketSetup(server) {
 
     let unreadMessageCount;
     let jobs;
+    let neededRatings;
     if (path === '/wsapp/unreadNotifications') {
       unreadMessageCount = getUnreadMessageCount(ctx, token);
     }
     if (path === '/wsapp/jobs') {
       jobs = getJobs(ctx, token);
+    }
+    if (path === '/wsapp/neededRatings') {
+      neededRatings = getNeededRatings(ctx, token);
     }
 
     // handle message events
@@ -82,6 +87,7 @@ function webSocketSetup(server) {
     ctx.on('close', () => {
       clearInterval(unreadMessageCount);
       clearInterval(jobs);
+      clearInterval(neededRatings);
     });
 
     // sent a message that we're good to proceed
