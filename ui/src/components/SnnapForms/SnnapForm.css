@@ -1,3 +1,23 @@
 .form-floating {
   color: black;
 }
+.range-switch {
+  width: 104px;
+}
+.range-switch input {
+  width: -webkit-fill-available !important;
+  height: -webkit-fill-available;
+  margin: 4px !important;
+  top: 0;
+  right: 0;
+  width: 100px !important;
+}
+
+.range-switch input:after {
+  content: "Range";
+  color: rgb(187, 182, 182);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

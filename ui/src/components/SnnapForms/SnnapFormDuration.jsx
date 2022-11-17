@@ -1,5 +1,5 @@
-import { Button, Col, Form, InputGroup } from 'react-bootstrap';
 import React, { useState } from 'react';
+import { Col, Form, InputGroup } from 'react-bootstrap';
 import './SnnapForm.css';
 
 function SnnapFormDuration(props) {
@@ -57,19 +57,17 @@ function SnnapFormDuration(props) {
         {formControl}
         <InputGroup.Text id={`inputGroupPost${safeName}`}>
           Hours
+          <Form.Switch
+            id={`setRange${safeName}`}
+            className="range-switch"
+            onClick={() => {
+              setRange(!range);
+              if (range) {
+                onChange(`${name}Range`, null);
+              }
+            }}
+          />
         </InputGroup.Text>
-        <Button
-          variant="outline-secondary"
-          id={`setRange${safeName}`}
-          onClick={() => {
-            setRange(!range);
-            if (range) {
-              onChange(`${name}Range`, null);
-            }
-          }}
-        >
-          Range
-        </Button>
         {formError}
       </InputGroup>
     </Form.Group>
