@@ -351,7 +351,9 @@ const User = class {
         `SELECT id, username, first_name, last_name, avatar FROM users WHERE id = ${id} OR username = '${username}';`
       )
     )[0];
-    userInfo.rating = await this.getRating(userInfo.id);
+    if (userInfo) {
+      userInfo.rating = await this.getRating(userInfo.id);
+    }
     return userInfo;
   }
 

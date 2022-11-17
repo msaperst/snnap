@@ -795,6 +795,17 @@ describe('User', () => {
     );
   });
 
+  it('gets empty basic user info when there is no match', async () => {
+    Mysql.query.mockResolvedValue([]);
+    expect(await User.getBasicUserInfo('*max1')).toBeUndefined();
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    // issue #574 addresses this issue with username/id overlap
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';"
+    );
+  });
+
   it('does not set forget if nothing is not found', async () => {
     Mysql.query.mockResolvedValueOnce();
     await User.forgot('someemail@email.email');
