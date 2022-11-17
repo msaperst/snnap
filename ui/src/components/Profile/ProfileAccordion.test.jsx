@@ -44,6 +44,7 @@ describe('profile accordion', () => {
       firstName: 'Max',
       lastName: 'Saperstone',
       username: 'user',
+      rating: null,
     });
 
     await act(async () => {
@@ -129,7 +130,7 @@ describe('profile accordion', () => {
       container.firstChild.firstChild.firstChild.firstChild.firstChild;
     expect(headers.children).toHaveLength(3);
     expect(headers).toHaveTextContent('Max SaperstoneSome Company');
-    expect(headers.firstChild).toHaveClass('col-md-1');
+    expect(headers.firstChild).toHaveClass('col-1');
     expect(headers.firstChild.firstChild.firstChild).toHaveClass(
       'form-check-input'
     );
@@ -275,6 +276,61 @@ describe('profile accordion', () => {
     // the rest is verified via PortfolioLink
     expect(row.lastChild.lastChild.firstChild).toHaveTextContent('link2');
     // the rest is verified via PortfolioLink
+  });
+
+  it('has no rating when none is supplied', () => {
+    const { container } = profileAccordion;
+    const headers =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+    expect(headers.children[0].lastChild.children).toHaveLength(0);
+  });
+
+  it('has plus rating when true is supplied', async () => {
+    userService.userService.get.mockResolvedValue({
+      firstName: 'Max',
+      lastName: 'Saperstone',
+      username: 'user',
+      rating: true,
+    });
+    await act(async () => {
+      profileAccordion = render(
+        <Profile type="accordion" company={application} />
+      );
+      const { container } = profileAccordion;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = profileAccordion;
+    const headers =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+    expect(headers.children[0].lastChild.children).toHaveLength(1);
+    expect(headers.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(
+      headers.children[0].lastChild.firstChild.firstChild
+    ).toHaveTextContent('Thumbs Up');
+  });
+
+  it('has minus rating when false is supplied', async () => {
+    userService.userService.get.mockResolvedValue({
+      firstName: 'Max',
+      lastName: 'Saperstone',
+      username: 'user',
+      rating: false,
+    });
+    await act(async () => {
+      profileAccordion = render(
+        <Profile type="accordion" company={application} />
+      );
+      const { container } = profileAccordion;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = profileAccordion;
+    const headers =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+    expect(headers.children[0].lastChild.children).toHaveLength(1);
+    expect(headers.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(
+      headers.children[0].lastChild.firstChild.firstChild
+    ).toHaveTextContent('Thumbs Down');
   });
 
   async function loadProfileAccordionWithMock(app) {

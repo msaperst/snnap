@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Col, Form, Row } from 'react-bootstrap';
+import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
 import Avatar from '../Avatar/Avatar';
 import './Profile.css';
 
 function ProfileHeader(props) {
   const { user, company, onClick, selected } = props;
   const navigate = useNavigate();
+  const [rating, setRating] = useState('');
+
+  useEffect(() => {
+    if (user.rating !== undefined && user.rating !== null) {
+      setRating(
+        user.rating ? (
+          <HandThumbsUp title="Thumbs Up" />
+        ) : (
+          <HandThumbsDown title="Thumbs Down" />
+        )
+      );
+    }
+  }, [user.rating]);
 
   let radioButton = '';
   let avatarNav = null;
   if (onClick) {
     radioButton = (
-      <Col md={1} xs={3} className="text-center">
+      <Col xs={1} className="text-center">
         <Form.Check
           id={`select-job-application-${company.id}`}
           type="radio"
@@ -30,13 +44,14 @@ function ProfileHeader(props) {
   return (
     <Row>
       {radioButton}
-      <Col md={2} xs={6}>
+      <Col md={2} xs={4}>
         <Avatar
           avatar={user.avatar}
           firstname={user.first_name}
           lastname={user.last_name}
           onClick={avatarNav}
         />
+        <span className="rating">{rating}</span>
       </Col>
       <Col>
         <Row>

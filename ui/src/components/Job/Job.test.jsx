@@ -56,6 +56,7 @@ describe('job', () => {
       first_name: 'Max',
       last_name: 'Saperstone',
       username: 'msaperst',
+      rating: null,
     });
 
     job = {
@@ -112,10 +113,13 @@ describe('job', () => {
     const buttonCell = cardContainer.firstChild.firstChild.lastChild;
 
     expect(avatarCell).toHaveClass('col-md-2 col-6 offset-md-0 offset-3');
-    expect(avatarCell.children).toHaveLength(1);
+    expect(avatarCell.children).toHaveLength(2);
     expect(avatarCell.firstChild).toHaveClass('circle');
     expect(avatarCell.firstChild.children).toHaveLength(1);
     expect(avatarCell.firstChild.firstChild).toHaveTextContent('MS');
+
+    expect(avatarCell.lastChild).toHaveClass('rating');
+    expect(avatarCell.lastChild.children).toHaveLength(0);
 
     expect(infoCell).toHaveClass('col-md-7');
     expect(infoCell.children).toHaveLength(2);
@@ -252,5 +256,46 @@ describe('job', () => {
       fireEvent.click(avatarCell.firstChild.firstChild);
     });
     expect(mockedNavigate).toHaveBeenCalledWith('/profile/msaperst');
+  });
+
+  it('has no rating when none is supplied', async () => {
+    await loadJob(job, createUser);
+    const { container } = requestForHire;
+    const userCol = container.firstChild.firstChild.firstChild;
+    expect(userCol.children[0].lastChild.children).toHaveLength(0);
+  });
+
+  it('has plus rating when true is supplied', async () => {
+    userService.userService.get.mockResolvedValue({
+      firstName: 'Max',
+      lastName: 'Saperstone',
+      username: 'user',
+      rating: true,
+    });
+    await loadJob(job, createUser);
+    const { container } = requestForHire;
+    const userCol = container.firstChild.firstChild.firstChild;
+    expect(userCol.children[0].lastChild.children).toHaveLength(1);
+    expect(userCol.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(
+      userCol.children[0].lastChild.firstChild.firstChild
+    ).toHaveTextContent('Thumbs Up');
+  });
+
+  it('has minus rating when false is supplied', async () => {
+    userService.userService.get.mockResolvedValue({
+      firstName: 'Max',
+      lastName: 'Saperstone',
+      username: 'user',
+      rating: false,
+    });
+    await loadJob(job, createUser);
+    const { container } = requestForHire;
+    const userCol = container.firstChild.firstChild.firstChild;
+    expect(userCol.children[0].lastChild.children).toHaveLength(1);
+    expect(userCol.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(
+      userCol.children[0].lastChild.firstChild.firstChild
+    ).toHaveTextContent('Thumbs Down');
   });
 });
