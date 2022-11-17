@@ -37,4 +37,5 @@ describe('profile page', () => {
   // verify links take to new page
   // verify links add http when not in them
   // verify links don't display when not set
+  // verify ratings show in profile
 });
