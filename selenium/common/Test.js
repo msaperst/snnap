@@ -117,6 +117,8 @@ class Test {
       await Mysql.query(`DELETE FROM job_equipment WHERE job = ${job.id}`);
       await Mysql.query(`DELETE FROM job_skills WHERE job = ${job.id}`);
     }
+    // delete all ratings
+    await Mysql.query(`DELETE FROM ratings WHERE rater = ${id} OR rater = 0;`);
   }
 
   async removeUser() {
@@ -224,6 +226,27 @@ class Test {
   static async chooseJobApplication(jobId, applicationId) {
     const job = new Job(jobId);
     await job.selectApplication(applicationId);
+  }
+
+  async addRating(job, ratee, rating = null) {
+    const info = await job.getInfo();
+    const date = new Date(info.date_time)
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
+    if (rating) {
+      await Mysql.query(
+        `INSERT INTO ratings (job, job_date, rater, ratee, rating, date_rated)
+         VALUES (${
+           info.id
+         }, '${date}', ${await this.user.getId()}, ${ratee}, ${rating}, CURRENT_TIMESTAMP);`
+      );
+    } else {
+      await Mysql.query(
+        `INSERT INTO ratings (job, job_date, rater, ratee)
+         VALUES (${info.id}, '${date}', ${await this.user.getId()}, ${ratee});`
+      );
+    }
   }
 
   async waitUntilNotPresent(locator, wait = 5000) {

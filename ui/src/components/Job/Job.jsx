@@ -2,6 +2,7 @@ import { Button, Card, Col, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './Job.css';
 import { useNavigate } from 'react-router-dom';
+import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
 import { userService } from '../../services/user.service';
 import { jobService } from '../../services/job.service';
 import Avatar from '../Avatar/Avatar';
@@ -18,6 +19,19 @@ function Job(props) {
   const [applied, setApplied] = useState(false);
   const [applications, setApplications] = useState([]);
   const [button, setButton] = useState('');
+  const [rating, setRating] = useState('');
+
+  useEffect(() => {
+    if (user.rating !== undefined && user.rating !== null) {
+      setRating(
+        user.rating ? (
+          <HandThumbsUp title="Thumbs Up" />
+        ) : (
+          <HandThumbsDown title="Thumbs Down" />
+        )
+      );
+    }
+  }, [user.rating]);
 
   useEffect(() => {
     let isMounted = true;
@@ -75,6 +89,7 @@ function Job(props) {
               lastname={user.last_name}
               onClick={() => navigate(`/profile/${user.username}`)}
             />
+            <span className="rating">{rating}</span>
           </Col>
           <Col md={7}>
             <Row>

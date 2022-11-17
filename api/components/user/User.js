@@ -134,6 +134,7 @@ const User = class {
         file
       )} WHERE id = ${await this.getId()}`
     );
+    this.avatar = file;
   }
 
   async setAccountInformation(email) {
@@ -150,6 +151,7 @@ const User = class {
         email
       )} WHERE id = ${await this.getId()}`
     );
+    this.email = email;
   }
 
   async setPersonalInformation(firstName, lastName, location) {
@@ -162,6 +164,11 @@ const User = class {
         location.lon
       )} WHERE id = ${await this.getId()}`
     );
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.loc = location.loc;
+    this.lat = location.lat;
+    this.lon = location.lon;
   }
 
   async updatePassword(currentPassword, newPassword) {
@@ -281,6 +288,7 @@ const User = class {
       loc: this.loc,
       lat: this.lat,
       lon: this.lon,
+      rating: await User.getRating(this.id),
     };
   }
 
@@ -317,6 +325,18 @@ const User = class {
     );
   }
 
+  static async getRating(id) {
+    const ratings = await Mysql.query(
+      `SELECT * FROM ratings WHERE ratee = ${id} AND rating IS NOT NULL;`
+    );
+    if (ratings.length < 5) {
+      return null;
+    }
+    const average =
+      ratings.reduce((sum, { rating }) => sum + rating, 0) / ratings.length;
+    return Boolean(Math.round(average));
+  }
+
   static async getBasicUserInfo(user) {
     const username = user.toString().replace(/\W/gi, '');
     let id;
@@ -326,9 +346,15 @@ const User = class {
       id = "'NaN'";
     }
 
-    return Mysql.query(
-      `SELECT id, username, first_name, last_name, avatar FROM users WHERE id = ${id} OR username = '${username}';`
-    );
+    const userInfo = (
+      await Mysql.query(
+        `SELECT id, username, first_name, last_name, avatar FROM users WHERE id = ${id} OR username = '${username}';`
+      )
+    )[0];
+    if (userInfo) {
+      userInfo.rating = await this.getRating(userInfo.id);
+    }
+    return userInfo;
   }
 
   static getToken(authorization) {

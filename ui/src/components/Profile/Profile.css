@@ -11,6 +11,12 @@
     padding: 20px;
 }
 
+.rating {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 /*only at medium */
 @media (min-width: 992px) {
     .accordion-header .col-md-2 {
