@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Col, Form, Row } from 'react-bootstrap';
 import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
@@ -8,6 +8,19 @@ import './Profile.css';
 function ProfileHeader(props) {
   const { user, company, onClick, selected } = props;
   const navigate = useNavigate();
+  const [rating, setRating] = useState('');
+
+  useEffect(() => {
+    if (user.rating !== undefined && user.rating !== null) {
+      setRating(
+        user.rating ? (
+          <HandThumbsUp title="Thumbs Up" />
+        ) : (
+          <HandThumbsDown title="Thumbs Down" />
+        )
+      );
+    }
+  }, [user.rating]);
 
   let radioButton = '';
   let avatarNav = null;
@@ -26,14 +39,6 @@ function ProfileHeader(props) {
       </Col>
     );
     avatarNav = () => navigate(`/profile/${user.username}`);
-  }
-  let rating = '';
-  if (user.rating !== null) {
-    rating = user.rating ? (
-      <HandThumbsUp title="Thumbs Up" />
-    ) : (
-      <HandThumbsDown title="Thumbs Down" />
-    );
   }
 
   return (

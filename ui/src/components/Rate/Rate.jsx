@@ -33,7 +33,11 @@ function Rate(props) {
   const handleSubmit = (rating) => {
     userService.rate(id, rating).then(
       () => {
-        setUpdate('Thank you for submitting your rating.');
+        if (rating !== null) {
+          setUpdate('Thank you for submitting your rating.');
+        } else {
+          setUpdate('Thank you for letting us know.');
+        }
         setTimeout(() => {
           if (isMountedVal.current) {
             setUpdate(null);

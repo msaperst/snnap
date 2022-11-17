@@ -114,7 +114,7 @@ describe('profile page', () => {
       until.elementLocated(By.css('.alert-success')),
       5000
     );
-    expect(await alert.getText()).toEqual('Thank you letting us know.');
+    expect(await alert.getText()).toEqual('Thank you for letting us know.');
     await test.waitUntilNotPresent(By.css('[data-testid="rateModal"]'));
     await driver.navigate().refresh();
     await Test.sleep(1000);

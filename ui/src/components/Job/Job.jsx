@@ -19,6 +19,19 @@ function Job(props) {
   const [applied, setApplied] = useState(false);
   const [applications, setApplications] = useState([]);
   const [button, setButton] = useState('');
+  const [rating, setRating] = useState('');
+
+  useEffect(() => {
+    if (user.rating !== undefined && user.rating !== null) {
+      setRating(
+        user.rating ? (
+          <HandThumbsUp title="Thumbs Up" />
+        ) : (
+          <HandThumbsDown title="Thumbs Down" />
+        )
+      );
+    }
+  }, [user.rating]);
 
   useEffect(() => {
     let isMounted = true;
@@ -64,15 +77,6 @@ function Job(props) {
       );
     }
   }, [applications, currentUser, equipment, job, skills, applied]);
-
-  let rating = '';
-  if (user.rating !== null) {
-    rating = user.rating ? (
-      <HandThumbsUp title="Thumbs Up" />
-    ) : (
-      <HandThumbsDown title="Thumbs Down" />
-    );
-  }
 
   return (
     <Card data-testid={`job-${job.id}`}>

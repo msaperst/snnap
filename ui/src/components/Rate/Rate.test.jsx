@@ -189,4 +189,15 @@ describe('rate', () => {
     });
     expect(modal).not.toBeVisible();
   });
+
+  it('on did not work success gives correct message', async () => {
+    userService.userService.rate.mockResolvedValue('Some Success');
+    await act(async () => {
+      await fireEvent.click(screen.getAllByRole('button')[1]);
+    });
+    const saveRow = modal.firstChild.lastChild.lastChild;
+    expect(saveRow.lastChild.firstChild).toHaveTextContent(
+      'Thank you for letting us know.'
+    );
+  });
 });
