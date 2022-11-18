@@ -74,7 +74,7 @@ describe('snnap form input', () => {
     ).toEqual('form123');
     expect(
       container.firstChild.firstChild.children[1].getAttribute('placeholder')
-    ).toEqual('123');
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.children[1].getAttribute('type')
     ).toEqual('number');

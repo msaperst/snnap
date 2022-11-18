@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS hire_requests_equipment
 
 ALTER TABLE hire_requests_equipment RENAME job_equipment;
 ALTER TABLE job_equipment RENAME COLUMN hire_request TO job;
+
+DROP TABLE job_equipment;

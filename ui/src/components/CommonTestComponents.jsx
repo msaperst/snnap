@@ -13,12 +13,7 @@ export const hr = {
   user: 1,
   durationMax: null,
   typeId: 2,
-  equipment: [
-    {
-      value: 1,
-      name: 'Camera',
-    },
-  ],
+  equipment: 'Camera',
   skills: [
     {
       value: 4,

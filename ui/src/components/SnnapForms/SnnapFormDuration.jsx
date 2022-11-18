@@ -22,7 +22,6 @@ function SnnapFormDuration(props) {
       type="number"
       step={0.25}
       min={0}
-      placeholder={name}
       aria-describedby={`inputGroup${safeName}`}
       onChange={change}
     />
@@ -38,7 +37,6 @@ function SnnapFormDuration(props) {
           type="number"
           step={0.25}
           min={0}
-          placeholder={`${name} Range`}
           aria-describedby={`inputGroup${safeName}`}
           onChange={changeRange}
         />

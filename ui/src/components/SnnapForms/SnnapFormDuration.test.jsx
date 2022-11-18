@@ -64,7 +64,7 @@ describe('snnap form input', () => {
     ).toEqual('form123');
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('placeholder')
-    ).toEqual('123');
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('number');
@@ -176,7 +176,7 @@ describe('snnap form input', () => {
     ).toEqual('form123');
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('placeholder')
-    ).toEqual('123');
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('number');
@@ -221,7 +221,7 @@ describe('snnap form input', () => {
     ).toEqual('form123');
     expect(
       container.firstChild.firstChild.children[2].getAttribute('placeholder')
-    ).toEqual('123 Range');
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.children[2].getAttribute('type')
     ).toEqual('number');

@@ -5,14 +5,15 @@
   width: 104px;
 }
 .range-switch input {
-  width: -webkit-fill-available !important;
-  height: -webkit-fill-available;
+  height: 30px;
   margin: 4px !important;
   top: 0;
   right: 0;
   width: 100px !important;
 }
-
+.range-switch input:checked {
+  background-repeat: no-repeat;
+}
 .range-switch input:after {
   content: "Range";
   color: rgb(187, 182, 182);
@@ -20,4 +21,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.multi-select-form > div {
+  padding: 10px;
 }

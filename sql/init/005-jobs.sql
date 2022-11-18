@@ -36,3 +36,4 @@ ALTER TABLE hire_requests RENAME jobs;
 ALTER TABLE jobs MODIFY COLUMN lat DOUBLE;
 ALTER TABLE jobs MODIFY COLUMN lon DOUBLE;
 ALTER TABLE jobs ADD COLUMN subtype int(11) NOT NULL;
+ALTER TABLE jobs ADD COLUMN equipment mediumtext;

@@ -14,6 +14,7 @@ function SnnapFormLocationInput(props) {
       input.className = 'form-control';
       input.id = `form${safeName}`;
       input.setAttribute('required', true);
+      input.setAttribute('autocomplete', 'off');
       // move the input
       const close = input.nextSibling;
       const parent = input.parentNode;

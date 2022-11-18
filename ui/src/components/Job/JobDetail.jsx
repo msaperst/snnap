@@ -58,11 +58,7 @@ function JobDetail(props) {
         <SnnapFormInput
           size={6}
           name="Equipment"
-          value={
-            job.equipment
-              ? job.equipment.map((option) => option.name).toString()
-              : ''
-          }
+          value={job.equipment}
           disabled
         />
         <SnnapFormInput

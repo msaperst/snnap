@@ -95,6 +95,7 @@ describe('new job form', () => {
     expect(jobTypeInput.getAttribute('id')).toEqual('formJobType');
     expect(jobTypeInput.getAttribute('aria-label')).toEqual('Job Type');
     expect(jobTypeInput.getAttribute('disabled')).toBeNull();
+    expect(jobTypeInput.getAttribute('required')).toEqual('');
 
     expect(jobTypeInput.children).toHaveLength(3);
     expect(jobTypeInput.firstChild).toHaveTextContent('Select an option');
@@ -116,6 +117,7 @@ describe('new job form', () => {
     expect(jobSubtypeInput.getAttribute('id')).toEqual('formLookingFor');
     expect(jobSubtypeInput.getAttribute('aria-label')).toEqual('Looking For');
     expect(jobSubtypeInput.getAttribute('disabled')).toBeNull();
+    expect(jobSubtypeInput.getAttribute('required')).toEqual('');
 
     expect(jobSubtypeInput.children).toHaveLength(3);
     expect(jobSubtypeInput.firstChild).toHaveTextContent('Select an option');
@@ -140,6 +142,7 @@ describe('new job form', () => {
     expect(locationInput.getAttribute('id')).toEqual('formCity');
     expect(locationInput.getAttribute('placeholder')).toEqual('City');
     expect(locationInput.getAttribute('disabled')).toBeNull();
+    expect(locationInput.getAttribute('required')).toBeTruthy();
     expect(locationInput.getAttribute('type')).toEqual('text');
     expect(locationInput.getAttribute('value')).toBeNull();
 
@@ -148,6 +151,7 @@ describe('new job form', () => {
     expect(dateInput.getAttribute('id')).toEqual('formDate');
     expect(dateInput.getAttribute('placeholder')).toEqual('Date');
     expect(dateInput.getAttribute('disabled')).toBeNull();
+    expect(dateInput.getAttribute('required')).toEqual('');
     expect(dateInput.getAttribute('type')).toEqual('date');
     expect(dateInput.getAttribute('value')).toEqual('');
   });
@@ -162,58 +166,66 @@ describe('new job form', () => {
     expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
     expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
     expect(detailsInput.getAttribute('disabled')).toBeNull();
+    expect(detailsInput.getAttribute('required')).toEqual('');
     expect(detailsInput.getAttribute('type')).toEqual('textarea');
     expect(detailsInput.getAttribute('value')).toBeNull();
     expect(detailsInput).toHaveTextContent('');
   });
 
-  it('fifth row has the duration and pay', async () => {
+  it('fifth row has the equipment and skills', async () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children[4]).toHaveClass('mb-3 row');
     expect(modalForm.children[4].children).toHaveLength(2);
 
     expect(modalForm.children[4].firstChild).toHaveClass('col-md-6');
-    const durationInput =
+    const equipmentInput =
       modalForm.children[4].firstChild.firstChild.firstChild;
-    expect(durationInput.getAttribute('id')).toEqual('formDuration');
-    expect(durationInput.getAttribute('placeholder')).toEqual('Duration');
-    expect(durationInput.getAttribute('disabled')).toBeNull();
-    expect(durationInput.getAttribute('type')).toEqual('number');
-    expect(durationInput.getAttribute('value')).toBeNull();
+    expect(equipmentInput.getAttribute('id')).toEqual('formDesiredEquipment');
+    expect(equipmentInput.getAttribute('placeholder')).toEqual(
+      'Desired Equipment'
+    );
+    expect(equipmentInput.getAttribute('disabled')).toBeNull();
+    expect(equipmentInput.getAttribute('required')).toBeNull();
+    expect(equipmentInput.getAttribute('type')).toEqual('text');
+    expect(equipmentInput.getAttribute('value')).toEqual('');
+    expect(equipmentInput).toHaveTextContent('');
+    // TODO - verify correct options, and that none are selected
 
     expect(modalForm.children[4].lastChild).toHaveClass('col-md-6');
-    expect(modalForm.children[4].lastChild.firstChild.firstChild).toHaveClass(
-      'input-group-text'
-    );
     expect(
-      modalForm.children[4].lastChild.firstChild.firstChild.getAttribute('id')
-    ).toEqual('inputGroupPrePay');
-    const payInput = modalForm.children[4].lastChild.firstChild.children[1];
-    expect(payInput.getAttribute('id')).toEqual('formPay');
-    expect(payInput.getAttribute('placeholder')).toEqual('Pay');
-    expect(payInput.getAttribute('disabled')).toBeNull();
-    expect(payInput.getAttribute('type')).toEqual('number');
-    expect(payInput.getAttribute('value')).toBeNull();
+      modalForm.children[4].lastChild.firstChild.children[2].firstChild
+        .firstChild
+    ).toHaveTextContent('Skills Required');
+    // TODO - verify correct options, and that none are selected
   });
 
-  it('sixth row has the equipment and skills', async () => {
+  it('sixth row has the duration and pay', async () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children[5]).toHaveClass('mb-3 row');
     expect(modalForm.children[5].children).toHaveLength(2);
 
     expect(modalForm.children[5].firstChild).toHaveClass('col-md-6');
-    expect(
-      modalForm.children[5].firstChild.firstChild.children[2].firstChild
-        .firstChild
-    ).toHaveTextContent('Equipment Needed');
-    // TODO - verify correct options, and that none are selected
+    const durationInput =
+      modalForm.children[5].firstChild.firstChild.firstChild;
+    expect(durationInput.getAttribute('id')).toEqual('formDuration');
+    expect(durationInput.getAttribute('placeholder')).toBeNull();
+    expect(durationInput.getAttribute('disabled')).toBeNull();
+    expect(durationInput.getAttribute('type')).toEqual('number');
+    expect(durationInput.getAttribute('value')).toBeNull();
 
     expect(modalForm.children[5].lastChild).toHaveClass('col-md-6');
+    expect(modalForm.children[5].lastChild.firstChild.firstChild).toHaveClass(
+      'input-group-text'
+    );
     expect(
-      modalForm.children[5].lastChild.firstChild.children[2].firstChild
-        .firstChild
-    ).toHaveTextContent('Skills Needed');
-    // TODO - verify correct options, and that none are selected
+      modalForm.children[5].lastChild.firstChild.firstChild.getAttribute('id')
+    ).toEqual('inputGroupPrePay');
+    const payInput = modalForm.children[5].lastChild.firstChild.children[1];
+    expect(payInput.getAttribute('id')).toEqual('formPay');
+    expect(payInput.getAttribute('placeholder')).toBeNull();
+    expect(payInput.getAttribute('disabled')).toBeNull();
+    expect(payInput.getAttribute('type')).toEqual('number');
+    expect(payInput.getAttribute('value')).toBeNull();
   });
 
   // expects in method
@@ -263,10 +275,10 @@ describe('new job form', () => {
     fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
       target: { value: 'Some Deets' },
     });
-    fireEvent.change(modalForm.children[4].firstChild.firstChild.firstChild, {
+    fireEvent.change(modalForm.children[5].firstChild.firstChild.firstChild, {
       target: { value: '8' },
     });
-    fireEvent.change(modalForm.children[4].lastChild.firstChild.children[1], {
+    fireEvent.change(modalForm.children[5].lastChild.firstChild.children[1], {
       target: { value: '50' },
     });
     // eslint-disable-next-line no-promise-executor-return
@@ -287,7 +299,7 @@ describe('new job form', () => {
     jobService.jobService.newJob.mockRejectedValue('Some Error');
     const modalForm = modal.firstChild.lastChild.firstChild;
     await fillOutForm(modalForm, false, '2010-10-13');
-    await hasAnError(modal, 'Please provide a date after today.');
+    await hasAnError(modal, 'Please provide a date today or later.');
     expect(spy).toHaveBeenCalledTimes(0);
   });
 
