@@ -85,6 +85,7 @@ router.post('/apply-to-job', applyToJobValidation, async (req, res) => {
       req.body.experience,
       equipment,
       skills,
+      req.body.comment,
       req.body.portfolio
     );
     return res.status(200).send();

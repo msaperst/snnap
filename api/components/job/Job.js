@@ -122,7 +122,7 @@ const Job = class {
     await this.instancePromise;
     const job = (
       await Mysql.query(
-        `SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.id = ${this.id};`
+        `SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = ${this.id};`
       )
     )[0];
     if (job) {

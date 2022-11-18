@@ -207,13 +207,6 @@ class NewJob extends React.Component {
               </Row>
               <Row className="mb-3">
                 <SnnapFormInput
-                  name="Job Details"
-                  type="textarea"
-                  onChange={this.updateForm}
-                />
-              </Row>
-              <Row className="mb-3">
-                <SnnapFormInput
                   size={6}
                   name="Desired Equipment"
                   onChange={this.updateForm}
@@ -224,6 +217,13 @@ class NewJob extends React.Component {
                   name="Skills Required"
                   onChange={this.updateForm}
                   options={skills}
+                />
+              </Row>
+              <Row className="mb-3">
+                <SnnapFormInput
+                  name="Job Details"
+                  type="textarea"
+                  onChange={this.updateForm}
                 />
               </Row>
               <Row className="mb-3">

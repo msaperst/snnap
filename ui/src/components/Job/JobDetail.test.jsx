@@ -16,6 +16,7 @@ describe('job detail info', () => {
     jobAlt = {
       id: 5,
       type: 'Event',
+      subtype: 'Assistant',
       details: "Max's 40th Birthday, woot!!!",
       pay: 0.5,
       duration: 8,
@@ -23,6 +24,7 @@ describe('job detail info', () => {
       user: 1,
       durationMax: 9,
       typeId: 2,
+      subtypeId: 2,
       loc: 'Fairfax, VA, United States of America',
       lat: 5,
       lon: -71.2345,
@@ -31,7 +33,7 @@ describe('job detail info', () => {
 
   it('has the correct layout for the form', async () => {
     const { container } = render(<JobDetail job={job} />);
-    expect(container.children).toHaveLength(5);
+    expect(container.children).toHaveLength(6);
   });
 
   function checkInput(inputRow, mdSize, id, placeHolder, value) {
@@ -54,45 +56,24 @@ describe('job detail info', () => {
   it('has the correct basic job information', async () => {
     const { container } = render(<JobDetail job={job} />);
     // job info first row
-    expect(container.children[1].children).toHaveLength(3);
+    expect(container.children[1].children).toHaveLength(2);
     checkInput(
       container.children[1].children[0],
-      4,
+      6,
       'formJobType',
       'Job Type',
       'Event'
     );
     checkInput(
       container.children[1].children[1],
-      4,
-      'formDate',
-      'Date',
-      'Friday, October 13, 2023'
-    );
-    checkInput(
-      container.children[1].children[2],
-      4,
-      'formDuration',
-      'Duration',
-      '8 hours'
+      6,
+      'formLookingFor',
+      'Looking For',
+      'Assistant'
     );
   });
 
-  // expects in method
-  // eslint-disable-next-line jest/expect-expect
-  it('has the correct basic job information with time span', async () => {
-    const { container } = render(<JobDetail job={jobAlt} />);
-    // job info first row
-    checkInput(
-      container.children[1].children[2],
-      4,
-      'formDuration',
-      'Duration',
-      '8 to 9 hours'
-    );
-  });
-
-  it('has the correct location and pay information', async () => {
+  it('has the correct location and date', async () => {
     const { container } = render(<JobDetail job={job} />);
     // job info second row
     expect(container.children[2].children).toHaveLength(2);
@@ -106,18 +87,58 @@ describe('job detail info', () => {
     checkInput(
       container.children[2].children[1],
       4,
-      'formPay',
-      'Pay',
-      '$0.5 per hour'
+      'formDate',
+      'Date',
+      'Friday, October 13, 2023'
+    );
+  });
+
+  it('has the correct equipment and skills', async () => {
+    const { container } = render(<JobDetail job={job} />);
+    // job info fourth row
+    expect(container.children[3].children).toHaveLength(2);
+    checkInput(
+      container.children[3].children[0],
+      6,
+      'formDesiredEquipment',
+      'Desired Equipment',
+      'Camera'
+    );
+    checkInput(
+      container.children[3].children[1],
+      6,
+      'formSkillsRequired',
+      'Skills Required',
+      'Posing, Something'
+    );
+  });
+
+  it('has the correct equipment and skills when none are listed', async () => {
+    const { container } = render(<JobDetail job={jobAlt} />);
+    // job info fourth row
+    expect(container.children[3].children).toHaveLength(2);
+    checkInput(
+      container.children[3].children[0],
+      6,
+      'formDesiredEquipment',
+      'Desired Equipment',
+      ' '
+    );
+    checkInput(
+      container.children[3].children[1],
+      6,
+      'formSkillsRequired',
+      'Skills Required',
+      ' '
     );
   });
 
   it('has the correct job details', async () => {
     const { container } = render(<JobDetail job={job} />);
     // job info third row
-    expect(container.children[3].children[0]).toHaveClass('col-md-12');
+    expect(container.children[4].children[0]).toHaveClass('col-md-12');
     const detailsInput =
-      container.children[3].children[0].firstChild.firstChild;
+      container.children[4].children[0].firstChild.firstChild;
     expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
     expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
     expect(detailsInput.getAttribute('disabled')).toEqual('');
@@ -125,43 +146,37 @@ describe('job detail info', () => {
     expect(detailsInput).toHaveTextContent("Max's 40th Birthday, woot!!!");
   });
 
-  it('has the correct equipment and skills', async () => {
+  it('has the correct time and pay', async () => {
     const { container } = render(<JobDetail job={job} />);
     // job info fourth row
-    expect(container.children[4].children).toHaveLength(2);
+    expect(container.children[5].children).toHaveLength(2);
     checkInput(
-      container.children[4].children[0],
+      container.children[5].children[0],
       6,
-      'formEquipment',
-      'Equipment',
-      'Camera'
+      'formDuration',
+      'Duration',
+      '8 hours'
     );
     checkInput(
-      container.children[4].children[1],
+      container.children[5].children[1],
       6,
-      'formSkills',
-      'Skills',
-      'Posing,Something'
+      'formPay',
+      'Pay',
+      '$0.5 per hour'
     );
   });
 
-  it('has the correct equipment and skills when none are listed', async () => {
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
+  it('has the correct basic job information with time span', async () => {
     const { container } = render(<JobDetail job={jobAlt} />);
-    // job info fourth row
-    expect(container.children[4].children).toHaveLength(2);
+    // job info first row
     checkInput(
-      container.children[4].children[0],
+      container.children[5].children[0],
       6,
-      'formEquipment',
-      'Equipment',
-      ''
-    );
-    checkInput(
-      container.children[4].children[1],
-      6,
-      'formSkills',
-      'Skills',
-      ''
+      'formDuration',
+      'Duration',
+      '8 to 9 hours'
     );
   });
 });

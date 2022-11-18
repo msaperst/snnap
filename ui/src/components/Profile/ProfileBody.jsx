@@ -44,6 +44,14 @@ function ProfileBody(props) {
         </Col>
       </Row>
       <Row className="mb-3">
+        <Col
+          id={`job-application-${company.id}-experience`}
+          className="text-justify"
+        >
+          {company.comment}
+        </Col>
+      </Row>
+      <Row className="mb-3">
         <Col id={`job-application-${company.id}-equipment`} md={8}>
           <h4>Equipment</h4>
           {equipmentItems.map((option) => (

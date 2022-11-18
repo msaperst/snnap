@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 export const hr = {
   id: 5,
   type: 'Event',
+  subtype: 'Assistant',
   loc: 'Fairfax, VA, United States of America',
   details: "Max's 40th Birthday, woot!!!",
   pay: 0.5,
@@ -13,6 +14,7 @@ export const hr = {
   user: 1,
   durationMax: null,
   typeId: 2,
+  subtypeId: 3,
   equipment: 'Camera',
   skills: [
     {

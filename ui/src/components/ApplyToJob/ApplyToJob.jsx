@@ -70,12 +70,13 @@ class ApplyToJob extends React.Component {
           formData.id, // company id
           formData.Name || `${user.firstName} ${user.lastName}`,
           formData.Company || formData.name,
-          !website || website === '' ? undefined : website,
-          !insta || insta === '' ? undefined : insta,
-          !fb || fb === '' ? undefined : fb,
+          this.getUndefinedVal(website),
+          this.getUndefinedVal(insta),
+          this.getUndefinedVal(fb),
           formData.Experience || formData.experience,
           formData.Equipment || formData.equipment,
           formData.Skills || formData.skills,
+          formData['Additional Comments'],
           formData.portfolio
         )
         .then(
@@ -97,6 +98,11 @@ class ApplyToJob extends React.Component {
         );
     }
     this.setState({ validated: true });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getUndefinedVal(val) {
+    return !val || val === '' ? undefined : val;
   }
 
   updateForm(key, value) {
@@ -210,6 +216,14 @@ class ApplyToJob extends React.Component {
                   values={company.skills}
                   onChange={this.updateForm}
                   options={skills}
+                />
+              </Row>
+              <Row className="mb-3">
+                <SnnapFormInput
+                  name="Additional Comments"
+                  type="textarea"
+                  onChange={this.updateForm}
+                  notRequired
                 />
               </Row>
               <Gallery
