@@ -7,6 +7,7 @@ const Job = require('../components/job/Job');
 const JobApplication = require('../components/jobApplication/JobApplication');
 const Common = require('./common');
 
+const thisMorning = new Date().setHours(0, 0, 0, 0);
 const newJobValidation = [
   check('type', 'Please provide a valid job type.').isNumeric(),
   check('subtype', 'Please provide a valid looking for.').isNumeric(),
@@ -20,7 +21,9 @@ const newJobValidation = [
     .optional()
     .isNumeric(),
   check('date', 'Please provide a valid date.').isDate(),
-  check('date', 'Please provide a date after today.').not().isBefore(),
+  check('date', 'Please provide a date today or later.').isAfter(
+    new Date(thisMorning).toDateString()
+  ),
 ];
 
 router.post('/new-job', newJobValidation, async (req, res) => {
@@ -30,7 +33,7 @@ router.post('/new-job', newJobValidation, async (req, res) => {
   }
   try {
     const user = User.auth(token);
-    const { equipment, skills } = Common.getEquipmentAndSkills(req);
+    const { skills } = Common.getEquipmentAndSkills(req);
     Job.create(
       await user.getId(),
       req.body.type,
@@ -41,7 +44,7 @@ router.post('/new-job', newJobValidation, async (req, res) => {
       req.body.duration,
       req.body.durationMax,
       req.body.date,
-      equipment,
+      req.body.equipment,
       skills
     );
     return res.status(200).send();

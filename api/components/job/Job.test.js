@@ -18,6 +18,7 @@ describe('job', () => {
     durationMax: null,
     typeId: 2,
     type: "B'nai Mitzvah",
+    equipment: '',
   };
   const item2 = {
     id: 2,
@@ -30,6 +31,7 @@ describe('job', () => {
     durationMax: null,
     typeId: 2,
     type: 'Event',
+    equipment: 'some equipment',
   };
   const location = {
     loc: 'Fairfax, VA, United States of America',
@@ -56,7 +58,7 @@ describe('job', () => {
       5,
       null,
       '2022-02-16',
-      [],
+      '',
       []
     );
     await expect(job.getId()).resolves.toEqual(15);
@@ -65,7 +67,7 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', '', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -84,7 +86,7 @@ describe('job', () => {
       5,
       10,
       '2022-02-16',
-      [],
+      '',
       []
     );
     await expect(job.getId()).resolves.toEqual(15);
@@ -93,12 +95,12 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', '', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 
-  it('sets the job with skills and equipment on creation', async () => {
+  it('sets the job with skills on creation', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
     const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query.mockResolvedValue({ insertId: 15 });
@@ -112,32 +114,28 @@ describe('job', () => {
       5,
       null,
       '2022-02-16',
+      'some equipment',
       [
-        { value: 3, label: 'Flash' },
-        { value: 4, label: 'Camera' },
-      ],
-      [{ value: 2, label: 'Posing' }]
+        { value: 2, label: 'Posing' },
+        { value: 3, label: 'Styling' },
+      ]
     );
     await expect(job.getId()).resolves.toEqual(15);
     await expect(job.getType()).resolves.toEqual(5);
     await expect(job.getLocation()).resolves.toEqual(location);
     // verify the sql calls
-    expect(sqlSpy).toHaveBeenCalledTimes(4);
+    expect(sqlSpy).toHaveBeenCalledTimes(3);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA, United States of America', 5,-71.2345);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'INSERT INTO job_equipment (job, equipment) VALUES (15, 3);'
+      'INSERT INTO job_skills (job, skill) VALUES (15, 2);'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      'INSERT INTO job_equipment (job, equipment) VALUES (15, 4);'
-    );
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      4,
-      'INSERT INTO job_skills (job, skill) VALUES (15, 2);'
+      'INSERT INTO job_skills (job, skill) VALUES (15, 3);'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -169,27 +167,23 @@ describe('job', () => {
       details: "Max's 40th Birthday, woot!!!",
       duration: 8,
       durationMax: null,
-      equipment: [{ name: 'Camera', value: 1 }],
+      equipment: '',
       id: 1,
       location: 'Fairfax, VA, United States of America',
       pay: 0.5,
-      skills: [],
+      skills: [{ name: 'Camera', value: 1 }],
       type: "B'nai Mitzvah",
       typeId: 2,
       user: 1,
     });
 
-    expect(sqlSpy).toHaveBeenCalledTimes(3);
+    expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       'SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.id = 5;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT equipment.id as value, equipment.name FROM job_equipment INNER JOIN equipment ON equipment.id = job_equipment.equipment WHERE job = 5;'
-    );
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      3,
       'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 5;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
@@ -204,7 +198,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time > NOW() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time >= CURDATE() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -232,7 +226,6 @@ describe('job', () => {
       .mockResolvedValueOnce()
       .mockResolvedValueOnce([{ user: 6, date_time: 'time' }])
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([{ email_notifications: 1 }])
       .mockResolvedValueOnce([
         { first_name: 'bob', last_name: 'smith', username: 'bsmith' },
@@ -241,7 +234,7 @@ describe('job', () => {
 
     const job = new Job(4);
     await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(11);
+    expect(sqlSpy).toHaveBeenCalledTimes(10);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       'UPDATE jobs SET jobs.application_selected = 3, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = 4;'
@@ -260,30 +253,26 @@ describe('job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,
-      'SELECT equipment.id as value, equipment.name FROM job_equipment INNER JOIN equipment ON equipment.id = job_equipment.equipment WHERE job = 4;'
-    );
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      6,
       'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 4;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      7,
+      6,
       'SELECT * FROM settings WHERE user = 6;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      8,
+      7,
       'SELECT * FROM users WHERE id = 6;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      9,
+      8,
       'SELECT * FROM users WHERE id = 5;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      10,
+      9,
       "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 5, 6);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      11,
+      10,
       "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 6, 5);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(1);
@@ -304,12 +293,11 @@ describe('job', () => {
       .mockResolvedValueOnce()
       .mockResolvedValueOnce([{ user: 6, date_time: '2022-11-15 00:00:00' }])
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([{ email_notifications: 0 }]);
 
     const job = new Job(4);
     await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(9);
+    expect(sqlSpy).toHaveBeenCalledTimes(8);
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 

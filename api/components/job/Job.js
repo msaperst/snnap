@@ -27,7 +27,7 @@ const Job = class {
     newJob.instancePromise = (async () => {
       const dateTime = `${date} 00:00:00`;
       const result = await Mysql.query(
-        `INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, loc, lat, lon) VALUES (${parseIntAndDbEscape(
+        `INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (${parseIntAndDbEscape(
           user
         )}, ${parseIntAndDbEscape(type)}, ${parseIntAndDbEscape(
           subtype
@@ -35,17 +35,10 @@ const Job = class {
           duration
         )}, ${
           durationMax ? parseIntAndDbEscape(durationMax) : null
-        }, ${db.escape(dateTime)}, ${db.escape(location.loc)}, ${parseFloat(
-          location.lat
-        )},${parseFloat(location.lon)});`
+        }, ${db.escape(dateTime)}, ${db.escape(equipment)}, ${db.escape(
+          location.loc
+        )}, ${parseFloat(location.lat)},${parseFloat(location.lon)});`
       );
-      equipment.map(async (equip) => {
-        await Mysql.query(
-          `INSERT INTO job_equipment (job, equipment) VALUES (${
-            result.insertId
-          }, ${parseIntAndDbEscape(equip.value)});`
-        );
-      });
       skills.map(async (skill) => {
         await Mysql.query(
           `INSERT INTO job_skills (job, skill) VALUES (${
@@ -77,7 +70,7 @@ const Job = class {
 
   static async getJobs() {
     return Mysql.query(
-      `SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time > NOW() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;`
+      `SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time >= CURDATE() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;`
     );
   }
 
@@ -133,9 +126,6 @@ const Job = class {
       )
     )[0];
     if (job) {
-      job.equipment = await Mysql.query(
-        `SELECT equipment.id as value, equipment.name FROM job_equipment INNER JOIN equipment ON equipment.id = job_equipment.equipment WHERE job = ${this.id};`
-      );
       job.skills = await Mysql.query(
         `SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = ${this.id};`
       );
