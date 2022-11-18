@@ -1,6 +1,5 @@
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import './IconLink.css';
 
 function IconLink(props) {
@@ -13,13 +12,13 @@ function IconLink(props) {
   return (
     <Col className="text-center">
       {/* if this doesn't start with an http, add one */}
-      <Link
-        to={link.startsWith('http') ? link : `http://${link}`}
+      <a
+        href={link.startsWith('http') ? link : `http://${link}`}
         target="_blank"
         rel="noreferrer"
       >
         {icon}
-      </Link>
+      </a>
     </Col>
   );
 }

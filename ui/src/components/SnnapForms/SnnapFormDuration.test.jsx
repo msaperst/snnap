@@ -35,7 +35,7 @@ describe('snnap form input', () => {
 
   it('has a label and inputs', () => {
     const { container } = render(<SnnapFormDuration size="5" name="123" />);
-    expect(container.firstChild.firstChild.children).toHaveLength(4);
+    expect(container.firstChild.firstChild.children).toHaveLength(3);
   });
 
   it('uses an onchange when provided', () => {
@@ -64,7 +64,7 @@ describe('snnap form input', () => {
     ).toEqual('form123');
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('placeholder')
-    ).toEqual('123');
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('number');
@@ -95,18 +95,19 @@ describe('snnap form input', () => {
 
   it('has a range button', () => {
     const { container } = render(<SnnapFormDuration name="123" />);
-    expect(container.firstChild.firstChild.children[2]).toHaveClass(
-      'btn btn-outline-secondary'
+    expect(container.firstChild.firstChild.children[1].children[0]).toHaveClass(
+      'range-switch form-switch'
     );
     expect(
-      container.firstChild.firstChild.children[2].getAttribute('type')
-    ).toEqual('button');
+      container.firstChild.firstChild.children[1].children[0].firstChild.getAttribute(
+        'type'
+      )
+    ).toEqual('checkbox');
     expect(
-      container.firstChild.firstChild.children[2].getAttribute('id')
+      container.firstChild.firstChild.children[1].children[0].firstChild.getAttribute(
+        'id'
+      )
     ).toEqual('setRange123');
-    expect(container.firstChild.firstChild.children[2]).toHaveTextContent(
-      'Range'
-    );
   });
 
   it('has an error field', () => {
@@ -132,9 +133,11 @@ describe('snnap form input', () => {
 
   it('has a label and inputs when the range is added', async () => {
     const { container } = render(<SnnapFormDuration size="5" name="123" />);
-    fireEvent.click(container.firstChild.firstChild.children[2]);
+    fireEvent.click(
+      container.firstChild.firstChild.children[1].children[0].firstChild
+    );
     await waitFor(() => container.firstChild);
-    expect(container.firstChild.firstChild.children).toHaveLength(6);
+    expect(container.firstChild.firstChild.children).toHaveLength(5);
   });
 
   it('uses an onchange when provided when the range is added', () => {
@@ -147,7 +150,7 @@ describe('snnap form input', () => {
     const { getAllByRole } = render(
       <SnnapFormDuration name="123" onChange={updateX} />
     );
-    fireEvent.click(getAllByRole('button')[0]);
+    fireEvent.click(getAllByRole('checkbox')[0]);
     const event = {
       preventDefault() {},
       target: { value: '1234' },
@@ -173,7 +176,7 @@ describe('snnap form input', () => {
     ).toEqual('form123');
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('placeholder')
-    ).toEqual('123');
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.firstChild.getAttribute('type')
     ).toEqual('number');
@@ -189,9 +192,11 @@ describe('snnap form input', () => {
     expect(container.firstChild.firstChild.firstChild).toBeRequired();
   });
 
-  it('has a two label when the range is added', async () => {
+  it('has a to label when the range is added', async () => {
     const { container } = render(<SnnapFormDuration name="123" />);
-    fireEvent.click(container.firstChild.firstChild.children[2]);
+    fireEvent.click(
+      container.firstChild.firstChild.children[1].children[0].firstChild
+    );
     await waitFor(() => container.firstChild);
     expect(container.firstChild.firstChild.children[1]).toHaveClass(
       'input-group-text'
@@ -204,7 +209,9 @@ describe('snnap form input', () => {
 
   it('has a second input field input when the range is added', async () => {
     const { container } = render(<SnnapFormDuration name="123" />);
-    fireEvent.click(container.firstChild.firstChild.children[2]);
+    fireEvent.click(
+      container.firstChild.firstChild.children[1].children[0].firstChild
+    );
     await waitFor(() => container.firstChild);
     expect(container.firstChild.firstChild.children[2]).toHaveClass(
       'form-control'
@@ -214,7 +221,7 @@ describe('snnap form input', () => {
     ).toEqual('form123');
     expect(
       container.firstChild.firstChild.children[2].getAttribute('placeholder')
-    ).toEqual('123 Range');
+    ).toBeNull();
     expect(
       container.firstChild.firstChild.children[2].getAttribute('type')
     ).toEqual('number');
@@ -232,7 +239,9 @@ describe('snnap form input', () => {
 
   it('has a hour label when the range is added', async () => {
     const { container } = render(<SnnapFormDuration name="123" />);
-    fireEvent.click(container.firstChild.firstChild.children[2]);
+    fireEvent.click(
+      container.firstChild.firstChild.children[1].children[0].firstChild
+    );
     await waitFor(() => container.firstChild);
     expect(container.firstChild.firstChild.children[3]).toHaveClass(
       'input-group-text'
@@ -245,27 +254,11 @@ describe('snnap form input', () => {
     );
   });
 
-  it('has a range button when the range is added', async () => {
-    const { container } = render(<SnnapFormDuration name="123" />);
-    fireEvent.click(container.firstChild.firstChild.children[2]);
-    await waitFor(() => container.firstChild);
-    expect(container.firstChild.firstChild.children[4]).toHaveClass(
-      'btn btn-outline-secondary'
-    );
-    expect(
-      container.firstChild.firstChild.children[4].getAttribute('type')
-    ).toEqual('button');
-    expect(
-      container.firstChild.firstChild.children[4].getAttribute('id')
-    ).toEqual('setRange123');
-    expect(container.firstChild.firstChild.children[4]).toHaveTextContent(
-      'Range'
-    );
-  });
-
   it('has an error field when the range is added', async () => {
     const { container } = render(<SnnapFormDuration name="123" />);
-    fireEvent.click(container.firstChild.firstChild.children[2]);
+    fireEvent.click(
+      container.firstChild.firstChild.children[1].children[0].firstChild
+    );
     await waitFor(() => container.firstChild);
     expect(container.firstChild.firstChild.lastChild).toHaveClass(
       'invalid-feedback'
@@ -285,8 +278,8 @@ describe('snnap form input', () => {
     const { getByRole } = render(
       <SnnapFormDuration name="123" onChange={updateX} />
     );
-    fireEvent.click(getByRole('button'));
-    fireEvent.click(getByRole('button'));
+    fireEvent.click(getByRole('checkbox'));
+    fireEvent.click(getByRole('checkbox'));
     expect(x).toEqual('123Range');
     expect(y).toBeNull();
   });

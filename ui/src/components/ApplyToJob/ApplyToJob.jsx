@@ -37,11 +37,15 @@ class ApplyToJob extends React.Component {
     this.isMountedVal = true;
     const { job } = this.state;
     companyService.get().then((company) => {
-      this.setState({ company });
-      this.setState({ formData: company });
+      if (this.isMountedVal) {
+        this.setState({ company });
+        this.setState({ formData: company });
+      }
     });
     jobService.getJob(job.id).then((hr) => {
-      this.setState({ job: hr });
+      if (this.isMountedVal) {
+        this.setState({ job: hr });
+      }
     });
   }
 

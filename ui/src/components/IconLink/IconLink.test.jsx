@@ -4,12 +4,6 @@ import { render } from '@testing-library/react';
 import { Facebook } from 'react-bootstrap-icons';
 import IconLink from './IconLink';
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
-  Link: (props) => <a {...props} href={props.to} />,
-}));
-
 describe('icon link', () => {
   it('displays nothing when no link', () => {
     const { container } = render(<IconLink />);

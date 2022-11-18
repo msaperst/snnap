@@ -919,6 +919,17 @@ describe('User', () => {
     );
   });
 
+  it('shows empty when invalid user id', async () => {
+    Mysql.query.mockResolvedValueOnce([]);
+    const user = User.auth(token);
+    expect(await user.getNeededRates()).toEqual([]);
+    expect(mysqlSpy).toHaveBeenCalledTimes(1);
+    expect(mysqlSpy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM users WHERE id = 123;'
+    );
+  });
+
   it('allows retrieving all jobs requiring being rated', async () => {
     const results = [{ id: 1, userId: 2, jobId: 3 }];
     Mysql.query
@@ -954,6 +965,15 @@ describe('User', () => {
       2,
       'UPDATE ratings SET rating = true, date_rated = CURRENT_TIMESTAMP WHERE id = 12 AND rater = 123;'
     );
+  });
+
+  it('returns null when no user', async () => {
+    expect(await User.getRating()).toBeNull();
+    expect(mysqlSpy).toHaveBeenCalledTimes(0);
+    expect(await User.getRating(null)).toBeNull();
+    expect(mysqlSpy).toHaveBeenCalledTimes(0);
+    expect(await User.getRating(0)).toBeNull();
+    expect(mysqlSpy).toHaveBeenCalledTimes(0);
   });
 
   it('returns null when no ratings exist for a user', async () => {

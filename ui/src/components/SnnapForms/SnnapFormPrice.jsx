@@ -18,7 +18,6 @@ function SnnapFormPrice(props) {
       type="number"
       step={1.0}
       min={0}
-      placeholder={name}
       aria-describedby={`inputGroup${safeName}`}
       onChange={change}
     />

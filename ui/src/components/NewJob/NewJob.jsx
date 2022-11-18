@@ -24,7 +24,6 @@ class NewJob extends React.Component {
       isSubmitting: false,
       formData: {},
       jobTypes: [],
-      equipment: [],
       skills: [],
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -38,9 +37,6 @@ class NewJob extends React.Component {
     });
     jobService.getJobSubtypes().then((jobSubtypes) => {
       this.setState({ jobSubtypes });
-    });
-    jobService.getEquipment().then((equipment) => {
-      this.setState({ equipment });
     });
     jobService.getSkills().then((skills) => {
       this.setState({ skills });
@@ -63,24 +59,10 @@ class NewJob extends React.Component {
     // actually check and submit the form
     if (form.checkValidity() === true) {
       // custom checks - should match API checks
-      if (Date.parse(formData.Date) < new Date().setHours(0, 0, 0, 0)) {
-        this.setState({
-          status: 'Please provide a date after today.',
-        });
-        date.setCustomValidity('Invalid field.');
-        return;
-      }
-      if (
-        !(
-          formData.City &&
-          formData.City.properties &&
-          formData.City.properties.formatted
-        )
-      ) {
-        this.setState({
-          status: 'Please select a valid city from the drop down.',
-        });
-        city.setCustomValidity('Invalid field.');
+      let isValid = true;
+      isValid = this.checkLocation(city) && isValid;
+      isValid = this.checkDate(date) && isValid;
+      if (!isValid) {
         return;
       }
       this.setState({ isSubmitting: true });
@@ -99,8 +81,8 @@ class NewJob extends React.Component {
           formData.DurationRange,
           formData.Date,
           formData.Time,
-          formData['Equipment Needed'],
-          formData['Skills Needed']
+          formData['Desired Equipment'],
+          formData['Skills Required']
         )
         .then(
           () => {
@@ -121,6 +103,38 @@ class NewJob extends React.Component {
     }
   }
 
+  checkDate(date) {
+    const { formData } = this.state;
+    const input = Date.parse(formData.Date);
+    const startOfToday = new Date().setHours(-5, 0, 0, 0);
+    if (input < startOfToday) {
+      this.setState({
+        status: 'Please provide a date today or later.',
+      });
+      date.setCustomValidity('Invalid field.');
+      return false;
+    }
+    return true;
+  }
+
+  checkLocation(city) {
+    const { formData } = this.state;
+    if (
+      !(
+        formData.City &&
+        formData.City.properties &&
+        formData.City.properties.formatted
+      )
+    ) {
+      this.setState({
+        status: 'Please select a valid city from the drop down.',
+      });
+      city.setCustomValidity('Invalid field.');
+      return false;
+    }
+    return true;
+  }
+
   updateForm(key, value) {
     const { formData } = this.state;
     formData[key] = value;
@@ -136,7 +150,6 @@ class NewJob extends React.Component {
       isSubmitting,
       jobTypes,
       jobSubtypes,
-      equipment,
       skills,
     } = this.state;
     return (
@@ -200,6 +213,20 @@ class NewJob extends React.Component {
                 />
               </Row>
               <Row className="mb-3">
+                <SnnapFormInput
+                  size={6}
+                  name="Desired Equipment"
+                  onChange={this.updateForm}
+                  notRequired
+                />
+                <SnnapFormMultiSelect
+                  size={6}
+                  name="Skills Required"
+                  onChange={this.updateForm}
+                  options={skills}
+                />
+              </Row>
+              <Row className="mb-3">
                 <SnnapFormDuration
                   size={6}
                   type="number"
@@ -211,20 +238,6 @@ class NewJob extends React.Component {
                   size={6}
                   name="Pay"
                   onChange={this.updateForm}
-                />
-              </Row>
-              <Row className="mb-3">
-                <SnnapFormMultiSelect
-                  size={6}
-                  name="Equipment Needed"
-                  onChange={this.updateForm}
-                  options={equipment}
-                />
-                <SnnapFormMultiSelect
-                  size={6}
-                  name="Skills Needed"
-                  onChange={this.updateForm}
-                  options={skills}
                 />
               </Row>
               <Submit

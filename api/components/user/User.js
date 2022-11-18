@@ -314,6 +314,9 @@ const User = class {
 
   async getNeededRates() {
     const id = await this.getId();
+    if (!id) {
+      return [];
+    }
     return Mysql.query(
       `SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = ${id} AND job_date < CURRENT_DATE AND date_rated IS NULL;`
     );
@@ -326,6 +329,9 @@ const User = class {
   }
 
   static async getRating(id) {
+    if (!id) {
+      return null;
+    }
     const ratings = await Mysql.query(
       `SELECT * FROM ratings WHERE ratee = ${id} AND rating IS NOT NULL;`
     );

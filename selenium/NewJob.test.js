@@ -57,8 +57,8 @@ describe('new job', () => {
 
   it('shows no error messages upon opening the form', async () => {
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
-    expect(feedbacks).toHaveLength(7);
-    for (let i = 0; i < 7; i++) {
+    expect(feedbacks).toHaveLength(8);
+    for (let i = 0; i < feedbacks.length; i++) {
       expect(await feedbacks[i].isDisplayed()).toBeFalsy();
     }
     const alerts = await modal.findElements(By.className('alert-danger'));
@@ -68,7 +68,10 @@ describe('new job', () => {
   it('shows errors when submitting an empty form', async () => {
     (await modal.findElement(By.id('createNewRequestButton'))).click();
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < feedbacks.length; i++) {
+      if (i === 5) {
+        continue;
+      }
       expect(await feedbacks[i].isDisplayed()).toBeTruthy();
     }
     expect(await feedbacks[0].getText()).toEqual(
@@ -86,10 +89,11 @@ describe('new job', () => {
     expect(await feedbacks[4].getText()).toEqual(
       'Please provide a valid job details.'
     );
-    expect(await feedbacks[5].getText()).toEqual(
+    expect(await feedbacks[5].getText()).toEqual('');
+    expect(await feedbacks[6].getText()).toEqual(
       'Please provide a valid duration.'
     );
-    expect(await feedbacks[6].getText()).toEqual('Please provide a valid pay.');
+    expect(await feedbacks[7].getText()).toEqual('Please provide a valid pay.');
     const alerts = await modal.findElements(By.className('alert-danger'));
     expect(alerts).toHaveLength(0);
   });
@@ -97,7 +101,7 @@ describe('new job', () => {
   it('shows errors upon submitting when selecting previous day', async () => {
     await enterData(2, 2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < feedbacks.length; i++) {
       if (i === 3) {
         expect(await feedbacks[i].isDisplayed()).toBeTruthy();
         expect(await feedbacks[i].getText()).toEqual(
@@ -111,7 +115,9 @@ describe('new job', () => {
       until.elementLocated(By.className('alert-danger')),
       5000
     );
-    expect(await alert.getText()).toEqual('Please provide a date after today.');
+    expect(await alert.getText()).toEqual(
+      'Please provide a date today or later.'
+    );
   });
 
   it('allows clearing of response alert', async () => {
