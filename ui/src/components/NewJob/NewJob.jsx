@@ -105,7 +105,9 @@ class NewJob extends React.Component {
 
   checkDate(date) {
     const { formData } = this.state;
-    if (Date.parse(formData.Date) <= new Date().setHours(0, 0, 0, 0)) {
+    const input = Date.parse(formData.Date);
+    const startOfToday = new Date().setHours(-5, 0, 0, 0);
+    if (input < startOfToday) {
       this.setState({
         status: 'Please provide a date today or later.',
       });
