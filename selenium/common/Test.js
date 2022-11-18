@@ -114,7 +114,6 @@ class Test {
     // delete our user's job(s)
     for (const job of jobs) {
       await Mysql.query(`DELETE FROM jobs WHERE id = ${job.id}`);
-      await Mysql.query(`DELETE FROM job_equipment WHERE job = ${job.id}`);
       await Mysql.query(`DELETE FROM job_skills WHERE job = ${job.id}`);
     }
     // delete all ratings
@@ -162,7 +161,7 @@ class Test {
       4,
       null,
       date,
-      [],
+      '',
       []
     );
   }
