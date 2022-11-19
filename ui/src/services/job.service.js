@@ -8,7 +8,6 @@ export const jobService = {
   getSkills,
   newJob,
   getJob,
-  getJobs,
   applyToJob,
   getJobApplication,
   getJobApplications,
@@ -78,11 +77,6 @@ function getJob(id) {
   );
 }
 
-function getJobs() {
-  const requestOptions = { method: 'GET', headers: authHeader() };
-  return fetch(`/api/jobs/jobs`, requestOptions).then(handleResponse);
-}
-
 function getJobApplication(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(
@@ -111,6 +105,7 @@ function applyToJob(
   experience,
   equipment,
   skills,
+  comment,
   portfolio
 ) {
   const headers = authHeader();
@@ -130,6 +125,7 @@ function applyToJob(
       experience,
       equipment,
       skills,
+      comment,
       portfolio,
     }),
   };

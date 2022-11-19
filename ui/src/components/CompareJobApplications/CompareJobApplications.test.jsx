@@ -106,13 +106,13 @@ describe('compare job applications form', () => {
 
   it('has the job information outlined', () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
-    expect(modalForm.children).toHaveLength(7);
+    expect(modalForm.children).toHaveLength(8);
     expect(modalForm.getAttribute('noValidate')).toEqual('');
   });
 
   it('one application is shown when one exists', async () => {
     const applications =
-      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+      modal.firstChild.lastChild.firstChild.children[6].firstChild;
     expect(applications).toHaveClass('accordion');
     expect(applications.children).toHaveLength(1);
   });
@@ -143,7 +143,7 @@ describe('compare job applications form', () => {
     const spy = jest.spyOn(jobService.jobService, 'chooseJobApplication');
     jobService.jobService.chooseJobApplication.mockRejectedValue('Some Error');
     const applications =
-      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+      modal.firstChild.lastChild.firstChild.children[6].firstChild;
     fireEvent.click(applications.firstChild);
     await hasAnError(modal);
     expect(spy).toHaveBeenCalledWith(5, 5);
@@ -165,7 +165,7 @@ describe('compare job applications form', () => {
       'Some Success'
     );
     const applications =
-      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+      modal.firstChild.lastChild.firstChild.children[6].firstChild;
     fireEvent.click(applications.firstChild);
     await hasASuccess(modal, 'Job Application Chosen');
     expect(spy).toHaveBeenCalledWith(5, 5);
@@ -190,7 +190,7 @@ describe('compare job applications form', () => {
       'Some Success'
     );
     const applications =
-      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+      modal.firstChild.lastChild.firstChild.children[6].firstChild;
     fireEvent.click(applications.firstChild);
     await noModal(modal);
   });
@@ -215,7 +215,7 @@ describe('compare job applications form', () => {
       'compareJobApplicationsModal-6'
     );
     const applications =
-      modal.firstChild.lastChild.firstChild.children[5].firstChild;
+      modal.firstChild.lastChild.firstChild.children[6].firstChild;
     expect(applications).toHaveClass('accordion');
     expect(applications.children).toHaveLength(2);
   });

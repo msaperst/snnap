@@ -20,3 +20,4 @@ ALTER TABLE hire_request_applications MODIFY company_name varchar(200) COLLATE u
 ALTER TABLE hire_request_applications ADD COLUMN date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE hire_request_applications RENAME job_applications;
 ALTER TABLE job_applications RENAME COLUMN hire_request_id TO job_id;
+ALTER TABLE job_applications ADD COLUMN comment longtext NULL;

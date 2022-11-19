@@ -149,7 +149,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.id = 5;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -180,7 +180,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.id = 5;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -249,7 +249,7 @@ describe('job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.id = 4;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 4;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,

@@ -18,7 +18,7 @@ jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
 describe('new job form', () => {
-  jest.setTimeout(10000);
+  jest.setTimeout(15000);
   let modal;
   let getText;
   const assignMock = jest.fn();
@@ -156,30 +156,14 @@ describe('new job form', () => {
     expect(dateInput.getAttribute('value')).toEqual('');
   });
 
-  it('fourth row has the details', async () => {
+  it('fourth row has the equipment and skills', async () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
     expect(modalForm.children[3]).toHaveClass('mb-3 row');
-    expect(modalForm.children[3].children).toHaveLength(1);
+    expect(modalForm.children[3].children).toHaveLength(2);
 
-    expect(modalForm.children[3].firstChild).toHaveClass('col-md-12');
-    const detailsInput = modalForm.children[3].firstChild.firstChild.firstChild;
-    expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
-    expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
-    expect(detailsInput.getAttribute('disabled')).toBeNull();
-    expect(detailsInput.getAttribute('required')).toEqual('');
-    expect(detailsInput.getAttribute('type')).toEqual('textarea');
-    expect(detailsInput.getAttribute('value')).toBeNull();
-    expect(detailsInput).toHaveTextContent('');
-  });
-
-  it('fifth row has the equipment and skills', async () => {
-    const modalForm = modal.firstChild.lastChild.firstChild;
-    expect(modalForm.children[4]).toHaveClass('mb-3 row');
-    expect(modalForm.children[4].children).toHaveLength(2);
-
-    expect(modalForm.children[4].firstChild).toHaveClass('col-md-6');
+    expect(modalForm.children[3].firstChild).toHaveClass('col-md-6');
     const equipmentInput =
-      modalForm.children[4].firstChild.firstChild.firstChild;
+      modalForm.children[3].firstChild.firstChild.firstChild;
     expect(equipmentInput.getAttribute('id')).toEqual('formDesiredEquipment');
     expect(equipmentInput.getAttribute('placeholder')).toEqual(
       'Desired Equipment'
@@ -191,12 +175,28 @@ describe('new job form', () => {
     expect(equipmentInput).toHaveTextContent('');
     // TODO - verify correct options, and that none are selected
 
-    expect(modalForm.children[4].lastChild).toHaveClass('col-md-6');
+    expect(modalForm.children[3].lastChild).toHaveClass('col-md-6');
     expect(
-      modalForm.children[4].lastChild.firstChild.children[2].firstChild
+      modalForm.children[3].lastChild.firstChild.children[2].firstChild
         .firstChild
     ).toHaveTextContent('Skills Required');
     // TODO - verify correct options, and that none are selected
+  });
+
+  it('fifth row has the details', async () => {
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    expect(modalForm.children[4]).toHaveClass('mb-3 row');
+    expect(modalForm.children[4].children).toHaveLength(1);
+
+    expect(modalForm.children[4].firstChild).toHaveClass('col-md-12');
+    const detailsInput = modalForm.children[4].firstChild.firstChild.firstChild;
+    expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
+    expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
+    expect(detailsInput.getAttribute('disabled')).toBeNull();
+    expect(detailsInput.getAttribute('required')).toEqual('');
+    expect(detailsInput.getAttribute('type')).toEqual('textarea');
+    expect(detailsInput.getAttribute('value')).toBeNull();
+    expect(detailsInput).toHaveTextContent('');
   });
 
   it('sixth row has the duration and pay', async () => {
@@ -272,7 +272,7 @@ describe('new job form', () => {
     fireEvent.change(modalForm.children[2].lastChild.firstChild.firstChild, {
       target: { value: date },
     });
-    fireEvent.change(modalForm.children[3].firstChild.firstChild.firstChild, {
+    fireEvent.change(modalForm.children[4].firstChild.firstChild.firstChild, {
       target: { value: 'Some Deets' },
     });
     fireEvent.change(modalForm.children[5].firstChild.firstChild.firstChild, {

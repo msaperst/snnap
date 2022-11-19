@@ -93,7 +93,7 @@ describe('profile card', () => {
       await new Promise((r) => setTimeout(r, 100));
     });
     expect(container.firstChild.lastChild).toHaveClass('card-body');
-    expect(container.firstChild.lastChild.children).toHaveLength(4);
+    expect(container.firstChild.lastChild.children).toHaveLength(5);
   });
 
   it('has links in first row', async () => {
@@ -118,9 +118,16 @@ describe('profile card', () => {
     expect(row).toHaveTextContent('some awesome experience');
   });
 
-  it('has no equipment/skill data when none provided', async () => {
+  it('has comments in the next row', async () => {
     const { container } = profileCard;
     const row = container.firstChild.lastChild.children[2];
+    expect(row.children).toHaveLength(1);
+    expect(row).toHaveTextContent('');
+  });
+
+  it('has no equipment/skill data when none provided', async () => {
+    const { container } = profileCard;
+    const row = container.firstChild.lastChild.children[3];
     expect(row.children).toHaveLength(2);
     expect(row).toHaveTextContent('EquipmentSkills');
   });
@@ -131,7 +138,7 @@ describe('profile card', () => {
     app.skills = [];
     await loadProfileCardWithMock(app);
     const { container } = profileCard;
-    const row = container.firstChild.lastChild.children[2];
+    const row = container.firstChild.lastChild.children[3];
     expect(row.children).toHaveLength(2);
     expect(row).toHaveTextContent('EquipmentSkills');
   });
@@ -145,7 +152,7 @@ describe('profile card', () => {
     app.skills = [{ value: 3, name: 'Lighting' }];
     await loadProfileCardWithMock(app);
     const { container } = profileCard;
-    const row = container.firstChild.lastChild.children[2];
+    const row = container.firstChild.lastChild.children[3];
     expect(row.children).toHaveLength(2);
 
     expect(row.firstChild.children).toHaveLength(3);
@@ -160,7 +167,7 @@ describe('profile card', () => {
 
   it('has no portfolio data when not provided', async () => {
     const { container } = profileCard;
-    const row = container.firstChild.lastChild.children[3];
+    const row = container.firstChild.lastChild.children[4];
     expect(row.children).toHaveLength(2);
     expect(row.firstChild).toHaveTextContent('Portfolio');
     expect(row.lastChild.children).toHaveLength(0);
@@ -185,7 +192,7 @@ describe('profile card', () => {
     await loadProfileCardWithMock(app);
 
     const { container } = profileCard;
-    const row = container.firstChild.lastChild.children[3];
+    const row = container.firstChild.lastChild.children[4];
     expect(row.lastChild.children).toHaveLength(2);
     expect(row.lastChild.firstChild.firstChild).toHaveTextContent('link1');
     // the rest is verified via PortfolioLink

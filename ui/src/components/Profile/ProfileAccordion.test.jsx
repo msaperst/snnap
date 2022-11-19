@@ -30,6 +30,7 @@ describe('profile accordion', () => {
       company_id: 1,
       company_name: 'Some Company',
       experience: 'some awesome experience',
+      comment: 'some comment',
       fb: 'facebook.com/me',
       job_id: 2,
       id: 3,
@@ -178,7 +179,7 @@ describe('profile accordion', () => {
     expect(container.firstChild.lastChild.firstChild).toHaveClass(
       'accordion-body'
     );
-    expect(container.firstChild.lastChild.firstChild.children).toHaveLength(4);
+    expect(container.firstChild.lastChild.firstChild.children).toHaveLength(5);
   });
 
   it('has links in first row', async () => {
@@ -203,9 +204,16 @@ describe('profile accordion', () => {
     expect(row).toHaveTextContent('some awesome experience');
   });
 
-  it('has no equipment/skill data when none provided', async () => {
+  it('has comment in the next row', async () => {
     const { container } = profileAccordion;
     const row = container.firstChild.lastChild.firstChild.children[2];
+    expect(row.children).toHaveLength(1);
+    expect(row).toHaveTextContent('some comment');
+  });
+
+  it('has no equipment/skill data when none provided', async () => {
+    const { container } = profileAccordion;
+    const row = container.firstChild.lastChild.firstChild.children[3];
     expect(row.children).toHaveLength(2);
     expect(row).toHaveTextContent('EquipmentSkills');
   });
@@ -216,7 +224,7 @@ describe('profile accordion', () => {
     app.skills = [];
     await loadProfileAccordionWithMock(app);
     const { container } = profileAccordion;
-    const row = container.firstChild.lastChild.firstChild.children[2];
+    const row = container.firstChild.lastChild.firstChild.children[3];
     expect(row.children).toHaveLength(2);
     expect(row).toHaveTextContent('EquipmentSkills');
   });
@@ -230,7 +238,7 @@ describe('profile accordion', () => {
     app.skills = [{ value: 3, name: 'Lighting' }];
     await loadProfileAccordionWithMock(app);
     const { container } = profileAccordion;
-    const row = container.firstChild.lastChild.firstChild.children[2];
+    const row = container.firstChild.lastChild.firstChild.children[3];
     expect(row.children).toHaveLength(2);
 
     expect(row.firstChild.children).toHaveLength(3);
@@ -245,7 +253,7 @@ describe('profile accordion', () => {
 
   it('has no portfolio data when not provided', async () => {
     const { container } = profileAccordion;
-    const row = container.firstChild.lastChild.firstChild.children[3];
+    const row = container.firstChild.lastChild.firstChild.children[4];
     expect(row.children).toHaveLength(2);
     expect(row.firstChild).toHaveTextContent('Portfolio');
     expect(row.lastChild.children).toHaveLength(0);
@@ -270,7 +278,7 @@ describe('profile accordion', () => {
     await loadProfileAccordionWithMock(app);
 
     const { container } = profileAccordion;
-    const row = container.firstChild.lastChild.firstChild.children[3];
+    const row = container.firstChild.lastChild.firstChild.children[4];
     expect(row.lastChild.children).toHaveLength(2);
     expect(row.lastChild.firstChild.firstChild).toHaveTextContent('link1');
     // the rest is verified via PortfolioLink

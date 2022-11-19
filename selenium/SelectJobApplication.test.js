@@ -73,7 +73,7 @@ describe('apply to job', () => {
       await modal.findElement(By.className('modal-title')).getText()
     ).toEqual('Applications for the Wedding Session');
     const rows = await modal.findElements(By.className('mb-3 row'));
-    expect(rows).toHaveLength(13);
+    expect(rows).toHaveLength(16);
     await modal.findElement(By.className('btn-close')).click();
     await test.waitUntilNotPresent(By.className('modal-dialog'));
     expect(

@@ -22,33 +22,41 @@ class Home {
     expect(await jobType.getAttribute('disabled')).toBeTruthy();
     expect(await jobType.getAttribute('value')).toEqual('Wedding');
 
-    const date = await this.driver.findElement(By.id('formDate'));
-    expect(await date.getAttribute('disabled')).toBeTruthy();
-    expect(await date.getAttribute('value')).toEqual('Sunday, March 12, 2023');
-
-    const duration = await this.driver.findElement(By.id('formDuration'));
-    expect(await duration.getAttribute('disabled')).toBeTruthy();
-    expect(await duration.getAttribute('value')).toEqual('4 hours');
+    const jobSubtype = await this.driver.findElement(By.id('formLookingFor'));
+    expect(await jobSubtype.getAttribute('disabled')).toBeTruthy();
+    expect(await jobSubtype.getAttribute('value')).toEqual(
+      'Second Photographer'
+    );
 
     const location = await this.driver.findElement(By.id('formCity'));
     expect(await location.getAttribute('disabled')).toBeTruthy();
     expect(await location.getAttribute('value')).toEqual('Chantilly, VA');
 
-    const pay = await this.driver.findElement(By.id('formPay'));
-    expect(await pay.getAttribute('disabled')).toBeTruthy();
-    expect(await pay.getAttribute('value')).toEqual('$200 per hour');
+    const date = await this.driver.findElement(By.id('formDate'));
+    expect(await date.getAttribute('disabled')).toBeTruthy();
+    expect(await date.getAttribute('value')).toEqual('Sunday, March 12, 2023');
+
+    const equipment = await this.driver.findElement(
+      By.id('formDesiredEquipment')
+    );
+    expect(await equipment.getAttribute('disabled')).toBeTruthy();
+    expect(await equipment.getAttribute('value')).toEqual(' ');
+
+    const skills = await this.driver.findElement(By.id('formSkillsRequired'));
+    expect(await skills.getAttribute('disabled')).toBeTruthy();
+    expect(await skills.getAttribute('value')).toEqual(' ');
 
     const details = await this.driver.findElement(By.id('formJobDetails'));
     expect(await details.getAttribute('disabled')).toBeTruthy();
     expect(await details.getAttribute('value')).toEqual('Some details');
 
-    const equipment = await this.driver.findElement(By.id('formEquipment'));
-    expect(await equipment.getAttribute('disabled')).toBeTruthy();
-    expect(await equipment.getAttribute('value')).toEqual('');
+    const duration = await this.driver.findElement(By.id('formDuration'));
+    expect(await duration.getAttribute('disabled')).toBeTruthy();
+    expect(await duration.getAttribute('value')).toEqual('4 hours');
 
-    const skills = await this.driver.findElement(By.id('formSkills'));
-    expect(await skills.getAttribute('disabled')).toBeTruthy();
-    expect(await skills.getAttribute('value')).toEqual('');
+    const pay = await this.driver.findElement(By.id('formPay'));
+    expect(await pay.getAttribute('disabled')).toBeTruthy();
+    expect(await pay.getAttribute('value')).toEqual('$200 per hour');
   }
 }
 

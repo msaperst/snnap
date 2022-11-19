@@ -59,6 +59,7 @@ describe('application for job', () => {
       'some experience',
       [],
       [],
+      '',
       []
     );
     await expect(jobApplication.getId()).resolves.toEqual(15);
@@ -66,7 +67,7 @@ describe('application for job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience', '');"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -111,6 +112,7 @@ describe('application for job', () => {
       'some experience',
       [],
       [],
+      '',
       []
     );
     await expect(jobApplication.getId()).resolves.toEqual(15);
@@ -118,7 +120,7 @@ describe('application for job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience', '');"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -155,6 +157,7 @@ describe('application for job', () => {
       'some experience',
       [],
       [],
+      '',
       []
     );
     await expect(jobApplication.getId()).resolves.toEqual(15);
@@ -162,7 +165,7 @@ describe('application for job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience', '');"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -197,6 +200,7 @@ describe('application for job', () => {
       'some experience',
       [],
       [],
+      '',
       []
     );
     await expect(jobApplication.getId()).resolves.toEqual(15);
@@ -204,7 +208,7 @@ describe('application for job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience', '');"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -237,7 +241,7 @@ describe('application for job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience');"
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience', NULL);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -276,6 +280,7 @@ describe('application for job', () => {
         { value: 4, label: 'Camera', what: 'Camera Thingy' },
       ],
       [{ value: 2, label: 'Posing', what: 'babies' }],
+      'some comment',
       [
         { description: 'description1', link: 'link1' },
         {},
@@ -289,7 +294,7 @@ describe('application for job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(9);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', 'website', NULL, 'fb', NULL);"
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', 'website', NULL, 'fb', NULL, 'some comment');"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,

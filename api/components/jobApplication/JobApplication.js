@@ -23,18 +23,21 @@ const JobApplication = class {
     experience,
     equipment,
     skills,
+    comment,
     portfolio
   ) {
     const newJobApplication = new JobApplication();
     newJobApplication.instancePromise = (async () => {
       const result = await Mysql.query(
-        `INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience) VALUES (${parseIntAndDbEscape(
+        `INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (${parseIntAndDbEscape(
           jobId
         )}, ${parseIntAndDbEscape(userId)}, ${parseIntAndDbEscape(
           companyId
         )}, ${db.escape(userName)}, ${db.escape(companyName)}, ${db.escape(
           website
-        )}, ${db.escape(insta)}, ${db.escape(fb)}, ${db.escape(experience)});`
+        )}, ${db.escape(insta)}, ${db.escape(fb)}, ${db.escape(
+          experience
+        )}, ${db.escape(comment)});`
       );
       equipment.map(async (equip) => {
         await Mysql.query(

@@ -69,7 +69,8 @@ describe('new job', () => {
     (await modal.findElement(By.id('createNewRequestButton'))).click();
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
     for (let i = 0; i < feedbacks.length; i++) {
-      if (i === 5) {
+      if (i === 4) {
+        // eslint-disable-next-line no-continue
         continue;
       }
       expect(await feedbacks[i].isDisplayed()).toBeTruthy();
@@ -86,10 +87,10 @@ describe('new job', () => {
     expect(await feedbacks[3].getText()).toEqual(
       'Please provide a valid date.'
     );
-    expect(await feedbacks[4].getText()).toEqual(
+    expect(await feedbacks[4].getText()).toEqual('');
+    expect(await feedbacks[5].getText()).toEqual(
       'Please provide a valid job details.'
     );
-    expect(await feedbacks[5].getText()).toEqual('');
     expect(await feedbacks[6].getText()).toEqual(
       'Please provide a valid duration.'
     );

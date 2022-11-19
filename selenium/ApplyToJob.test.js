@@ -108,7 +108,7 @@ describe('apply to job', () => {
         () =>
           driver
             .findElements(By.className('mb-3 row'))
-            .then((elements) => elements.length === 12),
+            .then((elements) => elements.length === 14),
         // verifies that 12 elements are present, or wait fails
         5000
       );
@@ -124,7 +124,7 @@ describe('apply to job', () => {
 
   it('displays profile information', async () => {
     expect(
-      await (await form.findElements(By.className('mb-3 row')))[5].getText()
+      await (await form.findElements(By.className('mb-3 row')))[6].getText()
     ).toEqual('Your Information');
 
     const name = await driver.findElement(By.id('formName'));
@@ -194,7 +194,7 @@ describe('apply to job', () => {
       5000
     );
     expect(
-      await (await form.findElements(By.className('mb-3 row')))[5].getText()
+      await (await form.findElements(By.className('mb-3 row')))[6].getText()
     ).toEqual('Your Information');
 
     const name = await driver.findElement(By.id('formName'));
@@ -294,9 +294,9 @@ describe('apply to job', () => {
     const applyLink = await driver.findElement(By.id('applyToJobButton'));
     await applyLink.click();
     const feedbacks = await form.findElements(By.css('.invalid-feedback'));
-    expect(feedbacks).toHaveLength(16);
+    expect(feedbacks).toHaveLength(18);
     for (let i = 0; i < feedbacks.length; i++) {
-      if (i === 8) {
+      if (i === 9) {
         expect(await feedbacks[i].isDisplayed()).toBeTruthy();
         expect(await feedbacks[i].getText()).toEqual(
           'Please provide a valid name.'
@@ -383,8 +383,9 @@ describe('apply to job', () => {
   }
 
   async function checkAlreadyApplied() {
-    const button = await home.getButton(await jobs[0].getId());
+    let button = await home.getButton(await jobs[0].getId());
     await driver.wait(until.elementIsDisabled(button), 5000);
+    button = await home.getButton(await jobs[0].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeFalsy();
     expect(await button.getText()).toEqual('Already Applied');
