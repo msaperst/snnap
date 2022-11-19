@@ -194,6 +194,7 @@ class Test {
       null,
       [],
       [],
+      '',
       []
     );
   }
@@ -214,6 +215,7 @@ class Test {
         { value: 2, what: 'other things' },
       ],
       [{ value: 1 }, { value: 2 }],
+      'a comment',
       [
         { link: 'link1.com', description: 'description 1' },
         { link: 'link2.com', description: 'description 2' },
