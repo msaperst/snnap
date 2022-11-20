@@ -5,7 +5,7 @@ const User = require('../components/user/User');
 const { getJobs } = require('./webSocketJobs');
 const { getNeededRatings } = require('./webSocketRate');
 
-// available as part of nodejs
+const users = new Set();
 
 // returns the path and params of input url
 // the url will be of the format '/demo?token=<token_string>
@@ -23,6 +23,18 @@ const getParams = (request) => {
     return {};
   }
 };
+
+// basic function to send messages
+function sendMessage(message) {
+  users.forEach(async (user) => {
+    if (
+      message.to === (await user.user.getUsername()) ||
+      message.from === (await user.user.getUsername())
+    ) {
+      user.ctx.send(JSON.stringify(message));
+    }
+  });
+}
 
 // accepts an http server (covered later)
 function webSocketSetup(server) {
@@ -62,7 +74,13 @@ function webSocketSetup(server) {
 
   // what to do after a connection is established
   wss.on('connection', (ctx) => {
-    // print number of active connections
+    // console.log('user connected');
+    const user = User.auth(token);
+    const userRef = {
+      ctx,
+      user,
+    };
+    users.add(userRef);
 
     let unreadMessageCount;
     let jobs;
@@ -80,11 +98,34 @@ function webSocketSetup(server) {
     // handle message events
     // receive a message and echo it back
     ctx.on('message', (message) => {
-      ctx.send(`you said ${message}`);
+      try {
+        // Parsing the message
+        const data = JSON.parse(message);
+
+        // Checking if the message is a valid one
+        if (typeof data.to !== 'string' || typeof data.body !== 'string') {
+          // console.error('Invalid message');
+          return;
+        }
+
+        // Sending the message
+        const messageToSend = {
+          to: data.to,
+          from: data.from,
+          body: data.body,
+          sentAt: Date.now(),
+        };
+
+        sendMessage(messageToSend);
+      } catch (e) {
+        // console.error('Error passing message!', e);
+      }
     });
 
     // handle close event
     ctx.on('close', () => {
+      // console.log('user disconnected');
+      users.delete(userRef);
       clearInterval(unreadMessageCount);
       clearInterval(jobs);
       clearInterval(neededRatings);

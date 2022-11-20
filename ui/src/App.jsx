@@ -21,6 +21,8 @@ const JobApplications = lazy(() =>
 );
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
+const Chat = lazy(() => import('./components/Chat/Chat'));
+
 function App() {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
@@ -96,6 +98,7 @@ function App() {
             />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/chat/:sendTo" element={<Chat />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
