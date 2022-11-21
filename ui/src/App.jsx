@@ -12,6 +12,7 @@ const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/Register/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
 const SettingsPage = lazy(() => import('./pages/Settings/SettingsPage'));
+const ChatPage = lazy(() => import('./pages/Chat/ChatPage'));
 const NotificationsPage = lazy(() =>
   import('./pages/Notifications/NotificationsPage')
 );
@@ -20,8 +21,6 @@ const JobApplications = lazy(() =>
   import('./pages/JobApplications/JobApplications')
 );
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
-
-const Chat = lazy(() => import('./components/Chat/Chat'));
 
 function App() {
   const navigate = useNavigate();
@@ -96,9 +95,16 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <ChatPage />
+                </PrivateRoute>
+              }
+            />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/chat/:sendTo" element={<Chat />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

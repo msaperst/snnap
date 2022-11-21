@@ -8,6 +8,7 @@ const job = require('./routes/job.js');
 const authentication = require('./routes/authentication.js');
 const user = require('./routes/user.js');
 const company = require('./routes/company.js');
+const chat = require('./routes/chat.js');
 const setupWebSocket = require('./services/webSocketSetup');
 
 const limiter = rateLimit({
@@ -33,6 +34,7 @@ app.use('/api/auth', authentication);
 app.use('/api/user', user);
 app.use('/api/company', company);
 app.use('/api/jobs', job);
+app.use('/api/chat', chat);
 
 // Handling Errors
 app.use((err, _req, res) => {

@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 const url = require('url');
 const { getUnreadMessageCount } = require('./webSocketNotifications');
 const User = require('../components/user/User');
+const Chat = require('../components/chat/Chat');
 const { getJobs } = require('./webSocketJobs');
 const { getNeededRatings } = require('./webSocketRate');
 
@@ -117,6 +118,7 @@ function webSocketSetup(server) {
         };
 
         sendMessage(messageToSend);
+        Chat.addConversation(messageToSend);
       } catch (e) {
         // console.error('Error passing message!', e);
       }
@@ -132,7 +134,7 @@ function webSocketSetup(server) {
     });
 
     // sent a message that we're good to proceed
-    ctx.send('connection established.');
+    // ctx.send('connection established.');
   });
 }
 

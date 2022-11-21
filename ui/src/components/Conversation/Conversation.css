@@ -1,0 +1,4 @@
+#chat-view-container {
+    overflow-y: auto;
+    height: 50vh;
+}

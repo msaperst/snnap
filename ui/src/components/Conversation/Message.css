@@ -1,0 +1,47 @@
+.bubble-message {
+    margin: 5px 0 5px 0;
+    position: relative;
+    padding: 0.5rem;
+    display: inline-block;
+    width: 100%;
+}
+
+.self-message > span {
+    float: right;
+    background: #42a5f5;
+    color: #fff !important;
+    border-radius: 20px 20px 3px 20px;
+    display: block;
+    max-width: 75%;
+    padding: 7px 13px 7px 13px;
+}
+
+.them-message > span {
+    float: left;
+    background: #f1f1f1;
+    color: #000 !important;
+    border-radius: 20px 20px 20px 3px;
+    display: block;
+    max-width: 75%;
+    padding: 7px 13px 7px 13px;
+}
+
+.self-message:before {
+    content: attr(data-is);
+    position: absolute;
+    right: 15px;
+    bottom: -0.8em;
+    display: block;
+    font-size: .750rem;
+    color: rgba(84, 110, 122,1.0);
+}
+
+.them-message:before {
+    content: attr(data-is);
+    position: absolute;
+    left: 13px;
+    bottom: -0.8em;
+    display: block;
+    font-size: .750rem;
+    color: rgba(84, 110, 122,1.0);
+}
