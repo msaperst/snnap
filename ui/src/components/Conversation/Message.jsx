@@ -11,7 +11,7 @@ function Message(props) {
     <div
       className={`bubble-message ${
         message.to === user.username ? 'them-message' : 'self-message'
-      }`}
+      }${message.reviewed ? '' : ' unread'}`}
       data-is={`${
         message.to === user.username ? message.from : 'you'
       } - ${new Date(message.sentAt).toLocaleTimeString(undefined, {

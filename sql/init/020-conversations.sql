@@ -2,9 +2,10 @@ CREATE TABLE IF NOT EXISTS conversations
 (
     id      int(11)   NOT NULL AUTO_INCREMENT,
     sender  int(11)   NOT NULL,
-    sendee  int(11)   NOT NULL,
-    sentAt    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    recipient  int(11)   NOT NULL,
+    sentAt  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     message LONGTEXT  NOT NULL,
+    received boolean  NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1

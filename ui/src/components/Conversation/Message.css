@@ -45,3 +45,7 @@
     font-size: .750rem;
     color: rgba(84, 110, 122,1.0);
 }
+
+.self-message.unread:before {
+    color: rgba(180, 110, 122,1.0);
+}

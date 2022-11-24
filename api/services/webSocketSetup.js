@@ -27,22 +27,27 @@ const getParams = (request) => {
 
 // basic function to send messages
 function sendMessage(message) {
-  users.forEach(async (user) => {
-    if (
-      message.to === (await user.user.getUsername()) ||
-      message.from === (await user.user.getUsername())
-    ) {
+  // first check to see if the user is online and receiving it
+  users.forEach((user) => {
+    if (message.to === user.from) {
+      // eslint-disable-next-line no-param-reassign
+      message.reviewed = true;
+    }
+  });
+  // next actually send the message
+  users.forEach((user) => {
+    if (message.to === user.from || message.from === user.from) {
       user.ctx.send(JSON.stringify(message));
     }
   });
+  return message;
 }
 
 // accepts an http server (covered later)
 function webSocketSetup(server) {
   // ws instance
   const wss = new WebSocket.Server({ noServer: true });
-  let token;
-  let path;
+  let params;
 
   // could set a broadcast message here
   // broadcastPipeline(wss.clients);
@@ -51,13 +56,10 @@ function webSocketSetup(server) {
   server.on('upgrade', async (request, socket, head) => {
     try {
       // authentication and some other steps will come here
-      token = getParams(request).token;
-      path = getParams(request).path;
-      // we can choose whether to upgrade or not
-
-      if (token) {
+      params = getParams(request);
+      if (params.token) {
         // this should throw an error if there is a problem
-        User.auth(token);
+        User.auth(params.token);
         // user information will be available in req object
         // allow upgrade to web socket
         wss.handleUpgrade(request, socket, head, (ws) => {
@@ -76,24 +78,25 @@ function webSocketSetup(server) {
   // what to do after a connection is established
   wss.on('connection', (ctx) => {
     // console.log('user connected');
-    const user = User.auth(token);
-    const userRef = {
-      ctx,
-      user,
-    };
-    users.add(userRef);
+    const user = User.auth(params.token);
+    let userRef;
 
     let unreadMessageCount;
     let jobs;
     let neededRatings;
-    if (path === '/wsapp/unreadNotifications') {
-      unreadMessageCount = getUnreadMessageCount(ctx, token);
-    }
-    if (path === '/wsapp/jobs') {
-      jobs = getJobs(ctx, token);
-    }
-    if (path === '/wsapp/neededRatings') {
-      neededRatings = getNeededRatings(ctx, token);
+    if (params.path === '/wsapp/unreadNotifications') {
+      unreadMessageCount = getUnreadMessageCount(ctx, user);
+    } else if (params.path === '/wsapp/jobs') {
+      jobs = getJobs(ctx);
+    } else if (params.path === '/wsapp/neededRatings') {
+      neededRatings = getNeededRatings(ctx, user);
+    } else {
+      userRef = {
+        ctx,
+        from: User.decode(params.token).username,
+        to: params.user,
+      };
+      users.add(userRef);
     }
 
     // handle message events
@@ -115,10 +118,11 @@ function webSocketSetup(server) {
           from: data.from,
           body: data.body,
           sentAt: Date.now(),
+          reviewed: false,
         };
 
-        sendMessage(messageToSend);
-        Chat.addConversation(messageToSend);
+        const messageSent = sendMessage(messageToSend);
+        Chat.addConversation(messageSent);
       } catch (e) {
         // console.error('Error passing message!', e);
       }
@@ -127,7 +131,9 @@ function webSocketSetup(server) {
     // handle close event
     ctx.on('close', () => {
       // console.log('user disconnected');
-      users.delete(userRef);
+      if (userRef) {
+        users.delete(userRef);
+      }
       clearInterval(unreadMessageCount);
       clearInterval(jobs);
       clearInterval(neededRatings);

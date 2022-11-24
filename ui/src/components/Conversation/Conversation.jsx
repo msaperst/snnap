@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Send } from 'react-bootstrap-icons';
 import { authenticationService } from '../../services/authentication.service';
+import { chatService } from '../../services/chat.service';
 import Message from './Message';
 import './Conversation.css';
-import { chatService } from '../../services/chat.service';
+import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 
 function Conversation(props) {
   const { chatWith } = props;
@@ -15,7 +18,8 @@ function Conversation(props) {
   const ws = useRef();
 
   // sending message function
-  const sendMessage = () => {
+  const sendMessage = (event) => {
+    event.preventDefault();
     if (messageBody) {
       ws.current.send(
         JSON.stringify({
@@ -30,28 +34,47 @@ function Conversation(props) {
 
   // set up the active chat connection
   useEffect(() => {
-    ws.current = new WebSocket(
-      `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/?token=${user.token}`
-    );
+    if (chatWith) {
+      ws.current = new WebSocket(
+        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/?token=${user.token}&user=${chatWith}`
+      );
 
-    // Opening the ws connection
-    ws.current.onopen = () => {
-      setConnectionOpen(true);
-    };
+      // Opening the ws connection
+      ws.current.onopen = () => {
+        setConnectionOpen(true);
+      };
 
-    // Listening on ws new added messages
-    ws.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.from === chatWith || data.to === chatWith) {
-        setMessages((_messages) => [..._messages, data]);
+      // Listening on ws new added messages
+      ws.current.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.from === chatWith || data.to === chatWith) {
+          if (
+            (data.from === user.username && data.reviewed) ||
+            data.from === chatWith
+          ) {
+            // when sender receives new message, or getting a new message from sender, indicate all old sent as read
+            markAllRead();
+          }
+          setMessages((_messages) => [..._messages, data]);
+        }
+      };
+    }
+    return () => {
+      if (ws.current) {
+        ws.current.close();
       }
     };
-    return () => {
-      ws.current.close();
-    };
-  }, [chatWith, user.token]);
+  }, [chatWith, user]);
 
-  // scroll new messages into view ?? maybe TODO - will probably get rid of this...
+  const markAllRead = () => {
+    const els = document.getElementsByClassName('unread');
+    Array.from(els).forEach((el) => {
+      el.classList.remove('unread');
+    });
+    chatService.markMessagesRead(chatWith);
+  };
+
+  // scroll new messages into view
   const scrollTarget = useRef(null);
   useEffect(() => {
     if (scrollTarget.current) {
@@ -62,7 +85,6 @@ function Conversation(props) {
   // clear out prior messages, and load message history
   useEffect(() => {
     setMessages([]);
-    // TODO - load history and put it in the array
     chatService.getConversationWith(chatWith).then((conversations) => {
       setMessages(conversations);
     });
@@ -82,41 +104,29 @@ function Conversation(props) {
         ))}
         <div ref={scrollTarget} />
       </div>
-      <footer className="w-1/3">
-        <div className="flex flex-row">
-          <input
-            id="message"
-            type="text"
-            className="w-full border-2 border-gray-200 focus:outline-none rounded-md p-2 hover:border-purple-400"
-            placeholder="Type your message here..."
-            value={messageBody}
-            onChange={(e) => setMessageBody(e.target.value)}
-            required
-          />
-          <button
-            aria-label="Send"
-            onClick={sendMessage}
-            className="m-3"
-            disabled={!isConnectionOpen}
-            type="button"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+      <Form id="sendMessageForm" noValidate onSubmit={sendMessage}>
+        <Row className="mt-3">
+          <Col xs={10}>
+            <SnnapFormInput
+              name="Type your message here..."
+              currentVal={messageBody}
+              onChange={(_key, value) => setMessageBody(value)}
+              required
+            />
+          </Col>
+          <Col xs={2}>
+            <Button
+              aria-label="Send"
+              onClick={sendMessage}
+              style={{ height: '100%', width: '100%' }}
+              disabled={!isConnectionOpen}
+              type="button"
             >
-              <path
-                d="M19 10L1 1L5 10L1 19L19 10Z"
-                stroke="black"
-                strokeWidth="2"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-      </footer>
+              <Send />
+            </Button>
+          </Col>
+        </Row>
+      </Form>
     </>
   );
 }
