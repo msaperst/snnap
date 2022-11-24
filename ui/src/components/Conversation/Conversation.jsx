@@ -28,6 +28,7 @@ function Conversation(props) {
           body: messageBody,
         })
       );
+      // TODO - need to wipe out message
       setMessageBody('');
     }
   };
@@ -109,7 +110,6 @@ function Conversation(props) {
           <Col xs={10}>
             <SnnapFormInput
               name="Type your message here..."
-              currentVal={messageBody}
               onChange={(_key, value) => setMessageBody(value)}
               required
             />

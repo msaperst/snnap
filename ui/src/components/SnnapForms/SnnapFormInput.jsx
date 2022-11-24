@@ -3,17 +3,8 @@ import React from 'react';
 import './SnnapForm.css';
 
 function SnnapFormInput(props) {
-  const {
-    size,
-    name,
-    id,
-    value,
-    type,
-    onChange,
-    disabled,
-    notRequired,
-    currentVal,
-  } = props;
+  const { size, name, id, value, type, onChange, disabled, notRequired } =
+    props;
   if (!name) {
     return null;
   }
@@ -47,7 +38,6 @@ function SnnapFormInput(props) {
       onChange={change}
       disabled={disabled}
       defaultValue={value}
-      value={currentVal}
     />
   );
   const formError = (
