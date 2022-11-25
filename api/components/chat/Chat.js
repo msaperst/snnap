@@ -5,9 +5,7 @@ const parseIntAndDbEscape = require('../Common');
 
 const Chat = class {
   constructor(id) {
-    if (id) {
-      this.id = parseIntAndDbEscape(id);
-    }
+    this.id = parseIntAndDbEscape(id);
   }
 
   static async addConversation(message) {
@@ -16,7 +14,7 @@ const Chat = class {
     await Mysql.query(
       `INSERT INTO conversations (sender, recipient, sentAt, message, reviewed) VALUES (${senderId}, ${recipientId}, ${db.escape(
         new Date(message.sentAt)
-      )}, ${db.escape(message.body)}, reviewed);`
+      )}, ${db.escape(message.body)}, ${message.reviewed});`
     );
   }
 
@@ -49,10 +47,10 @@ const Chat = class {
 
   async getConversationList() {
     const sent = await Mysql.query(
-      `SELECT distinct sender AS user, users.username FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${this.id}`
+      `SELECT distinct sender AS user, users.username FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${this.id};`
     );
     const received = await Mysql.query(
-      `SELECT distinct recipient AS user, users.username FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${this.id}`
+      `SELECT distinct recipient AS user, users.username FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${this.id};`
     );
     const allConversations = [...sent, ...received];
     const uniqueConversations = [];
@@ -79,14 +77,14 @@ const Chat = class {
         userInfo.username
       )} AS 'to' FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${
         this.id
-      } AND users.username = ${db.escape(user)}`
+      } AND users.username = ${db.escape(user)};`
     );
     const received = await Mysql.query(
       `SELECT conversations.id, sentAt, reviewed, message AS body, users.username AS 'to', ${db.escape(
         userInfo.username
       )} AS 'from' FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${
         this.id
-      } AND users.username = ${db.escape(user)}`
+      } AND users.username = ${db.escape(user)};`
     );
     let allMessages = [...sent, ...received];
     allMessages = allMessages.sort(

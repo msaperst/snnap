@@ -15,7 +15,11 @@ describe('User', () => {
     lat: 5,
     lon: -71.2345,
   };
-  const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+  const token = jwt.sign(
+    { id: 123, username: 'bob' },
+    'some-super-secret-jwt-token',
+    {}
+  );
   let hash;
   let mysqlSpy;
   let emailSpy;
@@ -27,6 +31,18 @@ describe('User', () => {
     mysqlSpy = jest.spyOn(Mysql, 'query');
     emailSpy = jest.spyOn(Email, 'sendMail');
     hash = await bcrypt.hash('password', 10);
+  });
+
+  it('return 0 (invalid) when no token to decode', () => {
+    expect(User.decode()).toEqual({ id: 0 });
+  });
+
+  it('returns id and username when valid token to decode', () => {
+    expect(User.decode(token)).toMatchObject({
+      iat: expect.any(Number),
+      id: 123,
+      username: 'bob',
+    });
   });
 
   it('throws an error looking up the user via login', async () => {
