@@ -35,6 +35,8 @@ const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedNavigate,
+  // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
+  Link: (props) => <a {...props} href={props.to} />,
 }));
 
 describe('job', () => {
@@ -96,8 +98,8 @@ describe('job', () => {
       lat: 5,
       lon: -71.2345,
     };
-    createUser = { id: 4 };
-    otherUser = { id: 5 };
+    createUser = { id: 4, username: 'msaperst' };
+    otherUser = { id: 5, username: 'msaperst' };
   });
 
   function checkCard(container, duration, buttonText) {
@@ -108,17 +110,24 @@ describe('job', () => {
 
     expect(cardContainer.firstChild.firstChild).toHaveClass('row');
     expect(cardContainer.firstChild.firstChild.children).toHaveLength(3);
-    const avatarCell = cardContainer.firstChild.firstChild.firstChild;
+    const avatarParentCell = cardContainer.firstChild.firstChild.firstChild;
+    const avatarCell = avatarParentCell.firstChild;
     const infoCell = cardContainer.firstChild.firstChild.children[1];
     const buttonCell = cardContainer.firstChild.firstChild.lastChild;
 
-    expect(avatarCell).toHaveClass('col-md-2 col-6 offset-md-0 offset-3');
-    expect(avatarCell.children).toHaveLength(2);
+    expect(avatarParentCell).toHaveClass('col-md-2 col-6 offset-md-0 offset-3');
+    expect(avatarParentCell.children).toHaveLength(1);
+    expect(avatarCell).toHaveClass('square');
+    expect(avatarCell.children).toHaveLength(3);
+
     expect(avatarCell.firstChild).toHaveClass('circle');
     expect(avatarCell.firstChild.children).toHaveLength(1);
     expect(avatarCell.firstChild.firstChild).toHaveTextContent('MS');
 
-    expect(avatarCell.lastChild).toHaveClass('rating');
+    expect(avatarCell.children[1]).toHaveClass('rating');
+    expect(avatarCell.children[1].children).toHaveLength(0);
+
+    expect(avatarCell.lastChild).toHaveClass('message');
     expect(avatarCell.lastChild.children).toHaveLength(0);
 
     expect(infoCell).toHaveClass('col-md-7');
@@ -262,7 +271,7 @@ describe('job', () => {
     await loadJob(job, createUser);
     const { container } = requestForHire;
     const userCol = container.firstChild.firstChild.firstChild;
-    expect(userCol.children[0].lastChild.children).toHaveLength(0);
+    expect(userCol.firstChild.firstChild.children[1].children).toHaveLength(0);
   });
 
   it('has plus rating when true is supplied', async () => {
@@ -275,10 +284,12 @@ describe('job', () => {
     await loadJob(job, createUser);
     const { container } = requestForHire;
     const userCol = container.firstChild.firstChild.firstChild;
-    expect(userCol.children[0].lastChild.children).toHaveLength(1);
-    expect(userCol.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(userCol.firstChild.firstChild.children[1].children).toHaveLength(1);
     expect(
-      userCol.children[0].lastChild.firstChild.firstChild
+      userCol.firstChild.firstChild.children[1].firstChild.children
+    ).toHaveLength(2);
+    expect(
+      userCol.firstChild.firstChild.children[1].firstChild.firstChild
     ).toHaveTextContent('Thumbs Up');
   });
 
@@ -292,10 +303,47 @@ describe('job', () => {
     await loadJob(job, createUser);
     const { container } = requestForHire;
     const userCol = container.firstChild.firstChild.firstChild;
-    expect(userCol.children[0].lastChild.children).toHaveLength(1);
-    expect(userCol.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(userCol.firstChild.firstChild.children[1].children).toHaveLength(1);
     expect(
-      userCol.children[0].lastChild.firstChild.firstChild
+      userCol.firstChild.firstChild.children[1].firstChild.children
+    ).toHaveLength(2);
+    expect(
+      userCol.firstChild.firstChild.children[1].firstChild.firstChild
     ).toHaveTextContent('Thumbs Down');
+  });
+
+  it('has no message icon when user is same', async () => {
+    await loadJob(job, createUser);
+    const { container } = requestForHire;
+    const userCol = container.firstChild.firstChild.firstChild;
+    expect(userCol.firstChild.firstChild.lastChild.children).toHaveLength(0);
+  });
+
+  it('has chat bubble when not user', async () => {
+    userService.userService.get.mockResolvedValue({
+      firstName: 'Max',
+      lastName: 'Saperstone',
+      username: 'grob',
+      rating: false,
+    });
+    await loadJob(job, createUser);
+    const { container } = requestForHire;
+    const userCol = container.firstChild.firstChild.firstChild;
+    expect(userCol.firstChild.firstChild.lastChild.children).toHaveLength(1);
+    expect(
+      userCol.firstChild.firstChild.lastChild.firstChild.getAttribute('href')
+    ).toEqual('/chat');
+    expect(
+      userCol.firstChild.firstChild.lastChild.firstChild.getAttribute('to')
+    ).toEqual('/chat');
+    expect(
+      userCol.firstChild.firstChild.lastChild.firstChild.children
+    ).toHaveLength(1);
+    expect(
+      userCol.firstChild.firstChild.lastChild.firstChild.firstChild.children
+    ).toHaveLength(3);
+    expect(
+      userCol.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
+    ).toHaveTextContent('Chat');
   });
 });

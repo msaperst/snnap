@@ -10,6 +10,9 @@ const userService = require('../../services/user.service');
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
+jest.mock('../../services/authentication.service');
+const authenticationService = require('../../services/authentication.service');
+
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -40,6 +43,9 @@ describe('profile card', () => {
     };
 
     jobService.jobService.getJobApplication.mockResolvedValue(application);
+    authenticationService.authenticationService.currentUserValue = {
+      username: 'user',
+    };
     userService.userService.get.mockResolvedValue({
       firstName: 'Max',
       lastName: 'Saperstone',
