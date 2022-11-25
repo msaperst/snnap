@@ -29,7 +29,7 @@ const getParams = (request) => {
 function sendMessage(message) {
   // first check to see if the user is online and receiving it
   users.forEach((user) => {
-    if (message.to === user.from) {
+    if (message.to === user.from && message.from === user.to) {
       // eslint-disable-next-line no-param-reassign
       message.reviewed = true;
     }
