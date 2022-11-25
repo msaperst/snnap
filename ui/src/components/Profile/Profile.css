@@ -17,6 +17,12 @@
     right: 0;
 }
 
+.message {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
 /*only at medium */
 @media (min-width: 992px) {
     .accordion-header .col-md-2 {

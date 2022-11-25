@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Button, Col, Row } from 'react-bootstrap';
 import { chatService } from '../../services/chat.service';
 import Conversation from '../../components/Conversation/Conversation';
 
 function ChatPage() {
-  const [chatWith, setChatWith] = useState(null);
+  const location = useLocation();
+  let user = null;
+  if (location && location.state) {
+    user = location.state.user;
+  }
+  const [chatWith, setChatWith] = useState(user);
   const [recentConversations, setRecentConversations] = useState([]);
 
   useEffect(() => {
@@ -18,7 +24,6 @@ function ChatPage() {
       <Col>
         <h3>Recent Conversations</h3>
         {recentConversations.map((conversation) => (
-          // eslint-disable-next-line react/no-array-index-key
           <Button
             variant="link"
             key={conversation.user}

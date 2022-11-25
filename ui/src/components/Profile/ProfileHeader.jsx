@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Col, Form, Row } from 'react-bootstrap';
-import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
+import { ChatDots, HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
 import Avatar from '../Avatar/Avatar';
 import './Profile.css';
+import { authenticationService } from '../../services/authentication.service';
 
 function ProfileHeader(props) {
   const { user, company, onClick, selected } = props;
   const navigate = useNavigate();
   const [rating, setRating] = useState('');
+  const [message, setMessage] = useState('');
+
+  const currentUser = authenticationService.currentUserValue;
 
   useEffect(() => {
     if (user.rating !== undefined && user.rating !== null) {
@@ -20,7 +24,14 @@ function ProfileHeader(props) {
         )
       );
     }
-  }, [user.rating]);
+    if (user && user.username && user.username !== currentUser.username) {
+      setMessage(
+        <Link to="/chat" state={{ user: user.username }}>
+          <ChatDots title="Chat" color="white" />
+        </Link>
+      );
+    }
+  }, [currentUser.username, user]);
 
   let radioButton = '';
   let avatarNav = null;
@@ -52,6 +63,7 @@ function ProfileHeader(props) {
           onClick={avatarNav}
         />
         <span className="rating">{rating}</span>
+        <span className="message">{message}</span>
       </Col>
       <Col>
         <Row>
