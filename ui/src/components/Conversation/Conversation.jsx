@@ -3,9 +3,9 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Send } from 'react-bootstrap-icons';
 import { authenticationService } from '../../services/authentication.service';
 import { chatService } from '../../services/chat.service';
+import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import Message from './Message';
 import './Conversation.css';
-import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 
 function Conversation(props) {
   const { chatWith } = props;
@@ -28,8 +28,7 @@ function Conversation(props) {
           body: messageBody,
         })
       );
-      // TODO - need to wipe out message
-      setMessageBody('');
+      document.getElementById('formTypeyourmessagehere').value = '';
     }
   };
 
