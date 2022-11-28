@@ -88,7 +88,7 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest-html-reporter": "^3.7.0",
-    "jest-junit": "^14.0.1",
+    "jest-junit": "^15.0.0",
     "owasp-dependency-check": "^0.0.21",
     "prettier": "^2.7.1"
   },
