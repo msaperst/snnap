@@ -57,6 +57,9 @@ jobs:
       - name: Setup env file ⚙
         run: |
           echo "REACT_APP_GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" > ui/.env
+          echo "REACT_APP_WS_PROTOCOL=wss" >> ui/.env
+          echo "REACT_APP_DOMAIN=localhost" >> ui/.env
+          echo "REACT_APP_WS_PORT=3001" >> ui/.env
 
       - name: Setup Node ☕
         uses: actions/setup-node@v1
