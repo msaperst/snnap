@@ -17,4 +17,4 @@ COPY routes ./routes
 
 # Exports
 EXPOSE ${API_PORT}
-CMD [ "npm", "run", "start" ]
+CMD [ "node", "server.js" ]
