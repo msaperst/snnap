@@ -90,7 +90,7 @@ function Conversation(props) {
     });
   }, [chatWith]);
 
-  if (chatWith === null) {
+  if (!chatWith) {
     return '';
   }
 
