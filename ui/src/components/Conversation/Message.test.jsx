@@ -35,7 +35,7 @@ describe('message', () => {
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('bubble-message');
     expect(container.firstChild.getAttribute('data-is')).toEqual(
-      'otherUser - 9:00 PM'
+      'otherUser - 12:00 AM'
     );
     expect(container.firstChild.children).toHaveLength(1);
     expect(container.firstChild.firstChild).toHaveTextContent('some message');
