@@ -47,10 +47,10 @@ const Chat = class {
 
   async getConversationList() {
     const sent = await Mysql.query(
-      `SELECT distinct sender AS user, users.username FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${this.id};`
+      `SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${this.id} GROUP BY sender;`
     );
     const received = await Mysql.query(
-      `SELECT distinct recipient AS user, users.username FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${this.id};`
+      `SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${this.id};`
     );
     const allConversations = [...sent, ...received];
     const uniqueConversations = [];

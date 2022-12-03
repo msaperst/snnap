@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS conversations
     recipient  int(11)   NOT NULL,
     sentAt  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     message LONGTEXT  NOT NULL,
-    received boolean  NOT NULL DEFAULT 0,
+    reviewed boolean  NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1

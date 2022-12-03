@@ -1,0 +1,7 @@
+.list-group-item-action {
+    cursor: pointer;
+}
+
+.list-group-item-action.active {
+    cursor: auto !important;
+}

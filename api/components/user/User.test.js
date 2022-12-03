@@ -867,10 +867,10 @@ describe('User', () => {
       'someemail@email.email',
       'SNNAP: Password Reset',
       expect.stringMatching(
-        /We just recieved a password reset request from you.\nEnter the below code into the form.\n[a-f0-9]{6}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
+        /We just received a password reset request from you.\nEnter the below code into the form.\n[a-f0-9]{6}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
       ),
       expect.stringMatching(
-        /We just recieved a password reset request from you.<br\/>Enter the below code into the form.<br\/><b>[a-f0-9]{6}<\/b><br\/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
+        /We just received a password reset request from you.<br\/>Enter the below code into the form.<br\/><b>[a-f0-9]{6}<\/b><br\/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
       )
     );
     jest.runOnlyPendingTimers();

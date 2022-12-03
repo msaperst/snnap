@@ -223,8 +223,8 @@ const User = class {
       Email.sendMail(
         user[0].email,
         'SNNAP: Password Reset',
-        `We just recieved a password reset request from you.\nEnter the below code into the form.\n${n}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`,
-        `We just recieved a password reset request from you.<br/>Enter the below code into the form.<br/><b>${n}</b><br/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`
+        `We just received a password reset request from you.\nEnter the below code into the form.\n${n}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`,
+        `We just received a password reset request from you.<br/>Enter the below code into the form.<br/><b>${n}</b><br/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`
       );
     }
   }
