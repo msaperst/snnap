@@ -15,7 +15,11 @@ describe('User', () => {
     lat: 5,
     lon: -71.2345,
   };
-  const token = jwt.sign({ id: 123 }, 'some-super-secret-jwt-token');
+  const token = jwt.sign(
+    { id: 123, username: 'bob' },
+    'some-super-secret-jwt-token',
+    {}
+  );
   let hash;
   let mysqlSpy;
   let emailSpy;
@@ -27,6 +31,18 @@ describe('User', () => {
     mysqlSpy = jest.spyOn(Mysql, 'query');
     emailSpy = jest.spyOn(Email, 'sendMail');
     hash = await bcrypt.hash('password', 10);
+  });
+
+  it('return 0 (invalid) when no token to decode', () => {
+    expect(User.decode()).toEqual({ id: 0 });
+  });
+
+  it('returns id and username when valid token to decode', () => {
+    expect(User.decode(token)).toMatchObject({
+      iat: expect.any(Number),
+      id: 123,
+      username: 'bob',
+    });
   });
 
   it('throws an error looking up the user via login', async () => {
@@ -851,10 +867,10 @@ describe('User', () => {
       'someemail@email.email',
       'SNNAP: Password Reset',
       expect.stringMatching(
-        /We just recieved a password reset request from you.\nEnter the below code into the form.\n[a-f0-9]{6}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
+        /We just received a password reset request from you.\nEnter the below code into the form.\n[a-f0-9]{6}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
       ),
       expect.stringMatching(
-        /We just recieved a password reset request from you.<br\/>Enter the below code into the form.<br\/><b>[a-f0-9]{6}<\/b><br\/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
+        /We just received a password reset request from you.<br\/>Enter the below code into the form.<br\/><b>[a-f0-9]{6}<\/b><br\/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
       )
     );
     jest.runOnlyPendingTimers();

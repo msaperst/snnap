@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, Button, Form, Row, Modal } from 'react-bootstrap';
+import { Accordion, Button, Form, Row, Modal, Badge } from 'react-bootstrap';
 import { jobService } from '../../services/job.service';
 import Submit from '../Submit/Submit';
 import JobDetail from '../Job/JobDetail';
@@ -105,12 +105,9 @@ class CompareJobApplications extends React.Component {
             className="btn-block"
           >
             {buttonText}
-            <span
-              className="btn-warning p-1 rounded-circle"
-              style={{ marginLeft: '10px' }}
-            >
+            <Badge bg="primary" className="float-end" pill>
               {jobApplications.length}
-            </span>
+            </Badge>
           </Button>
         </div>
         <Modal

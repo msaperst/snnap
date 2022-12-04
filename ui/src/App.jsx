@@ -12,6 +12,7 @@ const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/Register/RegisterPage'));
 const ProfilePage = lazy(() => import('./pages/Profile/ProfilePage'));
 const SettingsPage = lazy(() => import('./pages/Settings/SettingsPage'));
+const ChatPage = lazy(() => import('./pages/Chat/ChatPage'));
 const NotificationsPage = lazy(() =>
   import('./pages/Notifications/NotificationsPage')
 );
@@ -91,6 +92,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <JobApplications />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <ChatPage />
                 </PrivateRoute>
               }
             />

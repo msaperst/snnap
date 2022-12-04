@@ -53,6 +53,13 @@ const User = class {
     return newUser;
   }
 
+  static decode(token) {
+    if (token) {
+      return jwt.verify(token, JWT_SECRET);
+    }
+    return { id: 0 };
+  }
+
   static login(username, password, rememberMe) {
     const newUser = new User();
     newUser.instancePromise = (async () => {
@@ -76,7 +83,11 @@ const User = class {
         if (!rememberMe) {
           options = { expiresIn: '1h' };
         }
-        newUser.token = jwt.sign({ id: newUser.id }, JWT_SECRET, options);
+        newUser.token = jwt.sign(
+          { id: newUser.id, username },
+          JWT_SECRET,
+          options
+        );
         await Mysql.query(
           `UPDATE users SET last_login = now() WHERE id = ${newUser.id};`
         );
@@ -102,7 +113,7 @@ const User = class {
   static auth(token) {
     const newUser = new User();
     newUser.token = token;
-    const decoded = jwt.verify(newUser.token, JWT_SECRET);
+    const decoded = User.decode(newUser.token);
     newUser.instancePromise = (async () => {
       const user = await Mysql.query(
         `SELECT * FROM users WHERE id = ${decoded.id};`
@@ -212,8 +223,8 @@ const User = class {
       Email.sendMail(
         user[0].email,
         'SNNAP: Password Reset',
-        `We just recieved a password reset request from you.\nEnter the below code into the form.\n${n}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`,
-        `We just recieved a password reset request from you.<br/>Enter the below code into the form.<br/><b>${n}</b><br/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`
+        `We just received a password reset request from you.\nEnter the below code into the form.\n${n}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`,
+        `We just received a password reset request from you.<br/>Enter the below code into the form.<br/><b>${n}</b><br/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts.`
       );
     }
   }

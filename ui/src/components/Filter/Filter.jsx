@@ -42,11 +42,9 @@ function Filter(props) {
     setToken(currentUser.token);
     if (ws.data) {
       const { message } = ws.data;
-      if (Array.isArray(message)) {
-        if (message.length !== allJobs.length) {
-          setAllJobs(message);
-          setFilteredJobs(message);
-        }
+      if (Array.isArray(message) && message.length !== allJobs.length) {
+        setAllJobs(message);
+        setFilteredJobs(message);
       }
     }
   }, [allJobs.length, currentUser, ws.data]);

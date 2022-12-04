@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import './Menu.css';
+import { Badge } from 'react-bootstrap';
 import snnapLogo from './SNNAP.png';
 import NewJob from '../NewJob/NewJob';
 import useWebSocketLite from '../../helpers/useWebSocketLite';
@@ -36,12 +37,9 @@ function Menu(props) {
       const { message } = wsNotifications.data;
       if (message > 0) {
         const not = (
-          <span
-            className="btn-primary p-1 rounded-circle"
-            style={{ marginLeft: '10px' }}
-          >
+          <Badge bg="primary" className="float-end" pill>
             {message}
-          </span>
+          </Badge>
         );
         setNotifications(not);
         setBell(' 🔔');

@@ -1,12 +1,9 @@
-const User = require('../components/user/User');
-
 async function sendJobsToRate(user, ctx) {
   const rates = await user.getNeededRates();
   ctx.send(JSON.stringify(rates));
 }
 
-function getNeededRatings(ctx, token) {
-  const user = User.auth(token);
+function getNeededRatings(ctx, user) {
   sendJobsToRate(user, ctx);
   return setInterval(async () => {
     await sendJobsToRate(user, ctx);

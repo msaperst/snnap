@@ -54,6 +54,21 @@
   --bs-btn-disabled-border-color: #6a3ca5;
 }
 
+.list-group-item-primary {
+  color: #6a3ca5;
+  background-color: black;
+}
+
+.list-group-item-primary.list-group-item-action.active {
+  background-color: #6a3ca5 !important;
+  border-color: #6a3ca5 !important;
+}
+
+.list-group-item-primary.list-group-item-action:hover {
+  color: white;
+  background-color: #5e4960;
+}
+
 .form-check-input:checked {
   background-color: #6a3ca5;
   border-color: #6a3ca5;

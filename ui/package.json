@@ -89,6 +89,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest-html-reporter": "^3.7.0",
     "jest-junit": "^15.0.0",
+    "jest-websocket-mock": "^2.4.0",
     "owasp-dependency-check": "^0.0.21",
     "prettier": "^2.7.1"
   },

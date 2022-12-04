@@ -10,6 +10,9 @@ const userService = require('../../services/user.service');
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
+jest.mock('../../services/authentication.service');
+const authenticationService = require('../../services/authentication.service');
+
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -41,6 +44,9 @@ describe('profile accordion', () => {
     };
 
     jobService.jobService.getJobApplication.mockResolvedValue(application);
+    authenticationService.authenticationService.currentUserValue = {
+      username: 'user',
+    };
     userService.userService.get.mockResolvedValue({
       firstName: 'Max',
       lastName: 'Saperstone',
@@ -290,7 +296,7 @@ describe('profile accordion', () => {
     const { container } = profileAccordion;
     const headers =
       container.firstChild.firstChild.firstChild.firstChild.firstChild;
-    expect(headers.children[0].lastChild.children).toHaveLength(0);
+    expect(headers.children[0].children[1].children).toHaveLength(0);
   });
 
   it('has plus rating when true is supplied', async () => {
@@ -310,10 +316,10 @@ describe('profile accordion', () => {
     const { container } = profileAccordion;
     const headers =
       container.firstChild.firstChild.firstChild.firstChild.firstChild;
-    expect(headers.children[0].lastChild.children).toHaveLength(1);
-    expect(headers.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(headers.children[0].children[1].children).toHaveLength(1);
+    expect(headers.children[0].children[1].firstChild.children).toHaveLength(2);
     expect(
-      headers.children[0].lastChild.firstChild.firstChild
+      headers.children[0].children[1].firstChild.firstChild
     ).toHaveTextContent('Thumbs Up');
   });
 
@@ -334,11 +340,48 @@ describe('profile accordion', () => {
     const { container } = profileAccordion;
     const headers =
       container.firstChild.firstChild.firstChild.firstChild.firstChild;
-    expect(headers.children[0].lastChild.children).toHaveLength(1);
-    expect(headers.children[0].lastChild.firstChild.children).toHaveLength(2);
+    expect(headers.children[0].children[1].children).toHaveLength(1);
+    expect(headers.children[0].children[1].firstChild.children).toHaveLength(2);
     expect(
-      headers.children[0].lastChild.firstChild.firstChild
+      headers.children[0].children[1].firstChild.firstChild
     ).toHaveTextContent('Thumbs Down');
+  });
+
+  it('has no message icon when user is same', async () => {
+    const { container } = profileAccordion;
+    const headers =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+    expect(headers.children[0].lastChild.children).toHaveLength(0);
+  });
+
+  it('has chat bubble when not user', async () => {
+    authenticationService.authenticationService.currentUserValue = {
+      username: 'msaperst',
+    };
+    await act(async () => {
+      profileAccordion = render(
+        <Profile type="accordion" company={application} />
+      );
+      const { container } = profileAccordion;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = profileAccordion;
+    const headers =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+    expect(headers.children[0].lastChild.children).toHaveLength(1);
+    expect(
+      headers.children[0].lastChild.firstChild.getAttribute('href')
+    ).toEqual('/chat');
+    expect(headers.children[0].lastChild.firstChild.getAttribute('to')).toEqual(
+      '/chat'
+    );
+    expect(headers.children[0].lastChild.firstChild.children).toHaveLength(1);
+    expect(
+      headers.children[0].lastChild.firstChild.firstChild.children
+    ).toHaveLength(3);
+    expect(
+      headers.children[0].lastChild.firstChild.firstChild.firstChild
+    ).toHaveTextContent('Chat');
   });
 
   async function loadProfileAccordionWithMock(app) {

@@ -2,6 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { fireEvent, render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
+import { useLocation } from 'react-router-dom';
 import Login from './Login';
 import { hasError } from '../Settings/CommonTestComponents';
 
@@ -9,11 +10,10 @@ jest.mock('../../services/authentication.service');
 const authenticationService = require('../../services/authentication.service');
 
 const mockedNavigate = jest.fn();
-const mockedLocation = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedNavigate,
-  useLocation: () => mockedLocation,
+  useLocation: jest.fn(),
   // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
   Link: (props) => <a {...props} href={props.to} />,
 }));
@@ -22,6 +22,8 @@ describe('login', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+
+    useLocation.mockImplementation(() => jest.fn());
   });
 
   it('renders header properly', () => {
@@ -210,12 +212,45 @@ describe('login', () => {
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
   });
 
-  it('forwards to homepage on success', async () => {
+  it('forwards to default on success', async () => {
     authenticationService.authenticationService.login.mockResolvedValue();
     const { container } = render(<Login />);
     await fillOutForm(container.firstChild);
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
     expect(mockedNavigate).toHaveBeenCalledWith('/', { replace: true });
+  });
+
+  it('forwards to default without from', async () => {
+    useLocation.mockReturnValue({
+      state: '/path',
+    });
+    authenticationService.authenticationService.login.mockResolvedValue();
+    const { container } = render(<Login />);
+    await fillOutForm(container.firstChild);
+    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
+    expect(mockedNavigate).toHaveBeenCalledWith('/', { replace: true });
+  });
+
+  it('forwards to default without pathname', async () => {
+    useLocation.mockReturnValue({
+      state: { from: '/path' },
+    });
+    authenticationService.authenticationService.login.mockResolvedValue();
+    const { container } = render(<Login />);
+    await fillOutForm(container.firstChild);
+    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
+    expect(mockedNavigate).toHaveBeenCalledWith('/', { replace: true });
+  });
+
+  it('forwards to homepage on success', async () => {
+    useLocation.mockReturnValue({
+      state: { from: { pathname: '/path' } },
+    });
+    authenticationService.authenticationService.login.mockResolvedValue();
+    const { container } = render(<Login />);
+    await fillOutForm(container.firstChild);
+    expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
+    expect(mockedNavigate).toHaveBeenCalledWith('/path', { replace: true });
   });
 
   async function fillOutForm(form) {

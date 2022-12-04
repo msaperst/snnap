@@ -1,8 +1,8 @@
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './Job.css';
-import { useNavigate } from 'react-router-dom';
-import { HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { ChatDots, HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
 import { userService } from '../../services/user.service';
 import { jobService } from '../../services/job.service';
 import Avatar from '../Avatar/Avatar';
@@ -20,6 +20,7 @@ function Job(props) {
   const [applications, setApplications] = useState([]);
   const [button, setButton] = useState('');
   const [rating, setRating] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (user.rating !== undefined && user.rating !== null) {
@@ -31,7 +32,14 @@ function Job(props) {
         )
       );
     }
-  }, [user.rating]);
+    if (user && user.username && user.username !== currentUser.username) {
+      setMessage(
+        <Link to="/chat" state={{ user: user.username }}>
+          <ChatDots title="Chat" color="black" />
+        </Link>
+      );
+    }
+  }, [currentUser.username, user]);
 
   useEffect(() => {
     let isMounted = true;
@@ -83,13 +91,16 @@ function Job(props) {
       <Card.Body>
         <Row>
           <Col md={{ span: 2, offset: 0 }} xs={{ span: 6, offset: 3 }}>
-            <Avatar
-              avatar={user.avatar}
-              firstname={user.first_name}
-              lastname={user.last_name}
-              onClick={() => navigate(`/profile/${user.username}`)}
-            />
-            <span className="rating">{rating}</span>
+            <div className="square">
+              <Avatar
+                avatar={user.avatar}
+                firstname={user.first_name}
+                lastname={user.last_name}
+                onClick={() => navigate(`/profile/${user.username}`)}
+              />
+              <span className="rating">{rating}</span>
+              <span className="message">{message}</span>
+            </div>
           </Col>
           <Col md={7}>
             <Row>
