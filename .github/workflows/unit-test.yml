@@ -37,7 +37,7 @@ jobs:
           category: api
 
       - name: Unit Test 🤞
-        run: cd api; npm run test
+        run: timedatectl set-timezone America/New_York; cd api; npm run test
 
       - name: Upload Coverage 📊
         if: always()
@@ -80,7 +80,7 @@ jobs:
           category: ui
 
       - name: Unit Test 🤞
-        run: cd ui; npm run test
+        run: timedatectl set-timezone America/New_York; cd ui; npm run test
 
       - name: Upload Coverage 📊
         if: always()
