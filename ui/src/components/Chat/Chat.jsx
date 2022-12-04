@@ -88,12 +88,12 @@ function Chat(props) {
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <hr />
+      {/* <hr />
       <h3>Clients</h3>
       <span className="font-italic">Coming Soon</span>
       <hr />
       <h3>Communities</h3>
-      <span className="font-italic">Coming Soon</span>
+      <span className="font-italic">Coming Soon</span> */}
     </>
   );
 }

@@ -105,9 +105,8 @@ describe('conversation', () => {
     expect(container.lastChild.firstChild.firstChild).toHaveClass('col-10');
     expect(container.lastChild.firstChild.firstChild.children).toHaveLength(1);
     const input =
-      container.lastChild.firstChild.firstChild.firstChild.firstChild
-        .firstChild;
-    expect(input.getAttribute('id')).toEqual('formTypeyourmessagehere');
+      container.lastChild.firstChild.firstChild.firstChild.firstChild;
+    expect(input.getAttribute('id')).toEqual('formMessage');
     expect(input.getAttribute('type')).toEqual('text');
     expect(input.getAttribute('required')).toEqual('');
     expect(input.getAttribute('disabled')).toBeNull();
@@ -200,8 +199,7 @@ describe('conversation', () => {
     await loadConversation();
     const { container, getByRole } = conversation;
     const input =
-      container.lastChild.firstChild.firstChild.firstChild.firstChild
-        .firstChild;
+      container.lastChild.firstChild.firstChild.firstChild.firstChild;
     await act(async () => {
       fireEvent.change(input, {
         target: { value: 'message' },
@@ -220,8 +218,7 @@ describe('conversation', () => {
     await loadConversation();
     const { container, getByRole } = conversation;
     const input =
-      container.lastChild.firstChild.firstChild.firstChild.firstChild
-        .firstChild;
+      container.lastChild.firstChild.firstChild.firstChild.firstChild;
     await act(async () => {
       fireEvent.click(getByRole('button'));
     });

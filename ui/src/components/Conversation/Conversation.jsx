@@ -3,7 +3,6 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Send } from 'react-bootstrap-icons';
 import { authenticationService } from '../../services/authentication.service';
 import { chatService } from '../../services/chat.service';
-import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import Message from './Message';
 import './Conversation.css';
 
@@ -28,7 +27,7 @@ function Conversation(props) {
           body: messageBody,
         })
       );
-      document.getElementById('formTypeyourmessagehere').value = '';
+      setMessageBody('');
     }
   };
 
@@ -107,11 +106,19 @@ function Conversation(props) {
       <Form id="sendMessageForm" noValidate onSubmit={sendMessage}>
         <Row className="mt-3">
           <Col xs={10}>
-            <SnnapFormInput
-              name="Type your message here..."
-              onChange={(_key, value) => setMessageBody(value)}
-              required
-            />
+            <Form.Group as={Col} controlId="formMessage">
+              <Form.Control
+                required
+                type="text"
+                placeholder="Type your message here..."
+                onChange={(e) => setMessageBody(e.target.value)}
+                value={messageBody}
+                autoComplete="off"
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide a valid message.
+              </Form.Control.Feedback>
+            </Form.Group>
           </Col>
           <Col xs={2}>
             <Button
