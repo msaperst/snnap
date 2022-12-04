@@ -94,11 +94,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT distinct sender AS user, users.username FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1;'
+      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT distinct recipient AS user, users.username FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
+      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
     );
   });
 
@@ -114,11 +114,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT distinct sender AS user, users.username FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1;'
+      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT distinct recipient AS user, users.username FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
+      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
     );
   });
 
@@ -145,11 +145,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT distinct sender AS user, users.username FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1;'
+      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT distinct recipient AS user, users.username FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
+      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
     );
   });
 

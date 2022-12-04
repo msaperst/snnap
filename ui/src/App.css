@@ -60,7 +60,8 @@
 }
 
 .list-group-item-primary.list-group-item-action.active {
-  background-color: #6a3ca5;
+  background-color: #6a3ca5 !important;
+  border-color: #6a3ca5 !important;
 }
 
 .list-group-item-primary.list-group-item-action:hover {

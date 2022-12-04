@@ -5,6 +5,7 @@ const User = require('../components/user/User');
 const Chat = require('../components/chat/Chat');
 const { getJobs } = require('./webSocketJobs');
 const { getNeededRatings } = require('./webSocketRate');
+const { getConversationList } = require('./webSocketConversations');
 
 const users = new Set();
 
@@ -84,12 +85,15 @@ function webSocketSetup(server) {
     let unreadMessageCount;
     let jobs;
     let neededRatings;
+    let conversationList;
     if (params.path === '/wsapp/unreadNotifications') {
       unreadMessageCount = getUnreadMessageCount(ctx, user);
     } else if (params.path === '/wsapp/jobs') {
       jobs = getJobs(ctx);
     } else if (params.path === '/wsapp/neededRatings') {
       neededRatings = getNeededRatings(ctx, user);
+    } else if (params.path === '/wsapp/conversationList') {
+      conversationList = getConversationList(ctx, user);
     } else {
       userRef = {
         ctx,
@@ -137,6 +141,7 @@ function webSocketSetup(server) {
       clearInterval(unreadMessageCount);
       clearInterval(jobs);
       clearInterval(neededRatings);
+      clearInterval(conversationList);
     });
 
     // sent a message that we're good to proceed
