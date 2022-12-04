@@ -37,7 +37,7 @@ jobs:
           category: api
 
       - name: Unit Test 🤞
-        run: cp /usr/share/zoneinfo/America/New_York /etc/localtime; cd api; npm run test
+        run: cd api; npm run test
 
       - name: Upload Coverage 📊
         if: always()
@@ -80,7 +80,7 @@ jobs:
           category: ui
 
       - name: Unit Test 🤞
-        run: cp /usr/share/zoneinfo/America/New_York /etc/localtime; cd ui; npm run test
+        run: cd ui; npm run test
 
       - name: Upload Coverage 📊
         if: always()

@@ -37,7 +37,9 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(5);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,
-      "INSERT INTO conversations (sender, recipient, sentAt, message, reviewed) VALUES (1, 2, '2022-11-25 09:19:43.788', 'hello', false);"
+      expect.stringMatching(
+        /^INSERT INTO conversations \(sender, recipient, sentAt, message, reviewed\) VALUES \(1, 2, '2022-11-25 \d{2}:19:43.788', 'hello', false\);$/
+      )
     );
   });
 
