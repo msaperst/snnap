@@ -12,9 +12,11 @@ const Chat = class {
     const senderId = (await User.getBasicUserInfo(message.from)).id;
     const recipientId = (await User.getBasicUserInfo(message.to)).id;
     await Mysql.query(
-      `INSERT INTO conversations (sender, recipient, sentAt, message, reviewed) VALUES (${senderId}, ${recipientId}, ${db.escape(
+      `INSERT INTO conversations (sender, recipient, sentAt, message, reviewed) VALUES (${parseIntAndDbEscape(
+        senderId
+      )}, ${parseIntAndDbEscape(recipientId)}, ${db.escape(
         new Date(message.sentAt)
-      )}, ${db.escape(message.body)}, ${message.reviewed});`
+      )}, ${db.escape(message.body)}, ${Boolean.valueOf(message.reviewed)});`
     );
   }
 
@@ -24,9 +26,8 @@ const Chat = class {
     }
     messages.forEach((message) => {
       Mysql.query(
-        `UPDATE conversations SET reviewed = true WHERE id = ${parseInt(
-          message,
-          10
+        `UPDATE conversations SET reviewed = true WHERE id = ${parseIntAndDbEscape(
+          message
         )} AND recipient = ${this.id} AND reviewed = false;`
       );
     });
@@ -91,7 +92,7 @@ const Chat = class {
       (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
     );
     const unread = allMessages.filter((message) => !message.reviewed);
-    await this.markMessagesRead(unread.map((message) => message.id));
+    this.markMessagesRead(unread.map((message) => message.id));
     return allMessages;
   }
 };
