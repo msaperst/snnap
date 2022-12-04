@@ -16,7 +16,7 @@ const Chat = class {
         senderId
       )}, ${parseIntAndDbEscape(recipientId)}, ${db.escape(
         new Date(message.sentAt)
-      )}, ${db.escape(message.body)}, ${Boolean.valueOf(message.reviewed)});`
+      )}, ${db.escape(message.body)}, ${Boolean(message.reviewed)});`
     );
   }
 
