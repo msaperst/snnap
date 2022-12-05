@@ -1,9 +1,9 @@
 import React from 'react';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import useWebSocketLite from '../../helpers/useWebSocketLite';
-import { renderWithSockets } from './Menu.test';
+import Menu from './Menu';
 
 jest.mock('../../helpers/useWebSocketLite');
 
@@ -69,5 +69,19 @@ describe('snnap menu', () => {
       fireEvent.click(screen.getByText(username));
     });
     return container.firstChild.firstChild.lastChild.firstChild.children[1];
+  }
+
+  async function renderWithSockets(message = {}) {
+    const data = { message };
+    useWebSocketLite.mockReturnValue({ data });
+
+    let menu;
+    await act(async () => {
+      menu = render(<Menu currentUser={{ username: 'msaperst' }} />);
+      const { container } = menu;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = menu;
+    return container;
   }
 });

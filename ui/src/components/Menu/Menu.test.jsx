@@ -217,19 +217,18 @@ describe('menu', () => {
     ).toEqual('SNNAP.png');
     return true;
   }
-});
 
-// eslint-disable-next-line jest/no-export
-export async function renderWithSockets(message = {}) {
-  const data = { message };
-  useWebSocketLite.mockReturnValue({ data });
+  async function renderWithSockets(message = {}) {
+    const data = { message };
+    useWebSocketLite.mockReturnValue({ data });
 
-  let menu;
-  await act(async () => {
-    menu = render(<Menu currentUser={{ username: 'msaperst' }} />);
+    let menu;
+    await act(async () => {
+      menu = render(<Menu currentUser={{ username: 'msaperst' }} />);
+      const { container } = menu;
+      await waitFor(() => container.firstChild);
+    });
     const { container } = menu;
-    await waitFor(() => container.firstChild);
-  });
-  const { container } = menu;
-  return container;
-}
+    return container;
+  }
+});
