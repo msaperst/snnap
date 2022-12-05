@@ -38,4 +38,5 @@ describe('profile page', () => {
   // verify links add http when not in them
   // verify links don't display when not set
   // verify ratings show in profile
+  // verify link to chat shown in profile
 });
