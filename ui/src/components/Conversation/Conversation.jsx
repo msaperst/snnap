@@ -35,7 +35,7 @@ function Conversation(props) {
   useEffect(() => {
     if (chatWith) {
       ws.current = new WebSocket(
-        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/?token=${user.token}&user=${chatWith}`
+        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp?token=${user.token}&user=${chatWith}`
       );
 
       // Opening the ws connection
