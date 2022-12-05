@@ -50,7 +50,7 @@ describe('conversation', () => {
       },
     ]);
     Element.prototype.scrollIntoView = jest.fn();
-    server = new WS('wss://localhost:3001');
+    server = new WS('wss://localhost:3001/wsapp');
 
     message = {
       id: 5,

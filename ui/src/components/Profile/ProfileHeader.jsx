@@ -26,7 +26,11 @@ function ProfileHeader(props) {
     }
     if (user && user.username && user.username !== currentUser.username) {
       setMessage(
-        <Link to="/chat" state={{ user: user.username }}>
+        <Link
+          to="/chat"
+          alt={`Chat with ${user.username}`}
+          state={{ user: user.username }}
+        >
           <ChatDots title="Chat" color="white" />
         </Link>
       );

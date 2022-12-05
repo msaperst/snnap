@@ -152,7 +152,7 @@ describe('notifications', () => {
     await dropDown.click();
     expect(
       await driver.findElement(By.css('[href="/notifications"]')).getText()
-    ).toEqual('Notifications1');
+    ).toEqual('Notifications\n1');
     await driver.findElement(By.css('svg')).click();
     await driver.navigate().refresh();
     dropDown = driver.wait(until.elementLocated(By.id('user-dropdown')), 5000);
