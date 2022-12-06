@@ -84,9 +84,11 @@ function Conversation(props) {
   // clear out prior messages, and load message history
   useEffect(() => {
     setMessages([]);
-    chatService.getConversationWith(chatWith).then((conversations) => {
-      setMessages(conversations);
-    });
+    if (chatWith) {
+      chatService.getConversationWith(chatWith).then((conversations) => {
+        setMessages(conversations);
+      });
+    }
   }, [chatWith]);
 
   if (!chatWith) {
