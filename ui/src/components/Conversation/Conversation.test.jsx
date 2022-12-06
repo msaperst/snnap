@@ -50,7 +50,7 @@ describe('conversation', () => {
       },
     ]);
     Element.prototype.scrollIntoView = jest.fn();
-    server = new WS('wss://localhost:3001');
+    server = new WS('wss://localhost:3001/wsapp/');
 
     message = {
       id: 5,
@@ -119,11 +119,25 @@ describe('conversation', () => {
     const button = container.lastChild.firstChild.lastChild.firstChild;
     expect(button).toHaveClass('btn btn-primary');
     expect(button.getAttribute('aria-label')).toEqual('Send');
-    expect(button.getAttribute('disabled')).toBeNull();
+    expect(button.getAttribute('disabled')).toEqual('');
     expect(button.getAttribute('style')).toEqual('height: 100%; width: 100%;');
     expect(button.getAttribute('type')).toEqual('button');
     expect(button.children).toHaveLength(1);
     expect(button.firstChild).toHaveTextContent('');
+  });
+
+  it('is enabled when text entered', async () => {
+    await loadConversation();
+    const { container } = conversation;
+    const input =
+      container.lastChild.firstChild.firstChild.firstChild.firstChild;
+    await act(async () => {
+      fireEvent.change(input, {
+        target: { value: 'message' },
+      });
+    });
+    const button = container.lastChild.firstChild.lastChild.firstChild;
+    expect(button.getAttribute('disabled')).toBeNull();
   });
 
   it('does not add a message when no match', async () => {
