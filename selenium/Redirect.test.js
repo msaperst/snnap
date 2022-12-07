@@ -18,7 +18,7 @@ describe('home page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('redirects to home after going to login when authenticated', async () => {
+  it('redirects to home after going to login when authenticated @network @accessibility', async () => {
     await test.loginUser('redirectUser');
     await driver.get(Test.getApp());
     const initialUrl = await driver.getCurrentUrl();
@@ -29,13 +29,13 @@ describe('home page', () => {
     expect(await driver.getCurrentUrl()).toEqual(initialUrl);
   });
 
-  it('stays on login when not authenticated', async () => {
+  it('stays on login when not authenticated @network @accessibility', async () => {
     await driver.get(Test.getApp());
     await driver.get(`${Test.getApp()}/login`);
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/login`);
   });
 
-  it('redirects to profile after going to register when authenticated', async () => {
+  it('redirects to profile after going to register when authenticated @network @accessibility', async () => {
     await test.loginUser('redirectUser');
     await driver.get(Test.getApp());
     const initialUrl = await driver.getCurrentUrl();
@@ -46,7 +46,7 @@ describe('home page', () => {
     expect(await driver.getCurrentUrl()).toEqual(initialUrl);
   });
 
-  it('stays on register when not authenticated', async () => {
+  it('stays on register when not authenticated @network @accessibility', async () => {
     await driver.get(Test.getApp());
     await driver.get(`${Test.getApp()}/register`);
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/register`);

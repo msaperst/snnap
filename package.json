@@ -18,7 +18,9 @@
   "scripts": {
     "start:api": "cd api; npm run start",
     "start:ui": "cd ui; npm run start",
-    "test": "jest selenium/*.js"
+    "test": "jest selenium/*.js",
+    "test:network": "NETWORK=true jest -t '@network' selenium/*.js",
+    "test:accessibility": "ACCESSIBILITY=true jest -t '@accessibility' selenium/*.js"
   },
   "browserslist": {
     "production": [

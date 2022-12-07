@@ -34,6 +34,11 @@ class Test {
     await driver.get(Test.getApp() + url);
     await driver.manage().window().setRect({ height: 1600, width: 1800 });
     this.driver = driver;
+
+    if (process.env.NETWORK) {
+      console.log('TODO STUFF FOR A NETWORKING TEST');
+    }
+
     return driver;
   }
 
@@ -43,6 +48,10 @@ class Test {
       attach: Buffer.from(image, 'base64'),
     });
     await this.driver.quit();
+
+    if (process.env.ACCESSIBILITY) {
+      console.log('TODO STUFF FOR AN ACCESSIBILITY TEST');
+    }
   }
 
   addUser(username) {

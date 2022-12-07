@@ -37,11 +37,11 @@ describe('profile page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('shows the form when clicked', async () => {
+  it('shows the form when clicked @network @accessibility', async () => {
     expect(await forgot.isDisplayed()).toBeTruthy();
   });
 
-  it('does not allow you to submit with empty email', async () => {
+  it('does not allow you to submit with empty email @accessibility', async () => {
     const feedback = await driver.findElements(
       By.className('invalid-feedback')
     );
@@ -57,12 +57,12 @@ describe('profile page', () => {
     expect(await feedback[2].isDisplayed()).toBeTruthy();
   });
 
-  it('shows error with bad email', async () => {
+  it('shows error with bad email @network @accessibility', async () => {
     const alert = await fillAndSubmitWithEmail('forgotPasswordUser@exampl');
     expect(await alert.getText()).toEqual('Please provide a valid email.');
   });
 
-  it('shows success with good email', async () => {
+  it('shows success with good email @network @accessibility', async () => {
     const alert = await fillAndSubmitWithEmail('passwordResetUser@example.org');
     expect(await alert.getText()).toEqual(
       'A reset code was sent to your email. This code is only valid for 10 minutes.'
@@ -71,7 +71,7 @@ describe('profile page', () => {
 
   // TODO it('sends an email with reset code', () => {});
 
-  it('properly auto-shows reset code form', async () => {
+  it('properly auto-shows reset code form @network @accessibility', async () => {
     await fillAndSubmitWithEmail('passwordResetUser@example.org');
     await test.waitUntilNotPresent(
       By.css('[data-testid="forgotPasswordModal"]'),
@@ -82,7 +82,7 @@ describe('profile page', () => {
     ).toEqual('passwordResetUser@example.org');
   });
 
-  it('does not allow you to submit with empty fields', async () => {
+  it('does not allow you to submit with empty fields @accessibility', async () => {
     await fillAndSubmitWithEmail('passwordResetUser@example.org');
     await test.waitUntilNotPresent(
       By.css('[data-testid="forgotPasswordModal"]'),
@@ -110,7 +110,7 @@ describe('profile page', () => {
     }
   });
 
-  it('does not let you reset with bad code', async () => {
+  it('does not let you reset with bad code @network @accessibility', async () => {
     await fillAndSubmitWithEmail('passwordResetUser@example.org');
     await fillAndSubmitWithCode(
       'passwordResetUser@example.org',
@@ -124,7 +124,7 @@ describe('profile page', () => {
     expect(await alert.getText()).toEqual('Supplied code does not match!');
   });
 
-  it('does not let you reset with bad password', async () => {
+  it('does not let you reset with bad password @network @accessibility', async () => {
     await fillAndSubmitWithEmail('passwordResetUser@example.org');
     await fillAndSubmitWithCode('passwordResetUser@example.org', 1234, 'newPa');
     const alert = await driver.wait(
@@ -136,7 +136,7 @@ describe('profile page', () => {
     );
   });
 
-  it('does not let you reset with too many attempts', async () => {
+  it('does not let you reset with too many attempts @network @accessibility', async () => {
     await fillAndSubmitWithEmail('passwordResetUser@example.org');
     await test.waitUntilNotPresent(
       By.css('[data-testid="forgotPasswordModal"]'),
@@ -187,7 +187,7 @@ describe('profile page', () => {
     expect(await alert.getText()).toEqual('Supplied code does not match!');
   });
 
-  it('lets you reset password, and logs you in', async () => {
+  it('lets you reset password, and logs you in @network @accessibility', async () => {
     await fillAndSubmitWithEmail('passwordResetUser@example.org');
     await test.waitUntilNotPresent(
       By.css('[data-testid="forgotPasswordModal"]'),

@@ -42,11 +42,11 @@ describe('home page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('takes us to the homepage', async () => {
+  it('takes us to the homepage @network @accessibility', async () => {
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/`);
   });
 
-  it('allows us to log out', async () => {
+  it('allows us to log out @network @accessibility', async () => {
     const dropDownMenu = driver.wait(
       until.elementLocated(By.id('user-dropdown')),
       5000
@@ -97,7 +97,7 @@ describe('home page', () => {
     expect(cards).toHaveLength(foundDigit);
   });
 
-  it("hides created b'nai mitzvahs we created when filtered out", async () => {
+  it("hides created b'nai mitzvahs we created when filtered out @network @accessibility", async () => {
     const initialFoundText = await getFoundText(0);
     const initialFoundDigit = parseInt(initialFoundText.replace(/\D/g, ''), 10);
     const filterButtons = await driver.wait(
@@ -138,7 +138,7 @@ describe('home page', () => {
     }
   });
 
-  it('updates displayed jobs based on text in search box', async () => {
+  it('updates displayed jobs based on text in search box @network @accessibility', async () => {
     const searchInput = await driver.wait(
       until.elementLocated(By.id('searchForJobInput')),
       5000
@@ -151,7 +151,7 @@ describe('home page', () => {
     }
   });
 
-  it('updates displayed jobs based on mileage dropdown', async () => {
+  it('updates displayed jobs based on mileage dropdown @network @accessibility', async () => {
     const initialFoundText = await getFoundText(0);
     const initialFoundDigit = parseInt(initialFoundText.replace(/\D/g, ''), 10);
     const select = await driver.wait(
@@ -166,13 +166,13 @@ describe('home page', () => {
     expect(cards).toHaveLength(afterFoundDigit);
   });
 
-  // TODO - remove the above when this test is completed
+  // TODO - remove the below when this test is completed
   // eslint-disable-next-line jest/expect-expect
-  it('updates displayed jobs based on from where dropdown', () => {
+  it('updates displayed jobs based on from where dropdown @network @accessibility', () => {
     // TODO - unable to do this currently as allowing location isn't possible/simple through Selenium
   });
 
-  it('updates displayed jobs based on custom where dropdown', async () => {
+  it('updates displayed jobs based on custom where dropdown @network @accessibility', async () => {
     const select = await driver.wait(
       until.elementLocated(By.id('select-location')),
       5000

@@ -23,7 +23,7 @@ describe('profile page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('allows us to navigate to the user profile', async () => {
+  it('allows us to navigate to the user profile @network @accessibility', async () => {
     expect(await driver.getCurrentUrl()).toEqual(
       `${Test.getApp()}/profile/profileUser`
     );

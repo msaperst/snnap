@@ -21,7 +21,7 @@ describe('register page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('takes us to the register page', async () => {
+  it('takes us to the register page @network @accessibility', async () => {
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/register`);
   });
 
@@ -32,7 +32,7 @@ describe('register page', () => {
     );
   });
 
-  it('shows error when you register with blank information', async () => {
+  it('shows error when you register with blank information @accessibility', async () => {
     const feedback = await driver.findElements(
       By.className('invalid-feedback')
     );
@@ -69,7 +69,7 @@ describe('register page', () => {
     }
   });
 
-  it('allows you to register with a valid information', async () => {
+  it('allows you to register with a valid information @network @accessibility', async () => {
     await register(
       'Test',
       'User',
@@ -91,7 +91,7 @@ describe('register page', () => {
     );
   });
 
-  it('does not allow you to register without a valid email', async () => {
+  it('does not allow you to register without a valid email @accessibility', async () => {
     await driver.findElement(By.id('formEmail')).sendKeys('example');
     driver.findElement(By.id('createAccountButton')).click();
     const feedback = await driver.findElements(
@@ -103,7 +103,7 @@ describe('register page', () => {
     expect(await feedback[3].isDisplayed()).toBeTruthy();
   });
 
-  it('does not allow you to register with a duplicate email', async () => {
+  it('does not allow you to register with a duplicate email @network @accessibility', async () => {
     test.addUser('registerUser');
     await register(
       'Test',
@@ -123,7 +123,7 @@ describe('register page', () => {
     );
   });
 
-  it('does not allow you to register with a duplicate username', async () => {
+  it('does not allow you to register with a duplicate username @network @accessibility', async () => {
     test.addUser('registerUser');
     await register(
       'Test',

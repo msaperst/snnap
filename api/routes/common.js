@@ -40,7 +40,7 @@ const Common = class {
       });
     }
     try {
-      return callback(token);
+      return await callback(token);
     } catch (error) {
       return res.status(422).send({
         msg: error.message,

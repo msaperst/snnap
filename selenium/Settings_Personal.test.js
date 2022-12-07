@@ -30,7 +30,7 @@ describe('settings personal page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('shows the personal information', async () => {
+  it('shows the personal information @network @accessibility', async () => {
     const personalInfo = (await driver.findElements(By.css('form')))[3];
     expect(await personalInfo.findElement(By.css('h3')).getText()).toEqual(
       'Personal Information'
@@ -66,7 +66,7 @@ describe('settings personal page', () => {
     expect(await city.getAttribute('disabled')).toBeNull();
   });
 
-  it('shows error when you update settings blank information', async () => {
+  it('shows error when you update settings blank information @accessibility', async () => {
     const settings = (await driver.findElements(By.css('form')))[3];
     const feedbacks = await settings.findElements(
       By.className('invalid-feedback')
@@ -99,7 +99,7 @@ describe('settings personal page', () => {
     expect(await lastName.getAttribute('value')).toEqual('User0');
   }
 
-  it('allows updating the personal values', async () => {
+  it('allows updating the personal values @network @accessibility', async () => {
     let firstName = await driver.wait(
       until.elementLocated(By.id('formFirstName')),
       5000
@@ -136,7 +136,7 @@ describe('settings personal page', () => {
     await checkFields(firstName, lastName);
   });
 
-  it('allows updating the city', async () => {
+  it('allows updating the city @network', async () => {
     let city = await driver.wait(until.elementLocated(By.id('formCity')), 5000);
     await test.waitUntilInputFilled(By.id('formCity'));
     await city.clear();

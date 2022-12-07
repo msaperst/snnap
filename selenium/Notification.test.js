@@ -38,12 +38,12 @@ describe('notifications', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('applying to a job creates a notification', async () => {
+  it('applying to a job creates a notification @network @accessibility', async () => {
     const notification = await createAppliedToJobNotification();
     expect(await notification.isDisplayed()).toBeTruthy();
   });
 
-  it('choosing a job creates a notification', async () => {
+  it('choosing a job creates a notification @network @accessibility', async () => {
     const notification = await createChosenJobApplicationNotification();
     expect(await notification.isDisplayed()).toBeTruthy();
   });
@@ -57,7 +57,7 @@ describe('notifications', () => {
     ).toEqual('red');
   });
 
-  it('clicking unread icon marks the notification as read', async () => {
+  it('clicking unread icon marks the notification as read @network @accessibility', async () => {
     const notification = await createAppliedToJobNotification();
     await notification.findElement(By.css('svg')).click();
     await test.waitUntilNotPresent(By.css('svg'));
@@ -75,7 +75,7 @@ describe('notifications', () => {
     expect(await notification.findElements(By.css('svg'))).toHaveLength(0);
   });
 
-  it('navigates to the user page when clicking on the user name', async () => {
+  it('navigates to the user page when clicking on the user name @network @accessibility', async () => {
     await createAppliedToJobNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('Test User')),
@@ -87,7 +87,7 @@ describe('notifications', () => {
     );
   });
 
-  it('navigates to the job when clicking on the job', async () => {
+  it('navigates to the job when clicking on the job @network @accessibility', async () => {
     await createAppliedToJobNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('job')),
@@ -99,7 +99,7 @@ describe('notifications', () => {
     );
   });
 
-  it('navigates to the job application when clicking on the application', async () => {
+  it('navigates to the job application when clicking on the application @network @accessibility', async () => {
     await createChosenJobApplicationNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('job application')),
@@ -130,7 +130,7 @@ describe('notifications', () => {
     expect(await dropDown.getText()).toEqual('notificationUser 🔔');
   });
 
-  it('shows the unread notification count in the menu for all notifications', async () => {
+  it('shows the unread notification count in the menu for all notifications @network @accessibility', async () => {
     await driver.get(Test.getApp());
     let dropDown = await driver.wait(
       until.elementLocated(By.id('user-dropdown')),

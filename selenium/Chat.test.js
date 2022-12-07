@@ -31,7 +31,7 @@ describe('chat', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('navigates to chat without user from the menu', async () => {
+  it('navigates to chat without user from the menu @network @accessibility', async () => {
     const menu = driver.wait(
       until.elementLocated(By.id('user-dropdown')),
       5000
@@ -46,7 +46,7 @@ describe('chat', () => {
     expect(headers).toHaveLength(0);
   });
 
-  it('navigates to chat with user from profile', async () => {
+  it('navigates to chat with user from profile @network @accessibility', async () => {
     const chatLink = driver.wait(
       until.elementLocated(By.css('a[alt="Chat with userToChatWith"]')),
       5000
@@ -74,7 +74,7 @@ describe('chat', () => {
     expect(await chatLink.getText()).toEqual('Chat');
   });
 
-  it('shows unread messages in menu when some', async () => {
+  it('shows unread messages in menu when some @network @accessibility', async () => {
     await sendSingleMessage();
     // check for a message notification
     await chatDriver.get(`${Test.getApp()}/`);
@@ -101,7 +101,7 @@ describe('chat', () => {
     expect(await userChat.getText()).toEqual('userToChat\n1');
   });
 
-  it('removes notifications when selecting a chat', async () => {
+  it('removes notifications when selecting a chat @network @accessibility', async () => {
     await sendSingleMessage();
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
@@ -123,7 +123,7 @@ describe('chat', () => {
     expect(await userChat.getText()).toEqual('userToChat');
   });
 
-  it('switches to different user chat when selected', async () => {
+  it('switches to different user chat when selected @network @accessibility', async () => {
     await sendSingleMessage();
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
@@ -215,7 +215,7 @@ describe('chat', () => {
     expect(await message.getAttribute('data-is')).toEqual(`you - ${now}`);
   });
 
-  it('updates sent message to read when user sends message', async () => {
+  it('updates sent message to read when user sends message @network @accessibility', async () => {
     await sendSingleMessage();
     const message = await driver.wait(
       until.elementLocated(By.css('.bubble-message')),
