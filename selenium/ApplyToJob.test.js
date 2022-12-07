@@ -123,33 +123,7 @@ describe('apply to job', () => {
   });
 
   it('displays profile information', async () => {
-    const rows = await form.findElements(By.className('mb-3 row'));
-    await driver.wait(until.elementTextIs(rows[6], 'Your Information'), 5000);
-    expect(await rows[6].getText()).toEqual('Your Information');
-
-    const name = await driver.findElement(By.id('formName'));
-    expect(await name.getAttribute('disabled')).toBeFalsy();
-    expect(await name.getAttribute('value')).toEqual('Test User');
-
-    const companyName = await driver.findElement(By.id('formCompany'));
-    expect(await companyName.getAttribute('disabled')).toBeFalsy();
-    expect(await companyName.getAttribute('value')).toEqual('');
-
-    const website = await driver.findElement(By.id('formWebsite'));
-    expect(await website.getAttribute('disabled')).toBeFalsy();
-    expect(await website.getAttribute('value')).toEqual('');
-
-    const insta = await driver.findElement(By.id('formInstagramLink'));
-    expect(await insta.getAttribute('disabled')).toBeFalsy();
-    expect(await insta.getAttribute('value')).toEqual('');
-
-    const fb = await driver.findElement(By.id('formFacebookLink'));
-    expect(await fb.getAttribute('disabled')).toBeFalsy();
-    expect(await fb.getAttribute('value')).toEqual('');
-
-    const experience = await driver.findElement(By.id('formExperience'));
-    expect(await experience.getAttribute('disabled')).toBeFalsy();
-    expect(await experience.getAttribute('value')).toEqual('');
+    await checkInformation('Test User', '', '', '', '', '');
 
     // TODO - experience/skills - pull from profile
 
@@ -193,33 +167,14 @@ describe('apply to job', () => {
       until.elementLocated(By.id('applyToJobForm')),
       5000
     );
-    expect(
-      await (await form.findElements(By.className('mb-3 row')))[6].getText()
-    ).toEqual('Your Information');
-
-    const name = await driver.findElement(By.id('formName'));
-    expect(await name.getAttribute('disabled')).toBeFalsy();
-    expect(await name.getAttribute('value')).toEqual('Test User');
-
-    const companyName = await driver.findElement(By.id('formCompany'));
-    expect(await companyName.getAttribute('disabled')).toBeFalsy();
-    expect(await companyName.getAttribute('value')).toEqual('Company');
-
-    const website = await driver.findElement(By.id('formWebsite'));
-    expect(await website.getAttribute('disabled')).toBeFalsy();
-    expect(await website.getAttribute('value')).toEqual('https://website.com');
-
-    const insta = await driver.findElement(By.id('formInstagramLink'));
-    expect(await insta.getAttribute('disabled')).toBeFalsy();
-    expect(await insta.getAttribute('value')).toEqual('https://instagram.com');
-
-    const fb = await driver.findElement(By.id('formFacebookLink'));
-    expect(await fb.getAttribute('disabled')).toBeFalsy();
-    expect(await fb.getAttribute('value')).toEqual('https://facebook.com');
-
-    const experience = await driver.findElement(By.id('formExperience'));
-    expect(await experience.getAttribute('disabled')).toBeFalsy();
-    expect(await experience.getAttribute('value')).toEqual('Experience');
+    await checkInformation(
+      'Test User',
+      'Company',
+      'https://website.com',
+      'https://instagram.com',
+      'https://facebook.com',
+      'Experience'
+    );
 
     // TODO - experience/skills - pull from profile
 
@@ -389,5 +344,42 @@ describe('apply to job', () => {
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeFalsy();
     expect(await button.getText()).toEqual('Already Applied');
+  }
+
+  async function checkInformation(
+    username,
+    company,
+    web,
+    instagram,
+    facebook,
+    exp
+  ) {
+    const rows = await form.findElements(By.className('mb-3 row'));
+    await driver.wait(until.elementTextIs(rows[6], 'Your Information'), 5000);
+    expect(await rows[6].getText()).toEqual('Your Information');
+
+    const name = await driver.findElement(By.id('formName'));
+    expect(await name.getAttribute('disabled')).toBeFalsy();
+    expect(await name.getAttribute('value')).toEqual(username);
+
+    const companyName = await driver.findElement(By.id('formCompany'));
+    expect(await companyName.getAttribute('disabled')).toBeFalsy();
+    expect(await companyName.getAttribute('value')).toEqual(company);
+
+    const website = await driver.findElement(By.id('formWebsite'));
+    expect(await website.getAttribute('disabled')).toBeFalsy();
+    expect(await website.getAttribute('value')).toEqual(web);
+
+    const insta = await driver.findElement(By.id('formInstagramLink'));
+    expect(await insta.getAttribute('disabled')).toBeFalsy();
+    expect(await insta.getAttribute('value')).toEqual(instagram);
+
+    const fb = await driver.findElement(By.id('formFacebookLink'));
+    expect(await fb.getAttribute('disabled')).toBeFalsy();
+    expect(await fb.getAttribute('value')).toEqual(facebook);
+
+    const experience = await driver.findElement(By.id('formExperience'));
+    expect(await experience.getAttribute('disabled')).toBeFalsy();
+    expect(await experience.getAttribute('value')).toEqual(exp);
   }
 });
