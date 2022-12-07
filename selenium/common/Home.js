@@ -14,9 +14,12 @@ class Home {
   }
 
   async hasJobInfo(form) {
-    expect(
-      await (await form.findElements(By.className('mb-3 row')))[0].getText()
-    ).toEqual('Job Information');
+    const rows = await form.findElements(By.className('mb-3 row'));
+    await this.driver.wait(
+      until.elementTextIs(rows[0], 'Job Information'),
+      5000
+    );
+    expect(await rows[0].getText()).toEqual('Job Information');
 
     const jobType = await this.driver.findElement(By.id('formJobType'));
     expect(await jobType.getAttribute('disabled')).toBeTruthy();

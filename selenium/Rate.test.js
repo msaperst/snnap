@@ -3,7 +3,7 @@ const { By, until } = require('selenium-webdriver');
 const Test = require('./common/Test');
 require('chromedriver');
 
-describe('profile page', () => {
+describe('ratings', () => {
   jest.setTimeout(20000);
 
   let test;

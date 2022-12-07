@@ -123,9 +123,9 @@ describe('apply to job', () => {
   });
 
   it('displays profile information', async () => {
-    expect(
-      await (await form.findElements(By.className('mb-3 row')))[6].getText()
-    ).toEqual('Your Information');
+    const rows = await form.findElements(By.className('mb-3 row'));
+    await driver.wait(until.elementTextIs(rows[6], 'Your Information'), 5000);
+    expect(await rows[6].getText()).toEqual('Your Information');
 
     const name = await driver.findElement(By.id('formName'));
     expect(await name.getAttribute('disabled')).toBeFalsy();
