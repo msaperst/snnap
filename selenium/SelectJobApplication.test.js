@@ -62,7 +62,7 @@ describe('apply to job', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('opens the modal when clicked', async () => {
+  it('opens the modal when clicked @network @accessibility', async () => {
     const modal = driver.wait(
       until.elementLocated(By.className('modal-dialog')),
       5000
@@ -128,22 +128,22 @@ describe('apply to job', () => {
     ).toEqual('Company');
   });
 
-  it('each application can be expanded', async () => {
-    const accordianBody = driver.wait(
+  it('each application can be expanded @accessibility', async () => {
+    const accordionBody = driver.wait(
       until.elementLocated(By.className('accordion-body'))
     );
-    await driver.wait(until.elementIsNotVisible(accordianBody), 5000);
-    expect(await accordianBody.isDisplayed()).toBeFalsy();
+    await driver.wait(until.elementIsNotVisible(accordionBody), 5000);
+    expect(await accordionBody.isDisplayed()).toBeFalsy();
     const header = driver.findElement(By.className('accordion-header'));
     await header.click();
-    await driver.wait(until.elementIsVisible(accordianBody), 5000);
-    expect(await accordianBody.isDisplayed()).toBeTruthy();
+    await driver.wait(until.elementIsVisible(accordionBody), 5000);
+    expect(await accordionBody.isDisplayed()).toBeTruthy();
     await header.click();
-    await driver.wait(until.elementIsNotVisible(accordianBody), 5000);
-    expect(await accordianBody.isDisplayed()).toBeFalsy();
+    await driver.wait(until.elementIsNotVisible(accordionBody), 5000);
+    expect(await accordionBody.isDisplayed()).toBeFalsy();
   });
 
-  it('empty application has expected details listed', async () => {
+  it('empty application has expected details listed @network', async () => {
     const applicationId = await applicationsForJobs[0].getId();
     const accordion = driver.findElement(
       By.css(`[data-testid="jobApplication-${applicationId}"]`)
@@ -178,7 +178,7 @@ describe('apply to job', () => {
     expect(await portfolio.getText()).toEqual('Portfolio');
   });
 
-  it('full application has all details listed', async () => {
+  it('full application has all details listed @network', async () => {
     const applicationId = await applicationsForJobs[1].getId();
     const accordion = driver.findElement(
       By.css(`[data-testid="jobApplication-${applicationId}"]`)
@@ -201,6 +201,7 @@ describe('apply to job', () => {
     expect(icons).toHaveLength(3);
     // all things initially are hidden
     for (const icon of icons) {
+      await driver.wait(until.elementIsNotVisible(icon), 5000);
       expect(await icon.isDisplayed()).toBeFalsy();
     }
     expect(await experience.getText()).toEqual('');
@@ -246,7 +247,7 @@ describe('apply to job', () => {
     ).toEqual('http://link3.com/');
   });
 
-  it('unable to submit without choosing an application', async () => {
+  it('unable to submit without choosing an application @network @accessibility', async () => {
     const applyLink = await driver.findElement(
       By.id('selectJobApplicationButton')
     );
@@ -258,7 +259,7 @@ describe('apply to job', () => {
     expect(await alert.getText()).toEqual('Please select an application');
   });
 
-  it('selecting an application reloads the page', async () => {
+  it('selecting an application reloads the page @network @accessibility', async () => {
     await driver
       .findElement(
         By.css(
@@ -299,10 +300,6 @@ describe('apply to job', () => {
       By.id('selectJobApplicationButton')
     );
     await applyLink.click();
-    await driver.wait(
-      until.elementLocated(By.className('alert-success')),
-      5000
-    );
     await driver.wait(
       async () =>
         driver

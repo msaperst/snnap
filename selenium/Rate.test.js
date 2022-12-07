@@ -33,7 +33,7 @@ describe('profile page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('does not display a rating modal when a job date is today or prior', async () => {
+  it('does not display a rating modal when a job date is today or prior @network @accessibility', async () => {
     await test.addRating(jobs[1], jobCreatorId);
     await driver.get(`${Test.getApp()}/`);
     await Test.sleep(1000);
@@ -51,7 +51,7 @@ describe('profile page', () => {
     );
   });
 
-  it('can be dismissed, but will pop back up on new page load', async () => {
+  it('can be dismissed, but will pop back up on new page load @network @accessibility', async () => {
     let ratingModal = await waitForRatingModal();
     await ratingModal.findElement(By.css('.btn-close')).click();
     await test.waitUntilNotPresent(By.css('[data-testid="rateModal"]'));
@@ -63,7 +63,7 @@ describe('profile page', () => {
     expect(await ratingModal.isDisplayed()).toBeTruthy();
   });
 
-  it('clicking thumbs up sends a positive rating', async () => {
+  it('clicking thumbs up sends a positive rating @network @accessibility', async () => {
     const ratingModal = await waitForRatingModal();
     await ratingModal
       .findElement(
@@ -85,7 +85,7 @@ describe('profile page', () => {
     ).toHaveLength(0);
   });
 
-  it('clicking thumbs down sends a negative rating', async () => {
+  it('clicking thumbs down sends a negative rating @network @accessibility', async () => {
     const ratingModal = await waitForRatingModal();
     await ratingModal
       .findElement(
@@ -107,7 +107,7 @@ describe('profile page', () => {
     ).toHaveLength(0);
   });
 
-  it('clicking i did not work sends no rating', async () => {
+  it('clicking i did not work sends no rating @network @accessibility', async () => {
     const ratingModal = await waitForRatingModal();
     await ratingModal.findElement(By.css('.btn-link')).click();
     const alert = await driver.wait(
@@ -123,7 +123,7 @@ describe('profile page', () => {
     ).toHaveLength(0);
   });
 
-  it('takes you to the user profile when clicked', async () => {
+  it('takes you to the user profile when clicked @network @accessibility', async () => {
     const ratingModal = await waitForRatingModal();
     await ratingModal.findElement(By.linkText('Test User')).click();
     expect(await driver.getCurrentUrl()).toEqual(
@@ -132,7 +132,7 @@ describe('profile page', () => {
     expect(await ratingModal.isDisplayed()).toBeTruthy();
   });
 
-  it('takes you to the job posting when clicked', async () => {
+  it('takes you to the job posting when clicked @network @accessibility', async () => {
     const ratingModal = await waitForRatingModal();
     await ratingModal.findElement(By.linkText('the Wedding')).click();
     expect(await driver.getCurrentUrl()).toEqual(
@@ -141,7 +141,7 @@ describe('profile page', () => {
     expect(await ratingModal.isDisplayed()).toBeTruthy();
   });
 
-  it('gives a plus mark on a user after submitting 5 positive reviews', async () => {
+  it('gives a plus mark on a user after submitting 5 positive reviews @network @accessibility', async () => {
     for (let i = 0; i < 5; i++) {
       await waitForRatingModal();
       const thumbsUp = await driver.wait(

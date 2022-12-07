@@ -23,7 +23,7 @@ describe('settings page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('allows us to navigate to the settings', async () => {
+  it('allows us to navigate to the settings @network @accessibility', async () => {
     await driver.get(Test.getApp());
     const dropDownMenu = driver.wait(
       until.elementLocated(By.id('user-dropdown')),
@@ -69,7 +69,7 @@ describe('settings page', () => {
     expect(await forms[5].isDisplayed()).toBeFalsy();
   });
 
-  it('has 1 form for personal information', async () => {
+  it('has 1 form for personal information @network @accessibility', async () => {
     driver.wait(until.elementLocated(By.css('h2')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
     const forms = await driver.findElements(By.css('form'));
@@ -81,7 +81,7 @@ describe('settings page', () => {
     expect(await forms[5].isDisplayed()).toBeFalsy();
   });
 
-  it('has 2 different forms for company information', async () => {
+  it('has 2 different forms for company information @network @accessibility', async () => {
     driver.wait(until.elementLocated(By.css('h2')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     const forms = await driver.findElements(By.css('form'));

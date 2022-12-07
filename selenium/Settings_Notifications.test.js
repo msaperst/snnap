@@ -50,7 +50,7 @@ describe('settings notifications page', () => {
     expect(await pushNotification.isEnabled()).toBeFalsy();
   });
 
-  it('allows updating the notification settings', async () => {
+  it('allows updating the notification settings @network @accessibility', async () => {
     let emailNotification = driver.wait(
       until.elementLocated(By.id('emailNotifications')),
       5000

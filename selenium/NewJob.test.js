@@ -34,7 +34,7 @@ describe('new job', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('has a link to open the modal', async () => {
+  it('has a link to open the modal @network @accessibility', async () => {
     driver.navigate().refresh();
     const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')), 5000);
     gigs.click();
@@ -46,7 +46,7 @@ describe('new job', () => {
     expect(await driver.findElements(By.css('.modal-header'))).toHaveLength(0);
   });
 
-  it('opens the modal', async () => {
+  it('opens the modal @network @accessibility', async () => {
     expect(await modal.findElement(By.css('.modal-header')).getText()).toEqual(
       'Create a new job'
     );
@@ -65,7 +65,7 @@ describe('new job', () => {
     expect(alerts).toHaveLength(0);
   });
 
-  it('shows errors when submitting an empty form', async () => {
+  it('shows errors when submitting an empty form @accessibility', async () => {
     (await modal.findElement(By.id('createNewRequestButton'))).click();
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
     for (let i = 0; i < feedbacks.length; i++) {
@@ -99,7 +99,7 @@ describe('new job', () => {
     expect(alerts).toHaveLength(0);
   });
 
-  it('shows errors upon submitting when selecting previous day', async () => {
+  it('shows errors upon submitting when selecting previous day @accessibility', async () => {
     await enterData(2, 2, 'Fairfax', 'Deetz', '100', '100', '10/13/2021');
     const feedbacks = await modal.findElements(By.css('.invalid-feedback'));
     for (let i = 0; i < feedbacks.length; i++) {
@@ -130,7 +130,7 @@ describe('new job', () => {
     expect(alerts).toHaveLength(0);
   });
 
-  it('closes modal with successful submission of the form', async () => {
+  it('closes modal with successful submission of the form @network @accessibility', async () => {
     const cards = (await driver.findElements(By.className('card'))).length;
     await enterData(2, 1, 'Fairfax', 'New Deetz', '100', '100', '10/13/2031');
     await driver.wait(

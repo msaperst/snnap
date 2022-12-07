@@ -32,6 +32,10 @@ describe('settings portfolio page', () => {
 
   it('shows the portfolio information', async () => {
     const portfolioInfo = (await driver.findElements(By.css('form')))[5];
+    await driver.wait(
+      until.elementTextIs(portfolioInfo.findElement(By.css('h3')), 'Portfolio'),
+      5000
+    );
     expect(await portfolioInfo.findElement(By.css('h3')).getText()).toEqual(
       'Portfolio'
     );
@@ -64,7 +68,7 @@ describe('settings portfolio page', () => {
     return { feedback: feedbacks, experience };
   }
 
-  it('throws an error if you try to submit with only a description filled out', async () => {
+  it('throws an error if you try to submit with only a description filled out @accessibility', async () => {
     const { feedback, experience } = await verifyNoErrors();
     const description = driver.wait(
       until.elementLocated(By.id('galleryDescription-0')),
@@ -83,7 +87,7 @@ describe('settings portfolio page', () => {
     expect(await feedback[2].isDisplayed()).toBeTruthy();
   });
 
-  it('throws an error if you try to submit with only a link filled out', async () => {
+  it('throws an error if you try to submit with only a link filled out @accessibility', async () => {
     const { feedback, experience } = await verifyNoErrors();
     const link = driver.wait(
       until.elementLocated(By.id('galleryLink-0')),
@@ -120,7 +124,7 @@ describe('settings portfolio page', () => {
     return { experience, description, link };
   }
 
-  it('allows updating the portfolio values', async () => {
+  it('allows updating the portfolio values @network @accessibility', async () => {
     let { experience, description, link } = fillOutPortfilio();
     await link.sendKeys('https://Link.com');
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
@@ -146,12 +150,13 @@ describe('settings portfolio page', () => {
       5000
     );
     link = driver.wait(until.elementLocated(By.id('galleryLink-0')), 5000);
+    await test.waitUntilInputFilled(By.id('formExperience'));
     expect(await experience.getAttribute('value')).toEqual('Some Experience');
     expect(await description.getAttribute('value')).toEqual('Description');
     expect(await link.getAttribute('value')).toEqual('https://Link.com');
   });
 
-  it('adds a new row when you fill out both description and link', async () => {
+  it('adds a new row when you fill out both description and link @accessibility', async () => {
     const description = driver.wait(
       until.elementLocated(By.id('galleryDescription-0')),
       5000
@@ -199,7 +204,7 @@ describe('settings portfolio page', () => {
     expect(await driver.findElements(By.id('galleryLink-1'))).toHaveLength(0);
   });
 
-  it('requires a valid link when updating the portfolio values', async () => {
+  it('requires a valid link when updating the portfolio values @network @accessibility', async () => {
     const { experience, description, link } = fillOutPortfilio();
     await link.sendKeys('Link');
     expect(await experience.getAttribute('value')).toEqual('Some Experience');

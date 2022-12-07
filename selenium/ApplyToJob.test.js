@@ -44,7 +44,7 @@ describe('apply to job', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('can be viewed from any job', async () => {
+  it('can be viewed from any job @network @accessibility', async () => {
     jobs.push(await Test.addJob(jobCreatorId, 2, '2023-03-10'));
     jobs.push(await Test.addJob(await user.getId(), 4, '2023-03-10'));
     await driver.navigate().refresh();
@@ -73,13 +73,13 @@ describe('apply to job', () => {
 
   // checks are in the methods
   // eslint-disable-next-line jest/expect-expect
-  it('has the button disabled when you already applied to the request', async () => {
+  it('has the button disabled when you already applied to the request @network', async () => {
     await Test.addJobApplication(await jobs[0].getId(), await user.getId(), 0);
     await driver.navigate().refresh();
     await checkAlreadyApplied();
   });
 
-  it('displays job application', async () => {
+  it('displays job application @network @accessibility', async () => {
     const events = ['Wedding', "B'nai Mitzvah", 'Commercial Event', 'Other'];
     jobs.push(await Test.addJob(jobCreatorId, 2, '2024-03-10'));
     jobs.push(await Test.addJob(jobCreatorId, 3, '2025-03-10'));
@@ -118,7 +118,7 @@ describe('apply to job', () => {
 
   // checks are in the method
   // eslint-disable-next-line jest/expect-expect
-  it('displays job information', async () => {
+  it('displays job information @network @accessibility', async () => {
     await home.hasJobInfo(form);
   });
 
@@ -164,7 +164,7 @@ describe('apply to job', () => {
     expect(await galleryLink.getAttribute('value')).toEqual('');
   });
 
-  it('displays filled out profile information', async () => {
+  it('displays filled out profile information @network @accessibility', async () => {
     await Test.setUpProfile(
       await user.getId(),
       'Company',
@@ -249,7 +249,7 @@ describe('apply to job', () => {
   });
 
   // eslint-disable-next-line jest/expect-expect
-  it('can be submitted with profile information', async () => {
+  it('can be submitted with profile information @network @accessibility', async () => {
     // assertions in function call
     await applyForJob();
   });
@@ -288,7 +288,7 @@ describe('apply to job', () => {
     await applyForJob();
   });
 
-  it('can not be submitted if name is missing', async () => {
+  it('can not be submitted if name is missing @accessibility', async () => {
     const name = await driver.findElement(By.id('formName'));
     await name.clear();
     const applyLink = await driver.findElement(By.id('applyToJobButton'));
@@ -310,7 +310,7 @@ describe('apply to job', () => {
     expect(alerts).toHaveLength(0);
   });
 
-  it('gets rejected with bad website value', async () => {
+  it('gets rejected with bad website value @network @accessibility', async () => {
     const website = await driver.findElement(By.id('formWebsite'));
     await website.sendKeys('somebadurl');
     const applyLink = await driver.findElement(By.id('applyToJobButton'));
