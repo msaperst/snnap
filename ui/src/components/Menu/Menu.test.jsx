@@ -19,11 +19,10 @@ describe('menu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
-
-    useWebSocketLite.mockResolvedValue({ data: 0 });
   });
 
   it('renders only logo when no user', () => {
+    useWebSocketLite.mockResolvedValue({ data: {} });
     const { container } = render(<Menu />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass(
@@ -35,10 +34,8 @@ describe('menu', () => {
     expect(checkMainBrand(container)).toBeTruthy();
   });
 
-  it('renders menu when data', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('renders menu when data', async () => {
+    const container = await renderWithSockets();
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass(
       'navbar navbar-expand-lg navbar-dark'
@@ -48,17 +45,13 @@ describe('menu', () => {
     expect(container.firstChild.firstChild.children).toHaveLength(3);
   });
 
-  it('renders main logo when menu', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('renders main logo when menu', async () => {
+    const container = await renderWithSockets();
     expect(checkMainBrand(container)).toBeTruthy();
   });
 
-  it('renders togglable menu when data', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('renders togglable menu when data', async () => {
+    const container = await renderWithSockets();
     expect(container.firstChild.firstChild.children[1]).toHaveClass(
       'navbar-toggler collapsed'
     );
@@ -76,10 +69,8 @@ describe('menu', () => {
     );
   });
 
-  it('renders menu contents when data', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('renders menu contents when data', async () => {
+    const container = await renderWithSockets();
     expect(container.firstChild.firstChild.lastChild).toHaveClass(
       'navbar-collapse collapse'
     );
@@ -101,19 +92,15 @@ describe('menu', () => {
     ).toHaveTextContent('msaperst');
   });
 
-  it('has no gig menu when not clicked', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('has no gig menu when not clicked', async () => {
+    const container = await renderWithSockets();
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[0].children
     ).toHaveLength(1);
   });
 
-  it('has gig menu when clicked', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('has gig menu when clicked', async () => {
+    const container = await renderWithSockets();
     fireEvent.click(screen.getByText('My Jobs'));
     const gigMenu =
       container.firstChild.firstChild.lastChild.firstChild.children[0];
@@ -152,24 +139,20 @@ describe('menu', () => {
     );
   });
 
-  it('has no user menu when not clicked', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('has no user menu when not clicked', async () => {
+    const container = await renderWithSockets();
     expect(
       container.firstChild.firstChild.lastChild.firstChild.children[1].children
     ).toHaveLength(1);
   });
 
-  it('has user menu when clicked', () => {
-    const { container } = render(
-      <Menu currentUser={{ username: 'msaperst' }} />
-    );
+  it('has user menu when clicked', async () => {
+    const container = await renderWithSockets();
     fireEvent.click(screen.getByText('msaperst'));
     const userNav =
       container.firstChild.firstChild.lastChild.firstChild.children[1];
     expect(userNav.children).toHaveLength(2);
-    expect(userNav.lastChild.children).toHaveLength(5);
+    expect(userNav.lastChild.children).toHaveLength(6);
     expect(userNav.lastChild).toHaveClass('dropdown-menu show');
     expect(userNav.lastChild.getAttribute('aria-labelledby')).toEqual(
       'user-dropdown'
@@ -181,18 +164,19 @@ describe('menu', () => {
       '/notifications',
       'Notifications'
     );
+    checkMenuItem(userNav.lastChild.children[1], '/chat', 'Chat');
     checkMenuItem(
-      userNav.lastChild.children[1],
+      userNav.lastChild.children[2],
       '/profile/msaperst',
       'My Profile'
     );
-    checkMenuItem(userNav.lastChild.children[2], '/settings', 'Settings');
+    checkMenuItem(userNav.lastChild.children[3], '/settings', 'Settings');
 
-    expect(userNav.lastChild.children[3]).toHaveClass('dropdown-divider');
-    expect(userNav.lastChild.children[3].getAttribute('role')).toEqual(
+    expect(userNav.lastChild.children[4]).toHaveClass('dropdown-divider');
+    expect(userNav.lastChild.children[4].getAttribute('role')).toEqual(
       'separator'
     );
-    expect(userNav.lastChild.children[3]).toHaveTextContent('');
+    expect(userNav.lastChild.children[4]).toHaveTextContent('');
 
     checkMenuItem(userNav.lastChild.lastChild, '#', 'Logout');
     expect(userNav.lastChild.lastChild.getAttribute('role')).toEqual('button');
@@ -211,29 +195,12 @@ describe('menu', () => {
     const updateX = () => {
       x = 1;
     };
+    useWebSocketLite.mockResolvedValue({ data: {} });
     render(<Menu currentUser={{ username: 'msaperst' }} logout={updateX} />);
     fireEvent.click(screen.getByText('msaperst'));
     fireEvent.click(screen.getByText('Logout'));
     expect(x).toEqual(1);
   });
-
-  it('shows no notification icon when no notifications', async () => {
-    const message = 0;
-    const userNav = await checkUsernameMenu(message, 'msaperst');
-    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications');
-  });
-
-  it('shows notifications icon when notifications', async () => {
-    const message = 2;
-    const userNav = await checkUsernameMenu(message, 'msaperst 🔔');
-    expect(userNav.lastChild.firstChild.textContent).toEqual('Notifications2');
-  });
-
-  // it('shows no rates when no ratings needed', async () => {
-  //   const message = [];
-  //   const userNav = await renderWithSockets(message);
-  //   expect(userNav.children).toHaveLength(1);
-  // });
 
   function checkMainBrand(container) {
     expect(container.firstChild.firstChild.firstChild).toHaveClass(
@@ -251,7 +218,7 @@ describe('menu', () => {
     return true;
   }
 
-  async function renderWithSockets(message) {
+  async function renderWithSockets(message = {}) {
     const data = { message };
     useWebSocketLite.mockReturnValue({ data });
 
@@ -263,11 +230,5 @@ describe('menu', () => {
     });
     const { container } = menu;
     return container;
-  }
-
-  async function checkUsernameMenu(message, username) {
-    const container = await renderWithSockets(message);
-    fireEvent.click(screen.getByText(username));
-    return container.firstChild.firstChild.lastChild.firstChild.children[1];
   }
 });

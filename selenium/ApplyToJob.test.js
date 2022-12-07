@@ -68,7 +68,7 @@ describe('apply to job', () => {
     const button = await home.getButton(await jobs[1].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeTruthy();
-    expect(await button.getText()).toEqual('Select Application0');
+    expect(await button.getText()).toEqual('Select Application\n0');
   });
 
   // checks are in the methods

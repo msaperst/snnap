@@ -35,7 +35,7 @@ function Conversation(props) {
   useEffect(() => {
     if (chatWith) {
       ws.current = new WebSocket(
-        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/?token=${user.token}&user=${chatWith}`
+        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/?token=${user.token}&user=${chatWith}`
       );
 
       // Opening the ws connection
@@ -84,9 +84,11 @@ function Conversation(props) {
   // clear out prior messages, and load message history
   useEffect(() => {
     setMessages([]);
-    chatService.getConversationWith(chatWith).then((conversations) => {
-      setMessages(conversations);
-    });
+    if (chatWith) {
+      chatService.getConversationWith(chatWith).then((conversations) => {
+        setMessages(conversations);
+      });
+    }
   }, [chatWith]);
 
   if (!chatWith) {
@@ -125,7 +127,7 @@ function Conversation(props) {
               aria-label="Send"
               onClick={sendMessage}
               style={{ height: '100%', width: '100%' }}
-              disabled={!isConnectionOpen}
+              disabled={!(isConnectionOpen && messageBody)}
               type="button"
             >
               <Send />

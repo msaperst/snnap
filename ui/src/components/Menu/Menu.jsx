@@ -15,7 +15,8 @@ function Menu(props) {
   let menu = null;
   const { logout, currentUser } = props;
   const [token, setToken] = useState('');
-  const [notifications, setNotifications] = useState('');
+  const [alerts, setAlerts] = useState('');
+  const [messages, setMessages] = useState('');
   const [bell, setBell] = useState('');
   const [rates, setRates] = useState('');
 
@@ -29,22 +30,30 @@ function Menu(props) {
     token,
   });
 
+  function setNotification(value, setter) {
+    if (value > 0) {
+      setter(
+        <Badge bg="primary" className="float-end" pill>
+          {value}
+        </Badge>
+      );
+    } else {
+      setter('');
+    }
+  }
+
   useEffect(() => {
     if (currentUser) {
       setToken(currentUser.token);
     }
     if (wsNotifications.data) {
       const { message } = wsNotifications.data;
-      if (message > 0) {
-        const not = (
-          <Badge bg="primary" className="float-end" pill>
-            {message}
-          </Badge>
-        );
-        setNotifications(not);
+      const { alerts, messages } = message;
+      setNotification(alerts, setAlerts);
+      setNotification(messages, setMessages);
+      if (alerts + messages > 0) {
         setBell(' 🔔');
       } else {
-        setNotifications('');
         setBell('');
       }
     }
@@ -84,8 +93,9 @@ function Menu(props) {
             id="user-dropdown"
           >
             <NavDropdown.Item href="/notifications">
-              Notifications{notifications}
+              Notifications{alerts}
             </NavDropdown.Item>
+            <NavDropdown.Item href="/chat">Chat{messages}</NavDropdown.Item>
             <NavDropdown.Item href={`/profile/${currentUser.username}`}>
               My Profile
             </NavDropdown.Item>
