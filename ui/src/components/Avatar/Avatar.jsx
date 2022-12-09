@@ -1,14 +1,9 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/no-noninteractive-tabindex */
 import React from 'react';
 import './Avatar.css';
 
 function Avatar(props) {
   const { avatar, firstname, lastname, onClick } = props;
-
-  let style;
-  if (onClick) {
-    style = { cursor: 'pointer' };
-  }
 
   let avatarBlock;
   if (avatar) {
@@ -20,6 +15,7 @@ function Avatar(props) {
         style={{ backgroundImage: `url(${avatar})` }}
         role="button"
         tabIndex="0"
+        aria-label={`${firstname} ${lastname}`}
       />
     );
   } else {
@@ -31,16 +27,15 @@ function Avatar(props) {
       <div
         className="circle initials"
         onClick={onClick}
-        onKeyPress={onClick}
-        role="button"
-        tabIndex="0"
+        onKeyDown={onClick}
+        role={onClick ? 'button' : null}
+        tabIndex={onClick ? '0' : null}
       >
         <span
           onClick={onClick}
-          onKeyPress={onClick}
-          style={style}
-          role="button"
-          tabIndex="0"
+          onKeyDown={onClick}
+          role={onClick ? 'button' : null}
+          tabIndex={onClick ? '0' : null}
         >
           {avatarText}
         </span>
