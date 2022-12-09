@@ -44,7 +44,7 @@ function App() {
           <Menu currentUser={currentUser} logout={logout} />
         </Col>
       </Row>
-      <Container className="medium">
+      <Container className="medium" role="main">
         <Suspense fallback="Loading...">
           <Routes>
             <Route

@@ -61,7 +61,7 @@ function Portfolio(props) {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h3>Portfolio</h3>
+      <h2 className="h3">Portfolio</h2>
       <Row className="mb-3">
         <SnnapFormInput
           name="Experience"

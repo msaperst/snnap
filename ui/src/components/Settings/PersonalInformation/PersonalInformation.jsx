@@ -99,7 +99,7 @@ function PersonalInformation(props) {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h3>Personal Information</h3>
+      <h2 className="h3">Personal Information</h2>
       <Row className="mb-3">
         <SnnapFormInput
           name="First Name"

@@ -36,7 +36,7 @@ class Jobs extends React.Component {
       <>
         <Row>
           <Col>
-            <h2>My Jobs</h2>
+            <h1 className="h2">My Jobs</h1>
           </Col>
         </Row>
         {jobs.map((job) => (

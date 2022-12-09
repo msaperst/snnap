@@ -15,7 +15,7 @@ describe('settings portfolio page', () => {
     driver = await test.getDriver();
     await test.loginUser('settingsPortfolioUser');
     await driver.get(`${Test.getApp()}/settings`);
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     driver.wait(
       until.elementIsVisible(driver.findElement(By.id('formExperience'))),
@@ -33,10 +33,10 @@ describe('settings portfolio page', () => {
   it('shows the portfolio information', async () => {
     const portfolioInfo = (await driver.findElements(By.css('form')))[5];
     await driver.wait(
-      until.elementTextIs(portfolioInfo.findElement(By.css('h3')), 'Portfolio'),
+      until.elementTextIs(portfolioInfo.findElement(By.css('h2')), 'Portfolio'),
       5000
     );
-    expect(await portfolioInfo.findElement(By.css('h3')).getText()).toEqual(
+    expect(await portfolioInfo.findElement(By.css('h2')).getText()).toEqual(
       'Portfolio'
     );
   });

@@ -27,7 +27,7 @@ describe('profile page', () => {
     expect(await driver.getCurrentUrl()).toEqual(
       `${Test.getApp()}/profile/profileUser`
     );
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual(
+    expect(await driver.findElement(By.css('h1')).getText()).toEqual(
       'Test User'
     );
   });

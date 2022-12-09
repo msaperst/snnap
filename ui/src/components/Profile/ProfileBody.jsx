@@ -53,7 +53,7 @@ function ProfileBody(props) {
       </Row>
       <Row className="mb-3">
         <Col id={`job-application-${company.id}-equipment`} md={8}>
-          <h4>Equipment</h4>
+          <h3 className="h4">Equipment</h3>
           {equipmentItems.map((option) => (
             <div key={option.value}>
               <b>{option.name}</b>: {option.what}
@@ -61,14 +61,14 @@ function ProfileBody(props) {
           ))}
         </Col>
         <Col id={`job-application-${company.id}-skills`} md={4}>
-          <h4>Skills</h4>
+          <h3 className="h4">Skills</h3>
           {skillItems.map((option) => (
             <div key={option.value}>{option.name}</div>
           ))}
         </Col>
       </Row>
       <Row id={`job-application-${company.id}-portfolio`}>
-        <h4>Portfolio</h4>
+        <h3 className="h4">Portfolio</h3>
         <Col>
           {portfolioItems.map((portfolioItem) => (
             <PortfolioLink key={portfolioItem.id} portfolio={portfolioItem} />

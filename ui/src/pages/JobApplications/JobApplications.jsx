@@ -26,7 +26,7 @@ class JobApplications extends React.Component {
       <Container className="skinny">
         <Row>
           <Col>
-            <h2>Submitted Applications</h2>
+            <h1 className="h2">Submitted Applications</h1>
           </Col>
         </Row>
         {jobApplications.map((jobApplication) => (

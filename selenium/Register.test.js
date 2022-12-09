@@ -27,7 +27,7 @@ describe('register page', () => {
 
   it('shows the register header', async () => {
     driver.wait(until.elementLocated(By.id('formFirstname')), 5000);
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual(
+    expect(await driver.findElement(By.css('h1')).getText()).toEqual(
       'Register'
     );
   });

@@ -1,7 +1,8 @@
 /* eslint-disable no-await-in-loop */
-const { addAttach } = require('jest-html-reporters/helper');
+const { addAttach, addMsg } = require('jest-html-reporters/helper');
 const { Builder } = require('selenium-webdriver');
 const { Options } = require('selenium-webdriver/chrome');
+const axe = require('axe-core');
 const User = require('../../api/components/user/User');
 const Mysql = require('../../api/services/Mysql');
 const Job = require('../../api/components/job/Job');
@@ -43,6 +44,26 @@ class Test {
   }
 
   async cleanUp() {
+    let result;
+    if (process.env.ACCESSIBILITY) {
+      await this.driver.executeScript(axe.source.toString());
+      result = await this.driver.executeAsyncScript(
+        'var callback = arguments[arguments.length - 1];axe.run().then(results => callback(results))'
+      );
+      await addMsg({
+        message:
+          `Inapplicable: ${result.inapplicable.length}\n` +
+          `Incomplete: ${result.incomplete.length}\n` +
+          `Passes: ${result.passes.length}\n` +
+          `Violations: ${result.violations.length}\n`,
+      });
+      await addMsg({
+        message: `Violations:${result.violations.map(
+          (violation) => `\n${violation.description}: ${violation.help}`
+        )}`,
+      });
+    }
+
     const image = await this.driver.takeScreenshot();
     await addAttach({
       attach: Buffer.from(image, 'base64'),
@@ -50,7 +71,10 @@ class Test {
     await this.driver.quit();
 
     if (process.env.ACCESSIBILITY) {
-      console.log('TODO STUFF FOR AN ACCESSIBILITY TEST');
+      await addMsg({ message: JSON.stringify(result) });
+      if (result.violations.length) {
+        throw new Error('Accessibility error(s) found!');
+      }
     }
   }
 

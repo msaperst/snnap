@@ -110,7 +110,7 @@ function Menu(props) {
 
   return (
     <>
-      <Navbar variant="dark" expand="lg">
+      <Navbar variant="dark" expand="lg" role="navigation">
         <Container>
           <Navbar.Brand href="/">
             <img

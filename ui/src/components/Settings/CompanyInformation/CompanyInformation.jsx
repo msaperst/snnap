@@ -85,7 +85,7 @@ function CompanyInformation(props) {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h3>Company Information</h3>
+      <h2 className="h3">Company Information</h2>
       <Row className="mb-3">
         <SnnapFormInput
           name="Company Name"

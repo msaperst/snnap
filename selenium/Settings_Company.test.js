@@ -16,7 +16,7 @@ describe('settings company page', () => {
     driver = await test.getDriver();
     user = await test.loginUser('settingsCompanyUser');
     await driver.get(`${Test.getApp()}/settings`);
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     driver.wait(
       until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),
@@ -35,13 +35,13 @@ describe('settings company page', () => {
     const companyInformation = (await driver.findElements(By.css('form')))[4];
     await driver.wait(
       until.elementTextIs(
-        companyInformation.findElement(By.css('h3')),
+        companyInformation.findElement(By.css('h2')),
         'Company Information'
       ),
       5000
     );
     expect(
-      await companyInformation.findElement(By.css('h3')).getText()
+      await companyInformation.findElement(By.css('h2')).getText()
     ).toEqual('Company Information');
   });
 
@@ -254,7 +254,7 @@ describe('settings company page', () => {
   //     []
   //   );
   //   await driver.navigate().refresh();
-  //   await driver.wait(until.elementLocated(By.css('h2')), 5000);
+  //   await driver.wait(until.elementLocated(By.css('h1')), 5000);
   //   driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
   //   driver.wait(
   //     until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),
@@ -317,7 +317,7 @@ describe('settings company page', () => {
   //     ]
   //   );
   //   await driver.navigate().refresh();
-  //   await driver.wait(until.elementLocated(By.css('h2')), 5000);
+  //   await driver.wait(until.elementLocated(By.css('h1')), 5000);
   //   driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
   //   driver.wait(until.elementLocated(By.id('formCompanyName')), 5000);
   //   let companyInformation = (await driver.findElements(By.css('form')))[4];
@@ -380,7 +380,7 @@ describe('settings company page', () => {
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
     driver.navigate().refresh();
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     driver.wait(
       until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),
@@ -413,7 +413,7 @@ describe('settings company page', () => {
     await driver.findElement(By.id('saveCompanyInformationButton')).click();
     driver.wait(until.elementLocated(By.className('alert-success')), 5000);
     await driver.navigate().refresh();
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     driver.wait(
       until.elementIsVisible(driver.findElement(By.id('formCompanyName'))),

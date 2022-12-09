@@ -151,7 +151,7 @@ class ApplyToJob extends React.Component {
             >
               <JobDetail job={job} />
               <Row className="mb-3">
-                <h3>Your Information</h3>
+                <h2 className="h3">Your Information</h2>
               </Row>
               <Row className="mb-3">
                 <SnnapFormInput

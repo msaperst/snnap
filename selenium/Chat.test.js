@@ -42,7 +42,7 @@ describe('chat', () => {
       5000
     );
     await chatLink.click();
-    const headers = await driver.findElements(By.css('h2'));
+    const headers = await driver.findElements(By.css('h1'));
     expect(headers).toHaveLength(0);
   });
 
@@ -53,7 +53,7 @@ describe('chat', () => {
     );
     await chatLink.click();
     const conversationHeader = driver.wait(
-      until.elementLocated(By.css('h2')),
+      until.elementLocated(By.css('h1')),
       5000
     );
     expect(await conversationHeader.getText()).toEqual(
@@ -133,7 +133,7 @@ describe('chat', () => {
     );
     await userChat.click();
     const conversationHeader = chatDriver.wait(
-      until.elementLocated(By.css('h2')),
+      until.elementLocated(By.css('h1')),
       5000
     );
     expect(await conversationHeader.getText()).toEqual('Chat with userToChat');
