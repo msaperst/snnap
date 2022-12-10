@@ -78,7 +78,9 @@ class Test {
     if (process.env.ACCESSIBILITY) {
       await addMsg({ message: JSON.stringify(result) });
       if (result.violations.length) {
-        throw new Error('Accessibility error(s) found!');
+        throw new Error(
+          result.violations.map((violation) => `${violation.help}\n`)
+        );
       }
     }
   }
