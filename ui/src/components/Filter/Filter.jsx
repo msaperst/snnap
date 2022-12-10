@@ -17,48 +17,7 @@ function Filter(props) {
   const { currentUser, filter } = props;
   const { latitude, longitude } = usePosition();
 
-  const [allJobs, setAllJobs] = useState([
-    {
-      id: 585,
-      type: 'Wedding',
-      details: 'Some details',
-      pay: 200,
-      duration: 4,
-      date_time: '2030-03-12T04:00:00.000Z',
-      user: 1796,
-      durationMax: null,
-      date_created: '2022-12-08T01:35:51.000Z',
-      application_selected: null,
-      date_application_selected: null,
-      loc: 'Chantilly, VA, United States of America',
-      lat: 38.8461234,
-      lon: -77.303452,
-      subtype: 'Second Photographer',
-      equipment: '',
-      typeId: 1,
-      subtypeId: 1,
-    },
-    {
-      id: 2041,
-      type: 'Wedding',
-      details: 'Some details',
-      pay: 200,
-      duration: 4,
-      date_time: '2030-03-12T04:00:00.000Z',
-      user: 1796,
-      durationMax: null,
-      date_created: '2022-12-08T01:35:51.000Z',
-      application_selected: null,
-      date_application_selected: null,
-      loc: 'Chantilly, VA, United States of America',
-      lat: 38.8461234,
-      lon: -77.303452,
-      subtype: 'Second Photographer',
-      equipment: '',
-      typeId: 1,
-      subtypeId: 1,
-    },
-  ]);
+  const [allJobs, setAllJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
   const [jobSubtypes, setJobSubtypes] = useState([]);
@@ -72,8 +31,8 @@ function Filter(props) {
 
   const [showOwnLocation, setShowOwnLocation] = useState(false);
 
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
+    let isMounted = true;
     if (currentUser.token) {
       const ws = new WebSocket(
         `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/jobs?token=${currentUser.token}`
@@ -82,7 +41,11 @@ function Filter(props) {
         // receive messages
         ws.onmessage = (event) => {
           const message = JSON.parse(event.data);
-          if (Array.isArray(message) && message.length !== allJobs.length) {
+          if (
+            isMounted &&
+            Array.isArray(message) &&
+            message.length !== allJobs.length
+          ) {
             setAllJobs(message);
             setFilteredJobs(message);
           }
@@ -92,6 +55,9 @@ function Filter(props) {
         ws.close();
       };
     }
+    return () => {
+      isMounted = false;
+    };
   }, [currentUser, allJobs]);
 
   useEffect(() => {
@@ -129,22 +95,22 @@ function Filter(props) {
 
   useEffect(() => {
     let isMounted = true;
+    // start out with everything
+    let jobs = allJobs;
+    // remove elements not in our job type
+    if (filter) {
+      jobs = jobs.filter((job) =>
+        job.details.toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+    // remove jobs based on selected job types
+    jobs = jobs.filter((job) => selectedJobTypes.includes(job.typeId));
+    // remove jobs based on selected job subtypes
+    jobs = jobs.filter((job) => selectedJobSubtypes.includes(job.subtypeId));
+    // filter out ones outside our location
+    jobs = jobs.filter((job) => distance >= calculateDistance(location, job));
+    // set our new values;
     if (isMounted) {
-      // start out with everything
-      let jobs = allJobs;
-      // remove elements not in our job type
-      if (filter) {
-        jobs = jobs.filter((job) =>
-          job.details.toLowerCase().includes(filter.toLowerCase())
-        );
-      }
-      // remove jobs based on selected job types
-      jobs = jobs.filter((job) => selectedJobTypes.includes(job.typeId));
-      // remove jobs based on selected job subtypes
-      jobs = jobs.filter((job) => selectedJobSubtypes.includes(job.subtypeId));
-      // filter out ones outside our location
-      jobs = jobs.filter((job) => distance >= calculateDistance(location, job));
-      // set our new values;
       setFilteredJobs(jobs);
     }
     return () => {
