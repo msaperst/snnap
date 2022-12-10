@@ -48,6 +48,7 @@ function SnnapFormMultiSelect(props) {
       isMulti
       className="multi-select-form"
       onChange={change}
+      aria-label={name}
     />
   );
 

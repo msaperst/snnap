@@ -57,11 +57,16 @@ class Test {
           `Passes: ${result.passes.length}\n` +
           `Violations: ${result.violations.length}\n`,
       });
-      await addMsg({
-        message: `Violations:${result.violations.map(
-          (violation) => `\n${violation.description}: ${violation.help}`
-        )}`,
-      });
+      if (result.violations.length) {
+        await addMsg({
+          message: `Violations:${result.violations.map(
+            (violation) => `\n${violation.description}: ${violation.help}`
+          )}`,
+        });
+        await addMsg({
+          message: JSON.stringify(result.violations),
+        });
+      }
     }
 
     const image = await this.driver.takeScreenshot();

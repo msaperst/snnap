@@ -66,7 +66,7 @@ function Chat(props) {
 
   return (
     <>
-      <h2 className="h3">Conversations</h2>
+      <h1 className="h3">Conversations</h1>
       <ListGroup defaultActiveKey={`#${chatWith}`} variant="flush">
         {recentConversations.map((conversation) => (
           <ListGroup.Item
@@ -75,7 +75,6 @@ function Chat(props) {
             key={conversation.user}
             onClick={() => changeChat(conversation.username)}
             variant="primary"
-            as="li"
           >
             {conversation.username}
             {conversation.unread ? (

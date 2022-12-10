@@ -21,6 +21,7 @@ describe('avatar', () => {
 
     expect(container.lastChild.children).toHaveLength(1);
     expect(container.lastChild).toHaveClass('circle initials');
+    expect(container.lastChild.getAttribute('style')).toBeNull();
     expect(container.lastChild).toHaveTextContent('MS');
   });
 
@@ -31,6 +32,9 @@ describe('avatar', () => {
     };
     const { container } = render(
       <Avatar firstname="Max" lastname="Saperstone" onClick={updateX} />
+    );
+    expect(container.lastChild.getAttribute('style')).toEqual(
+      'cursor: pointer;'
     );
     fireEvent.click(container.firstChild);
     expect(x).toEqual(1);
@@ -55,7 +59,7 @@ describe('avatar', () => {
     expect(container.firstChild.children).toHaveLength(0);
     expect(container.firstChild).toHaveClass('circle');
     expect(container.firstChild.getAttribute('style')).toEqual(
-      'background-image: url(pic.jpg);'
+      'cursor: pointer; background-image: url(pic.jpg);'
     );
   });
 

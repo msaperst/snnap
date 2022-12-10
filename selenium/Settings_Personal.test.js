@@ -32,6 +32,13 @@ describe('settings personal page', () => {
 
   it('shows the personal information @network @accessibility', async () => {
     const personalInfo = (await driver.findElements(By.css('form')))[3];
+    await driver.wait(
+      until.elementTextIs(
+        personalInfo.findElement(By.css('h2')),
+        'Personal Information'
+      ),
+      5000
+    );
     expect(await personalInfo.findElement(By.css('h2')).getText()).toEqual(
       'Personal Information'
     );

@@ -167,6 +167,7 @@ class NewJob extends React.Component {
           show={show}
           onHide={() => this.setState({ show: false })}
           data-testid="newJobModal"
+          aria-label="Create New Job"
         >
           <Modal.Header closeButton>
             <Modal.Title>Create a new job</Modal.Title>

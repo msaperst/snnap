@@ -1,9 +1,14 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions,jsx-a11y/no-noninteractive-tabindex */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import './Avatar.css';
 
 function Avatar(props) {
   const { avatar, firstname, lastname, onClick } = props;
+
+  let style;
+  if (onClick) {
+    style = { cursor: 'pointer' };
+  }
 
   let avatarBlock;
   if (avatar) {
@@ -11,11 +16,8 @@ function Avatar(props) {
       <div
         className="circle"
         onClick={onClick}
-        onKeyPress={onClick}
-        style={{ backgroundImage: `url(${avatar})` }}
-        role="button"
-        tabIndex="0"
-        aria-label={`${firstname} ${lastname}`}
+        onKeyDown={onClick}
+        style={{ cursor: 'pointer', backgroundImage: `url(${avatar})` }}
       />
     );
   } else {
@@ -26,17 +28,11 @@ function Avatar(props) {
     avatarBlock = (
       <div
         className="circle initials"
+        style={style}
         onClick={onClick}
         onKeyDown={onClick}
-        role={onClick ? 'button' : null}
-        tabIndex={onClick ? '0' : null}
       >
-        <span
-          onClick={onClick}
-          onKeyDown={onClick}
-          role={onClick ? 'button' : null}
-          tabIndex={onClick ? '0' : null}
-        >
+        <span onClick={onClick} onKeyDown={onClick} aria-label={avatarText}>
           {avatarText}
         </span>
       </div>

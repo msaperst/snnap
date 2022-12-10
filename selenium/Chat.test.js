@@ -42,7 +42,7 @@ describe('chat', () => {
       5000
     );
     await chatLink.click();
-    const headers = await driver.findElements(By.css('h1'));
+    const headers = await driver.findElements(By.css('h2'));
     expect(headers).toHaveLength(0);
   });
 
@@ -53,7 +53,7 @@ describe('chat', () => {
     );
     await chatLink.click();
     const conversationHeader = driver.wait(
-      until.elementLocated(By.css('h1')),
+      until.elementLocated(By.css('h2')),
       5000
     );
     expect(await conversationHeader.getText()).toEqual(
@@ -95,7 +95,7 @@ describe('chat', () => {
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
     const userChat = await chatDriver.wait(
-      until.elementLocated(By.css('li[href="#userToChat"]')),
+      until.elementLocated(By.css('[href="#userToChat"]')),
       5000
     );
     expect(await userChat.getText()).toEqual('userToChat\n1');
@@ -106,7 +106,7 @@ describe('chat', () => {
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
     const userChat = await chatDriver.wait(
-      until.elementLocated(By.css('li[href="#userToChat"]')),
+      until.elementLocated(By.css('[href="#userToChat"]')),
       5000
     );
     await userChat.click();
@@ -128,12 +128,12 @@ describe('chat', () => {
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
     const userChat = await chatDriver.wait(
-      until.elementLocated(By.css('li[href="#userToChat"]')),
+      until.elementLocated(By.css('[href="#userToChat"]')),
       5000
     );
     await userChat.click();
     const conversationHeader = chatDriver.wait(
-      until.elementLocated(By.css('h1')),
+      until.elementLocated(By.css('h2')),
       5000
     );
     expect(await conversationHeader.getText()).toEqual('Chat with userToChat');

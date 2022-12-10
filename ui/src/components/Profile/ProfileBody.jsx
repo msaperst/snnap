@@ -45,7 +45,7 @@ function ProfileBody(props) {
       </Row>
       <Row className="mb-3">
         <Col
-          id={`job-application-${company.id}-experience`}
+          id={`job-application-${company.id}-comment`}
           className="text-justify"
         >
           {company.comment}
@@ -53,7 +53,7 @@ function ProfileBody(props) {
       </Row>
       <Row className="mb-3">
         <Col id={`job-application-${company.id}-equipment`} md={8}>
-          <h3 className="h4">Equipment</h3>
+          <h2 className="h4">Equipment</h2>
           {equipmentItems.map((option) => (
             <div key={option.value}>
               <b>{option.name}</b>: {option.what}
@@ -61,14 +61,14 @@ function ProfileBody(props) {
           ))}
         </Col>
         <Col id={`job-application-${company.id}-skills`} md={4}>
-          <h3 className="h4">Skills</h3>
+          <h2 className="h4">Skills</h2>
           {skillItems.map((option) => (
             <div key={option.value}>{option.name}</div>
           ))}
         </Col>
       </Row>
       <Row id={`job-application-${company.id}-portfolio`}>
-        <h3 className="h4">Portfolio</h3>
+        <h2 className="h4">Portfolio</h2>
         <Col>
           {portfolioItems.map((portfolioItem) => (
             <PortfolioLink key={portfolioItem.id} portfolio={portfolioItem} />

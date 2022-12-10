@@ -97,7 +97,7 @@ function Conversation(props) {
 
   return (
     <>
-      <h1 className="h2">Chat with {chatWith}</h1>
+      <h2>Chat with {chatWith}</h2>
       <div id="chat-view-container">
         {messages.map((message, index) => (
           // eslint-disable-next-line react/no-array-index-key

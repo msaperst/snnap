@@ -115,8 +115,8 @@ describe('profile accordion', () => {
       const { container } = jobApplication;
       await waitFor(() => container.firstChild);
     });
-    const { getAllByRole } = jobApplication;
-    const avatar = getAllByRole('button')[4];
+    const { getAllByLabelText } = jobApplication;
+    const avatar = getAllByLabelText('')[1];
     await act(async () => {
       fireEvent.click(avatar);
     });

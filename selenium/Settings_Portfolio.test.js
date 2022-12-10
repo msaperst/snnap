@@ -141,6 +141,8 @@ describe('settings portfolio page', () => {
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
     await driver.navigate().refresh();
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
+    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     experience = driver.wait(
       until.elementLocated(By.id('formExperience')),
       5000

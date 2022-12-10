@@ -115,6 +115,7 @@ class CompareJobApplications extends React.Component {
           show={show}
           onHide={() => this.setState({ show: false })}
           data-testid={`compareJobApplicationsModal-${job.id}`}
+          aria-label={`Applications for the ${job.type} Session`}
         >
           <Modal.Header closeButton>
             <Modal.Title>Applications for the {job.type} Session</Modal.Title>

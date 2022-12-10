@@ -138,6 +138,7 @@ class ApplyToJob extends React.Component {
           show={show}
           onHide={() => this.setState({ show: false })}
           data-testid={`applyToJobModal-${job.id}`}
+          aria-label={`Apply to ${job.type} Session`}
         >
           <Modal.Header closeButton>
             <Modal.Title>Submit to work the {job.type} Session</Modal.Title>
