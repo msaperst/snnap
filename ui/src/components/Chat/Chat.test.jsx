@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import useWebSocketLite from '../../helpers/useWebSocketLite';
+import WS from 'jest-websocket-mock';
 import Chat from './Chat';
 
 jest.mock('../../services/authentication.service');
@@ -13,6 +13,7 @@ jest.mock('../../helpers/useWebSocketLite');
 describe('chat', () => {
   let chat;
   let chatList;
+  let server;
   let x;
   const updateX = () => {
     x = 1;
@@ -23,20 +24,26 @@ describe('chat', () => {
     jest.resetAllMocks();
 
     authenticationService.authenticationService.currentUserValue = {
+      token: 1234,
       username: 'user',
     };
 
     chatList = [];
     x = 0;
+    server = new WS('wss://localhost:3001/wsapp/conversationList');
+  });
+
+  afterEach(() => {
+    WS.clean();
   });
 
   it('displays nothing when no data', async () => {
-    useWebSocketLite.mockReturnValue({});
     await act(async () => {
       chat = render(<Chat />);
       const { container } = chat;
       await waitFor(() => container.firstChild);
     });
+    await server.connected;
     const { container } = chat;
     expect(container.children).toHaveLength(2);
     expect(container.firstChild).toHaveTextContent('Conversations');
@@ -48,8 +55,12 @@ describe('chat', () => {
   });
 
   it('displays nothing when no user provided', async () => {
-    authenticationService.authenticationService.currentUserValue = undefined;
-    await loadChat();
+    authenticationService.authenticationService.currentUserValue = {};
+    await act(async () => {
+      chat = render(<Chat />);
+      const { container } = chat;
+      await waitFor(() => container.firstChild);
+    });
     const { container } = chat;
     expect(container.children).toHaveLength(2);
     expect(container.firstChild.children).toHaveLength(0);
@@ -176,13 +187,13 @@ describe('chat', () => {
   });
 
   async function loadChat(chatWith) {
-    const data = { message: chatList };
-    useWebSocketLite.mockReturnValue({ data });
     await act(async () => {
       chat = render(<Chat chatWith={chatWith} changeChat={updateX} />);
       const { container } = chat;
       await waitFor(() => container.firstChild);
     });
+    await server.connected;
+    server.send(JSON.stringify(chatList));
   }
 
   function checkUser(input, user, active = false, unread = false) {
