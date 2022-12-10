@@ -295,7 +295,8 @@ describe('profile accordion', () => {
   it('has no rating when none is supplied', () => {
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].children[1].children).toHaveLength(0);
   });
 
@@ -315,7 +316,8 @@ describe('profile accordion', () => {
     });
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].children[1].children).toHaveLength(1);
     expect(headers.children[0].children[1].firstChild.children).toHaveLength(2);
     expect(
@@ -339,7 +341,8 @@ describe('profile accordion', () => {
     });
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].children[1].children).toHaveLength(1);
     expect(headers.children[0].children[1].firstChild.children).toHaveLength(2);
     expect(
@@ -350,7 +353,8 @@ describe('profile accordion', () => {
   it('has no message icon when user is same', async () => {
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].lastChild.children).toHaveLength(0);
   });
 
@@ -367,7 +371,8 @@ describe('profile accordion', () => {
     });
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].lastChild.children).toHaveLength(1);
     expect(
       headers.children[0].lastChild.firstChild.getAttribute('href')
