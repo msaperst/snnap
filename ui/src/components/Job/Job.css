@@ -22,7 +22,7 @@
 
 /*only at medium */
 @media (min-width: 992px) {
-  .card .col-md-2 {
+  .job .col-md-2 {
     max-width: 12%;
   }
 }
