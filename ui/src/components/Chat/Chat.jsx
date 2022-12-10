@@ -10,47 +10,7 @@ function Chat(props) {
 
   const user = authenticationService.currentUserValue;
 
-  useEffect(() => {
-    let isMounted = true;
-    let ws;
-    if (user.token) {
-      ws = new WebSocket(
-        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/conversationList?token=${user.token}`
-      );
-      ws.onopen = () => {
-        // receive messages
-        ws.onmessage = (event) => {
-          const message = JSON.parse(event.data);
-          if (isMounted) {
-            const conversations = addChatToConversation(message);
-            if (
-              (isMounted &&
-                getUnread(conversations) !== getUnread(recentConversations)) ||
-              conversations.length !== recentConversations.length
-            ) {
-              setRecentConversations(conversations);
-            }
-          }
-        };
-      };
-      return () => {
-        ws.close();
-      };
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [user, chatWith, addChatToConversation, recentConversations]);
-
-  function getUnread(conversations) {
-    return conversations.reduce(
-      (total, currentValue) => total + currentValue.unread,
-      0
-    );
-  }
-
-  // add new chat user if needed
-  function addChatToConversation(message) {
+  function setUpUser(message) {
     let conversations = message;
     if (chatWith) {
       if (!message.find((conversation) => conversation.username === chatWith)) {
@@ -71,6 +31,45 @@ function Chat(props) {
       }
     }
     return conversations;
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+    let ws;
+
+    if (user.token) {
+      ws = new WebSocket(
+        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/conversationList?token=${user.token}`
+      );
+      ws.onopen = () => {
+        // receive messages
+        ws.onmessage = (event) => {
+          const message = JSON.parse(event.data);
+          // add conversation to list
+          const conversations = setUpUser(message);
+          if (
+            (isMounted &&
+              getUnread(conversations) !== getUnread(recentConversations)) ||
+            conversations.length !== recentConversations.length
+          ) {
+            setRecentConversations(conversations);
+          }
+        };
+      };
+      return () => {
+        ws.close();
+      };
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [user, chatWith, recentConversations]);
+
+  function getUnread(conversations) {
+    return conversations.reduce(
+      (total, currentValue) => total + currentValue.unread,
+      0
+    );
   }
 
   return (
