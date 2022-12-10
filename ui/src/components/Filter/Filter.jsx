@@ -1,5 +1,5 @@
-import { Button, Col, Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import {
   GeoapifyContext,
   GeoapifyGeocoderAutocomplete,
@@ -9,7 +9,6 @@ import { jobService } from '../../services/job.service';
 import { usePosition } from '../../helpers/usePosition';
 import Job from '../Job/Job';
 import './Filter.css';
-import useWebSocketLite from '../../helpers/useWebSocketLite';
 
 function Filter(props) {
   const distances = [5, 25, 100, 250];
@@ -18,14 +17,13 @@ function Filter(props) {
   const { currentUser, filter } = props;
   const { latitude, longitude } = usePosition();
 
-  const [token, setToken] = useState('');
   const [allJobs, setAllJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [jobTypes, setJobTypes] = useState([]);
   const [jobSubtypes, setJobSubtypes] = useState([]);
   const [equipment, setEquipment] = useState([]);
   const [skills, setSkills] = useState([]);
-  const [distance, setDistance] = useState(distances[0]);
+  const [distance, setDistance] = useState(distances[1]);
   const [location, setLocation] = useState(currentUser);
   const [currentLocation, setCurrentLocation] = useState({});
   const [selectedJobTypes, setSelectedJobTypes] = useState([]);
@@ -33,37 +31,62 @@ function Filter(props) {
 
   const [showOwnLocation, setShowOwnLocation] = useState(false);
 
-  const ws = useWebSocketLite({
-    socketUrl: `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/jobs`,
-    token,
-  });
-
   useEffect(() => {
-    setToken(currentUser.token);
-    if (ws.data) {
-      const { message } = ws.data;
-      if (Array.isArray(message) && message.length !== allJobs.length) {
-        setAllJobs(message);
-        setFilteredJobs(message);
-      }
+    let isMounted = true;
+    if (currentUser.token) {
+      const ws = new WebSocket(
+        `${process.env.REACT_APP_WS_PROTOCOL}://${process.env.REACT_APP_DOMAIN}:${process.env.REACT_APP_WS_PORT}/wsapp/jobs?token=${currentUser.token}`
+      );
+      ws.onopen = () => {
+        // receive messages
+        ws.onmessage = (event) => {
+          const message = JSON.parse(event.data);
+          if (
+            isMounted &&
+            Array.isArray(message) &&
+            message.length !== allJobs.length
+          ) {
+            setAllJobs(message);
+            setFilteredJobs(message);
+          }
+        };
+      };
+      return () => {
+        ws.close();
+      };
     }
-  }, [allJobs.length, currentUser, ws.data]);
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser, allJobs]);
 
   useEffect(() => {
+    let isMounted = true;
     jobService.getJobTypes().then((jobs) => {
-      setJobTypes(jobs);
-      setSelectedJobTypes(jobs.map((item) => item.id));
+      if (isMounted) {
+        setJobTypes(jobs);
+        setSelectedJobTypes(jobs.map((item) => item.id));
+      }
     });
     jobService.getJobSubtypes().then((jobs) => {
-      setJobSubtypes(jobs);
-      setSelectedJobSubtypes(jobs.map((item) => item.id));
+      if (isMounted) {
+        setJobSubtypes(jobs);
+        setSelectedJobSubtypes(jobs.map((item) => item.id));
+      }
     });
     jobService.getEquipment().then((e) => {
-      setEquipment(e);
+      if (isMounted) {
+        setEquipment(e);
+      }
     });
     jobService.getSkills().then((s) => {
-      setSkills(s);
+      if (isMounted) {
+        setSkills(s);
+      }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -71,6 +94,7 @@ function Filter(props) {
   }, [longitude, latitude]);
 
   useEffect(() => {
+    let isMounted = true;
     // start out with everything
     let jobs = allJobs;
     // remove elements not in our job type
@@ -86,7 +110,12 @@ function Filter(props) {
     // filter out ones outside our location
     jobs = jobs.filter((job) => distance >= calculateDistance(location, job));
     // set our new values;
-    setFilteredJobs(jobs);
+    if (isMounted) {
+      setFilteredJobs(jobs);
+    }
+    return () => {
+      isMounted = false;
+    };
   }, [
     allJobs,
     filter,
@@ -223,6 +252,7 @@ function Filter(props) {
               id="select-mileage"
               className="small-select"
               aria-label="Within Miles"
+              value={distance}
               onChange={(e) => {
                 setDistance(e.target.value);
               }}

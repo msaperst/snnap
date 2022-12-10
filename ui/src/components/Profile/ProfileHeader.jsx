@@ -69,14 +69,16 @@ function ProfileHeader(props) {
     <Row>
       {radioButton}
       <Col md={2} xs={4}>
-        <Avatar
-          avatar={user.avatar}
-          firstname={user.first_name}
-          lastname={user.last_name}
-          onClick={avatarNav}
-        />
-        <span className="rating">{rating}</span>
-        <span className="message">{message}</span>
+        <div style={{ position: 'relative' }}>
+          <Avatar
+            avatar={user.avatar}
+            firstname={user.first_name}
+            lastname={user.last_name}
+            onClick={avatarNav}
+          />
+          <span className="rating">{rating}</span>
+          <span className="message">{message}</span>
+        </div>
       </Col>
       <Col>
         <Row>

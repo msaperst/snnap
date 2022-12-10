@@ -147,7 +147,7 @@ describe('home page', () => {
     const cards = await driver.findElements(By.className('card'));
     for (const card of cards) {
       const details = card.findElement(By.className('details'));
-      expect(details.getText()).toContain('Alexandria');
+      expect(await details.getText()).toContain('Alexandria');
     }
   });
 
@@ -158,7 +158,7 @@ describe('home page', () => {
       until.elementLocated(By.id('select-mileage')),
       5000
     );
-    await (await select.findElements(By.css('option')))[2].click();
+    await (await select.findElements(By.css('option')))[0].click();
     const afterFoundText = await getFoundText(initialFoundDigit);
     const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
     expect(afterFoundDigit).toBeGreaterThanOrEqual(2);

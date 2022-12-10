@@ -91,7 +91,7 @@ function Job(props) {
   }, [applications, currentUser, equipment, job, skills, applied]);
 
   return (
-    <Card data-testid={`job-${job.id}`}>
+    <Card className="job" data-testid={`job-${job.id}`}>
       <Card.Body>
         <Row>
           <Col md={{ span: 2, offset: 0 }} xs={{ span: 6, offset: 3 }}>
@@ -143,7 +143,7 @@ function Job(props) {
             </Row>
             <Row className="mt-2">
               <Col>
-                <Card.Text id={`job-${job.id}-details`}>
+                <Card.Text className="details" id={`job-${job.id}-details`}>
                   {job.details}
                 </Card.Text>
               </Col>
