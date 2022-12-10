@@ -25,9 +25,9 @@ describe('settings notifications page', () => {
   }, 15000);
 
   it('shows the notifications', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.wait(until.elementLocated(By.css('h1')), 5000);
     const password = (await driver.findElements(By.css('form')))[2];
-    expect(await password.findElement(By.css('h3')).getText()).toEqual(
+    expect(await password.findElement(By.css('h2')).getText()).toEqual(
       'Notification Settings'
     );
   });

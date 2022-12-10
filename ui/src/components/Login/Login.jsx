@@ -52,7 +52,7 @@ function Login() {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h2>Login</h2>
+      <h1 className="h2">Login</h1>
       <Row className="mb-3">
         <SnnapFormInput name="Username" onChange={updateForm} />
       </Row>

@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import './Avatar.css';
 
@@ -16,10 +16,8 @@ function Avatar(props) {
       <div
         className="circle"
         onClick={onClick}
-        onKeyPress={onClick}
-        style={{ backgroundImage: `url(${avatar})` }}
-        role="button"
-        tabIndex="0"
+        onKeyDown={onClick}
+        style={{ cursor: 'pointer', backgroundImage: `url(${avatar})` }}
       />
     );
   } else {
@@ -30,18 +28,11 @@ function Avatar(props) {
     avatarBlock = (
       <div
         className="circle initials"
+        style={style}
         onClick={onClick}
-        onKeyPress={onClick}
-        role="button"
-        tabIndex="0"
+        onKeyDown={onClick}
       >
-        <span
-          onClick={onClick}
-          onKeyPress={onClick}
-          style={style}
-          role="button"
-          tabIndex="0"
-        >
+        <span onClick={onClick} onKeyDown={onClick} aria-label={avatarText}>
           {avatarText}
         </span>
       </div>

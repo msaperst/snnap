@@ -45,7 +45,7 @@ function Password() {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h3>Password</h3>
+      <h2 className="h3">Password</h2>
       <Row className="mb-3">
         <SnnapFormInput
           name="Current Password"

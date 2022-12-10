@@ -4,7 +4,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --bs-bg-opacity: 1;
-  background-color: #050505 !important;
+  background-color: #000000 !important;
   color: white;
 }
 

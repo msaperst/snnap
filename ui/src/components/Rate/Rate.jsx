@@ -58,6 +58,7 @@ function Rate(props) {
       show={show}
       onHide={() => setShow(false)}
       data-testid="rateModal"
+      aria-label="Rate Your Experience"
     >
       <Modal.Header closeButton>
         <Modal.Title>Please Rate Your Experience</Modal.Title>

@@ -26,7 +26,7 @@ class NotificationsPage extends React.Component {
       <Container className="skinny">
         <Row>
           <Col>
-            <h2>My Notifications</h2>
+            <h1 className="h2">My Notifications</h1>
           </Col>
         </Row>
         {notifications.map((notification) => (

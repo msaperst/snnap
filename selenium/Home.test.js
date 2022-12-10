@@ -58,9 +58,9 @@ describe('home page', () => {
     );
     driver.wait(until.elementIsVisible(logoutButton), 5000);
     await logoutButton.click();
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/login`);
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Login');
+    expect(await driver.findElement(By.css('h1')).getText()).toEqual('Login');
   });
 
   it('shows the tagline', async () => {

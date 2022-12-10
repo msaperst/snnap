@@ -95,7 +95,7 @@ describe('chat', () => {
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
     const userChat = await chatDriver.wait(
-      until.elementLocated(By.css('li[href="#userToChat"]')),
+      until.elementLocated(By.css('[href="#userToChat"]')),
       5000
     );
     expect(await userChat.getText()).toEqual('userToChat\n1');
@@ -106,7 +106,7 @@ describe('chat', () => {
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
     const userChat = await chatDriver.wait(
-      until.elementLocated(By.css('li[href="#userToChat"]')),
+      until.elementLocated(By.css('[href="#userToChat"]')),
       5000
     );
     await userChat.click();
@@ -128,7 +128,7 @@ describe('chat', () => {
     // check messages of other user
     await chatDriver.get(`${Test.getApp()}/chat`);
     const userChat = await chatDriver.wait(
-      until.elementLocated(By.css('li[href="#userToChat"]')),
+      until.elementLocated(By.css('[href="#userToChat"]')),
       5000
     );
     await userChat.click();

@@ -30,7 +30,7 @@ function SettingsPage() {
   return (
     <Row>
       <Col>
-        <h2>Settings</h2>
+        <h1 className="h2">Settings</h1>
         <Tabs
           defaultActiveKey="account"
           className="mb-3"

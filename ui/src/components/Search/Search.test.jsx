@@ -24,7 +24,7 @@ describe('search', () => {
 
   it('displays search bar', () => {
     const search = render(<Search />);
-    expect(search.queryByLabelText(/Search For Job/)).toBeTruthy();
+    expect(search.queryByLabelText('Search For Job')).toBeTruthy();
   });
 
   it('displays each button', () => {

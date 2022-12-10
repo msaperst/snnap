@@ -61,6 +61,7 @@ function ResetPassword(props) {
       show={show}
       onHide={() => setShow(false)}
       data-testid="resetPasswordModal"
+      aria-label="Password Reset"
     >
       <Modal.Header closeButton>
         <Modal.Title>Password Reset</Modal.Title>

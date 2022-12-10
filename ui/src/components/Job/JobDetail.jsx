@@ -8,7 +8,7 @@ function JobDetail(props) {
   return (
     <>
       <Row className="mb-3">
-        <h3>Job Information</h3>
+        <h2 className="h3">Job Information</h2>
       </Row>
       <Row className="mb-3">
         <SnnapFormInput size={6} name="Job Type" value={job.type} disabled />

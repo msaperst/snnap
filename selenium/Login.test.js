@@ -23,7 +23,7 @@ describe('log in page', () => {
 
   it('takes you to the login page when not authenticated @network @accessibility', async () => {
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/login`);
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Login');
+    expect(await driver.findElement(By.css('h1')).getText()).toEqual('Login');
   });
 
   it('shows error when you login with blank credentials @network @accessibility', async () => {
@@ -84,7 +84,7 @@ describe('log in page', () => {
   it('allows you to navigate to the register page @network @accessibility', async () => {
     await driver.findElement(By.linkText('Sign Up')).click();
     await driver.wait(until.elementLocated(By.id('formFirstname')), 5000);
-    const header = driver.findElement(By.css('h2'));
+    const header = driver.findElement(By.css('h1'));
     expect(await header.getText()).toEqual('Register');
   });
 
