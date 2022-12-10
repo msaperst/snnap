@@ -143,7 +143,7 @@ function Job(props) {
             </Row>
             <Row className="mt-2">
               <Col>
-                <Card.Text id={`job-${job.id}-details`}>
+                <Card.Text className="details" id={`job-${job.id}-details`}>
                   {job.details}
                 </Card.Text>
               </Col>
