@@ -142,7 +142,7 @@ describe('job detail info', () => {
     expect(detailsInput.getAttribute('id')).toEqual('formJobDetails');
     expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
     expect(detailsInput.getAttribute('disabled')).toEqual('');
-    expect(detailsInput.getAttribute('type')).toEqual('textarea');
+    expect(detailsInput.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(detailsInput).toHaveTextContent("Max's 40th Birthday, woot!!!");
   });
 

@@ -2,15 +2,16 @@ import React from 'react';
 import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { Facebook, Globe, Instagram } from 'react-bootstrap-icons';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
-import { jobService } from '../../services/job.service';
-import { companyService } from '../../services/company.service';
 import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
+import SnnapFormTextarea from '../SnnapForms/SnnapFormTextarea';
 import Gallery from '../Settings/Portfolio/Gallery/Gallery';
-import './ApplyToJob.css';
 import Submit from '../Submit/Submit';
 import EquipmentSelect from '../Settings/CompanyInformation/EquipmentSelect/EquipmentSelect';
 import JobDetail from '../Job/JobDetail';
+import { jobService } from '../../services/job.service';
+import { companyService } from '../../services/company.service';
 import { commonFormComponents } from '../CommonFormComponents';
+import './ApplyToJob.css';
 
 class ApplyToJob extends React.Component {
   constructor(props) {
@@ -202,11 +203,10 @@ class ApplyToJob extends React.Component {
                 />
               </Row>
               <Row className="mb-3">
-                <SnnapFormInput
+                <SnnapFormTextarea
                   name="Experience"
                   value={company.experience}
                   onChange={this.updateForm}
-                  type="textarea"
                   notRequired
                 />
               </Row>
@@ -220,9 +220,8 @@ class ApplyToJob extends React.Component {
                 />
               </Row>
               <Row className="mb-3">
-                <SnnapFormInput
+                <SnnapFormTextarea
                   name="Additional Comments"
-                  type="textarea"
                   onChange={this.updateForm}
                   notRequired
                 />

@@ -194,7 +194,7 @@ describe('new job form', () => {
     expect(detailsInput.getAttribute('placeholder')).toEqual('Job Details');
     expect(detailsInput.getAttribute('disabled')).toBeNull();
     expect(detailsInput.getAttribute('required')).toEqual('');
-    expect(detailsInput.getAttribute('type')).toEqual('textarea');
+    expect(detailsInput.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(detailsInput.getAttribute('value')).toBeNull();
     expect(detailsInput).toHaveTextContent('');
   });
