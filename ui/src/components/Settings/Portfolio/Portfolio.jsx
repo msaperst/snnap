@@ -1,9 +1,9 @@
-import { Form, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
-import { companyService } from '../../../services/company.service';
-import SnnapFormInput from '../../SnnapForms/SnnapFormInput';
+import { Form, Row } from 'react-bootstrap';
+import SnnapFormTextarea from '../../SnnapForms/SnnapFormTextarea';
 import Gallery from './Gallery/Gallery';
 import Submit from '../../Submit/Submit';
+import { companyService } from '../../../services/company.service';
 import { commonFormComponents } from '../../CommonFormComponents';
 
 function Portfolio(props) {
@@ -63,9 +63,8 @@ function Portfolio(props) {
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <h2 className="h3">Portfolio</h2>
       <Row className="mb-3">
-        <SnnapFormInput
+        <SnnapFormTextarea
           name="Experience"
-          type="textarea"
           value={experience}
           onChange={updateExperience}
           notRequired
