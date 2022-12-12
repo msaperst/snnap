@@ -4,6 +4,15 @@ import '@testing-library/jest-dom';
 import Avatar from './Avatar';
 
 describe('avatar', () => {
+  let x;
+  const updateX = () => {
+    x++;
+  };
+
+  beforeEach(() => {
+    x = 0;
+  });
+
   it('renders an empty circle without an user information', () => {
     const { container } = render(<Avatar />);
     expect(container.children).toHaveLength(1);
@@ -26,10 +35,6 @@ describe('avatar', () => {
   });
 
   it('allows clicking on the initials', () => {
-    let x = 0;
-    const updateX = () => {
-      x++;
-    };
     const { container } = render(
       <Avatar firstname="Max" lastname="Saperstone" onClick={updateX} />
     );
@@ -41,10 +46,6 @@ describe('avatar', () => {
   });
 
   it('allows clicking on the span', () => {
-    let x = 0;
-    const updateX = () => {
-      x++;
-    };
     const { container } = render(
       <Avatar firstname="Max" lastname="Saperstone" onClick={updateX} />
     );
@@ -59,15 +60,22 @@ describe('avatar', () => {
     expect(container.firstChild.children).toHaveLength(0);
     expect(container.firstChild).toHaveClass('circle');
     expect(container.firstChild.getAttribute('style')).toEqual(
+      'background-image: url(pic.jpg);'
+    );
+  });
+
+  it('renders the avatar image with an avatar data and click', () => {
+    const { container } = render(<Avatar avatar="pic.jpg" onClick={updateX} />);
+    expect(container.children).toHaveLength(1);
+
+    expect(container.firstChild.children).toHaveLength(0);
+    expect(container.firstChild).toHaveClass('circle');
+    expect(container.firstChild.getAttribute('style')).toEqual(
       'cursor: pointer; background-image: url(pic.jpg);'
     );
   });
 
   it('allows clicking on the image', () => {
-    let x = 0;
-    const updateX = () => {
-      x++;
-    };
     const { container } = render(<Avatar avatar="pic.jpg" onClick={updateX} />);
     fireEvent.click(container.firstChild);
     expect(x).toEqual(1);
