@@ -129,7 +129,7 @@ jobs:
           npm ci
           cd api; npm ci
 
-      - name: Functional Test 🔒
+      - name: Accessibility Test 🔒
         run: |
           export $(grep -v '^#' .env | xargs)
           docker exec snnap_mysql ./setup-database.sh
