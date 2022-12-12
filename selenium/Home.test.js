@@ -161,7 +161,7 @@ describe('home page', () => {
     await (await select.findElements(By.css('option')))[0].click();
     const afterFoundText = await getFoundText(initialFoundDigit);
     const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
-    expect(afterFoundDigit).toBeGreaterThanOrEqual(2);
+    expect(afterFoundDigit).toBeGreaterThanOrEqual(1);
     const cards = await driver.findElements(By.className('card'));
     expect(cards).toHaveLength(afterFoundDigit);
   });
