@@ -12,12 +12,16 @@ function Avatar(props) {
 
   let avatarBlock;
   if (avatar) {
+    if (!style) {
+      style = {};
+    }
+    style.backgroundImage = `url(${avatar})`;
     avatarBlock = (
       <div
         className="circle"
         onClick={onClick}
         onKeyDown={onClick}
-        style={{ cursor: 'pointer', backgroundImage: `url(${avatar})` }}
+        style={style}
       />
     );
   } else {
