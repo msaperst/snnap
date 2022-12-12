@@ -52,7 +52,11 @@ function Conversation(props) {
             data.from === chatWith
           ) {
             // when sender receives new message, or getting a new message from sender, indicate all old sent as read
-            markAllRead();
+            const els = document.getElementsByClassName('unread');
+            Array.from(els).forEach((el) => {
+              el.classList.remove('unread');
+            });
+            chatService.markMessagesRead(chatWith);
           }
           setMessages((_messages) => [..._messages, data]);
         }
@@ -65,14 +69,6 @@ function Conversation(props) {
     };
   }, [chatWith, user]);
 
-  const markAllRead = () => {
-    const els = document.getElementsByClassName('unread');
-    Array.from(els).forEach((el) => {
-      el.classList.remove('unread');
-    });
-    chatService.markMessagesRead(chatWith);
-  };
-
   // scroll new messages into view
   const scrollTarget = useRef(null);
   useEffect(() => {
@@ -83,12 +79,18 @@ function Conversation(props) {
 
   // clear out prior messages, and load message history
   useEffect(() => {
+    let isMounted = true;
     setMessages([]);
     if (chatWith) {
       chatService.getConversationWith(chatWith).then((conversations) => {
-        setMessages(conversations);
+        if (isMounted) {
+          setMessages(conversations);
+        }
       });
     }
+    return () => {
+      isMounted = false;
+    };
   }, [chatWith]);
 
   if (!chatWith) {

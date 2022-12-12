@@ -6,12 +6,16 @@ async function sendUnreadNotifications(user, ctx) {
   const unreadAlerts = alerts.filter((val) => !val.reviewed);
   notifications.alerts = unreadAlerts.length;
 
-  const chat = new Chat(await user.getId());
-  const conversationList = await chat.getConversationList();
-  notifications.messages = conversationList.reduce(
-    (total, conversation) => total + conversation.unread,
-    0
-  );
+  try {
+    const chat = new Chat(await user.getId());
+    const conversationList = await chat.getConversationList();
+    notifications.messages = conversationList.reduce(
+      (total, conversation) => total + conversation.unread,
+      0
+    );
+  } catch (e) {
+    // console.log('unable to send notification')
+  }
 
   ctx.send(JSON.stringify(notifications));
 }

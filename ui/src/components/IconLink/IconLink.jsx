@@ -16,6 +16,7 @@ function IconLink(props) {
         href={link.startsWith('http') ? link : `http://${link}`}
         target="_blank"
         rel="noreferrer"
+        aria-label={`Link to ${link}`}
       >
         {icon}
       </a>

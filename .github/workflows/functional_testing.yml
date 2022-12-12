@@ -1,12 +1,12 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Functional Testing
+name: End To End Testing
 
 on: [ pull_request ]
 
 jobs:
-  test:
+  functional_test:
     name: Functional Testing
     runs-on: ubuntu-latest
 
@@ -73,5 +73,75 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Selenium Test Results
+          name: Functional Test Results
+          path: 'Selenium Test Results'
+
+  accessibility_test:
+    name: Accessibility Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup env file ⚙
+        run: |
+          echo "# tool hosting information" > .env
+          echo "HTTP_PORT=70" >> .env
+          echo "DOMAIN=localhost" >> .env
+          echo "WS_PROTOCOL=ws" >> .env
+          echo "WS_PORT=70" >> .env
+          echo "" >> .env
+          echo "# database information" >> .env
+          echo "MYSQL_ROOT_PASSWORD=xFRcwhHSF4aHxpGv7n5DuzSz" >> .env
+          echo "MYSQL_PORT=3206" >> .env
+          echo "MYSQL_DATABASE=snnap" >> .env
+          echo "MYSQL_USER=snnap" >> .env
+          echo "MYSQL_PASSWORD=vGvmKAcPLeQpQ7gEKckN89dB" >> .env
+          echo "" >> .env
+          echo "# api information" >> .env
+          echo "API_PORT=3001" >> .env
+          echo "API_LIMIT=10000" >> .env
+          echo "" >> .env
+          echo "# third party information" >> .env
+          echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
+          echo "" >> .env
+          echo "# email info" >> .env
+          echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> .env
+          echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
+
+      - name: Setup key files ⚙
+        run: |
+          mkdir -p api/certs
+          echo "${{ secrets.KEY }}" > api/certs/key-rsa.pem
+          echo "${{ secrets.CERT }}" > api/certs/cert.pem
+
+      - name: Build Dockerfile 🐋
+        run: docker-compose -f docker-compose.yml up -d --build
+
+      - name: Setup Node ☕
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Install 🔧
+        run: |
+          npm ci
+          cd api; npm ci
+
+      - name: Functional Test 🔒
+        run: |
+          export $(grep -v '^#' .env | xargs)
+          docker exec snnap_mysql ./setup-database.sh
+          APP=http://localhost:70 npm run test:accessibility
+
+      - name: Retrieve Docker API Logs
+        if: always()
+        run: docker logs snnap_api
+
+      - name: Archive Test Results 📊
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Accessibility Test Results
           path: 'Selenium Test Results'

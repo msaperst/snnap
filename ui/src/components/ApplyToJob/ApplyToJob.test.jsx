@@ -199,7 +199,7 @@ describe('apply to job form', () => {
     expect(detailsInput.getAttribute('id')).toEqual('formExperience');
     expect(detailsInput.getAttribute('placeholder')).toEqual('Experience');
     expect(detailsInput.getAttribute('disabled')).toBeNull();
-    expect(detailsInput.getAttribute('type')).toEqual('textarea');
+    expect(detailsInput.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(detailsInput).toHaveTextContent(
       "None really, but somebody's gotta work this bitch"
     );
@@ -217,7 +217,7 @@ describe('apply to job form', () => {
       'Additional Comments'
     );
     expect(commentsInput.getAttribute('disabled')).toBeNull();
-    expect(commentsInput.getAttribute('type')).toEqual('textarea');
+    expect(commentsInput.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(commentsInput).toHaveTextContent('');
   });
 
@@ -237,7 +237,7 @@ describe('apply to job form', () => {
       'Gallery Description'
     );
     expect(galleryDescription0Input.getAttribute('disabled')).toBeNull();
-    expect(galleryDescription0Input.getAttribute('type')).toEqual('textarea');
+    expect(galleryDescription0Input.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(galleryDescription0Input).toHaveTextContent('Gallery 1');
 
     expect(modalForm.children[12].children[1]).toHaveClass('col-md-12');
@@ -262,7 +262,7 @@ describe('apply to job form', () => {
       'Gallery Description'
     );
     expect(galleryDescription1Input.getAttribute('disabled')).toBeNull();
-    expect(galleryDescription1Input.getAttribute('type')).toEqual('textarea');
+    expect(galleryDescription1Input.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(galleryDescription1Input).toHaveTextContent('');
 
     expect(modalForm.children[13].children[1]).toHaveClass('col-md-12');

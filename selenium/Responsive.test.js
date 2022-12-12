@@ -21,7 +21,7 @@ describe('home page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('displays full menu at large size', async () => {
+  it('displays full menu at large size @accessibility', async () => {
     const navBar = driver.wait(
       until.elementLocated(By.id('responsive-navbar-nav')),
       5000
@@ -34,7 +34,7 @@ describe('home page', () => {
     expect(await navBurger.isDisplayed()).toBeFalsy();
   });
 
-  it('displays burger menu at medium size', async () => {
+  it('displays burger menu at medium size @accessibility', async () => {
     await driver.manage().window().setRect({ height: 800, width: 800 });
     const navBar = driver.wait(
       until.elementLocated(By.id('responsive-navbar-nav')),
@@ -48,7 +48,7 @@ describe('home page', () => {
     expect(await navBurger.isDisplayed()).toBeTruthy();
   });
 
-  it('displays search guy at large size', async () => {
+  it('displays search guy at large size @accessibility', async () => {
     const searchGuy = driver.wait(
       until.elementLocated(By.className('searchGuy')),
       5000
@@ -56,7 +56,7 @@ describe('home page', () => {
     expect(await searchGuy.isDisplayed()).toBeTruthy();
   });
 
-  it('displays search guy at medium size', async () => {
+  it('displays search guy at medium size @accessibility', async () => {
     await driver.manage().window().setRect({ height: 800, width: 800 });
     const searchGuy = driver.wait(
       until.elementLocated(By.className('searchGuy')),
@@ -65,7 +65,7 @@ describe('home page', () => {
     expect(await searchGuy.isDisplayed()).toBeFalsy();
   });
 
-  it('displays no search guy at extra small size', async () => {
+  it('displays no search guy at extra small size @accessibility', async () => {
     await driver.manage().window().setRect({ height: 400, width: 800 });
     const searchGuy = driver.wait(
       until.elementLocated(By.className('searchGuy')),

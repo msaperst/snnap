@@ -123,7 +123,7 @@ function Register() {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h2>Register</h2>
+      <h1 className="h2">Register</h1>
       <Row className="mb-3">
         <SnnapFormInput size={5} name="First name" onChange={updateForm} />
         <SnnapFormInput size={7} name="Last name" onChange={updateForm} />

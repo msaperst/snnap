@@ -1,7 +1,8 @@
 /* eslint-disable no-await-in-loop */
-const { addAttach } = require('jest-html-reporters/helper');
+const { addAttach, addMsg } = require('jest-html-reporters/helper');
 const { Builder } = require('selenium-webdriver');
 const { Options } = require('selenium-webdriver/chrome');
+const axe = require('axe-core');
 const User = require('../../api/components/user/User');
 const Mysql = require('../../api/services/Mysql');
 const Job = require('../../api/components/job/Job');
@@ -34,15 +35,54 @@ class Test {
     await driver.get(Test.getApp() + url);
     await driver.manage().window().setRect({ height: 1600, width: 1800 });
     this.driver = driver;
+
+    if (process.env.NETWORK) {
+      console.log('TODO STUFF FOR A NETWORKING TEST');
+    }
+
     return driver;
   }
 
   async cleanUp() {
+    let result;
+    if (process.env.ACCESSIBILITY) {
+      await this.driver.executeScript(axe.source.toString());
+      result = await this.driver.executeAsyncScript(
+        'var callback = arguments[arguments.length - 1];axe.run().then(results => callback(results))'
+      );
+      await addMsg({
+        message:
+          `Inapplicable: ${result.inapplicable.length}\n` +
+          `Incomplete: ${result.incomplete.length}\n` +
+          `Passes: ${result.passes.length}\n` +
+          `Violations: ${result.violations.length}\n`,
+      });
+      if (result.violations.length) {
+        await addMsg({
+          message: `Violations:${result.violations.map(
+            (violation) => `\n${violation.description}: ${violation.help}`
+          )}`,
+        });
+        await addMsg({
+          message: JSON.stringify(result.violations),
+        });
+      }
+    }
+
     const image = await this.driver.takeScreenshot();
     await addAttach({
       attach: Buffer.from(image, 'base64'),
     });
     await this.driver.quit();
+
+    if (process.env.ACCESSIBILITY) {
+      await addMsg({ message: JSON.stringify(result) });
+      if (result.violations.length) {
+        throw new Error(
+          result.violations.map((violation) => `${violation.help}\n`)
+        );
+      }
+    }
   }
 
   addUser(username) {

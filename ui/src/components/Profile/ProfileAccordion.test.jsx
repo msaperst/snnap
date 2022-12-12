@@ -115,8 +115,8 @@ describe('profile accordion', () => {
       const { container } = jobApplication;
       await waitFor(() => container.firstChild);
     });
-    const { getAllByRole } = jobApplication;
-    const avatar = getAllByRole('button')[4];
+    const { getAllByLabelText } = jobApplication;
+    const avatar = getAllByLabelText('')[1];
     await act(async () => {
       fireEvent.click(avatar);
     });
@@ -295,7 +295,8 @@ describe('profile accordion', () => {
   it('has no rating when none is supplied', () => {
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].children[1].children).toHaveLength(0);
   });
 
@@ -315,7 +316,8 @@ describe('profile accordion', () => {
     });
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].children[1].children).toHaveLength(1);
     expect(headers.children[0].children[1].firstChild.children).toHaveLength(2);
     expect(
@@ -339,7 +341,8 @@ describe('profile accordion', () => {
     });
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].children[1].children).toHaveLength(1);
     expect(headers.children[0].children[1].firstChild.children).toHaveLength(2);
     expect(
@@ -350,7 +353,8 @@ describe('profile accordion', () => {
   it('has no message icon when user is same', async () => {
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].lastChild.children).toHaveLength(0);
   });
 
@@ -367,7 +371,8 @@ describe('profile accordion', () => {
     });
     const { container } = profileAccordion;
     const headers =
-      container.firstChild.firstChild.firstChild.firstChild.firstChild;
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .children[0];
     expect(headers.children[0].lastChild.children).toHaveLength(1);
     expect(
       headers.children[0].lastChild.firstChild.getAttribute('href')
@@ -382,6 +387,69 @@ describe('profile accordion', () => {
     expect(
       headers.children[0].lastChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('Chat');
+  });
+
+  it('shows company company_name properly', async () => {
+    await act(async () => {
+      profileAccordion = render(
+        <Profile
+          type="accordion"
+          user={{ first_name: 'Max', last_name: 'Saperstone' }}
+          company={{ company_name: 'My Company' }}
+        />
+      );
+      const { container } = profileAccordion;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = profileAccordion;
+    const header =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .lastChild;
+    expect(header.children).toHaveLength(2);
+    expect(header.firstChild).toHaveTextContent('Max Saperstone');
+    expect(header.lastChild).toHaveTextContent('My Company');
+  });
+
+  it('shows company name properly', async () => {
+    await act(async () => {
+      profileAccordion = render(
+        <Profile
+          type="accordion"
+          user={{ first_name: 'Max', last_name: 'Saperstone' }}
+          company={{ name: 'My Company' }}
+        />
+      );
+      const { container } = profileAccordion;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = profileAccordion;
+    const header =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .lastChild;
+    expect(header.children).toHaveLength(2);
+    expect(header.firstChild).toHaveTextContent('Max Saperstone');
+    expect(header.lastChild).toHaveTextContent('My Company');
+  });
+
+  it('shows nothing when no company value', async () => {
+    await act(async () => {
+      profileAccordion = render(
+        <Profile
+          type="accordion"
+          user={{ first_name: 'Max', last_name: 'Saperstone' }}
+          company={{}}
+        />
+      );
+      const { container } = profileAccordion;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = profileAccordion;
+    const header =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .lastChild;
+    expect(header.children).toHaveLength(2);
+    expect(header.firstChild).toHaveTextContent('Max Saperstone');
+    expect(header.lastChild.firstChild.children).toHaveLength(0);
   });
 
   async function loadProfileAccordionWithMock(app) {

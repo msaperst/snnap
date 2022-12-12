@@ -1,16 +1,16 @@
-import { Row } from 'react-bootstrap';
 import React from 'react';
+import { Row } from 'react-bootstrap';
 import SnnapFormInput from '../../../SnnapForms/SnnapFormInput';
+import SnnapFormTextarea from '../../../SnnapForms/SnnapFormTextarea';
 
 function GalleryItem(props) {
   const { order, link, description, onChange, notRequired } = props;
 
   return (
     <Row className="mb-3">
-      <SnnapFormInput
+      <SnnapFormTextarea
         id={`galleryDescription-${order}`}
         name="Gallery Description"
-        type="textarea"
         value={description}
         onChange={onChange}
         notRequired={notRequired}

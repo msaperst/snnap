@@ -15,7 +15,7 @@ describe('settings personal page', () => {
     driver = await test.getDriver();
     await test.loginUser('settingsPersonalUser');
     await driver.get(`${Test.getApp()}/settings`);
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
     driver.wait(
       until.elementIsVisible(driver.findElement(By.id('formFirstName'))),
@@ -30,9 +30,16 @@ describe('settings personal page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('shows the personal information', async () => {
+  it('shows the personal information @network @accessibility', async () => {
     const personalInfo = (await driver.findElements(By.css('form')))[3];
-    expect(await personalInfo.findElement(By.css('h3')).getText()).toEqual(
+    await driver.wait(
+      until.elementTextIs(
+        personalInfo.findElement(By.css('h2')),
+        'Personal Information'
+      ),
+      5000
+    );
+    expect(await personalInfo.findElement(By.css('h2')).getText()).toEqual(
       'Personal Information'
     );
   });
@@ -66,7 +73,7 @@ describe('settings personal page', () => {
     expect(await city.getAttribute('disabled')).toBeNull();
   });
 
-  it('shows error when you update settings blank information', async () => {
+  it('shows error when you update settings blank information @accessibility', async () => {
     const settings = (await driver.findElements(By.css('form')))[3];
     const feedbacks = await settings.findElements(
       By.className('invalid-feedback')
@@ -99,7 +106,7 @@ describe('settings personal page', () => {
     expect(await lastName.getAttribute('value')).toEqual('User0');
   }
 
-  it('allows updating the personal values', async () => {
+  it('allows updating the personal values @network @accessibility', async () => {
     let firstName = await driver.wait(
       until.elementLocated(By.id('formFirstName')),
       5000
@@ -123,7 +130,7 @@ describe('settings personal page', () => {
       await driver.findElements(By.className('alert-success'))
     ).toHaveLength(0);
     await driver.navigate().refresh();
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
     firstName = driver.wait(
       until.elementIsVisible(driver.findElement(By.id('formFirstName'))),
@@ -136,7 +143,7 @@ describe('settings personal page', () => {
     await checkFields(firstName, lastName);
   });
 
-  it('allows updating the city', async () => {
+  it('allows updating the city @network', async () => {
     let city = await driver.wait(until.elementLocated(By.id('formCity')), 5000);
     await test.waitUntilInputFilled(By.id('formCity'));
     await city.clear();
@@ -156,7 +163,7 @@ describe('settings personal page', () => {
       5000
     );
     await driver.navigate().refresh();
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
     city = await driver.wait(
       until.elementIsVisible(driver.findElement(By.id('formCity'))),

@@ -42,11 +42,11 @@ describe('home page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('takes us to the homepage', async () => {
+  it('takes us to the homepage @network @accessibility', async () => {
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/`);
   });
 
-  it('allows us to log out', async () => {
+  it('allows us to log out @network @accessibility', async () => {
     const dropDownMenu = driver.wait(
       until.elementLocated(By.id('user-dropdown')),
       5000
@@ -58,9 +58,9 @@ describe('home page', () => {
     );
     driver.wait(until.elementIsVisible(logoutButton), 5000);
     await logoutButton.click();
-    await driver.wait(until.elementLocated(By.css('h2')), 5000);
+    await driver.wait(until.elementLocated(By.css('h1')), 5000);
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/login`);
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Login');
+    expect(await driver.findElement(By.css('h1')).getText()).toEqual('Login');
   });
 
   it('shows the tagline', async () => {
@@ -97,7 +97,7 @@ describe('home page', () => {
     expect(cards).toHaveLength(foundDigit);
   });
 
-  it("hides created b'nai mitzvahs we created when filtered out", async () => {
+  it("hides created b'nai mitzvahs we created when filtered out @network @accessibility", async () => {
     const initialFoundText = await getFoundText(0);
     const initialFoundDigit = parseInt(initialFoundText.replace(/\D/g, ''), 10);
     const filterButtons = await driver.wait(
@@ -138,7 +138,7 @@ describe('home page', () => {
     }
   });
 
-  it('updates displayed jobs based on text in search box', async () => {
+  it('updates displayed jobs based on text in search box @network @accessibility', async () => {
     const searchInput = await driver.wait(
       until.elementLocated(By.id('searchForJobInput')),
       5000
@@ -147,32 +147,32 @@ describe('home page', () => {
     const cards = await driver.findElements(By.className('card'));
     for (const card of cards) {
       const details = card.findElement(By.className('details'));
-      expect(details.getText()).toContain('Alexandria');
+      expect(await details.getText()).toContain('Alexandria');
     }
   });
 
-  it('updates displayed jobs based on mileage dropdown', async () => {
+  it('updates displayed jobs based on mileage dropdown @network @accessibility', async () => {
     const initialFoundText = await getFoundText(0);
     const initialFoundDigit = parseInt(initialFoundText.replace(/\D/g, ''), 10);
     const select = await driver.wait(
       until.elementLocated(By.id('select-mileage')),
       5000
     );
-    await (await select.findElements(By.css('option')))[2].click();
+    await (await select.findElements(By.css('option')))[0].click();
     const afterFoundText = await getFoundText(initialFoundDigit);
     const afterFoundDigit = parseInt(afterFoundText.replace(/\D/g, ''), 10);
-    expect(afterFoundDigit).toBeGreaterThanOrEqual(2);
+    expect(afterFoundDigit).toBeGreaterThanOrEqual(1);
     const cards = await driver.findElements(By.className('card'));
     expect(cards).toHaveLength(afterFoundDigit);
   });
 
-  // TODO - remove the above when this test is completed
+  // TODO - remove the below when this test is completed
   // eslint-disable-next-line jest/expect-expect
-  it('updates displayed jobs based on from where dropdown', () => {
+  it('updates displayed jobs based on from where dropdown @network @accessibility', () => {
     // TODO - unable to do this currently as allowing location isn't possible/simple through Selenium
   });
 
-  it('updates displayed jobs based on custom where dropdown', async () => {
+  it('updates displayed jobs based on custom where dropdown @network @accessibility', async () => {
     const select = await driver.wait(
       until.elementLocated(By.id('select-location')),
       5000

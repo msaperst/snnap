@@ -56,7 +56,7 @@ describe('portfolio', () => {
     const form =
       container.firstChild.children[1].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formExperience');
-    expect(form.getAttribute('type')).toEqual('textarea');
+    expect(form.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(form).toHaveTextContent('');
     expect(form.getAttribute('required')).toBeNull();
     // the rest is verified in SnnapFormInput.test.jsx
@@ -73,7 +73,7 @@ describe('portfolio', () => {
     const form =
       container.firstChild.children[1].lastChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('formExperience');
-    expect(form.getAttribute('type')).toEqual('textarea');
+    expect(form.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(form).toHaveTextContent('Some experience');
     expect(form.getAttribute('required')).toBeNull();
     // the rest is verified in SnnapFormInput.test.jsx
@@ -104,7 +104,7 @@ describe('portfolio', () => {
     const form =
       container.firstChild.children[2].firstChild.firstChild.firstChild;
     expect(form.getAttribute('id')).toEqual('galleryDescription-0');
-    expect(form.getAttribute('type')).toEqual('textarea');
+    expect(form.getAttribute('type')).toBeNull(); // sign of a textarea
     expect(form).toHaveTextContent('description1');
     expect(form.getAttribute('required')).toEqual('');
     // the rest is verified in SnnapFormInput.test.jsx

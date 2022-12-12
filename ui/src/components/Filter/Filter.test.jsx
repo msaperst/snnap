@@ -2,9 +2,9 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
-import Filter from './Filter';
+import WS from 'jest-websocket-mock';
 import { selectFairfax } from '../CommonTestComponents';
-import useWebSocketLite from '../../helpers/useWebSocketLite';
+import Filter from './Filter';
 
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
@@ -25,10 +25,10 @@ jest.mock('../../helpers/usePosition', () => ({
   }),
 }));
 
-jest.mock('../../helpers/useWebSocketLite');
-
 describe('filter', () => {
   let filter;
+  let server;
+
   const types = [
     { id: 1, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
     { id: 2, type: 'Misc', plural: 'Misc' },
@@ -89,18 +89,25 @@ describe('filter', () => {
     jobService.jobService.getJobSubtypes.mockResolvedValue(subtypes);
     jobService.jobService.getEquipment.mockResolvedValue([]);
     jobService.jobService.getSkills.mockResolvedValue([]);
-    const data = { message: jobs };
-    useWebSocketLite.mockReturnValue({ data });
+    server = new WS('wss://localhost:3001/wsapp/jobs');
+  });
+
+  afterEach(() => {
+    WS.clean();
   });
 
   async function basicFilter() {
     await act(async () => {
       filter = render(
-        <Filter currentUser={{ lat: 38.8462236, lon: -77.3063733 }} />
+        <Filter
+          currentUser={{ token: 1234, lat: 38.8462236, lon: -77.3063733 }}
+        />
       );
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
+    await server.connected;
+    server.send(JSON.stringify(jobs));
   }
 
   async function expectOneMatch() {
@@ -108,6 +115,19 @@ describe('filter', () => {
     expect(header.textContent).toEqual('Found 1 Job');
     const cards = screen.getAllByText('job card');
     expect(cards).toHaveLength(1);
+    return true;
+  }
+
+  async function expectMatches(number) {
+    const header = screen.getByRole('heading', { level: 3 });
+    expect(header.textContent).toEqual(`Found ${number} Jobs`);
+    if (number) {
+      const cards = screen.getAllByText('job card');
+      expect(cards).toHaveLength(number);
+    } else {
+      const cards = screen.queryByText('job card');
+      expect(cards).toBeNull();
+    }
     return true;
   }
 
@@ -127,7 +147,27 @@ describe('filter', () => {
     }
   });
 
-  async function renderAndGetJobsHeader() {
+  async function renderAndGetJobsHeader(message) {
+    await act(async () => {
+      filter = render(
+        <Filter
+          currentUser={{ token: 1234, lat: 38.8462236, lon: -77.3063733 }}
+        />
+      );
+      const { container } = filter;
+      await waitFor(() => container.firstChild);
+    });
+    await server.connected;
+    server.send(JSON.stringify(message));
+    const header = screen.getByRole('heading', { level: 3 });
+    return header.textContent;
+  }
+
+  it('displays no jobs when bad ws data', async () => {
+    expect(await renderAndGetJobsHeader(123)).toEqual('Found 0 Jobs');
+  });
+
+  it('displays nothing when no user', async () => {
     await act(async () => {
       filter = render(
         <Filter currentUser={{ lat: 38.8462236, lon: -77.3063733 }} />
@@ -135,30 +175,8 @@ describe('filter', () => {
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
-    const header = screen.getByRole('heading', { level: 3 });
-    return header.textContent;
-  }
-
-  it('displays no jobs when no ws data', async () => {
-    useWebSocketLite.mockReturnValue({});
-    expect(await renderAndGetJobsHeader()).toEqual('Found 0 Jobs');
-  });
-
-  it('displays no jobs when bad ws data', async () => {
-    const data = { message: 123 };
-    useWebSocketLite.mockReturnValue({ data });
-    expect(await renderAndGetJobsHeader()).toEqual('Found 0 Jobs');
-  });
-
-  it('displays the number of jobs when no jobs', async () => {
-    const data = { message: [] };
-    useWebSocketLite.mockReturnValue({ data });
-    expect(await renderAndGetJobsHeader()).toEqual('Found 0 Jobs');
-  });
-
-  it('displays the number of jobs when 1 job', async () => {
-    const data = {
-      message: [
+    server.send(
+      JSON.stringify([
         {
           id: 1,
           lat: '38.8462236',
@@ -166,25 +184,43 @@ describe('filter', () => {
           typeId: 1,
           subtypeId: 1,
         },
-      ],
-    };
-    useWebSocketLite.mockReturnValue({ data });
+      ])
+    );
+    expect(await expectMatches(0)).toBeTruthy();
+  });
+
+  it('displays the number of jobs when no jobs', async () => {
+    expect(await renderAndGetJobsHeader([])).toEqual('Found 0 Jobs');
+  });
+
+  it('displays the number of jobs when 1 job', async () => {
     await act(async () => {
       filter = render(
-        <Filter currentUser={{ lat: 38.8462236, lon: -77.3063733 }} />
+        <Filter
+          currentUser={{ token: 1234, lat: 38.8462236, lon: -77.3063733 }}
+        />
       );
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
-
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 1 Job');
+    await server.connected;
+    server.send(
+      JSON.stringify([
+        {
+          id: 1,
+          lat: '38.8462236',
+          lon: '-77.3063733',
+          typeId: 1,
+          subtypeId: 1,
+        },
+      ])
+    );
+    expect(await expectOneMatch()).toBeTruthy();
   });
 
   it('displays the number of jobs when multiple jobs', async () => {
     await basicFilter();
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 2 Jobs');
+    expect(await expectMatches(3)).toBeTruthy();
   });
 
   it('displays menu with distances for filter', async () => {
@@ -193,11 +229,11 @@ describe('filter', () => {
     expect(select.children).toHaveLength(4);
 
     expect(select.children[0].textContent).toEqual('Within 5 miles');
-    expect(select.children[0].selected).toBeTruthy();
+    expect(select.children[0].selected).toBeFalsy();
     expect(select.children[0].value).toEqual('5');
 
     expect(select.children[1].textContent).toEqual('Within 25 miles');
-    expect(select.children[1].selected).toBeFalsy();
+    expect(select.children[1].selected).toBeTruthy();
     expect(select.children[1].value).toEqual('25');
 
     expect(select.children[2].textContent).toEqual('Within 100 miles');
@@ -230,7 +266,7 @@ describe('filter', () => {
   it('shows correct jobs based on default filter', async () => {
     await basicFilter();
     const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(2);
+    expect(cards).toHaveLength(3);
   });
 
   it('updates displayed jobs based on selected filter button', async () => {
@@ -242,7 +278,7 @@ describe('filter', () => {
     expect(buttons[0]).toHaveClass('btn-filter btn btn-secondary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-primary');
 
-    expectOneMatch();
+    expect(await expectMatches(2)).toBeTruthy();
   });
 
   it('updates displayed jobs based on selected sub filter button', async () => {
@@ -254,7 +290,7 @@ describe('filter', () => {
     expect(buttons[3]).toHaveClass('btn-filter btn btn-secondary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-primary');
 
-    expectOneMatch();
+    expect(await expectMatches(2)).toBeTruthy();
   });
 
   it('updates displayed jobs based on all selected filter button', async () => {
@@ -269,10 +305,7 @@ describe('filter', () => {
     expect(buttons[0]).toHaveClass('btn-filter btn btn-secondary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-secondary');
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 0 Jobs');
-    const cards = screen.queryByText('job card');
-    expect(cards).toBeNull();
+    expect(await expectMatches(0)).toBeTruthy();
   });
 
   it('updates displayed jobs based on all selected sub filter button', async () => {
@@ -287,10 +320,7 @@ describe('filter', () => {
     expect(buttons[3]).toHaveClass('btn-filter btn btn-secondary');
     expect(buttons[4]).toHaveClass('btn-filter btn btn-secondary');
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 0 Jobs');
-    const cards = screen.queryByText('job card');
-    expect(cards).toBeNull();
+    expect(await expectMatches(0)).toBeTruthy();
   });
 
   it('updates displayed jobs based on unselected selected filter button', async () => {
@@ -308,7 +338,7 @@ describe('filter', () => {
     expect(buttons[0]).toHaveClass('btn-filter btn btn-primary');
     expect(buttons[1]).toHaveClass('btn-filter btn btn-secondary');
 
-    expectOneMatch();
+    await expectOneMatch();
   });
 
   it('updates displayed jobs based on unselected selected sub filter button', async () => {
@@ -326,72 +356,74 @@ describe('filter', () => {
     expect(buttons[3]).toHaveClass('btn-filter btn btn-primary');
     expect(buttons[4]).toHaveClass('btn-filter btn btn-secondary');
 
-    expectOneMatch();
+    await expectOneMatch();
   });
 
   it('updates displayed jobs based on text in search box', async () => {
     await act(async () => {
       filter = render(
         <Filter
-          currentUser={{ lat: 38.8462236, lon: -77.3063733 }}
-          filter="details"
+          currentUser={{ token: 1234, lat: 38.8462236, lon: -77.3063733 }}
+          filter="other"
         />
       );
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 2 Jobs');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(2);
+    await server.connected;
+    server.send(JSON.stringify(jobs));
+    expect(await expectOneMatch()).toBeTruthy();
   });
 
   it('updates displayed jobs based on filtered text in search box', async () => {
     await act(async () => {
       filter = render(
         <Filter
-          currentUser={{ lat: 38.8462236, lon: -77.3063733 }}
+          currentUser={{ token: 1234, lat: 38.8462236, lon: -77.3063733 }}
           filter="some"
         />
       );
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
-    expect(expectOneMatch()).toBeTruthy();
+    await server.connected;
+    server.send(JSON.stringify(jobs));
+    expect(await expectOneMatch()).toBeTruthy();
   });
 
   it('updates displayed jobs based on different user home location', async () => {
     await act(async () => {
       filter = render(
-        <Filter currentUser={{ lat: '38.8051095', lon: '-77.0470229' }} />
+        <Filter
+          currentUser={{ token: 1234, lat: '39.8051095', lon: '-77.0470229' }}
+        />
       );
       const { container } = filter;
       await waitFor(() => container.firstChild);
     });
-    expect(expectOneMatch()).toBeTruthy();
+    await server.connected;
+    server.send(JSON.stringify(jobs));
+    expect(await expectOneMatch()).toBeTruthy();
   });
 
   it('updates displayed jobs based on mileage dropdown', async () => {
     await basicFilter();
     const select = screen.getByLabelText('Within Miles');
-    act(() => {
-      fireEvent.change(select, { target: { value: '25' } });
+    await act(async () => {
+      fireEvent.change(select, { target: { value: '5' } });
     });
-    expect(select.children[0].selected).toBeFalsy();
-    expect(select.children[1].selected).toBeTruthy();
+    expect(select.children[0].selected).toBeTruthy();
+    expect(select.children[1].selected).toBeFalsy();
     expect(select.children[2].selected).toBeFalsy();
     expect(select.children[3].selected).toBeFalsy();
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 3 Jobs');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(3);
+    expect(await expectMatches(2)).toBeTruthy();
   });
 
   it('updates displayed jobs based on further mileage dropdown', async () => {
     await basicFilter();
     const select = screen.getByLabelText('Within Miles');
-    act(() => {
+    await act(async () => {
       fireEvent.change(select, { target: { value: '250' } });
     });
     expect(select.children[0].selected).toBeFalsy();
@@ -399,10 +431,7 @@ describe('filter', () => {
     expect(select.children[2].selected).toBeFalsy();
     expect(select.children[3].selected).toBeTruthy();
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 4 Jobs');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(4);
+    expect(await expectMatches(4)).toBeTruthy();
   });
 
   it('updates displayed jobs based on from where dropdown', async () => {
@@ -415,7 +444,7 @@ describe('filter', () => {
     expect(select.children[1].selected).toBeTruthy();
     expect(select.children[2].selected).toBeFalsy();
 
-    expectOneMatch();
+    await expectOneMatch();
   });
 
   it('updates displayed jobs based on custom where dropdown', async () => {
@@ -428,8 +457,7 @@ describe('filter', () => {
     expect(select.children[1].selected).toBeFalsy();
     expect(select.children[2].selected).toBeTruthy();
 
-    let header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 0 Jobs');
+    expect(await expectMatches(0)).toBeTruthy();
 
     // select fairfax as the location
     await act(async () => {
@@ -439,10 +467,7 @@ describe('filter', () => {
       await new Promise((r) => setTimeout(r, 1000));
     });
 
-    header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 2 Jobs');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(2);
+    expect(await expectMatches(3)).toBeTruthy();
   });
 
   it('updates displayed jobs based on my home dropdown', async () => {
@@ -458,9 +483,6 @@ describe('filter', () => {
     expect(select.children[1].selected).toBeFalsy();
     expect(select.children[2].selected).toBeFalsy();
 
-    const header = screen.getByRole('heading', { level: 3 });
-    expect(header.textContent).toEqual('Found 2 Jobs');
-    const cards = screen.getAllByText('job card');
-    expect(cards).toHaveLength(2);
+    expect(await expectMatches(3)).toBeTruthy();
   });
 });

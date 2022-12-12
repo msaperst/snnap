@@ -23,7 +23,7 @@ describe('settings page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('allows us to navigate to the settings', async () => {
+  it('allows us to navigate to the settings @network @accessibility', async () => {
     await driver.get(Test.getApp());
     const dropDownMenu = driver.wait(
       until.elementLocated(By.id('user-dropdown')),
@@ -37,7 +37,7 @@ describe('settings page', () => {
     driver.wait(until.elementIsVisible(settingsLink), 5000);
     await settingsLink.click();
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/settings`);
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual(
+    expect(await driver.findElement(By.css('h1')).getText()).toEqual(
       'Settings'
     );
   });
@@ -59,7 +59,7 @@ describe('settings page', () => {
   });
 
   it('has 3 different forms for account information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.wait(until.elementLocated(By.css('h1')), 5000);
     const forms = await driver.findElements(By.css('form'));
     expect(await forms[0].isDisplayed()).toBeTruthy();
     expect(await forms[1].isDisplayed()).toBeTruthy();
@@ -69,8 +69,8 @@ describe('settings page', () => {
     expect(await forms[5].isDisplayed()).toBeFalsy();
   });
 
-  it('has 1 form for personal information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
+  it('has 1 form for personal information @network @accessibility', async () => {
+    driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
     const forms = await driver.findElements(By.css('form'));
     expect(await forms[0].isDisplayed()).toBeFalsy();
@@ -81,8 +81,8 @@ describe('settings page', () => {
     expect(await forms[5].isDisplayed()).toBeFalsy();
   });
 
-  it('has 2 different forms for company information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
+  it('has 2 different forms for company information @network @accessibility', async () => {
+    driver.wait(until.elementLocated(By.css('h1')), 5000);
     driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
     const forms = await driver.findElements(By.css('form'));
     expect(await forms[0].isDisplayed()).toBeFalsy();

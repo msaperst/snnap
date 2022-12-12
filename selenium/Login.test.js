@@ -21,12 +21,12 @@ describe('log in page', () => {
     await test.cleanUp();
   }, 15000);
 
-  it('takes you to the login page when not authenticated', async () => {
+  it('takes you to the login page when not authenticated @network @accessibility', async () => {
     expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/login`);
-    expect(await driver.findElement(By.css('h2')).getText()).toEqual('Login');
+    expect(await driver.findElement(By.css('h1')).getText()).toEqual('Login');
   });
 
-  it('shows error when you login with blank credentials', async () => {
+  it('shows error when you login with blank credentials @network @accessibility', async () => {
     const feedback = await driver.findElements(
       By.className('invalid-feedback')
     );
@@ -46,7 +46,7 @@ describe('log in page', () => {
     expect(await feedback[1].isDisplayed()).toBeTruthy();
   });
 
-  it('allows you to login with a valid user', async () => {
+  it('allows you to login with a valid user @network @accessibility', async () => {
     await driver.findElement(By.id('formUsername')).sendKeys('loginUser');
     await driver.findElement(By.id('formPassword')).sendKeys('password');
     await driver.findElement(By.id('loginButton')).click();
@@ -57,7 +57,7 @@ describe('log in page', () => {
     expect(await dropDownMenu.getText()).toEqual('loginUser');
   });
 
-  it('does not allow you to login with an invalid user', async () => {
+  it('does not allow you to login with an invalid user @network @accessibility', async () => {
     await driver.findElement(By.id('formUsername')).sendKeys('some bad user');
     await driver.findElement(By.id('formPassword')).sendKeys('password');
     await driver.findElement(By.id('loginButton')).click();
@@ -81,10 +81,10 @@ describe('log in page', () => {
     expect(await alert.getText()).toEqual('Username or password is incorrect!');
   });
 
-  it('allows you to navigate to the register page', async () => {
+  it('allows you to navigate to the register page @network @accessibility', async () => {
     await driver.findElement(By.linkText('Sign Up')).click();
     await driver.wait(until.elementLocated(By.id('formFirstname')), 5000);
-    const header = driver.findElement(By.css('h2'));
+    const header = driver.findElement(By.css('h1'));
     expect(await header.getText()).toEqual('Register');
   });
 

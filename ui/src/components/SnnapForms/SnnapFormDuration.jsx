@@ -23,6 +23,7 @@ function SnnapFormDuration(props) {
       step={0.25}
       min={0}
       aria-describedby={`inputGroup${safeName}`}
+      aria-label={`${name} Min`}
       onChange={change}
     />
   );
@@ -38,6 +39,7 @@ function SnnapFormDuration(props) {
           step={0.25}
           min={0}
           aria-describedby={`inputGroup${safeName}`}
+          aria-label={`${name} Max`}
           onChange={changeRange}
         />
       </>
@@ -58,6 +60,7 @@ function SnnapFormDuration(props) {
           <Form.Switch
             id={`setRange${safeName}`}
             className="range-switch"
+            aria-label="Range Switch"
             onClick={() => {
               setRange(!range);
               if (range) {

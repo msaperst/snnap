@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row } from 'react-bootstrap';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
+import SnnapFormTextarea from '../SnnapForms/SnnapFormTextarea';
 
 function JobDetail(props) {
   const { job } = props;
@@ -8,7 +9,7 @@ function JobDetail(props) {
   return (
     <>
       <Row className="mb-3">
-        <h3>Job Information</h3>
+        <h2 className="h3">Job Information</h2>
       </Row>
       <Row className="mb-3">
         <SnnapFormInput size={6} name="Job Type" value={job.type} disabled />
@@ -57,12 +58,7 @@ function JobDetail(props) {
         />
       </Row>
       <Row className="mb-3">
-        <SnnapFormInput
-          name="Job Details"
-          value={job.details}
-          type="textarea"
-          disabled
-        />
+        <SnnapFormTextarea name="Job Details" value={job.details} disabled />
       </Row>
       <Row className="mb-3">
         <SnnapFormInput

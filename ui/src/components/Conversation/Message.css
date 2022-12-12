@@ -9,7 +9,7 @@
 .self-message > span {
     float: right;
     background: #42a5f5;
-    color: #fff !important;
+    color: #000000 !important;
     border-radius: 20px 20px 3px 20px;
     display: block;
     max-width: 75%;
@@ -19,7 +19,7 @@
 .them-message > span {
     float: left;
     background: #f1f1f1;
-    color: #000 !important;
+    color: #000000 !important;
     border-radius: 20px 20px 20px 3px;
     display: block;
     max-width: 75%;

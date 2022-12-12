@@ -1,14 +1,15 @@
 import React from 'react';
-import { Form, Modal, Row } from 'react-bootstrap';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { jobService } from '../../services/job.service';
+import { Form, Modal, Row } from 'react-bootstrap';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import SnnapFormPrice from '../SnnapForms/SnnapFormPrice';
 import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
 import SnnapFormLocationInput from '../SnnapForms/SnnapFormLocationInput';
 import SnnapFormSelect from '../SnnapForms/SnnapFormSelect';
 import SnnapFormDuration from '../SnnapForms/SnnapFormDuration';
+import SnnapFormTextarea from '../SnnapForms/SnnapFormTextarea';
 import Submit from '../Submit/Submit';
+import { jobService } from '../../services/job.service';
 import { commonFormComponents } from '../CommonFormComponents';
 
 class NewJob extends React.Component {
@@ -167,6 +168,7 @@ class NewJob extends React.Component {
           show={show}
           onHide={() => this.setState({ show: false })}
           data-testid="newJobModal"
+          aria-label="Create New Job"
         >
           <Modal.Header closeButton>
             <Modal.Title>Create a new job</Modal.Title>
@@ -220,9 +222,8 @@ class NewJob extends React.Component {
                 />
               </Row>
               <Row className="mb-3">
-                <SnnapFormInput
+                <SnnapFormTextarea
                   name="Job Details"
-                  type="textarea"
                   onChange={this.updateForm}
                 />
               </Row>

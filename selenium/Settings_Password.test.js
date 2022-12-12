@@ -25,9 +25,9 @@ describe('settings password page', () => {
   }, 15000);
 
   it('shows the password', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
+    driver.wait(until.elementLocated(By.css('h1')), 5000);
     const password = (await driver.findElements(By.css('form')))[1];
-    expect(await password.findElement(By.css('h3')).getText()).toEqual(
+    expect(await password.findElement(By.css('h2')).getText()).toEqual(
       'Password'
     );
   });
@@ -50,8 +50,8 @@ describe('settings password page', () => {
     expect(await newPassword.getAttribute('disabled')).toBeNull();
   });
 
-  it('shows error when you update password blank information', async () => {
-    driver.wait(until.elementLocated(By.css('h2')), 5000);
+  it('shows error when you update password blank information @network @accessibility', async () => {
+    driver.wait(until.elementLocated(By.css('h1')), 5000);
     const settings = (await driver.findElements(By.css('form')))[1];
     const feedbacks = await settings.findElements(
       By.className('invalid-feedback')
@@ -73,7 +73,7 @@ describe('settings password page', () => {
     }
   });
 
-  it('allows updating the password values', async () => {
+  it('allows updating the password values @network @accessibility', async () => {
     const currentPassword = driver.wait(
       until.elementLocated(By.id('formCurrentPassword')),
       5000
@@ -98,7 +98,7 @@ describe('settings password page', () => {
     ).toHaveLength(0);
   });
 
-  it('does not allow updating with a bad password', async () => {
+  it('does not allow updating with a bad password @network @accessibility', async () => {
     const currentPassword = driver.wait(
       until.elementLocated(By.id('formCurrentPassword')),
       5000
@@ -138,14 +138,14 @@ describe('settings password page', () => {
     return { danger, currentPassword, newPassword };
   }
 
-  it('does not allow updating with a too short password', async () => {
+  it('does not allow updating with a too short password @network @accessibility', async () => {
     const { danger } = await checkPasswordFields();
     expect(await danger.getText()).toEqual(
       'Password must be 6 or more characters'
     );
   });
 
-  it('password error message goes away once success is had', async () => {
+  it('password error message goes away once success is had @network @accessibility', async () => {
     const { danger, currentPassword, newPassword } =
       await checkPasswordFields();
     expect(await danger.getText()).toEqual(

@@ -8,7 +8,7 @@
   border-radius: 50%;
   background-size: cover;
   background-position: center;
-  cursor: pointer;
+  position: relative;
 }
 
 .circle:after {

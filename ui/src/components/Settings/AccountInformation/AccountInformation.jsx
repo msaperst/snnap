@@ -59,7 +59,7 @@ function AccountInformation(props) {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <h3>Account Information</h3>
+      <h2 className="h3">Account Information</h2>
       <Row className="mb-3">
         <EditAvatar user={user} />
         <Col md={9}>

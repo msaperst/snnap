@@ -56,31 +56,40 @@ function ProfileHeader(props) {
     avatarNav = () => navigate(`/profile/${user.username}`);
   }
 
+  let companyName;
+  if (company.company_name) {
+    companyName = <h2 className="h3">{company.company_name}</h2>;
+  } else if (company.name) {
+    companyName = <h2 className="h3">{company.name}</h2>;
+  } else {
+    companyName = '';
+  }
+
   return (
     <Row>
       {radioButton}
       <Col md={2} xs={4}>
-        <Avatar
-          avatar={user.avatar}
-          firstname={user.first_name}
-          lastname={user.last_name}
-          onClick={avatarNav}
-        />
-        <span className="rating">{rating}</span>
-        <span className="message">{message}</span>
+        <div style={{ position: 'relative' }}>
+          <Avatar
+            avatar={user.avatar}
+            firstname={user.first_name}
+            lastname={user.last_name}
+            onClick={avatarNav}
+          />
+          <span className="rating">{rating}</span>
+          <span className="message">{message}</span>
+        </div>
       </Col>
       <Col>
         <Row>
           <Col>
-            <h2 id={`job-application-${company.id}-name`}>
+            <h1 className="h2" id={`job-application-${company.id}-name`}>
               {company.user_name || `${user.first_name} ${user.last_name}`}
-            </h2>
+            </h1>
           </Col>
         </Row>
         <Row>
-          <Col id={`job-application-${company.id}-company`}>
-            <h3>{company.company_name || company.name}</h3>
-          </Col>
+          <Col id={`job-application-${company.id}-company`}>{companyName}</Col>
         </Row>
       </Col>
     </Row>

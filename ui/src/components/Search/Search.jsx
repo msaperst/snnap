@@ -12,7 +12,9 @@ function Search(props) {
       <Row>
         <Col sm={12} md={6}>
           <h1 id="tagline">Photography help in a snap</h1>
-          <h4 id="subTagline">The extra n is for easy</h4>
+          <h2 className="h4" id="subTagline">
+            The extra n is for easy
+          </h2>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
             id urna ligula. In fringilla ullamcorper nulla. Nam iaculis quam
@@ -35,7 +37,11 @@ function Search(props) {
                 placeholder="Search For Job"
                 onChange={filter}
               />
-              <Button type="submit" id="searchForJobButton">
+              <Button
+                type="submit"
+                aria-label="Submit Search For Job"
+                id="searchForJobButton"
+              >
                 <FaSearch />
               </Button>
             </InputGroup>
