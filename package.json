@@ -35,11 +35,11 @@
     ]
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "jest-html-reporters": "^3.0.11",
-    "selenium-webdriver": "^4.6.1",
     "axe-core": "^4.5.2",
-    "chromedriver": "^107.0.3"
+    "bcryptjs": "^2.4.3",
+    "chromedriver": "^108.0.0",
+    "jest-html-reporters": "^3.0.11",
+    "selenium-webdriver": "^4.7.0"
   },
   "devDependencies": {
     "eslint": "8.29.0",
