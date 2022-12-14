@@ -211,10 +211,10 @@ function PrivacyPolicy(props) {
             shared. - See more at:{' '}
             <a
               target="_blank"
-              href="http://consumercal.org/california-online-privacy-protection-act-caloppa/#sthash.0FdRbT51.dpuf"
+              href="https://consumercal.org/california-online-privacy-protection-act-caloppa/#sthash.0FdRbT51.dpuf"
               rel="noreferrer"
             >
-              http://consumercal.org/california-online-privacy-protection-act-caloppa/#sthash.0FdRbT51.dpuf
+              https://consumercal.org/california-online-privacy-protection-act-caloppa/#sthash.0FdRbT51.dpuf
             </a>
             .
           </p>

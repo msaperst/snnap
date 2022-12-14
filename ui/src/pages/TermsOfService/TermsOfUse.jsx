@@ -375,10 +375,10 @@ function TermsOfUse() {
             at{' '}
             <a
               target="_blank"
-              href="http://www.contractology.com."
+              href="https://www.contractology.com."
               rel="noreferrer"
             >
-              http://www.contractology.com
+              https://www.contractology.com
             </a>
             .
           </p>
