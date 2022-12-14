@@ -32,10 +32,11 @@ function register(firstName, lastName, location, email, username, password) {
       password,
     }),
   };
+  const cookies = JSON.parse(localStorage.getItem('cookies'));
 
   return fetch(`/api/auth/register`, requestOptions)
     .then(handleResponse)
-    .then(() => login(username, password, true));
+    .then(() => login(username, password, !cookies || cookies.preferences));
 }
 
 function forgot(email) {

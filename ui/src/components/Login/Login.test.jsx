@@ -18,12 +18,38 @@ jest.mock('react-router-dom', () => ({
   Link: (props) => <a {...props} href={props.to} />,
 }));
 
+const fakeLocalStorage = (function () {
+  let store = {};
+
+  return {
+    getItem(key) {
+      return store[key] || null;
+    },
+    setItem(key, value) {
+      store[key] = value.toString();
+    },
+    removeItem(key) {
+      delete store[key];
+    },
+    clear() {
+      store = {};
+    },
+  };
+})();
+
 describe('login', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, 'localStorage', {
+      value: fakeLocalStorage,
+    });
+  });
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
 
     useLocation.mockImplementation(() => jest.fn());
+    localStorage.clear();
   });
 
   it('renders header properly', () => {
@@ -251,6 +277,113 @@ describe('login', () => {
     await fillOutForm(container.firstChild);
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(0);
     expect(mockedNavigate).toHaveBeenCalledWith('/path', { replace: true });
+  });
+
+  it('displays remember me without any cookie localstorage', () => {
+    const { container } = render(<Login />);
+    expect(container.firstChild.children[3].firstChild.children).toHaveLength(
+      1
+    );
+  });
+
+  it('displays remember me with localstorage preferences cookie', () => {
+    const cookies = {};
+    cookies.preferences = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    const { container } = render(<Login />);
+    expect(container.firstChild.children[3].firstChild.children).toHaveLength(
+      1
+    );
+  });
+
+  it('does not display remember me with localstorage preferences cookie set to false', () => {
+    const cookies = {};
+    cookies.preferences = false;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    const { container } = render(<Login />);
+    expect(container.firstChild.children[3].firstChild.children).toHaveLength(
+      0
+    );
+  });
+
+  it('sets remember to checked value (false) when no cookie', async () => {
+    const spy = jest.spyOn(
+      authenticationService.authenticationService,
+      'login'
+    );
+    authenticationService.authenticationService.login.mockRejectedValue(
+      'Some Error'
+    );
+    const { container } = render(<Login />);
+    fireEvent.click(
+      container.firstChild.children[3].firstChild.firstChild.firstChild
+    );
+    await fillOutForm(container.firstChild);
+    expect(spy).toHaveBeenCalledWith('username', 'password', false);
+  });
+
+  it('sets remember to checked value (true) when no cookie', async () => {
+    const spy = jest.spyOn(
+      authenticationService.authenticationService,
+      'login'
+    );
+    authenticationService.authenticationService.login.mockRejectedValue(
+      'Some Error'
+    );
+    const { container } = render(<Login />);
+    await fillOutForm(container.firstChild);
+    expect(spy).toHaveBeenCalledWith('username', 'password', true);
+  });
+
+  it('sets remember to false when localstorage preferences cookie set to false', async () => {
+    const cookies = {};
+    cookies.preferences = false;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    const spy = jest.spyOn(
+      authenticationService.authenticationService,
+      'login'
+    );
+    authenticationService.authenticationService.login.mockRejectedValue(
+      'Some Error'
+    );
+    const { container } = render(<Login />);
+    await fillOutForm(container.firstChild);
+    expect(spy).toHaveBeenCalledWith('username', 'password', false);
+  });
+
+  it('sets remember to checked value (false) when localstorage preferences cookie set to true', async () => {
+    const cookies = {};
+    cookies.preferences = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    const spy = jest.spyOn(
+      authenticationService.authenticationService,
+      'login'
+    );
+    authenticationService.authenticationService.login.mockRejectedValue(
+      'Some Error'
+    );
+    const { container } = render(<Login />);
+    fireEvent.click(
+      container.firstChild.children[3].firstChild.firstChild.firstChild
+    );
+    await fillOutForm(container.firstChild);
+    expect(spy).toHaveBeenCalledWith('username', 'password', false);
+  });
+
+  it('sets remember to checked value (true) when localstorage preferences cookie set to true', async () => {
+    const cookies = {};
+    cookies.preferences = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    const spy = jest.spyOn(
+      authenticationService.authenticationService,
+      'login'
+    );
+    authenticationService.authenticationService.login.mockRejectedValue(
+      'Some Error'
+    );
+    const { container } = render(<Login />);
+    await fillOutForm(container.firstChild);
+    expect(spy).toHaveBeenCalledWith('username', 'password', true);
   });
 
   async function fillOutForm(form) {

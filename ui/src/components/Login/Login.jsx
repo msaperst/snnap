@@ -15,6 +15,7 @@ function Login() {
   const [formData, setFormData] = useState({ rememberMe: true });
 
   const location = useLocation();
+  const cookies = JSON.parse(localStorage.getItem('cookies'));
 
   let from = '/';
   if (location.state && location.state.from && location.state.from.pathname) {
@@ -28,7 +29,11 @@ function Login() {
     if (form.checkValidity() === true) {
       setIsSubmitting(true);
       authenticationService
-        .login(formData.Username, formData.Password, formData.rememberMe)
+        .login(
+          formData.Username,
+          formData.Password,
+          (!cookies || cookies.preferences) && formData.rememberMe
+        )
         .then(
           () => {
             navigate(from, { replace: true });
@@ -61,12 +66,14 @@ function Login() {
       </Row>
       <Row className="mb-3">
         <Col xs={5}>
-          <Form.Check
-            id="rememberMe"
-            label="Remember Me"
-            onClick={setRemembered}
-            defaultChecked
-          />
+          {(!cookies || cookies.preferences) && (
+            <Form.Check
+              id="rememberMe"
+              label="Remember Me"
+              onClick={setRemembered}
+              defaultChecked
+            />
+          )}
         </Col>
         <Col xs={7} className="text-end">
           <ForgotPassword />
