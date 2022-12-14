@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Row } from 'react-bootstrap';
 import { authenticationService } from '../../services/authentication.service';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
@@ -145,7 +145,11 @@ function Register() {
         <Form.Check
           required
           id="agreeToTerms"
-          label="Agree to terms and conditions"
+          label={
+            <>
+              Agree to <Link to="/terms-of-use">terms of use</Link>
+            </>
+          }
           feedback="You must agree before submitting."
           feedbackType="invalid"
         />
