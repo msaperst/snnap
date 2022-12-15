@@ -5,7 +5,7 @@ import './Footer.css';
 
 function Footer() {
   return (
-    <Row className="footer">
+    <Row className="footer" role="contentinfo">
       <Col className="text-start">
         Copyright © SNNAP {new Date().getFullYear()}
       </Col>

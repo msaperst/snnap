@@ -54,7 +54,11 @@ function GDPR(props) {
   };
 
   return (
-    <Modal show={showGDPR} onHide={() => setShowGDPR(false)}>
+    <Modal
+      show={showGDPR}
+      onHide={() => setShowGDPR(false)}
+      aria-label="Cookies & Privacy Policy"
+    >
       <Modal.Header closeButton>
         <Modal.Title>Cookies & Privacy Policy</Modal.Title>
       </Modal.Header>
@@ -78,13 +82,14 @@ function GDPR(props) {
       </Modal.Body>
       <Modal.Footer>
         <Button
+          id="customizePolicy"
           variant="secondary"
           onClick={customizeGdprSettings}
           disabled={customize}
         >
           Customize
         </Button>
-        <Button variant="primary" onClick={saveGdprSettings}>
+        <Button id="acceptPolicy" variant="primary" onClick={saveGdprSettings}>
           Accept
         </Button>
       </Modal.Footer>

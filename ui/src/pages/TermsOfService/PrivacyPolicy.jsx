@@ -128,7 +128,7 @@ function PrivacyPolicy(props) {
             <Button
               variant="link"
               onClick={() => showGDPR(true)}
-              style={{ padding: 0, display: 'contents' }}
+              style={{ padding: 0, top: '-2px', position: 'relative' }}
             >
               here
             </Button>

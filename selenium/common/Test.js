@@ -32,6 +32,18 @@ class Test {
       .forBrowser('chrome')
       .setChromeOptions(options)
       .build();
+    await driver.get(Test.getApp());
+
+    // set our gdpr as already entered
+    const cookies = {};
+    cookies.necessary = true;
+    cookies.preferences = true;
+    cookies.analytics = true;
+    await driver.executeScript(async (json) => {
+      localStorage.setItem('cookies', JSON.stringify(json));
+    }, cookies);
+
+    // load our page
     await driver.get(Test.getApp() + url);
     await driver.manage().window().setRect({ height: 1600, width: 1800 });
     this.driver = driver;
