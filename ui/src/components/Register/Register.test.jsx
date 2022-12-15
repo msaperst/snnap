@@ -13,6 +13,8 @@ const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedNavigate,
+  // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
+  Link: (props) => <a {...props} href={props.to} />,
 }));
 
 describe('register', () => {
@@ -199,7 +201,7 @@ describe('register', () => {
     expect(label.getAttribute('for')).toEqual('agreeToTerms');
     expect(label.getAttribute('disabled')).toBeNull();
     expect(label.getAttribute('title')).toEqual('');
-    expect(label).toHaveTextContent('Agree to terms and conditions');
+    expect(label).toHaveTextContent('Agree to terms of use');
   });
 
   it('has 2 items in the last row', () => {

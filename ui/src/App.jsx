@@ -5,6 +5,8 @@ import { Col, Row } from 'react-bootstrap';
 import { authenticationService } from './services/authentication.service';
 import { PrivateRoute } from './helpers/PrivateRoute';
 import Menu from './components/Menu/Menu';
+import GDPR from './components/GDPR/GDPR';
+import Footer from './components/Footer/Footer';
 import './App.css';
 
 const HomePage = lazy(() => import('./pages/Home/HomePage'));
@@ -20,11 +22,16 @@ const Jobs = lazy(() => import('./pages/Jobs/Jobs'));
 const JobApplications = lazy(() =>
   import('./pages/JobApplications/JobApplications')
 );
+const TermsOfUse = lazy(() => import('./pages/TermsOfService/TermsOfUse'));
+const PrivacyPolicy = lazy(() =>
+  import('./pages/TermsOfService/PrivacyPolicy')
+);
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
 function App() {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
+  const [showGDPR, setShowGDPR] = useState(false);
 
   useEffect(() => {
     authenticationService.currentUser.subscribe((x) => {
@@ -39,6 +46,7 @@ function App() {
 
   return (
     <Container>
+      <GDPR showGDPR={showGDPR} setShowGDPR={setShowGDPR} />
       <Row>
         <Col>
           <Menu currentUser={currentUser} logout={logout} />
@@ -105,10 +113,16 @@ function App() {
             />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/terms-of-use" element={<TermsOfUse />} />
+            <Route
+              path="/privacy-policy"
+              element={<PrivacyPolicy showGDPR={setShowGDPR} />}
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </Container>
+      <Footer />
     </Container>
   );
 }
