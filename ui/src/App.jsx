@@ -13,7 +13,7 @@ const options = {};
 if (window.location.hostname === 'localhost') {
   options.debug = true;
 }
-ReactGA.initialize('UA-000000-01', options);
+ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_CODE, options);
 
 const HomePage = lazy(() => import('./pages/Home/HomePage'));
 const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
