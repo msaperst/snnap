@@ -50,7 +50,7 @@ function App() {
   useEffect(() => {
     const cookies = JSON.parse(localStorage.getItem('cookies'));
     if (!cookies || cookies.analytics) {
-      ReactGA.pageview(window.location.pathname + window.location.search);
+      ReactGA.pageview(window.location.pathname);
     }
   }, [location]);
 

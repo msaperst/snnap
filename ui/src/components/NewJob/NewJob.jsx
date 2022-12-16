@@ -91,6 +91,7 @@ class NewJob extends React.Component {
               if (this.isMountedVal) {
                 this.setState(state);
               }
+              commonFormComponents.setPageView();
             }, 'New Job Submitted');
           },
           (error) => {
@@ -158,7 +159,10 @@ class NewJob extends React.Component {
         <div>
           <NavDropdown.Item
             id="openNewJobButton"
-            onClick={() => this.setState({ validated: false, show: true })}
+            onClick={() => {
+              this.setState({ validated: false, show: true });
+              commonFormComponents.setPageView('new-job');
+            }}
           >
             Create New Job
           </NavDropdown.Item>
@@ -166,7 +170,10 @@ class NewJob extends React.Component {
         <Modal
           size="lg"
           show={show}
-          onHide={() => this.setState({ show: false })}
+          onHide={() => {
+            this.setState({ show: false });
+            commonFormComponents.setPageView();
+          }}
           data-testid="newJobModal"
           aria-label="Create New Job"
         >
