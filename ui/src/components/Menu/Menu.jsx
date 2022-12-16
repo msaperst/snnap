@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import './Menu.css';
-import { Badge } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown, Badge } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import snnapLogo from './SNNAP.png';
 import NewJob from '../NewJob/NewJob';
 import useWebSocketLite from '../../helpers/useWebSocketLite';
 import Rate from '../Rate/Rate';
+import './Menu.css';
 
 function Menu(props) {
   let collapse = null;
@@ -81,25 +78,29 @@ function Menu(props) {
         <Nav className="ml-auto">
           <NavDropdown title="My Jobs" id="gig-dropdown">
             <NewJob />
-            <NavDropdown.Item href="/jobs">
-              Created Job Postings
-            </NavDropdown.Item>
-            <NavDropdown.Item href="/job-applications">
-              Submitted Applications
-            </NavDropdown.Item>
+            <LinkContainer to="/jobs">
+              <NavDropdown.Item>Created Job Postings</NavDropdown.Item>
+            </LinkContainer>
+            <LinkContainer to="/job-applications">
+              <NavDropdown.Item>Submitted Applications</NavDropdown.Item>
+            </LinkContainer>
           </NavDropdown>
           <NavDropdown
             title={`${currentUser.username}${bell}`}
             id="user-dropdown"
           >
-            <NavDropdown.Item href="/notifications">
-              Notifications{alerts}
-            </NavDropdown.Item>
-            <NavDropdown.Item href="/chat">Chat{messages}</NavDropdown.Item>
-            <NavDropdown.Item href={`/profile/${currentUser.username}`}>
-              My Profile
-            </NavDropdown.Item>
-            <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+            <LinkContainer to="/notifications">
+              <NavDropdown.Item>Notifications{alerts}</NavDropdown.Item>
+            </LinkContainer>
+            <LinkContainer to="/chat">
+              <NavDropdown.Item>Chat{messages}</NavDropdown.Item>
+            </LinkContainer>
+            <LinkContainer to={`/profile/${currentUser.username}`}>
+              <NavDropdown.Item>My Profile</NavDropdown.Item>
+            </LinkContainer>
+            <LinkContainer to="/settings">
+              <NavDropdown.Item>Settings</NavDropdown.Item>
+            </LinkContainer>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
           </NavDropdown>
@@ -112,13 +113,15 @@ function Menu(props) {
     <>
       <Navbar variant="dark" expand="lg" role="navigation">
         <Container>
-          <Navbar.Brand href="/">
-            <img
-              alt="SNNAP"
-              src={snnapLogo}
-              className="d-inline-block align-top logo"
-            />
-          </Navbar.Brand>
+          <LinkContainer to="/">
+            <Navbar.Brand>
+              <img
+                alt="SNNAP"
+                src={snnapLogo}
+                className="d-inline-block align-top logo"
+              />
+            </Navbar.Brand>
+          </LinkContainer>
           {collapse}
           {menu}
         </Container>
