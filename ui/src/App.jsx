@@ -8,6 +8,7 @@ import Menu from './components/Menu/Menu';
 import GDPR from './components/GDPR/GDPR';
 import Footer from './components/Footer/Footer';
 import './App.css';
+import { commonFormComponents } from "./components/CommonFormComponents";
 
 const options = {};
 if (window.location.hostname === 'localhost') {
@@ -48,10 +49,7 @@ function App() {
   });
 
   useEffect(() => {
-    const cookies = JSON.parse(localStorage.getItem('cookies'));
-    if (!cookies || cookies.analytics) {
-      ReactGA.pageview(window.location.pathname);
-    }
+    commonFormComponents.setPageView();
   }, [location]);
 
   const logout = () => {
