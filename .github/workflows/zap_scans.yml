@@ -84,6 +84,7 @@ jobs:
           echo "API_LIMIT=10000" >> .env
           echo "" >> .env
           echo "# third party information" >> .env
+          echo "GA_TRACKING_CODE=UA-000000-01" >> .env
           echo "GEOAPIFY_API_KEY=${{ secrets.GEOAPIFY_API_KEY }}" >> .env
           echo "" >> .env
           echo "# email info" >> .env

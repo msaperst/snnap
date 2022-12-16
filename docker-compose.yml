@@ -53,6 +53,7 @@ services:
         REACT_APP_DOMAIN: ${DOMAIN}
         REACT_APP_WS_PROTOCOL: ${WS_PROTOCOL}
         REACT_APP_WS_PORT: ${WS_PORT}
+        REACT_APP_GA_TRACKING_CODE: ${GA_TRACKING_CODE}
         REACT_APP_GEOAPIFY_API_KEY: ${GEOAPIFY_API_KEY}
     container_name: snnap_ui
     restart: always
