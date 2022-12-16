@@ -1,13 +1,20 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import { Col, Row } from 'react-bootstrap';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import ReactGA from 'react-ga';
+import { Container, Col, Row } from 'react-bootstrap';
 import { authenticationService } from './services/authentication.service';
+import { commonFormComponents } from './components/CommonFormComponents';
 import { PrivateRoute } from './helpers/PrivateRoute';
 import Menu from './components/Menu/Menu';
 import GDPR from './components/GDPR/GDPR';
 import Footer from './components/Footer/Footer';
 import './App.css';
+
+const options = {};
+if (window.location.hostname === 'localhost') {
+  options.debug = true;
+}
+ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_CODE, options);
 
 const HomePage = lazy(() => import('./pages/Home/HomePage'));
 const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
@@ -33,11 +40,17 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [showGDPR, setShowGDPR] = useState(false);
 
+  const location = useLocation();
+
   useEffect(() => {
     authenticationService.currentUser.subscribe((x) => {
       setCurrentUser(x);
     });
   });
+
+  useEffect(() => {
+    commonFormComponents.setPageView();
+  }, [location]);
 
   const logout = () => {
     authenticationService.logout();

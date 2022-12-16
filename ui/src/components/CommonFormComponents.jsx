@@ -1,6 +1,9 @@
+import ReactGA from 'react-ga';
+
 export const commonFormComponents = {
   setBasicSuccess,
   setRedrawSuccess,
+  setPageView,
 };
 
 function setBasicSuccess(
@@ -33,4 +36,11 @@ function setRedrawSuccess(updateState, message) {
     });
     // no need to redraw or do anything as new jobs/updates are pulled via websockets
   }, 5000);
+}
+
+function setPageView(path = '') {
+  const cookies = JSON.parse(localStorage.getItem('cookies'));
+  if (!cookies || cookies.analytics) {
+    ReactGA.pageview(window.location.pathname + path);
+  }
 }
