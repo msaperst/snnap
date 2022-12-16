@@ -15,6 +15,14 @@ jest.mock(
     }
 );
 
+const mockedNavigate = jest.fn();
+jest.mock('react-router-bootstrap', () => ({
+  ...jest.requireActual('react-router-bootstrap'),
+  useNavigate: () => mockedNavigate,
+  // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
+  LinkContainer: (props) => <span {...props} />,
+}));
+
 describe('menu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -112,11 +120,7 @@ describe('menu', () => {
     );
     expect(gigMenu.lastChild.getAttribute('data-bs-popper')).toEqual('static');
 
-    checkMenuItem(
-      gigMenu.lastChild.firstChild.firstChild,
-      '#',
-      'Create New Job'
-    );
+    checkMenuItem(gigMenu.lastChild.firstChild, null, 'Create New Job');
     expect(gigMenu.lastChild.firstChild.firstChild.getAttribute('id')).toEqual(
       'openNewJobButton'
     );
@@ -178,16 +182,25 @@ describe('menu', () => {
     );
     expect(userNav.lastChild.children[4]).toHaveTextContent('');
 
-    checkMenuItem(userNav.lastChild.lastChild, '#', 'Logout');
+    expect(userNav.lastChild.getAttribute('to')).toEqual(null);
+    expect(userNav.lastChild.lastChild).toHaveClass('dropdown-item');
+    expect(
+      userNav.lastChild.lastChild.getAttribute('data-rr-ui-dropdown-item')
+    ).toEqual('');
+    expect(userNav.lastChild.lastChild.getAttribute('href')).toEqual('#');
+    expect(userNav.lastChild.lastChild).toHaveTextContent('Logout');
     expect(userNav.lastChild.lastChild.getAttribute('role')).toEqual('button');
     expect(userNav.lastChild.lastChild.getAttribute('tabIndex')).toEqual('0');
   });
 
   function checkMenuItem(navItem, href, text) {
-    expect(navItem).toHaveClass('dropdown-item');
-    expect(navItem.getAttribute('data-rr-ui-dropdown-item')).toEqual('');
-    expect(navItem.getAttribute('href')).toEqual(href);
-    expect(navItem).toHaveTextContent(text);
+    expect(navItem.getAttribute('to')).toEqual(href);
+    expect(navItem.firstChild).toHaveClass('dropdown-item');
+    expect(navItem.firstChild.getAttribute('data-rr-ui-dropdown-item')).toEqual(
+      ''
+    );
+    expect(navItem.firstChild.getAttribute('href')).toEqual('#');
+    expect(navItem.firstChild).toHaveTextContent(text);
   }
 
   it('logs out when clicked', () => {
@@ -203,18 +216,18 @@ describe('menu', () => {
   });
 
   function checkMainBrand(container) {
-    expect(container.firstChild.firstChild.firstChild).toHaveClass(
-      'navbar-brand'
-    );
-    expect(container.firstChild.firstChild.firstChild.firstChild).toHaveClass(
+    const mainBrand = container.firstChild.firstChild.firstChild;
+    expect(mainBrand.children).toHaveLength(1);
+    expect(mainBrand.firstChild).toHaveClass('navbar-brand');
+    expect(mainBrand.firstChild.firstChild).toHaveClass(
       'd-inline-block align-top'
     );
-    expect(
-      container.firstChild.firstChild.firstChild.firstChild.getAttribute('alt')
-    ).toEqual('SNNAP');
-    expect(
-      container.firstChild.firstChild.firstChild.firstChild.getAttribute('src')
-    ).toEqual('SNNAP.png');
+    expect(mainBrand.firstChild.firstChild.getAttribute('alt')).toEqual(
+      'SNNAP'
+    );
+    expect(mainBrand.firstChild.firstChild.getAttribute('src')).toEqual(
+      'SNNAP.png'
+    );
     return true;
   }
 

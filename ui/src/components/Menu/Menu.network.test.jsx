@@ -15,6 +15,14 @@ jest.mock(
     }
 );
 
+const mockedNavigate = jest.fn();
+jest.mock('react-router-bootstrap', () => ({
+  ...jest.requireActual('react-router-bootstrap'),
+  useNavigate: () => mockedNavigate,
+  // eslint-disable-next-line jsx-a11y/anchor-has-content,react/destructuring-assignment
+  LinkContainer: (props) => <span {...props} />,
+}));
+
 describe('snnap menu', () => {
   beforeEach(() => {
     jest.clearAllMocks();
