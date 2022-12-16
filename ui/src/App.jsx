@@ -3,12 +3,12 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import { Container, Col, Row } from 'react-bootstrap';
 import { authenticationService } from './services/authentication.service';
+import { commonFormComponents } from './components/CommonFormComponents';
 import { PrivateRoute } from './helpers/PrivateRoute';
 import Menu from './components/Menu/Menu';
 import GDPR from './components/GDPR/GDPR';
 import Footer from './components/Footer/Footer';
 import './App.css';
-import { commonFormComponents } from "./components/CommonFormComponents";
 
 const options = {};
 if (window.location.hostname === 'localhost') {
