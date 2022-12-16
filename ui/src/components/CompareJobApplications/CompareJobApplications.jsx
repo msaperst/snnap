@@ -57,6 +57,7 @@ class CompareJobApplications extends React.Component {
               if (this.isMountedVal) {
                 this.setState(state);
               }
+              commonFormComponents.setPageView();
             }, 'Job Application Chosen');
           },
           (error) => {
@@ -101,7 +102,10 @@ class CompareJobApplications extends React.Component {
           <Button
             id={`openCompareJobApplicationsModal-${job.id}`}
             job={job.id}
-            onClick={() => this.setState({ show: true })}
+            onClick={() => {
+              this.setState({ show: true });
+              commonFormComponents.setPageView('compare');
+            }}
             className="btn-block"
           >
             {buttonText}
@@ -113,7 +117,10 @@ class CompareJobApplications extends React.Component {
         <Modal
           size="lg"
           show={show}
-          onHide={() => this.setState({ show: false })}
+          onHide={() => {
+            this.setState({ show: false });
+            commonFormComponents.setPageView();
+          }}
           data-testid={`compareJobApplicationsModal-${job.id}`}
           aria-label={`Applications for the ${job.type} Session`}
         >
