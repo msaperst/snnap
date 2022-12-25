@@ -69,7 +69,7 @@
     "react-router-dom": "^6.6.1",
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.0",
-    "rxjs": "^7.6.0"
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
