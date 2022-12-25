@@ -69,9 +69,10 @@
     "react-router-dom": "^6.6.1",
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.0",
-    "rxjs": "^7.6.0"
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.5",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@testing-library/dom": "^8.19.0",
     "@testing-library/jest-dom": "^5.16.5",
