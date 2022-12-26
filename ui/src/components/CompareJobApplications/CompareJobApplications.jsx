@@ -96,6 +96,19 @@ class CompareJobApplications extends React.Component {
       showCompareButton = false;
     }
 
+    // determine if we show the badge
+    let badge = '';
+    if (jobApplications.length) {
+      badge = (
+        <Badge bg="primary" className="float-end" pill>
+          {jobApplications.length}
+        </Badge>
+      );
+    } else {
+      buttonText = 'View Job Details';
+      showCompareButton = false;
+    }
+
     return (
       <>
         <div>
@@ -108,10 +121,7 @@ class CompareJobApplications extends React.Component {
             }}
             className="btn-block"
           >
-            {buttonText}
-            <Badge bg="primary" className="float-end" pill>
-              {jobApplications.length}
-            </Badge>
+            {buttonText} {badge}
           </Button>
         </div>
         <Modal
@@ -135,6 +145,11 @@ class CompareJobApplications extends React.Component {
               onSubmit={this.handleSubmit}
             >
               <JobDetail job={job} />
+              {jobApplications.length > 0 && (
+                <Row className="mb-3">
+                  <h2 className="h3">Applications</h2>
+                </Row>
+              )}
               <Row className="mb-3">
                 <Accordion>
                   {jobApplications.map((jobApplication) => (

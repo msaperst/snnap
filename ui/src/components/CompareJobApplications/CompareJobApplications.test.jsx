@@ -1,6 +1,7 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { act } from 'react-dom/test-utils';
 import CompareJobApplications from './CompareJobApplications';
 import {
   closeAlert,
@@ -49,7 +50,7 @@ describe('compare job applications form', () => {
     jobService.jobService.getJob.mockResolvedValue(job);
     jobService.jobService.getJobApplications.mockResolvedValue([{ id: 5 }]);
 
-    const { container } = render(<CompareJobApplications job={job} />);
+    const container = await getCompare(hr);
     modal = await openModal(
       container,
       'Select Application',
@@ -57,31 +58,45 @@ describe('compare job applications form', () => {
     );
   });
 
-  it('is a button', () => {
-    const { container } = render(<CompareJobApplications job={job} />);
+  async function getCompare(job) {
+    let compare;
+    await act(async () => {
+      compare = render(<CompareJobApplications job={job} />);
+      const { container } = compare;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = compare;
+    return container;
+  }
+
+  it('is a button', async () => {
+    jobService.jobService.getJobApplications.mockResolvedValue([]);
+    const container = await getCompare(job);
     expect(container.children).toHaveLength(1); // button and div to hold modal
     expect(container.firstChild.firstChild).toHaveClass('btn btn-primary');
     expect(container.firstChild.firstChild.getAttribute('type')).toEqual(
       'button'
     );
     expect(container.firstChild.firstChild).toHaveTextContent(
-      'Select Application'
+      'View Job Details'
     );
   });
 
-  it('has different text depending on selection of job', () => {
+  it('has different text depending on selection of job', async () => {
     const hr = { ...job };
     hr.application_selected = 5;
-    const { container } = render(<CompareJobApplications job={hr} />);
+    jobService.jobService.getJob.mockResolvedValue(hr);
+    const container = await getCompare(hr);
     expect(container.firstChild.firstChild).toHaveTextContent(
       'Application Selected'
     );
   });
 
-  it('has different text depending on date of job', () => {
+  it('has different text depending on date of job', async () => {
     const hr = { ...job };
     hr.date_time = '2022-10-13T04:00:00.000Z';
-    const { container } = render(<CompareJobApplications job={hr} />);
+    jobService.jobService.getJob.mockResolvedValue(hr);
+    const container = await getCompare(hr);
     expect(container.firstChild.firstChild).toHaveTextContent(
       'View Applications'
     );
@@ -106,13 +121,36 @@ describe('compare job applications form', () => {
 
   it('has the job information outlined', () => {
     const modalForm = modal.firstChild.lastChild.firstChild;
-    expect(modalForm.children).toHaveLength(8);
+    expect(modalForm.children).toHaveLength(9);
     expect(modalForm.getAttribute('noValidate')).toEqual('');
+  });
+
+  it('has no application information without applications', async () => {
+    const hr = { ...job };
+    hr.id = 4;
+    jobService.jobService.getJob.mockResolvedValue(hr);
+    jobService.jobService.getJobApplications.mockResolvedValue([]);
+    const container = await getCompare(hr);
+    modal = await openModal(
+      container,
+      'View Job Details',
+      'compareJobApplicationsModal-4'
+    );
+    const modalForm = modal.firstChild.lastChild.firstChild;
+    expect(modalForm.children).toHaveLength(7);
+    expect(modalForm.getAttribute('noValidate')).toEqual('');
+  });
+
+  it('Applications header are shown if applications exist', async () => {
+    const applications =
+      modal.firstChild.lastChild.firstChild.children[6].firstChild;
+    expect(applications).toHaveClass('h3');
+    expect(applications).toHaveTextContent('Applications');
   });
 
   it('one application is shown when one exists', async () => {
     const applications =
-      modal.firstChild.lastChild.firstChild.children[6].firstChild;
+      modal.firstChild.lastChild.firstChild.children[7].firstChild;
     expect(applications).toHaveClass('accordion');
     expect(applications.children).toHaveLength(1);
   });
@@ -143,7 +181,7 @@ describe('compare job applications form', () => {
     const spy = jest.spyOn(jobService.jobService, 'chooseJobApplication');
     jobService.jobService.chooseJobApplication.mockRejectedValue('Some Error');
     const applications =
-      modal.firstChild.lastChild.firstChild.children[6].firstChild;
+      modal.firstChild.lastChild.firstChild.children[7].firstChild;
     fireEvent.click(applications.firstChild);
     await hasAnError(modal);
     expect(spy).toHaveBeenCalledWith(5, 5);
@@ -165,7 +203,7 @@ describe('compare job applications form', () => {
       'Some Success'
     );
     const applications =
-      modal.firstChild.lastChild.firstChild.children[6].firstChild;
+      modal.firstChild.lastChild.firstChild.children[7].firstChild;
     fireEvent.click(applications.firstChild);
     await hasASuccess(modal, 'Job Application Chosen');
     expect(spy).toHaveBeenCalledWith(5, 5);
@@ -190,7 +228,7 @@ describe('compare job applications form', () => {
       'Some Success'
     );
     const applications =
-      modal.firstChild.lastChild.firstChild.children[6].firstChild;
+      modal.firstChild.lastChild.firstChild.children[7].firstChild;
     fireEvent.click(applications.firstChild);
     await noModal(modal);
   });
@@ -215,7 +253,7 @@ describe('compare job applications form', () => {
       'compareJobApplicationsModal-6'
     );
     const applications =
-      modal.firstChild.lastChild.firstChild.children[6].firstChild;
+      modal.firstChild.lastChild.firstChild.children[7].firstChild;
     expect(applications).toHaveClass('accordion');
     expect(applications.children).toHaveLength(2);
   });
