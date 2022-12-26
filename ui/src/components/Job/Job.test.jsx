@@ -199,7 +199,7 @@ describe('job', () => {
     jobService.jobService.getJobApplications.mockResolvedValue([]);
     await loadJob(job, createUser);
     const { container } = requestForHire;
-    checkCard(container, '2 hours', 'Select Application');
+    checkCard(container, '2 hours', 'View Job Details');
   });
 
   // expects in method

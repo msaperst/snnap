@@ -85,3 +85,9 @@
 .medium {
   max-width: 900px;
 }
+
+.badge {
+  top: 2px !important;
+  position: relative;
+  margin-left: 3px;
+}

@@ -6,11 +6,10 @@ class Home {
   }
 
   async getButton(jobId) {
-    await this.driver.wait(
+    return this.driver.wait(
       until.elementLocated(By.css(`button[job="${jobId}"]`)),
       5000
     );
-    return this.driver.findElement(By.css(`button[job="${jobId}"]`));
   }
 
   async hasJobInfo(form) {

@@ -68,7 +68,7 @@ describe('apply to job', () => {
     const button = await home.getButton(await jobs[1].getId());
     expect(await button.isDisplayed()).toBeTruthy();
     expect(await button.isEnabled()).toBeTruthy();
-    expect(await button.getText()).toEqual('Select Application\n0');
+    expect(await button.getText()).toEqual('View Job Details');
   });
 
   // checks are in the methods
@@ -98,7 +98,7 @@ describe('apply to job', () => {
         until.elementLocated(By.className('modal-dialog')),
         5000
       );
-      driver.wait(until.elementIsVisible(modal), 5000);
+      await driver.wait(until.elementIsVisible(modal), 5000);
       expect(await modal.isDisplayed()).toBeTruthy();
       expect(
         await modal.findElement(By.className('modal-title')).getText()
