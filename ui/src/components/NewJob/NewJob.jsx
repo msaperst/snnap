@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Form, Modal, Row } from 'react-bootstrap';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
@@ -12,61 +12,58 @@ import Submit from '../Submit/Submit';
 import { jobService } from '../../services/job.service';
 import { commonFormComponents } from '../CommonFormComponents';
 
-class NewJob extends React.Component {
-  constructor(props) {
-    super(props);
-    this.isMountedVal = false;
+function NewJob() {
+  const [show, setShow] = useState(false);
+  const [status, setStatus] = useState(null);
+  const [update, setUpdate] = useState(null);
+  const [validated, setValidated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [jobTypes, setJobTypes] = useState([]);
+  const [jobSubtypes, setJobSubtypes] = useState([]);
+  const [jobSkills, setJobSkills] = useState([]);
+  const isMountedVal = useRef(true);
 
-    this.state = {
-      show: false,
-      status: null,
-      update: null,
-      validated: false,
-      isSubmitting: false,
-      formData: {},
-      jobTypes: [],
-      skills: [],
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.updateForm = this.updateForm.bind(this);
-  }
-
-  componentDidMount() {
-    this.isMountedVal = true;
-    jobService.getJobTypes().then((jobTypes) => {
-      this.setState({ jobTypes });
+  useEffect(() => {
+    isMountedVal.current = true;
+    jobService.getJobTypes().then((types) => {
+      if (isMountedVal.current) {
+        setJobTypes(types);
+      }
     });
-    jobService.getJobSubtypes().then((jobSubtypes) => {
-      this.setState({ jobSubtypes });
+    jobService.getJobSubtypes().then((subtypes) => {
+      if (isMountedVal.current) {
+        setJobSubtypes(subtypes);
+      }
     });
     jobService.getSkills().then((skills) => {
-      this.setState({ skills });
+      if (isMountedVal.current) {
+        setJobSkills(skills);
+      }
     });
-  }
+    return () => {
+      isMountedVal.current = false;
+    };
+  }, []);
 
-  componentWillUnmount() {
-    this.isMountedVal = false;
-  }
-
-  handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const { formData } = this.state;
     const form = document.querySelector('#newJobForm');
     const city = document.querySelector('#formCity');
     const date = document.querySelector('#formDate');
     city.setCustomValidity('');
     date.setCustomValidity('');
-    this.setState({ validated: true });
+    setValidated(true);
     // actually check and submit the form
     if (form.checkValidity() === true) {
       // custom checks - should match API checks
       let isValid = true;
-      isValid = this.checkLocation(city) && isValid;
-      isValid = this.checkDate(date) && isValid;
+      isValid = checkLocation(city) && isValid;
+      isValid = checkDate(date) && isValid;
       if (!isValid) {
         return;
       }
-      this.setState({ isSubmitting: true });
+      setIsSubmitting(true);
       jobService
         .newJob(
           formData['Job Type'],
@@ -87,40 +84,36 @@ class NewJob extends React.Component {
         )
         .then(
           () => {
-            commonFormComponents.setRedrawSuccess((state) => {
-              if (this.isMountedVal) {
-                this.setState(state);
-              }
-              commonFormComponents.setPageView();
-            }, 'New Job Submitted');
+            commonFormComponents.setSuccess(
+              setStatus,
+              setUpdate,
+              'New Job Submitted',
+              setIsSubmitting,
+              setShow,
+              setValidated
+            );
           },
           (error) => {
-            this.setState({
-              status: error.toString(),
-              update: null,
-              isSubmitting: false,
-            });
+            setStatus(error.toString());
+            setUpdate(null);
+            setIsSubmitting(false);
           }
         );
     }
-  }
+  };
 
-  checkDate(date) {
-    const { formData } = this.state;
+  function checkDate(date) {
     const input = Date.parse(formData.Date);
     const startOfToday = new Date().setHours(-5, 0, 0, 0);
     if (input < startOfToday) {
-      this.setState({
-        status: 'Please provide a date today or later.',
-      });
+      setStatus('Please provide a date today or later.');
       date.setCustomValidity('Invalid field.');
       return false;
     }
     return true;
   }
 
-  checkLocation(city) {
-    const { formData } = this.state;
+  function checkLocation(city) {
     if (
       !(
         formData.City &&
@@ -128,140 +121,119 @@ class NewJob extends React.Component {
         formData.City.properties.formatted
       )
     ) {
-      this.setState({
-        status: 'Please select a valid city from the drop down.',
-      });
+      setStatus('Please select a valid city from the drop down.');
       city.setCustomValidity('Invalid field.');
       return false;
     }
     return true;
   }
 
-  updateForm(key, value) {
-    const { formData } = this.state;
-    formData[key] = value;
-    this.setState({ formData });
-  }
+  const updateForm = (key, value) => {
+    setFormData({ ...formData, [key]: value });
+  };
 
-  render() {
-    const {
-      show,
-      status,
-      update,
-      validated,
-      isSubmitting,
-      jobTypes,
-      jobSubtypes,
-      skills,
-    } = this.state;
-    return (
-      <>
-        <div>
-          <NavDropdown.Item
-            id="openNewJobButton"
-            onClick={() => {
-              this.setState({ validated: false, show: true });
-              commonFormComponents.setPageView('new-job');
-            }}
-          >
-            Create New Job
-          </NavDropdown.Item>
-        </div>
-        <Modal
-          size="lg"
-          show={show}
-          onHide={() => {
-            this.setState({ show: false });
-            commonFormComponents.setPageView();
+  return (
+    <>
+      <div>
+        <NavDropdown.Item
+          id="openNewJobButton"
+          onClick={() => {
+            setValidated(false);
+            setShow(true);
+            commonFormComponents.setPageView('new-job');
           }}
-          data-testid="newJobModal"
-          aria-label="Create New Job"
         >
-          <Modal.Header closeButton>
-            <Modal.Title>Create a new job</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="show-grid">
-            <Form
-              id="newJobForm"
-              noValidate
-              validated={validated}
-              onSubmit={this.handleSubmit}
-            >
-              <Row className="mb-3">
-                <SnnapFormSelect
-                  name="Job Type"
-                  onChange={this.updateForm}
-                  options={jobTypes}
-                />
-              </Row>
-              <Row className="mb-3">
-                <SnnapFormSelect
-                  name="Looking For"
-                  onChange={this.updateForm}
-                  options={jobSubtypes}
-                />
-              </Row>
-              <Row className="mb-3">
-                <SnnapFormLocationInput
-                  name="City"
-                  size={8}
-                  onChange={this.updateForm}
-                />
-                <SnnapFormInput
-                  size={4}
-                  name="Date"
-                  type="date"
-                  onChange={this.updateForm}
-                />
-              </Row>
-              <Row className="mb-3">
-                <SnnapFormInput
-                  size={6}
-                  name="Desired Equipment"
-                  onChange={this.updateForm}
-                  notRequired
-                />
-                <SnnapFormMultiSelect
-                  size={6}
-                  name="Skills Required"
-                  onChange={this.updateForm}
-                  options={skills}
-                />
-              </Row>
-              <Row className="mb-3">
-                <SnnapFormTextarea
-                  name="Job Details"
-                  onChange={this.updateForm}
-                />
-              </Row>
-              <Row className="mb-3">
-                <SnnapFormDuration
-                  size={6}
-                  type="number"
-                  name="Duration"
-                  options={['Minutes', 'Hours', 'Days']}
-                  onChange={this.updateForm}
-                />
-                <SnnapFormPrice
-                  size={6}
-                  name="Pay"
-                  onChange={this.updateForm}
-                />
-              </Row>
-              <Submit
-                buttonText="Create New Request"
-                isSubmitting={isSubmitting}
-                error={status}
-                updateError={() => this.setState({ status: null })}
-                success={update}
-                updateSuccess={() => this.setState({ update: null })}
+          Create New Job
+        </NavDropdown.Item>
+      </div>
+      <Modal
+        size="lg"
+        show={show}
+        onHide={() => {
+          setShow(false);
+          commonFormComponents.setPageView();
+        }}
+        data-testid="newJobModal"
+        aria-label="Create New Job"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create a new job</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="show-grid">
+          <Form
+            id="newJobForm"
+            noValidate
+            validated={validated}
+            onSubmit={handleSubmit}
+          >
+            <Row className="mb-3">
+              <SnnapFormSelect
+                name="Job Type"
+                onChange={updateForm}
+                options={jobTypes}
               />
-            </Form>
-          </Modal.Body>
-        </Modal>
-      </>
-    );
-  }
+            </Row>
+            <Row className="mb-3">
+              <SnnapFormSelect
+                name="Looking For"
+                onChange={updateForm}
+                options={jobSubtypes}
+              />
+            </Row>
+            <Row className="mb-3">
+              <SnnapFormLocationInput
+                name="City"
+                size={8}
+                onChange={updateForm}
+              />
+              <SnnapFormInput
+                size={4}
+                name="Date"
+                type="date"
+                value="yyyy-mm-dd"
+                onChange={updateForm}
+              />
+            </Row>
+            <Row className="mb-3">
+              <SnnapFormInput
+                size={6}
+                name="Desired Equipment"
+                onChange={updateForm}
+                notRequired
+              />
+              <SnnapFormMultiSelect
+                size={6}
+                name="Skills Required"
+                onChange={updateForm}
+                options={jobSkills}
+              />
+            </Row>
+            <Row className="mb-3">
+              <SnnapFormTextarea name="Job Details" onChange={updateForm} />
+            </Row>
+            <Row className="mb-3">
+              <SnnapFormDuration
+                size={6}
+                type="number"
+                name="Duration"
+                options={['Minutes', 'Hours', 'Days']}
+                onChange={updateForm}
+              />
+              <SnnapFormPrice size={6} name="Pay" onChange={updateForm} />
+            </Row>
+            <Submit
+              buttonText="Create New Request"
+              isSubmitting={isSubmitting}
+              error={status}
+              updateError={setStatus}
+              success={update}
+              updateSuccess={setUpdate}
+            />
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
 }
 
 export default NewJob;
