@@ -61,7 +61,7 @@ function ProfileBody(props) {
             >
               <h3 className="h6">{option.name}</h3>
               {option.what.split('\n').map((what) => (
-                <div>{what}</div>
+                <div key={what}>{what}</div>
               ))}
             </div>
           ))}
