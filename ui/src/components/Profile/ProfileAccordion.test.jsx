@@ -249,8 +249,20 @@ describe('profile accordion', () => {
 
     expect(row.firstChild.children).toHaveLength(3);
     expect(row.firstChild.children[0]).toHaveTextContent('Equipment');
-    expect(row.firstChild.children[1]).toHaveTextContent('Camera: Some Camera');
-    expect(row.firstChild.children[2]).toHaveTextContent('Flash: flashes!!!');
+    expect(row.firstChild.children[1]).toHaveTextContent('CameraSome Camera');
+    expect(row.firstChild.children[1].children).toHaveLength(2);
+    expect(row.firstChild.children[1].firstChild).toHaveClass('h6');
+    expect(row.firstChild.children[1].firstChild).toHaveTextContent('Camera');
+    expect(row.firstChild.children[1].lastChild).toHaveTextContent(
+      'Some Camera'
+    );
+    expect(row.firstChild.children[2]).toHaveTextContent('Flashflashes!!!');
+    expect(row.firstChild.children[2].children).toHaveLength(2);
+    expect(row.firstChild.children[2].firstChild).toHaveClass('h6');
+    expect(row.firstChild.children[2].firstChild).toHaveTextContent('Flash');
+    expect(row.firstChild.children[2].lastChild).toHaveTextContent(
+      'flashes!!!'
+    );
 
     expect(row.lastChild.children).toHaveLength(2);
     expect(row.lastChild.children[0]).toHaveTextContent('Skills');
