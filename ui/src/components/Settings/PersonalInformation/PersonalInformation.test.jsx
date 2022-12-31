@@ -448,7 +448,7 @@ describe('personal information', () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
     expect(spy).toHaveBeenNthCalledWith(2, 'George', 'Saperstone', {
-      loc: 'Fairfax, VA, United States of America',
+      loc: 'Fairfax, VA 20030, United States of America',
       lat: 38.8462236,
       lon: -77.3063733,
     });

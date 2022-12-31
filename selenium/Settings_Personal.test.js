@@ -68,7 +68,7 @@ describe('settings personal page', () => {
     const city = driver.wait(until.elementLocated(By.id('formCity')), 5000);
     await test.waitUntilInputFilled(By.id('formCity'));
     expect(await city.getAttribute('value')).toEqual(
-      'Fairfax, VA, United States of America'
+      'Fairfax, VA 20030, United States of America'
     );
     expect(await city.getAttribute('disabled')).toBeNull();
   });

@@ -9,7 +9,7 @@ const Email = require('../../services/Email');
 describe('application for job', () => {
   const dataItem1 = {
     id: 1,
-    location: 'Fairfax, VA, United States of America',
+    location: 'Fairfax, VA 20030, United States of America',
     details: "Max's 40th Birthday, woot!!!",
     pay: 0.5,
     duration: 8,
@@ -25,7 +25,7 @@ describe('application for job', () => {
     duration: 1,
     durationMax: null,
     id: 2,
-    location: 'Fairfax, VA, United States of America',
+    location: 'Fairfax, VA 20030, United States of America',
     pay: 50,
     type: 'Event',
     typeId: 2,
@@ -368,7 +368,7 @@ describe('application for job', () => {
       durationMax: null,
       equipment: [{ name: 'Camera', value: 1 }],
       id: 1,
-      location: 'Fairfax, VA, United States of America',
+      location: 'Fairfax, VA 20030, United States of America',
       pay: 0.5,
       skills: [],
       type: "B'nai Mitzvah",

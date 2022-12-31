@@ -9,7 +9,7 @@ const Email = require('../../services/Email');
 describe('job', () => {
   const item1 = {
     id: 1,
-    location: 'Fairfax, VA, United States of America',
+    location: 'Fairfax, VA 20030, United States of America',
     details: "Max's 40th Birthday, woot!!!",
     pay: 0.5,
     duration: 8,
@@ -22,7 +22,7 @@ describe('job', () => {
   };
   const item2 = {
     id: 2,
-    location: 'Fairfax, VA, United States of America',
+    location: 'Fairfax, VA 20030, United States of America',
     details: "Max's 50th Birthday, woot!!!",
     pay: 50,
     duration: 1,
@@ -34,7 +34,7 @@ describe('job', () => {
     equipment: 'some equipment',
   };
   const location = {
-    loc: 'Fairfax, VA, United States of America',
+    loc: 'Fairfax, VA 20030, United States of America',
     lat: 5,
     lon: -71.2345,
   };
@@ -67,7 +67,7 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', '', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -95,7 +95,7 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', '', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -127,7 +127,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(3);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
@@ -169,7 +169,7 @@ describe('job', () => {
       durationMax: null,
       equipment: '',
       id: 1,
-      location: 'Fairfax, VA, United States of America',
+      location: 'Fairfax, VA 20030, United States of America',
       pay: 0.5,
       skills: [{ name: 'Camera', value: 1 }],
       type: "B'nai Mitzvah",

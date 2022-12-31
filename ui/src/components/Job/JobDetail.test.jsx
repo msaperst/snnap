@@ -25,7 +25,7 @@ describe('job detail info', () => {
       durationMax: 9,
       typeId: 2,
       subtypeId: 2,
-      loc: 'Fairfax, VA, United States of America',
+      loc: 'Fairfax, VA 20030, United States of America',
       lat: 5,
       lon: -71.2345,
     };
@@ -82,7 +82,7 @@ describe('job detail info', () => {
       8,
       'formCity',
       'City',
-      'Fairfax, VA'
+      'Fairfax, VA 20030'
     );
     checkInput(
       container.children[2].children[1],

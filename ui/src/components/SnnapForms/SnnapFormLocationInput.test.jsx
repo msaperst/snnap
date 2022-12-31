@@ -42,7 +42,7 @@ describe('snnap form input', () => {
 
     const selectItem = selectFairfax(getByText);
     await selectItem(input);
-    expect(input).toHaveValue('Fairfax, VA, United States of America');
+    expect(input).toHaveValue('Fairfax, VA 20030, United States of America');
     // eslint-disable-next-line no-promise-executor-return
     await new Promise((r) => setTimeout(r, 1000));
     expect(x).not.toEqual(0); // this should equal 'Fairfax'

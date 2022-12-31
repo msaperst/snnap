@@ -153,7 +153,7 @@ describe('new job form', () => {
     expect(dateInput.getAttribute('disabled')).toBeNull();
     expect(dateInput.getAttribute('required')).toEqual('');
     expect(dateInput.getAttribute('type')).toEqual('date');
-    expect(dateInput.getAttribute('value')).toEqual('');
+    expect(dateInput.getAttribute('value')).toEqual('yyyy-mm-dd');
   });
 
   it('fourth row has the equipment and skills', async () => {
@@ -314,7 +314,7 @@ describe('new job form', () => {
       '5',
       {
         lat: 38.8462236,
-        loc: 'Fairfax, VA, United States of America',
+        loc: 'Fairfax, VA 20030, United States of America',
         lon: -77.3063733,
       },
       'Some Deets',
@@ -347,7 +347,7 @@ describe('new job form', () => {
       '7',
       '5',
       {
-        loc: 'Fairfax, VA, United States of America',
+        loc: 'Fairfax, VA 20030, United States of America',
         lat: 38.8462236,
         lon: -77.3063733,
       },

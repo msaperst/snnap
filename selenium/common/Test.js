@@ -104,7 +104,7 @@ class Test {
       {
         lat: 38.8462236,
         lon: -77.3063733,
-        loc: 'Fairfax, VA, United States of America',
+        loc: 'Fairfax, VA 20030, United States of America',
       },
       `${username}@example.org`,
       username,
