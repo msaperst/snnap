@@ -76,7 +76,7 @@ const Job = class {
 
   static async getUserJobs(user) {
     return Mysql.query(
-      `SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = ${parseIntAndDbEscape(
+      `SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.user = ${parseIntAndDbEscape(
         user
       )} ORDER BY jobs.date_time;`
     );

@@ -212,7 +212,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, job_types.type FROM jobs INNER JOIN job_types ON jobs.type = job_types.id WHERE jobs.user = 1 ORDER BY jobs.date_time;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.user = 1 ORDER BY jobs.date_time;'
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
