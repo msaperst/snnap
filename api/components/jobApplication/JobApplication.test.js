@@ -46,7 +46,8 @@ describe('application for job', () => {
       .mockResolvedValueOnce([{ username: 'max' }])
       .mockResolvedValueOnce([
         { user: 'max', email: 'email@address.com', email_notifications: 1 },
-      ]);
+      ])
+      .mockResolvedValueOnce([{ username: 'othermax' }]);
     const jobApplication = JobApplication.create(
       1,
       5,
@@ -64,7 +65,7 @@ describe('application for job', () => {
     );
     await expect(jobApplication.getId()).resolves.toEqual(15);
     // verify the sql calls
-    expect(sqlSpy).toHaveBeenCalledTimes(4);
+    expect(sqlSpy).toHaveBeenCalledTimes(5);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience', '');"
@@ -81,12 +82,16 @@ describe('application for job', () => {
       4,
       'SELECT * FROM users JOIN settings WHERE users.id = 1;'
     );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      5,
+      'SELECT * FROM users WHERE id = 5;'
+    );
     expect(emailSpy).toHaveBeenCalledTimes(1);
     expect(emailSpy).toHaveBeenCalledWith(
       'email@address.com',
       'SNNAP: New Job Application',
       'Max Saperstone applied to your job\nhttps://snnap.app/jobs#1',
-      "<a href='https://snnap.app/profile/undefined'>Max Saperstone</a> applied to your <a href='https://snnap.app/jobs#1'>job</a>"
+      "<a href='https://snnap.app/profile/othermax'>Max Saperstone</a> applied to your <a href='https://snnap.app/jobs#1'>job</a>"
     );
   });
 
@@ -264,7 +269,8 @@ describe('application for job', () => {
       .mockResolvedValueOnce([{ username: 'max' }])
       .mockResolvedValueOnce([
         { user: 'max', email: 'email@address.com', email_notifications: 1 },
-      ]);
+      ])
+      .mockResolvedValueOnce([{ username: 'othermax' }]);
     const jobApplication = JobApplication.create(
       1,
       5,
@@ -291,7 +297,7 @@ describe('application for job', () => {
     );
     await expect(jobApplication.getId()).resolves.toEqual(15);
     // verify the sql calls
-    expect(sqlSpy).toHaveBeenCalledTimes(9);
+    expect(sqlSpy).toHaveBeenCalledTimes(10);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', 'website', NULL, 'fb', NULL, 'some comment');"
@@ -328,12 +334,16 @@ describe('application for job', () => {
       9,
       'SELECT * FROM users JOIN settings WHERE users.id = 1;'
     );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      10,
+      'SELECT * FROM users WHERE id = 5;'
+    );
     expect(emailSpy).toHaveBeenCalledTimes(1);
     expect(emailSpy).toHaveBeenCalledWith(
       'email@address.com',
       'SNNAP: New Job Application',
       'Max Saperstone applied to your job\nhttps://snnap.app/jobs#1',
-      "<a href='https://snnap.app/profile/undefined'>Max Saperstone</a> applied to your <a href='https://snnap.app/jobs#1'>job</a>"
+      "<a href='https://snnap.app/profile/othermax'>Max Saperstone</a> applied to your <a href='https://snnap.app/jobs#1'>job</a>"
     );
   });
 
