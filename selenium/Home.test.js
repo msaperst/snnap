@@ -23,7 +23,7 @@ describe('home page', () => {
       '2023-03-12',
       {
         lat: 38.8051095,
-        loc: 'Alexandria, VA, United States of America',
+        loc: 'Alexandria, VA 20030, United States of America',
         lon: -77.0470229,
       },
       'Gig in Alexandria'

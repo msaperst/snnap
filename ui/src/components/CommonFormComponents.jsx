@@ -3,6 +3,7 @@ import ReactGA from 'react-ga';
 export const commonFormComponents = {
   setBasicSuccess,
   setRedrawSuccess,
+  setSuccess,
   setPageView,
 };
 
@@ -35,6 +36,24 @@ function setRedrawSuccess(updateState, message) {
       validated: false,
     });
     // no need to redraw or do anything as new jobs/updates are pulled via websockets
+  }, 5000);
+}
+
+function setSuccess(
+  setStatus,
+  setUpdate,
+  message,
+  setIsSubmitting,
+  setShow,
+  setValidated
+) {
+  setStatus(null);
+  setUpdate(message);
+  setTimeout(() => {
+    setIsSubmitting(false);
+    setShow(false);
+    setUpdate(null);
+    setValidated(false);
   }, 5000);
 }
 

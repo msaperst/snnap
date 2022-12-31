@@ -11,7 +11,7 @@ const Email = require('../../services/Email');
 
 describe('User', () => {
   const location = {
-    loc: 'Fairfax, VA, United States of America',
+    loc: 'Fairfax, VA 20030, United States of America',
     lat: 5,
     lon: -71.2345,
   };
@@ -317,7 +317,7 @@ describe('User', () => {
       lastName: 'Robert',
       username: 'Bobert',
       lat: 5,
-      loc: 'Fairfax, VA, United States of America',
+      loc: 'Fairfax, VA 20030, United States of America',
       lon: -71.2345,
       rating: null,
     });
@@ -333,7 +333,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
       expect.stringMatching(
-        /^INSERT INTO users \(first_name, last_name, email, username, password, loc, lat, lon\) VALUES \('Bob', 'Robert', 'bobert@example.org', 'Bobert', '.*', 'Fairfax, VA, United States of America', 5, -71.2345\);/
+        /^INSERT INTO users \(first_name, last_name, email, username, password, loc, lat, lon\) VALUES \('Bob', 'Robert', 'bobert@example.org', 'Bobert', '.*', 'Fairfax, VA 20030, United States of America', 5, -71.2345\);/
       )
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(

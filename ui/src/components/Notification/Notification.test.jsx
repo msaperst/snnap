@@ -27,7 +27,7 @@ describe('notification', () => {
     job = {
       id: 5,
       type: "B'nai Mitzvah",
-      location: 'Fairfax, VA, United States of America',
+      location: 'Fairfax, VA 20030, United States of America',
       details: 'Some details',
       pay: 200,
       duration: 2,
