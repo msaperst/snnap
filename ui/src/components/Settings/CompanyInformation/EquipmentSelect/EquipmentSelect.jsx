@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SnnapFormMultiSelect from '../../../SnnapForms/SnnapFormMultiSelect';
+import SnnapFormTextarea from '../../../SnnapForms/SnnapFormTextarea';
 import { jobService } from '../../../../services/job.service';
-import SnnapFormInput from '../../../SnnapForms/SnnapFormInput';
 
 function EquipmentSelect(props) {
   const { company, onChange } = props;
@@ -56,7 +56,7 @@ function EquipmentSelect(props) {
         options={equipment}
       />
       {equipmentItems.map((obj) => (
-        <SnnapFormInput
+        <SnnapFormTextarea
           key={obj.value}
           name={`${obj.name} Equipment List`}
           value={obj.what}
