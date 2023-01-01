@@ -11,3 +11,6 @@ CREATE TABLE IF NOT EXISTS equipment
 INSERT INTO equipment (name) VALUES ('Camera');
 INSERT INTO equipment (name) VALUES ('Flash');
 INSERT INTO equipment (name) VALUES ('Lights');
+DELETE FROM equipment WHERE name = 'Lights';
+INSERT INTO equipment (name) VALUES ('Lenses');
+INSERT INTO equipment (name) VALUES ('Other');
