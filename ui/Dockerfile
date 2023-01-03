@@ -36,4 +36,7 @@ COPY nginx.conf /etc/nginx/conf.d
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80
 
+# fix timezone
+RUN apk add tzdata; cp /usr/share/zoneinfo/US/Eastern /etc/localtime; echo "US/Eastern" >  /etc/timezone; apk del tzdata
+
 CMD ["nginx", "-g", "daemon off;"]
