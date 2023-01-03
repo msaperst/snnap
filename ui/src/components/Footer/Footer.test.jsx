@@ -13,7 +13,7 @@ describe('footer', () => {
   it('has the correct content', () => {
     const { container } = render(<Footer />);
     expect(container).toHaveTextContent(
-      'Copyright © SNNAP 2022Privacy Policy | Terms of Use'
+      'Copyright © SNNAP 2023Privacy Policy | Terms of Use'
     );
   });
 });
