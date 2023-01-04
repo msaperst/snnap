@@ -141,7 +141,7 @@ describe('filter', () => {
   }
 
   async function expectOneMatch() {
-    const header = screen.getByRole('heading', { level: 3 });
+    const header = screen.getByRole('heading', { level: 2 });
     expect(header.textContent).toEqual('Found 1 Job');
     const cards = screen.getAllByText('job card');
     expect(cards).toHaveLength(1);
@@ -149,7 +149,7 @@ describe('filter', () => {
   }
 
   async function expectMatches(number) {
-    const header = screen.getByRole('heading', { level: 3 });
+    const header = screen.getByRole('heading', { level: 2 });
     expect(header.textContent).toEqual(`Found ${number} Jobs`);
     if (number) {
       const cards = screen.getAllByText('job card');
@@ -174,7 +174,7 @@ describe('filter', () => {
     });
     await server.connected;
     server.send(JSON.stringify(message));
-    const header = screen.getByRole('heading', { level: 3 });
+    const header = screen.getByRole('heading', { level: 2 });
     return header.textContent;
   }
 
