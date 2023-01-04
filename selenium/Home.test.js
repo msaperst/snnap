@@ -31,6 +31,12 @@ describe('home page', () => {
     await Test.addJob(jobCreatorId, 2, '2023-03-10');
 
     await test.loginUser('homeUser');
+    await driver.executeScript(async () => {
+      localStorage.setItem(
+        'filters',
+        JSON.stringify({ jobTypes: [1, 2, 3], jobSubtypes: [1, 2, 3] })
+      );
+    });
     await driver.get(Test.getApp());
   }, 10000);
 
