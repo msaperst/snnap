@@ -274,10 +274,10 @@ function Filter(props) {
         </Row>
         <Row>
           <Col md={4}>
-            <h3>
+            <h2 className="h3">
               Found {filteredJobs.length} Job
               {filteredJobs.length !== 1 ? 's' : ''}
-            </h3>
+            </h2>
           </Col>
           <Col md={3} />
           <Col md={5} className="text-end">
