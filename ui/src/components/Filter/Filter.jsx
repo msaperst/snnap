@@ -28,8 +28,25 @@ function Filter(props) {
   const [currentLocation, setCurrentLocation] = useState({});
   const [selectedJobTypes, setSelectedJobTypes] = useState([]);
   const [selectedJobSubtypes, setSelectedJobSubtypes] = useState([]);
+  const [savedFilters, setSavedFilters] = useState({
+    jobTypes: [1],
+    jobSubtypes: [1],
+  });
 
   const [showOwnLocation, setShowOwnLocation] = useState(false);
+
+  useEffect(() => {
+    const cookies = JSON.parse(localStorage.getItem('cookies'));
+    const lastFilters = JSON.parse(localStorage.getItem('filters'));
+    if ((!cookies || cookies.preferences) && lastFilters) {
+      setSavedFilters(lastFilters);
+      setSelectedJobTypes(lastFilters.jobTypes);
+      setSelectedJobSubtypes(lastFilters.jobSubtypes);
+    } else {
+      setSelectedJobTypes(savedFilters.jobTypes);
+      setSelectedJobSubtypes(savedFilters.jobSubtypes);
+    }
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -65,13 +82,11 @@ function Filter(props) {
     jobService.getJobTypes().then((jobs) => {
       if (isMounted) {
         setJobTypes(jobs);
-        setSelectedJobTypes(jobs.map((item) => item.id));
       }
     });
     jobService.getJobSubtypes().then((jobs) => {
       if (isMounted) {
         setJobSubtypes(jobs);
-        setSelectedJobSubtypes(jobs.map((item) => item.id));
       }
     });
     jobService.getEquipment().then((e) => {
@@ -171,35 +186,53 @@ function Filter(props) {
   };
 
   const updateTypes = (value) => {
+    let jobTypes;
     if (selectedJobTypes.includes(value)) {
       for (let i = 0; i < selectedJobTypes.length; i++) {
         if (selectedJobTypes[i] === value) {
-          setSelectedJobTypes([
+          jobTypes = [
             ...selectedJobTypes.slice(0, i),
             ...selectedJobTypes.slice(i + 1, selectedJobTypes.length),
-          ]);
+          ];
           break;
         }
       }
     } else {
-      setSelectedJobTypes([...selectedJobTypes, value]);
+      jobTypes = [...selectedJobTypes, value];
     }
+    // store our values
+    const cookies = JSON.parse(localStorage.getItem('cookies'));
+    if (!cookies || cookies.preferences) {
+      const lastFilters = { ...savedFilters, jobTypes };
+      setSavedFilters(lastFilters);
+      localStorage.setItem('filters', JSON.stringify(lastFilters));
+    }
+    setSelectedJobTypes(jobTypes);
   };
 
   const updateSubtypes = (value) => {
+    let jobSubtypes;
     if (selectedJobSubtypes.includes(value)) {
       for (let i = 0; i < selectedJobSubtypes.length; i++) {
         if (selectedJobSubtypes[i] === value) {
-          setSelectedJobSubtypes([
+          jobSubtypes = [
             ...selectedJobSubtypes.slice(0, i),
             ...selectedJobSubtypes.slice(i + 1, selectedJobSubtypes.length),
-          ]);
+          ];
           break;
         }
       }
     } else {
-      setSelectedJobSubtypes([...selectedJobSubtypes, value]);
+      jobSubtypes = [...selectedJobSubtypes, value];
     }
+    // store our values
+    const cookies = JSON.parse(localStorage.getItem('cookies'));
+    if (!cookies || cookies.preferences) {
+      const lastFilters = { ...savedFilters, jobSubtypes };
+      setSavedFilters(lastFilters);
+      localStorage.setItem('filters', JSON.stringify(lastFilters));
+    }
+    setSelectedJobSubtypes(jobSubtypes);
   };
 
   return (

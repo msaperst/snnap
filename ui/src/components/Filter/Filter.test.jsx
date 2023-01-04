@@ -25,6 +25,25 @@ jest.mock('../../helpers/usePosition', () => ({
   }),
 }));
 
+const fakeLocalStorage = (function () {
+  let store = {};
+
+  return {
+    getItem(key) {
+      return store[key] || null;
+    },
+    setItem(key, value) {
+      store[key] = value.toString();
+    },
+    removeItem(key) {
+      delete store[key];
+    },
+    clear() {
+      store = {};
+    },
+  };
+})();
+
 describe('filter', () => {
   let filter;
   let server;
@@ -39,6 +58,7 @@ describe('filter', () => {
     { id: 2, type: 'Second', plural: 'Seconds' },
     { id: 3, type: 'Other', plural: 'Others' },
   ];
+  const allFilters = { jobTypes: [1, 2, 3], jobSubtypes: [1, 2, 3] };
   const jobs = [
     {
       id: 1,
@@ -82,6 +102,12 @@ describe('filter', () => {
     },
   ];
 
+  beforeAll(() => {
+    Object.defineProperty(window, 'localStorage', {
+      value: fakeLocalStorage,
+    });
+  });
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -90,13 +116,17 @@ describe('filter', () => {
     jobService.jobService.getEquipment.mockResolvedValue([]);
     jobService.jobService.getSkills.mockResolvedValue([]);
     server = new WS('wss://localhost:3001/wsapp/jobs');
+    localStorage.clear();
   });
 
   afterEach(() => {
     WS.clean();
   });
 
-  async function basicFilter() {
+  async function basicFilter(setAll = true) {
+    if (setAll) {
+      localStorage.setItem('filters', JSON.stringify(allFilters));
+    }
     await act(async () => {
       filter = render(
         <Filter
@@ -131,23 +161,8 @@ describe('filter', () => {
     return true;
   }
 
-  it('loads our filtering buttons', async () => {
-    await basicFilter();
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(6);
-
-    for (let i = 0; i < buttons.length; i++) {
-      expect(buttons[i]).toHaveClass('btn-filter btn btn-primary');
-      expect(buttons[i].getAttribute('type')).toEqual('button');
-      if (i < types.length) {
-        expect(buttons[i]).toHaveTextContent(types[i].plural);
-      } else {
-        expect(buttons[i]).toHaveTextContent(subtypes[i - types.length].plural);
-      }
-    }
-  });
-
   async function renderAndGetJobsHeader(message) {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
     await act(async () => {
       filter = render(
         <Filter
@@ -163,11 +178,73 @@ describe('filter', () => {
     return header.textContent;
   }
 
+  it('loads our default filtering buttons when no cookies', async () => {
+    await basicFilter(false);
+    const buttons = screen.getAllByRole('button');
+    expect(buttons).toHaveLength(6);
+
+    for (let i = 0; i < buttons.length; i++) {
+      if (
+        buttons[i].innerHTML === "B'nai Mitzvahs" ||
+        buttons[i].innerHTML === 'Assistants'
+      ) {
+        // only value 1s are marked as primary
+        expect(buttons[i]).toHaveClass('btn-filter btn btn-primary');
+      } else {
+        expect(buttons[i]).toHaveClass('btn-filter btn btn-secondary');
+      }
+      expect(buttons[i].getAttribute('type')).toEqual('button');
+      if (i < types.length) {
+        expect(buttons[i]).toHaveTextContent(types[i].plural);
+      } else {
+        expect(buttons[i]).toHaveTextContent(subtypes[i - types.length].plural);
+      }
+    }
+  });
+
+  it('loads our default filtering buttons when cookies', async () => {
+    const cookies = {};
+    cookies.necessary = true;
+    cookies.preferences = true;
+    cookies.analytics = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    await basicFilter();
+    const buttons = screen.getAllByRole('button');
+    for (let i = 0; i < buttons.length; i++) {
+      expect(buttons[i]).toHaveClass('btn-filter btn btn-primary');
+    }
+  });
+
+  it('loads our default filtering buttons when cookies but no preferences', async () => {
+    const cookies = {};
+    cookies.necessary = true;
+    cookies.preferences = false;
+    cookies.analytics = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    localStorage.setItem('filters', JSON.stringify(allFilters));
+    await basicFilter(false);
+    const buttons = screen.getAllByRole('button');
+    expect(buttons).toHaveLength(6);
+
+    for (let i = 0; i < buttons.length; i++) {
+      if (
+        buttons[i].innerHTML === "B'nai Mitzvahs" ||
+        buttons[i].innerHTML === 'Assistants'
+      ) {
+        // only value 1s are marked as primary
+        expect(buttons[i]).toHaveClass('btn-filter btn btn-primary');
+      } else {
+        expect(buttons[i]).toHaveClass('btn-filter btn btn-secondary');
+      }
+    }
+  });
+
   it('displays no jobs when bad ws data', async () => {
     expect(await renderAndGetJobsHeader(123)).toEqual('Found 0 Jobs');
   });
 
   it('displays nothing when no user', async () => {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
     await act(async () => {
       filter = render(
         <Filter currentUser={{ lat: 38.8462236, lon: -77.3063733 }} />
@@ -194,6 +271,7 @@ describe('filter', () => {
   });
 
   it('displays the number of jobs when 1 job', async () => {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
     await act(async () => {
       filter = render(
         <Filter
@@ -272,7 +350,7 @@ describe('filter', () => {
   it('updates displayed jobs based on selected filter button', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[0]);
     });
     expect(buttons[0]).toHaveClass('btn-filter btn btn-secondary');
@@ -284,7 +362,7 @@ describe('filter', () => {
   it('updates displayed jobs based on selected sub filter button', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[3]);
     });
     expect(buttons[3]).toHaveClass('btn-filter btn btn-secondary');
@@ -296,10 +374,10 @@ describe('filter', () => {
   it('updates displayed jobs based on all selected filter button', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[1]);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[0]);
     });
     expect(buttons[0]).toHaveClass('btn-filter btn btn-secondary');
@@ -311,10 +389,10 @@ describe('filter', () => {
   it('updates displayed jobs based on all selected sub filter button', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[4]);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[3]);
     });
     expect(buttons[3]).toHaveClass('btn-filter btn btn-secondary');
@@ -326,13 +404,13 @@ describe('filter', () => {
   it('updates displayed jobs based on unselected selected filter button', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[0]);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[1]);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[0]);
     });
     expect(buttons[0]).toHaveClass('btn-filter btn btn-primary');
@@ -344,13 +422,13 @@ describe('filter', () => {
   it('updates displayed jobs based on unselected selected sub filter button', async () => {
     await basicFilter();
     const buttons = screen.getAllByRole('button');
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[3]);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[4]);
     });
-    act(() => {
+    await act(async () => {
       fireEvent.click(buttons[3]);
     });
     expect(buttons[3]).toHaveClass('btn-filter btn btn-primary');
@@ -360,6 +438,7 @@ describe('filter', () => {
   });
 
   it('updates displayed jobs based on text in search box', async () => {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
     await act(async () => {
       filter = render(
         <Filter
@@ -376,6 +455,7 @@ describe('filter', () => {
   });
 
   it('updates displayed jobs based on filtered text in search box', async () => {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
     await act(async () => {
       filter = render(
         <Filter
@@ -392,6 +472,7 @@ describe('filter', () => {
   });
 
   it('updates displayed jobs based on different user home location', async () => {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
     await act(async () => {
       filter = render(
         <Filter
@@ -485,4 +566,45 @@ describe('filter', () => {
 
     expect(await expectMatches(3)).toBeTruthy();
   });
+
+  it('updates my filters when cookies are not present', async () => {
+    await clickTwoButtons();
+    expect(localStorage.getItem('filters')).toEqual(
+      '{"jobTypes":[],"jobSubtypes":[1,3]}'
+    );
+  });
+
+  it('updates my filters when cookies are present', async () => {
+    const cookies = {};
+    cookies.necessary = true;
+    cookies.preferences = true;
+    cookies.analytics = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    await clickTwoButtons();
+    expect(localStorage.getItem('filters')).toEqual(
+      '{"jobTypes":[],"jobSubtypes":[1,3]}'
+    );
+  });
+
+  it('does not update my filters when cookies are present, but no preferences', async () => {
+    const cookies = {};
+    cookies.necessary = true;
+    cookies.preferences = false;
+    cookies.analytics = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    await clickTwoButtons();
+    expect(localStorage.getItem('filters')).toBeNull();
+  });
+
+  async function clickTwoButtons() {
+    await basicFilter(false);
+    const buttons = screen.getAllByRole('button');
+    expect(localStorage.getItem('filters')).toBeNull();
+    await act(async () => {
+      fireEvent.click(buttons[0]);
+    });
+    await act(async () => {
+      fireEvent.click(buttons[5]);
+    });
+  }
 });

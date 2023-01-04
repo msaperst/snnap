@@ -11,15 +11,18 @@ describe('search', () => {
   });
 
   it('displays the main tagline', () => {
-    const search = render(<Search />);
-    const tag = search.getByText('Photography help in a snap');
-    expect(tag.getAttribute('id')).toEqual('tagline');
+    const { container } = render(<Search />);
+    const header = container.firstChild.firstChild.firstChild.firstChild;
+    expect(header.getAttribute('id')).toEqual('tagline');
+    expect(header).toHaveTextContent('Photography help in a snap');
   });
 
-  it('displays the next tagline', () => {
-    const search = render(<Search />);
-    const sub = search.getByText('The extra n is for easy');
-    expect(sub.getAttribute('id')).toEqual('subTagline');
+  it('displays the site description', () => {
+    const { container } = render(<Search />);
+    const description = container.firstChild.firstChild.firstChild.lastChild;
+    expect(description).toHaveTextContent(
+      'Snnap is a community for photophiles; connecting photographers, editors, assistants, and all involved in helping to capture moments. Come here to find jobs others are posting, or to create your own request for assistance.'
+    );
   });
 
   it('displays search bar', () => {
