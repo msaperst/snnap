@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Tab, Tabs } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import { userService } from '../../services/user.service';
 import { companyService } from '../../services/company.service';
 import AccountInformation from '../../components/Settings/AccountInformation/AccountInformation';
@@ -11,6 +12,12 @@ import Notifications from '../../components/Settings/Notifications/Notifications
 import './SettingsPage.css';
 
 function SettingsPage() {
+  const location = useLocation();
+  let page = 'account';
+  if (location && location.state) {
+    page = location.state.page;
+  }
+  const [key, setKey] = useState(page);
   const [user, setUser] = useState({});
   const [settings, setSettings] = useState({});
   const [company, setCompany] = useState({});
@@ -32,7 +39,8 @@ function SettingsPage() {
       <Col>
         <h1 className="h2">Settings</h1>
         <Tabs
-          defaultActiveKey="account"
+          activeKey={key}
+          onSelect={(k) => setKey(k)}
           className="mb-3"
           justify
           variant="pills"

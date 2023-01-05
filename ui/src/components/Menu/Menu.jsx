@@ -5,6 +5,7 @@ import snnapLogo from './SNNAP.png';
 import NewJob from '../NewJob/NewJob';
 import useWebSocketLite from '../../helpers/useWebSocketLite';
 import Rate from '../Rate/Rate';
+import ProfileNotification from '../ProfileNotification/ProfileNotification';
 import './Menu.css';
 
 function Menu(props) {
@@ -127,6 +128,7 @@ function Menu(props) {
         </Container>
       </Navbar>
       {rates}
+      <ProfileNotification />
     </>
   );
 }
