@@ -128,7 +128,7 @@ function Menu(props) {
         </Container>
       </Navbar>
       {rates}
-      <ProfileNotification />
+      {currentUser && <ProfileNotification />}
     </>
   );
 }

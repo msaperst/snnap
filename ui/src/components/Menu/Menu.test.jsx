@@ -15,6 +15,14 @@ jest.mock(
     }
 );
 
+jest.mock(
+  '../ProfileNotification/ProfileNotification',
+  () =>
+    function () {
+      return <div>Check Profile</div>;
+    }
+);
+
 const mockedNavigate = jest.fn();
 jest.mock('react-router-bootstrap', () => ({
   ...jest.requireActual('react-router-bootstrap'),
@@ -44,7 +52,7 @@ describe('menu', () => {
 
   it('renders menu when data', async () => {
     const container = await renderWithSockets();
-    expect(container.children).toHaveLength(1);
+    expect(container.children).toHaveLength(2);
     expect(container.firstChild).toHaveClass(
       'navbar navbar-expand-lg navbar-dark'
     );

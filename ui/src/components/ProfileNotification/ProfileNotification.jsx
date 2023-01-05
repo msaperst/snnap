@@ -9,7 +9,7 @@ function ProfileNotification() {
 
   useEffect(() => {
     companyService.get().then((company) => {
-      if (isMountedVal && !company.name) {
+      if (isMountedVal && company && !company.name) {
         setShow(true);
       }
     });
