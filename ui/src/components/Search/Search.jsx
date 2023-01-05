@@ -11,14 +11,14 @@ function Search(props) {
     <div id="search">
       <Row>
         <Col sm={12} md={6}>
-          <h1 id="tagline">Photography help in a snap</h1>
-          <h2 className="h4" id="subTagline">
-            The extra n is for easy
-          </h2>
+          <h1 id="tagline">
+            Photography help in a <i>snap</i>
+          </h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum
-            id urna ligula. In fringilla ullamcorper nulla. Nam iaculis quam
-            lectus, ac lobortis tortor porta eget.
+            Snnap is a community for photophiles; connecting photographers,
+            editors, assistants, and all involved in helping to capture moments.
+            Come here to find jobs others are posting, or to create your own
+            request for assistance.
           </p>
         </Col>
         <Col md={6} className="d-lg-block d-md-none d-none">

@@ -4,6 +4,8 @@ const Test = require('./common/Test');
 require('chromedriver');
 
 describe('home page', () => {
+  jest.setTimeout(10000);
+
   let test;
   let driver;
   let jobCreatorId;
@@ -31,6 +33,7 @@ describe('home page', () => {
     await Test.addJob(jobCreatorId, 2, '2023-03-10');
 
     await test.loginUser('homeUser');
+    await test.applyAllFilters();
     await driver.get(Test.getApp());
   }, 10000);
 
@@ -195,7 +198,7 @@ describe('home page', () => {
   async function getFoundText(waitUntilNot) {
     let foundText = `Found ${waitUntilNot} results`;
     while (parseInt(foundText.replace(/\D/g, ''), 10) === waitUntilNot) {
-      const found = driver.wait(until.elementLocated(By.css('h3')), 5000);
+      const found = driver.wait(until.elementLocated(By.css('h2')), 5000);
       foundText = await found.getText();
     }
     return foundText;
