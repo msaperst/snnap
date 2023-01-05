@@ -34,6 +34,7 @@ describe('apply to job', () => {
       await Test.addFullJobApplication(await jobs[0].getId(), jobCreatorId, 0)
     );
     // load the main page
+    await test.applyAllFilters();
     await driver.get(Test.getApp());
     const button = await home.getButton(await jobs[0].getId());
     await button.click();
