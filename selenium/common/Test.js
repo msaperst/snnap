@@ -124,6 +124,18 @@ class Test {
     return this.user;
   }
 
+  async applyAllFilters() {
+    await this.driver.executeScript(async () => {
+      localStorage.setItem(
+        'filters',
+        JSON.stringify({
+          jobTypes: [1, 2, 3, 4, 5, 6],
+          jobSubtypes: [1, 2, 3, 4, 5, 6],
+        })
+      );
+    });
+  }
+
   static async removeUserById(id) {
     const companies = await Mysql.query(
       `SELECT * FROM companies WHERE user = ${id} OR user = 0;`

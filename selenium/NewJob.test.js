@@ -16,6 +16,7 @@ describe('new job', () => {
     driver = await test.getDriver();
     // login as a user
     await test.loginUser('newJobUser');
+    await test.applyAllFilters();
     await driver.get(Test.getApp());
     const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')), 5000);
     gigs.click();
@@ -35,7 +36,7 @@ describe('new job', () => {
   }, 15000);
 
   it('has a link to open the modal @network @accessibility', async () => {
-    driver.navigate().refresh();
+    await driver.navigate().refresh();
     const gigs = driver.wait(until.elementLocated(By.id('gig-dropdown')), 5000);
     gigs.click();
     const button = driver.wait(

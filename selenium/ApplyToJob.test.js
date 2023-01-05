@@ -25,6 +25,7 @@ describe('apply to job', () => {
     jobs.push(await Test.addJob(jobCreatorId, 1, '2023-03-12'));
     // login as a user
     user = await test.loginUser('newApplyToJobUser');
+    await test.applyAllFilters();
     await driver.get(Test.getApp());
     const button = await home.getButton(await jobs[0].getId());
     await button.click();
