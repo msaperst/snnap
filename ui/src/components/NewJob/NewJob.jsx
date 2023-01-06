@@ -104,7 +104,7 @@ function NewJob() {
 
   function checkDate(date) {
     const input = Date.parse(formData.Date);
-    const startOfToday = new Date().setHours(-5, 0, 0, 0);
+    const startOfToday = new Date().setHours(0, 0, 0, 0);
     if (input < startOfToday) {
       setStatus('Please provide a date today or later.');
       date.setCustomValidity('Invalid field.');

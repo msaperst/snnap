@@ -25,6 +25,7 @@ describe('apply to job', () => {
     jobs.push(await Test.addJob(jobCreatorId, 1, '2023-03-12'));
     // login as a user
     user = await test.loginUser('newApplyToJobUser');
+    await test.applyAllFilters();
     await driver.get(Test.getApp());
     const button = await home.getButton(await jobs[0].getId());
     await button.click();
@@ -76,6 +77,7 @@ describe('apply to job', () => {
   it('has the button disabled when you already applied to the request @network', async () => {
     await Test.addJobApplication(await jobs[0].getId(), await user.getId(), 0);
     await driver.navigate().refresh();
+    await Test.sleep(1000);
     await checkAlreadyApplied();
   });
 
@@ -123,7 +125,7 @@ describe('apply to job', () => {
   });
 
   it('displays profile information', async () => {
-    await checkInformation('Test User', '', '', '', '', '');
+    await checkInformation('Test User', 'My Company', '', '', '', '');
 
     // TODO - experience/skills - pull from profile
 

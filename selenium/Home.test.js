@@ -4,6 +4,8 @@ const Test = require('./common/Test');
 require('chromedriver');
 
 describe('home page', () => {
+  jest.setTimeout(10000);
+
   let test;
   let driver;
   let jobCreatorId;
@@ -31,6 +33,7 @@ describe('home page', () => {
     await Test.addJob(jobCreatorId, 2, '2023-03-10');
 
     await test.loginUser('homeUser');
+    await test.applyAllFilters();
     await driver.get(Test.getApp());
   }, 10000);
 
@@ -73,7 +76,7 @@ describe('home page', () => {
       until.elementsLocated(By.className('btn-filter')),
       5000
     );
-    expect(filterButtons).toHaveLength(11);
+    expect(filterButtons).toHaveLength(12);
     expect(await filterButtons[0].getText()).toEqual("B'nai Mitzvahs");
     expect(await filterButtons[1].getText()).toEqual('Commercial Events');
     expect(await filterButtons[2].getText()).toEqual('Portraits');
@@ -82,10 +85,11 @@ describe('home page', () => {
     expect(await filterButtons[5].getText()).toEqual('Other');
 
     expect(await filterButtons[6].getText()).toEqual('Assistants');
-    expect(await filterButtons[7].getText()).toEqual('Lead Photographers');
-    expect(await filterButtons[8].getText()).toEqual('Photobooth Attendants');
-    expect(await filterButtons[9].getText()).toEqual('Second Photographers');
-    expect(await filterButtons[10].getText()).toEqual('Other');
+    expect(await filterButtons[7].getText()).toEqual('Associate Photographers');
+    expect(await filterButtons[8].getText()).toEqual('Lead Photographers');
+    expect(await filterButtons[9].getText()).toEqual('Photobooth Attendants');
+    expect(await filterButtons[10].getText()).toEqual('Second Photographers');
+    expect(await filterButtons[11].getText()).toEqual('Other');
   });
 
   it('displays all entries unfiltered', async () => {
@@ -194,7 +198,7 @@ describe('home page', () => {
   async function getFoundText(waitUntilNot) {
     let foundText = `Found ${waitUntilNot} results`;
     while (parseInt(foundText.replace(/\D/g, ''), 10) === waitUntilNot) {
-      const found = driver.wait(until.elementLocated(By.css('h3')), 5000);
+      const found = driver.wait(until.elementLocated(By.css('h2')), 5000);
       foundText = await found.getText();
     }
     return foundText;

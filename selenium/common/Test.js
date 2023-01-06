@@ -114,7 +114,9 @@ class Test {
 
   async loginUser(username) {
     this.addUser(username);
-    await this.user.getId();
+    const id = await this.user.getId();
+    const company = new Company(id);
+    await company.setCompanyInformation('My Company', null, null, null, [], []);
     this.user = User.login(username, 'password');
     const userInfo = await this.user.getInfo();
     userInfo.token = await this.user.getToken();
@@ -122,6 +124,18 @@ class Test {
       localStorage.setItem('currentUser', JSON.stringify(json));
     }, userInfo);
     return this.user;
+  }
+
+  async applyAllFilters() {
+    await this.driver.executeScript(async () => {
+      localStorage.setItem(
+        'filters',
+        JSON.stringify({
+          jobTypes: [1, 2, 3, 4, 5, 6],
+          jobSubtypes: [1, 2, 3, 4, 5, 6],
+        })
+      );
+    });
   }
 
   static async removeUserById(id) {

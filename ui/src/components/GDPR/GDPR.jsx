@@ -57,6 +57,7 @@ function GDPR(props) {
     <Modal
       show={showGDPR}
       onHide={() => setShowGDPR(false)}
+      data-testid="gdpr"
       aria-label="Cookies & Privacy Policy"
     >
       <Modal.Header closeButton>

@@ -34,6 +34,7 @@ describe('apply to job', () => {
       await Test.addFullJobApplication(await jobs[0].getId(), jobCreatorId, 0)
     );
     // load the main page
+    await test.applyAllFilters();
     await driver.get(Test.getApp());
     const button = await home.getButton(await jobs[0].getId());
     await button.click();
@@ -218,12 +219,19 @@ describe('apply to job', () => {
     expect(await experience.getText()).toEqual('some experience');
     // kludge as this is sometimes out of order
     const equipmentText = await equipment.getText();
-    expect(equipmentText).toHaveLength(47);
+    expect(equipmentText).toHaveLength(45);
     expect(equipmentText).toMatch(/^Equipment\n/);
-    expect(equipmentText).toMatch(/Flash: other things/);
-    expect(equipmentText).toMatch(/Camera: something/);
+    const flashText = await driver
+      .findElement(By.id(`job-application-${applicationId}-equipment-Flash`))
+      .getText();
+    expect(flashText).toEqual('Flash\nother things');
+    const cameraText = await driver
+      .findElement(By.id(`job-application-${applicationId}-equipment-Camera`))
+      .getText();
+    expect(cameraText).toEqual('Camera\nsomething');
     const skillText = await skills.getText();
-    expect(skillText).toMatch(/Skills\n/);
+    expect(skillText).toHaveLength(40);
+    expect(skillText).toMatch(/^Skills\n/);
     expect(skillText).toMatch(/Off Camera Flash/);
     expect(skillText).toMatch(/Solo Photography/);
     // kludge as this is sometimes out of order

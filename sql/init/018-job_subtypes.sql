@@ -14,3 +14,4 @@ INSERT INTO job_subtypes (type, plural) VALUES ('Lead Photographer', 'Lead Photo
 INSERT INTO job_subtypes (type, plural) VALUES ('Assistant', 'Assistants');
 INSERT INTO job_subtypes (type, plural) VALUES ('Photobooth Attendant', 'Photobooth Attendants');
 INSERT INTO job_subtypes (type, plural) VALUES ('Other', 'Other');
+INSERT INTO job_subtypes (type, plural) VALUES ('Associate Photographer', 'Associate Photographers');
