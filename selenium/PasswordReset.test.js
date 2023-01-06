@@ -5,7 +5,7 @@ const Test = require('./common/Test');
 require('chromedriver');
 const Mysql = require('../api/services/Mysql');
 
-describe('profile page', () => {
+describe('password reset', () => {
   jest.setTimeout(10000);
 
   let test;

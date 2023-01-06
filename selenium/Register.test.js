@@ -5,6 +5,8 @@ require('chromedriver');
 const Mysql = require('../api/services/Mysql');
 
 describe('register page', () => {
+  jest.setTimeout(10000);
+
   let test;
   let driver;
 
