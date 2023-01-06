@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { companyService } from '../../services/company.service';
@@ -8,8 +8,9 @@ function ProfileNotification() {
   const isMountedVal = useRef(true);
 
   useEffect(() => {
+    isMountedVal.current = true;
     companyService.get().then((company) => {
-      if (isMountedVal && company && !company.name) {
+      if (isMountedVal.current && company && !company.name) {
         setShow(true);
       }
     });
@@ -18,11 +19,13 @@ function ProfileNotification() {
     };
   }, []);
 
+  const hide = useCallback(() => setShow(false), []);
+
   return (
     <Modal
       size="md"
       show={show}
-      onHide={() => setShow(false)}
+      onHide={hide}
       data-testid="setUpProfileNotificationModal"
       aria-label="Profile Setup Notification"
     >
@@ -44,7 +47,7 @@ function ProfileNotification() {
               className="btn btn-primary"
               role="button"
               state={{ page: 'company' }}
-              onClick={() => setShow(false)}
+              onClick={hide}
             >
               Update Settings
             </Link>
