@@ -15,6 +15,14 @@ jest.mock(
     }
 );
 
+jest.mock(
+  '../ProfileNotification/ProfileNotification',
+  () =>
+    function () {
+      return <div>Check Profile</div>;
+    }
+);
+
 const mockedNavigate = jest.fn();
 jest.mock('react-router-bootstrap', () => ({
   ...jest.requireActual('react-router-bootstrap'),
@@ -58,7 +66,7 @@ describe('snnap menu', () => {
   it('shows no rates when no ratings needed', async () => {
     const message = [];
     const userNav = await renderWithSockets(message);
-    expect(userNav.children).toHaveLength(1);
+    expect(userNav.children).toHaveLength(2);
   });
 
   it('shows rates when ratings needed', async () => {
@@ -67,7 +75,7 @@ describe('snnap menu', () => {
       { id: 3, userId: 2, jobId: 2 },
     ];
     const userNav = await renderWithSockets(message);
-    expect(userNav.children).toHaveLength(3);
+    expect(userNav.children).toHaveLength(4);
     // the actual modal is verified in Rate.test.jsx
   });
 

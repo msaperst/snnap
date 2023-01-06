@@ -50,7 +50,7 @@ describe('settings company page', () => {
       until.elementLocated(By.id('formCompanyName')),
       5000
     );
-    expect(await companyName.getAttribute('value')).toEqual('');
+    expect(await companyName.getAttribute('value')).toEqual('My Company');
     expect(await companyName.getAttribute('disabled')).toBeNull();
   });
 
@@ -91,7 +91,7 @@ describe('settings company page', () => {
 
   it('allows updating the company values @network @accessibility', async () => {
     async function expected() {
-      expect(await companyName.getAttribute('value')).toEqual('0');
+      expect(await companyName.getAttribute('value')).toEqual('My Company0');
       expect(await website.getAttribute('value')).toEqual('123.org');
       expect(await insta.getAttribute('value')).toEqual('instagram.com/snnap');
       expect(await facebook.getAttribute('value')).toEqual(
@@ -361,7 +361,7 @@ describe('settings company page', () => {
 
   async function checkForms() {
     const { companyName, website, insta, facebook } = getFields();
-    expect(await companyName.getAttribute('value')).toEqual('');
+    expect(await companyName.getAttribute('value')).toEqual('My Company');
     expect(await website.getAttribute('value')).toEqual('');
     expect(await insta.getAttribute('value')).toEqual('');
     expect(await facebook.getAttribute('value')).toEqual('');

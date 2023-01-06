@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { useLocation } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import GDPR from './GDPR';
 
@@ -56,20 +56,22 @@ describe('gdpr', () => {
     localStorage.clear();
   });
 
-  it('shows nothing if cookies are set', () => {
+  it('shows nothing if cookies are set', async () => {
     const cookies = {};
     cookies.necessary = true;
     cookies.preferences = true;
     cookies.analytics = true;
     localStorage.setItem('cookies', JSON.stringify(cookies));
-    const { container } = render(<GDPR />);
-    expect(container.children).toHaveLength(0);
+    const modal = await renderGDPR(showGDPR);
+    expect(showGDPR).toBeFalsy();
+    expect(modal).toHaveLength(0);
   });
 
   it('shows modal if cookies are not set', async () => {
-    const container = await renderGDPR(false);
-    // TODO - doesn't work
-    // expect(container.children).toHaveLength(1);
+    const modal = (await renderGDPR(showGDPR))[0];
+    expect(showGDPR).toBeTruthy();
+    // TODO - still can't find the gdpr modal
+    // expect(modal).toHaveLength(1);
   });
 
   it('shows modal if passed in to show it', async () => {
@@ -78,40 +80,147 @@ describe('gdpr', () => {
     cookies.preferences = true;
     cookies.analytics = true;
     localStorage.setItem('cookies', JSON.stringify(cookies));
-    const container = await renderGDPR(true);
-    // TODO - doesn't work
-    // expect(container.children).toHaveLength(1);
+    showGDPR = true;
+    const modal = await renderGDPR(showGDPR);
+    expect(showGDPR).toBeTruthy();
+    expect(modal).toHaveLength(1);
   });
 
-  it('shows all the modal info', () => {
-    // TODO
+  // expects in method
+  // eslint-disable-next-line jest/expect-expect
+  it('closing the modal hides the modal', async () => {
+    showGDPR = true;
+    const modal = (await renderGDPR(showGDPR))[0];
+    fireEvent.click(screen.getAllByRole('button')[0]);
+    expect(showGDPR).toBeFalsy();
+    // TODO - still can't properly hide the gdpr modal
+    // expect(modal).not.toBeVisible();
   });
 
-  it('clicking accept closes the modal and sets all preferences', () => {
-    // TODO
+  it('shows the correct modal header', async () => {
+    showGDPR = true;
+    const modal = (await renderGDPR(showGDPR))[0];
+    expect(modal.firstChild.children).toHaveLength(3);
+    expect(modal.firstChild.firstChild).toHaveTextContent(
+      'Cookies & Privacy Policy'
+    );
   });
 
-  it('clicking customize shows the preference', () => {
-    // TODO
+  it('shows the correct modal footer', async () => {
+    showGDPR = true;
+    const modal = (await renderGDPR(showGDPR))[0];
+    expect(modal.firstChild.lastChild.children).toHaveLength(2);
+    expect(modal.firstChild.lastChild.firstChild).toHaveTextContent(
+      'Customize'
+    );
+    expect(modal.firstChild.lastChild.lastChild).toHaveTextContent('Accept');
   });
 
-  it('customized preferences show previously saved preferences', () => {
-    // TODO
+  it('clicking accept closes the modal and sets all preferences', async () => {
+    showGDPR = true;
+    const modal = (await renderGDPR(showGDPR))[0];
+    fireEvent.click(screen.getAllByRole('button')[2]);
+    expect(showGDPR).toBeFalsy();
+    // TODO - still can't properly hide the gdpr modal
+    // expect(modal).not.toBeVisible();
+    expect(localStorage.getItem('cookies')).toEqual(
+      JSON.stringify({
+        necessary: true,
+        preferences: true,
+        analytics: true,
+      })
+    );
   });
 
-  it('clicking customize then accept sets only needed preferences', () => {
-    // TODO
-  });
-
-  async function renderGDPR(show = {}) {
-    let gdpr;
-    showGDPR = show;
+  it('clicking customize shows the preference', async () => {
+    showGDPR = true;
+    await renderGDPR(showGDPR);
+    expect(screen.queryAllByRole('checkbox')).toHaveLength(0);
     await act(async () => {
-      gdpr = render(<GDPR showGDPR={showGDPR} setShowGDPR={setShowGDPR} />);
-      const { container } = gdpr;
+      fireEvent.click(screen.getAllByRole('button')[1]);
+    });
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes).toHaveLength(3);
+    expect(checkboxes[0].getAttribute('id')).toEqual('necessaryCookies');
+    expect(checkboxes[1].getAttribute('id')).toEqual('sitePreferencesCookies');
+    expect(checkboxes[2].getAttribute('id')).toEqual('analyticsCookies');
+    expect(checkboxes[0].getAttribute('disabled')).toEqual('');
+    expect(checkboxes[1].getAttribute('disabled')).toBeNull();
+    expect(checkboxes[2].getAttribute('disabled')).toBeNull();
+    expect(checkboxes[0]).toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+  });
+
+  it('customized preferences show previously saved preferences', async () => {
+    const cookies = {};
+    cookies.necessary = true;
+    cookies.preferences = true;
+    cookies.analytics = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    showGDPR = true;
+    await renderGDPR(showGDPR);
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button')[1]);
+    });
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes[0]).toBeChecked();
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[2]).toBeChecked();
+  });
+
+  it('clicking customize then accept sets only needed preferences', async () => {
+    showGDPR = true;
+    await renderGDPR(showGDPR);
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button')[1]);
+    });
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button')[2]);
+    });
+    expect(localStorage.getItem('cookies')).toEqual(
+      JSON.stringify({
+        necessary: true,
+        preferences: false,
+        analytics: false,
+      })
+    );
+  });
+
+  it('allows updating off preferences', async () => {
+    const cookies = {};
+    cookies.necessary = true;
+    cookies.preferences = true;
+    cookies.analytics = true;
+    localStorage.setItem('cookies', JSON.stringify(cookies));
+    showGDPR = true;
+    await renderGDPR(showGDPR);
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button')[1]);
+    });
+    const checkboxes = screen.getAllByRole('checkbox');
+    await act(async () => {
+      fireEvent.click(checkboxes[1]);
+    });
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button')[2]);
+    });
+    expect(localStorage.getItem('cookies')).toEqual(
+      JSON.stringify({
+        necessary: true,
+        preferences: false,
+        analytics: true,
+      })
+    );
+  });
+
+  async function renderGDPR(show = true) {
+    await act(async () => {
+      const { container } = render(
+        <GDPR showGDPR={show} setShowGDPR={setShowGDPR} />
+      );
       await waitFor(() => container.firstChild);
     });
-    const { container } = gdpr;
-    return container;
+    return waitFor(() => screen.queryAllByTestId('gdpr'));
   }
 });

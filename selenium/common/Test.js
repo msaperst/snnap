@@ -114,7 +114,9 @@ class Test {
 
   async loginUser(username) {
     this.addUser(username);
-    await this.user.getId();
+    const id = await this.user.getId();
+    const company = new Company(id);
+    await company.setCompanyInformation('My Company', null, null, null, [], []);
     this.user = User.login(username, 'password');
     const userInfo = await this.user.getInfo();
     userInfo.token = await this.user.getToken();

@@ -35,7 +35,7 @@ describe('profile page', () => {
     expect(await driver.findElement(By.css('h1')).getText()).toEqual(
       'Test User'
     );
-    expect(await driver.findElements(By.css('h2'))).toHaveLength(3);
+    expect(await driver.findElements(By.css('h2'))).toHaveLength(4);
   });
 
   it('has all of the users data filled out @accessibility', async () => {
