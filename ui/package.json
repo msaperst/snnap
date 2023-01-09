@@ -72,7 +72,7 @@
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.7",
+    "@babel/core": "^7.20.12",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@testing-library/dom": "^8.19.1",
     "@testing-library/jest-dom": "^5.16.5",
