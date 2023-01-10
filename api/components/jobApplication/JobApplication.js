@@ -83,6 +83,9 @@ const JobApplication = class {
           `SELECT * FROM users JOIN settings WHERE users.id = ${job[0].user};`
         );
         if (user && user.length && user[0].email_notifications) {
+          const userInfo = await Mysql.query(
+            `SELECT * FROM users WHERE id = ${parseIntAndDbEscape(userId)};`
+          );
           Email.sendMail(
             user[0].email,
             'SNNAP: New Job Application',
@@ -90,7 +93,7 @@ const JobApplication = class {
               jobId
             )}`,
             `<a href='https://snnap.app/profile/${
-              user[0].username
+              userInfo[0].username
             }'>${htmlEncode(
               userName
             )}</a> applied to your <a href='https://snnap.app/jobs#${parseIntAndDbEscape(
