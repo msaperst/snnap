@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Col, Form, Row } from 'react-bootstrap';
-import { ChatDots, HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
+import {
+  ChatDotsFill,
+  HandThumbsDown,
+  HandThumbsUp,
+} from 'react-bootstrap-icons';
 import Avatar from '../Avatar/Avatar';
 import './Profile.css';
 import { authenticationService } from '../../services/authentication.service';
@@ -31,7 +35,7 @@ function ProfileHeader(props) {
           alt={`Chat with ${user.username}`}
           state={{ user: user.username }}
         >
-          <ChatDots title="Chat" color="white" />
+          <ChatDotsFill title={`Chat with ${user.username}`} color="#42a5f5" />
         </Link>
       );
     }

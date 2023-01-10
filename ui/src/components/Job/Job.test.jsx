@@ -341,7 +341,7 @@ describe('job', () => {
     ).toHaveLength(1);
     expect(
       userCol.firstChild.firstChild.lastChild.firstChild.firstChild.children
-    ).toHaveLength(3);
+    ).toHaveLength(2);
     expect(
       userCol.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('Chat');

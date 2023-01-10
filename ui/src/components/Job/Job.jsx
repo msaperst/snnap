@@ -2,7 +2,11 @@ import { Button, Card, Col, Row } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import './Job.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChatDots, HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
+import {
+  ChatDotsFill,
+  HandThumbsDown,
+  HandThumbsUp,
+} from 'react-bootstrap-icons';
 import { userService } from '../../services/user.service';
 import { jobService } from '../../services/job.service';
 import Avatar from '../Avatar/Avatar';
@@ -39,7 +43,7 @@ function Job(props) {
           alt={`Chat with ${user.username}`}
           state={{ user: user.username }}
         >
-          <ChatDots title="Chat" color="black" />
+          <ChatDotsFill title={`Chat with ${user.username}`} color="#42a5f5" />
         </Link>
       );
     }
