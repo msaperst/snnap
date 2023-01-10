@@ -35,7 +35,7 @@
     ]
   },
   "dependencies": {
-    "axe-core": "^4.6.1",
+    "axe-core": "^4.6.2",
     "bcryptjs": "^2.4.3",
     "chromedriver": "^108.0.0",
     "jest-html-reporters": "^3.0.11",
@@ -44,15 +44,15 @@
   "devDependencies": {
     "eslint": "8.31.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^27.2.0",
+    "eslint-plugin-jest": "^27.2.1",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^29.3.1",
     "jest-junit": "^15.0.0",
-    "prettier": "^2.8.1"
+    "prettier": "^2.8.2"
   }
 }
