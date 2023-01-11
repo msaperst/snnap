@@ -1,5 +1,5 @@
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplyToJob from '../ApplyToJob/ApplyToJob';
 import CompareJobApplications from '../CompareJobApplications/CompareJobApplications';
@@ -18,6 +18,12 @@ function Job(props) {
   const [applied, setApplied] = useState(false);
   const [applications, setApplications] = useState([]);
   const [button, setButton] = useState('');
+
+  const appliedTrue = useCallback(() => setApplied(true), []);
+  const avatarNav = useCallback(
+    () => navigate(`/profile/${user.username}`),
+    [navigate, user.username]
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -58,21 +64,18 @@ function Job(props) {
           user={currentUser}
           equipment={equipment}
           skills={skills}
-          applied={() => setApplied(true)}
+          applied={appliedTrue}
         />
       );
     }
-  }, [applications, currentUser, equipment, job, skills, applied]);
+  }, [applications, currentUser, equipment, job, skills, applied, appliedTrue]);
 
   return (
     <Card className="job" data-testid={`job-${job.id}`}>
       <Card.Body>
         <Row>
           <Col md={{ span: 2, offset: 0 }} xs={{ span: 6, offset: 3 }}>
-            <UserVisual
-              user={user}
-              avatarNav={() => navigate(`/profile/${user.username}`)}
-            />
+            <UserVisual user={user} avatarNav={avatarNav} />
           </Col>
           <Col md={7}>
             <Row>
