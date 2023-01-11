@@ -31,6 +31,9 @@ const companyService = require('../../services/company.service');
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
+jest.mock('../../services/authentication.service');
+const authenticationService = require('../../services/authentication.service');
+
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -60,6 +63,9 @@ describe('job', () => {
       username: 'msaperst',
       rating: null,
     });
+    authenticationService.authenticationService.currentUserValue = {
+      username: 'msaperst',
+    };
 
     job = {
       id: 5,

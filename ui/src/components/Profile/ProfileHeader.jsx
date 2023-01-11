@@ -1,45 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Col, Form, Row } from 'react-bootstrap';
-import {
-  ChatDotsFill,
-  HandThumbsDown,
-  HandThumbsUp,
-} from 'react-bootstrap-icons';
-import Avatar from '../Avatar/Avatar';
+import UserVisual from '../UserVisual/UserVisual';
 import './Profile.css';
-import { authenticationService } from '../../services/authentication.service';
 
 function ProfileHeader(props) {
   const { user, company, onClick, selected } = props;
   const navigate = useNavigate();
-  const [rating, setRating] = useState('');
-  const [message, setMessage] = useState('');
-
-  const currentUser = authenticationService.currentUserValue;
-
-  useEffect(() => {
-    if (user.rating !== undefined && user.rating !== null) {
-      setRating(
-        user.rating ? (
-          <HandThumbsUp title="Thumbs Up" />
-        ) : (
-          <HandThumbsDown title="Thumbs Down" />
-        )
-      );
-    }
-    if (user && user.username && user.username !== currentUser.username) {
-      setMessage(
-        <Link
-          to="/chat"
-          alt={`Chat with ${user.username}`}
-          state={{ user: user.username }}
-        >
-          <ChatDotsFill title={`Chat with ${user.username}`} color="#42a5f5" />
-        </Link>
-      );
-    }
-  }, [currentUser.username, user]);
 
   let radioButton = '';
   let avatarNav = null;
@@ -73,16 +40,7 @@ function ProfileHeader(props) {
     <Row>
       {radioButton}
       <Col md={2} xs={4}>
-        <div style={{ position: 'relative' }}>
-          <Avatar
-            avatar={user.avatar}
-            firstname={user.first_name}
-            lastname={user.last_name}
-            onClick={avatarNav}
-          />
-          <span className="rating">{rating}</span>
-          <span className="message">{message}</span>
-        </div>
+        <UserVisual user={user} avatarNav={avatarNav} />
       </Col>
       <Col>
         <Row>

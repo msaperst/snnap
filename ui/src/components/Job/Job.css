@@ -4,10 +4,6 @@
   padding: 20px;
 }
 
-.square {
-  position: relative;
-}
-
 .rating {
   position: absolute;
   top: 0;
