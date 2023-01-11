@@ -31,6 +31,9 @@ const companyService = require('../../services/company.service');
 jest.mock('../../services/job.service');
 const jobService = require('../../services/job.service');
 
+jest.mock('../../services/authentication.service');
+const authenticationService = require('../../services/authentication.service');
+
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -60,6 +63,9 @@ describe('job', () => {
       username: 'msaperst',
       rating: null,
     });
+    authenticationService.authenticationService.currentUserValue = {
+      username: 'msaperst',
+    };
 
     job = {
       id: 5,
@@ -341,7 +347,7 @@ describe('job', () => {
     ).toHaveLength(1);
     expect(
       userCol.firstChild.firstChild.lastChild.firstChild.firstChild.children
-    ).toHaveLength(3);
+    ).toHaveLength(2);
     expect(
       userCol.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('Chat');

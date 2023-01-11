@@ -1,14 +1,13 @@
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
-import './Job.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { ChatDots, HandThumbsDown, HandThumbsUp } from 'react-bootstrap-icons';
-import { userService } from '../../services/user.service';
-import { jobService } from '../../services/job.service';
-import Avatar from '../Avatar/Avatar';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ApplyToJob from '../ApplyToJob/ApplyToJob';
 import CompareJobApplications from '../CompareJobApplications/CompareJobApplications';
+import UserVisual from '../UserVisual/UserVisual';
+import { userService } from '../../services/user.service';
+import { jobService } from '../../services/job.service';
 import { companyService } from '../../services/company.service';
+import './Job.css';
 
 function Job(props) {
   const { job, equipment, skills, currentUser } = props;
@@ -19,31 +18,12 @@ function Job(props) {
   const [applied, setApplied] = useState(false);
   const [applications, setApplications] = useState([]);
   const [button, setButton] = useState('');
-  const [rating, setRating] = useState('');
-  const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    if (user.rating !== undefined && user.rating !== null) {
-      setRating(
-        user.rating ? (
-          <HandThumbsUp title="Thumbs Up" />
-        ) : (
-          <HandThumbsDown title="Thumbs Down" />
-        )
-      );
-    }
-    if (user && user.username && user.username !== currentUser.username) {
-      setMessage(
-        <Link
-          to="/chat"
-          alt={`Chat with ${user.username}`}
-          state={{ user: user.username }}
-        >
-          <ChatDots title="Chat" color="black" />
-        </Link>
-      );
-    }
-  }, [currentUser.username, user]);
+  const appliedTrue = useCallback(() => setApplied(true), []);
+  const avatarNav = useCallback(
+    () => navigate(`/profile/${user.username}`),
+    [navigate, user.username]
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -84,27 +64,18 @@ function Job(props) {
           user={currentUser}
           equipment={equipment}
           skills={skills}
-          applied={() => setApplied(true)}
+          applied={appliedTrue}
         />
       );
     }
-  }, [applications, currentUser, equipment, job, skills, applied]);
+  }, [applications, currentUser, equipment, job, skills, applied, appliedTrue]);
 
   return (
     <Card className="job" data-testid={`job-${job.id}`}>
       <Card.Body>
         <Row>
           <Col md={{ span: 2, offset: 0 }} xs={{ span: 6, offset: 3 }}>
-            <div className="square">
-              <Avatar
-                avatar={user.avatar}
-                firstname={user.first_name}
-                lastname={user.last_name}
-                onClick={() => navigate(`/profile/${user.username}`)}
-              />
-              <span className="rating">{rating}</span>
-              <span className="message">{message}</span>
-            </div>
+            <UserVisual user={user} avatarNav={avatarNav} />
           </Col>
           <Col md={7}>
             <Row>

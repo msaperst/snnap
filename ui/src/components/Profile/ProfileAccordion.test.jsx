@@ -395,7 +395,7 @@ describe('profile accordion', () => {
     expect(headers.children[0].lastChild.firstChild.children).toHaveLength(1);
     expect(
       headers.children[0].lastChild.firstChild.firstChild.children
-    ).toHaveLength(3);
+    ).toHaveLength(2);
     expect(
       headers.children[0].lastChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('Chat');
