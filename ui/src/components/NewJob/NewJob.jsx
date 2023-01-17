@@ -3,7 +3,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Form, Modal, Row } from 'react-bootstrap';
 import SnnapFormInput from '../SnnapForms/SnnapFormInput';
 import SnnapFormPrice from '../SnnapForms/SnnapFormPrice';
-import SnnapFormMultiSelectCreate from '../SnnapForms/SnnapFormMultiSelectCreate';
+import SnnapFormMultiSelect from '../SnnapForms/SnnapFormMultiSelect';
 import SnnapFormLocationInput from '../SnnapForms/SnnapFormLocationInput';
 import SnnapFormSelect from '../SnnapForms/SnnapFormSelect';
 import SnnapFormDuration from '../SnnapForms/SnnapFormDuration';
@@ -201,11 +201,12 @@ function NewJob() {
                 onChange={updateForm}
                 notRequired
               />
-              <SnnapFormMultiSelectCreate
+              <SnnapFormMultiSelect
                 size={6}
                 name="Skills Required"
                 onChange={updateForm}
                 options={jobSkills}
+                creatable
               />
             </Row>
             <Row className="mb-3">
