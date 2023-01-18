@@ -2,8 +2,8 @@ const db = require('mysql');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Mysql = require('../../services/Mysql');
-const parseIntAndDbEscape = require('../Common');
 const Email = require('../../services/Email');
+const { parseIntAndDbEscape } = require('../Common');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-jwt-token';
 

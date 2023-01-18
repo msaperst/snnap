@@ -11,13 +11,14 @@ const animatedComponents = makeAnimated();
 function SnnapFormMultiSelect(props) {
   const { size, name, onChange, options, values, creatable } = props;
 
-  const [selectedValue, setSelectedValue] = useState([]);
+  const [selectedValues, setSelectedValues] = useState([]);
   const [allOptions, setAllOptions] = useState([]);
+  const [lastSelectedOptions, setLastSelectedOptions] = useState([]);
 
   useEffect(() => {
     // setup our selected values
     if (values) {
-      setSelectedValue(values.map((option) => option.value));
+      setSelectedValues(values.map((option) => option.value));
     }
   }, [values]);
 
@@ -37,12 +38,15 @@ function SnnapFormMultiSelect(props) {
   }
 
   const safeName = name.replace(/\W+/g, '');
+
   let change = (e) => {
-    setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
+    setLastSelectedOptions(e);
+    setSelectedValues(Array.isArray(e) ? e.map((x) => x.value) : []);
   };
   if (onChange) {
     change = (e) => {
-      setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
+      setLastSelectedOptions(e);
+      setSelectedValues(Array.isArray(e) ? e.map((x) => x.value) : []);
       onChange(name, e);
     };
   }
@@ -52,9 +56,15 @@ function SnnapFormMultiSelect(props) {
     maxOptionValue = parseInt(maxOptionValue, 10) + 1;
     setAllOptions([
       ...allOptions,
-      { value: maxOptionValue, label: inputValue },
+      { value: `new${maxOptionValue}`, label: inputValue },
     ]);
-    setSelectedValue([...selectedValue, maxOptionValue]);
+    setSelectedValues([...selectedValues, `new${maxOptionValue}`]);
+    if (onChange) {
+      onChange(name, [
+        ...lastSelectedOptions,
+        { value: `new${maxOptionValue}`, label: inputValue },
+      ]);
+    }
   };
 
   let select;
@@ -64,7 +74,7 @@ function SnnapFormMultiSelect(props) {
         options={allOptions}
         components={animatedComponents}
         placeholder={name}
-        value={allOptions.filter((obj) => selectedValue.includes(obj.value))}
+        value={allOptions.filter((obj) => selectedValues.includes(obj.value))}
         isMulti
         className="multi-select-form"
         onChange={change}
@@ -78,7 +88,7 @@ function SnnapFormMultiSelect(props) {
         options={allOptions}
         components={animatedComponents}
         placeholder={name}
-        value={allOptions.filter((obj) => selectedValue.includes(obj.value))}
+        value={allOptions.filter((obj) => selectedValues.includes(obj.value))}
         isMulti
         className="multi-select-form"
         onChange={change}

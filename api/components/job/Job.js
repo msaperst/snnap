@@ -1,7 +1,7 @@
 const db = require('mysql');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');
-const parseIntAndDbEscape = require('../Common');
+const { parseIntAndDbEscape, handleNewSkill } = require('../Common');
 
 const Job = class {
   constructor(id) {
@@ -39,11 +39,12 @@ const Job = class {
           location.loc
         )}, ${parseFloat(location.lat)},${parseFloat(location.lon)});`
       );
-      skills.map(async (skill) => {
+      await skills.map(async (skill) => {
+        const skillId = await handleNewSkill(skill, user);
         await Mysql.query(
           `INSERT INTO job_skills (job, skill) VALUES (${
             result.insertId
-          }, ${parseIntAndDbEscape(skill.value)});`
+          }, ${parseIntAndDbEscape(skillId)});`
         );
       });
       newJob.id = result.insertId;
@@ -86,8 +87,12 @@ const Job = class {
     return Mysql.query(`SELECT * FROM equipment ORDER BY name;`);
   }
 
-  static async getSkills() {
-    return Mysql.query(`SELECT * FROM skills ORDER BY name;`);
+  static async getSkills(user) {
+    return Mysql.query(
+      `SELECT * FROM skills WHERE who IS NULL OR who = ${parseIntAndDbEscape(
+        user
+      )} ORDER BY name;`
+    );
   }
 
   static async getJobTypes() {

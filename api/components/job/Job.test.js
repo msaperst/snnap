@@ -140,6 +140,45 @@ describe('job', () => {
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 
+  it('creates the new skill', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    const emailSpy = jest.spyOn(Email, 'sendMail');
+    Mysql.query
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValue({ insertId: 12 });
+    const job = Job.create(
+      1,
+      5,
+      1,
+      location,
+      'Deetz',
+      100,
+      5,
+      null,
+      '2022-02-16',
+      'some equipment',
+      [{ value: 'new1', label: 'Positioning' }]
+    );
+    await expect(job.getId()).resolves.toEqual(15);
+    await expect(job.getType()).resolves.toEqual(5);
+    await expect(job.getLocation()).resolves.toEqual(location);
+    // verify the sql calls
+    expect(sqlSpy).toHaveBeenCalledTimes(3);
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "INSERT INTO skills (name, who, date_created) VALUES ('Positioning', 1, CURRENT_TIMESTAMP);"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      3,
+      'INSERT INTO job_skills (job, skill) VALUES (15, 12);'
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
+  });
+
   it('retrieves nothing when request is missing', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
     const emailSpy = jest.spyOn(Email, 'sendMail');
@@ -329,13 +368,15 @@ describe('job', () => {
       { id: 2, name: 'Flash' },
       { id: 3, name: 'Lights' },
     ]);
-    expect(await Job.getSkills()).toEqual([
+    expect(await Job.getSkills(5)).toEqual([
       { id: 1, name: 'Camera' },
       { id: 2, name: 'Flash' },
       { id: 3, name: 'Lights' },
     ]);
     expect(sqlSpy).toHaveBeenCalledTimes(1);
-    expect(sqlSpy).toHaveBeenCalledWith('SELECT * FROM skills ORDER BY name;');
+    expect(sqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM skills WHERE who IS NULL OR who = 5 ORDER BY name;'
+    );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 
