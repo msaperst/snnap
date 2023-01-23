@@ -147,7 +147,7 @@ describe('settings personal page', () => {
     let city = await driver.wait(until.elementLocated(By.id('formCity')), 5000);
     await test.waitUntilInputFilled(By.id('formCity'));
     await city.clear();
-    await city.sendKeys('Chantilly');
+    await city.sendKeys('Chantilly, ');
     const location = await driver.wait(
       until.elementLocated(By.xpath('//*[text()="Chantilly"]')),
       5000
