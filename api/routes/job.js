@@ -164,9 +164,18 @@ router.get('/equipment', async (req, res) => {
 });
 
 router.get('/skills', async (req, res) => {
-  await Common.basicAuthExecuteAndReturn(req, res, async () =>
-    res.send(await Job.getSkills())
-  );
+  const token = await Common.checkInput(req, res);
+  if (typeof token !== 'string' && !(token instanceof String)) {
+    return token;
+  }
+  try {
+    const user = User.auth(token);
+    return res.send(await Job.getSkills(await user.getId()));
+  } catch (error) {
+    return res.status(422).send({
+      msg: error.message,
+    });
+  }
 });
 
 router.get('/job/:id', async (req, res) => {

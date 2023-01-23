@@ -1,6 +1,6 @@
 const db = require('mysql');
 const Mysql = require('../../services/Mysql');
-const parseIntAndDbEscape = require('../Common');
+const { parseIntAndDbEscape, handleNewSkill } = require('../Common');
 
 class Company {
   constructor(userId) {
@@ -82,7 +82,7 @@ class Company {
       `DELETE FROM company_equipment WHERE company = ${this.companyId};`
     );
     // set new equipment
-    equipment.map(async (equip) => {
+    await equipment.map(async (equip) => {
       await Mysql.query(
         `INSERT INTO company_equipment (company, equipment, what) VALUES (${
           this.companyId
@@ -94,11 +94,12 @@ class Company {
       `DELETE FROM company_skills WHERE company = ${this.companyId};`
     );
     // set new skills
-    skills.map(async (skill) => {
+    await skills.map(async (skill) => {
+      const skillId = await handleNewSkill(skill, this.userId);
       await Mysql.query(
         `INSERT INTO company_skills (company, skill) VALUES (${
           this.companyId
-        }, ${parseIntAndDbEscape(skill.value, 10)});`
+        }, ${parseIntAndDbEscape(skillId)});`
       );
     });
   }

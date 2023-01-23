@@ -224,6 +224,7 @@ class ApplyToJob extends React.Component {
                   values={company.skills}
                   onChange={this.updateForm}
                   options={skills}
+                  creatable
                 />
               </Row>
               <Row className="mb-3">

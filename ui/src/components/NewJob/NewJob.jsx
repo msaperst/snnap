@@ -206,6 +206,7 @@ function NewJob() {
                 name="Skills Required"
                 onChange={updateForm}
                 options={jobSkills}
+                creatable
               />
             </Row>
             <Row className="mb-3">

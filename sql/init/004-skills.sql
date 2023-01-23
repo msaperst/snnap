@@ -16,7 +16,10 @@ INSERT INTO skills (name) VALUES ('Pets');
 INSERT INTO skills (name) VALUES ('Children');
 
 DELETE FROM skills WHERE name = 'Photography' OR name = 'Retouch' OR name = 'Lighting' OR name = 'Posing' OR name = 'Pets' OR name = 'Children';
-INSERT INTO skills (id, name) VALUES (1, 'Off Camera Flash');
-INSERT INTO skills (id, name) VALUES (2, 'Solo Photography');
-INSERT INTO skills (id, name) VALUES (3, 'Natural Light');
-INSERT INTO skills (id, name) VALUES (4, 'Post Production Editing');
+INSERT IGNORE INTO skills (id, name) VALUES (1, 'Off Camera Flash');
+INSERT IGNORE INTO skills (id, name) VALUES (2, 'Solo Photography');
+INSERT IGNORE INTO skills (id, name) VALUES (3, 'Natural Light');
+INSERT IGNORE INTO skills (id, name) VALUES (4, 'Post Production Editing');
+
+ALTER TABLE skills ADD COLUMN who int(11) NULL;
+ALTER TABLE skills ADD COLUMN date_created TIMESTAMP NULL;
