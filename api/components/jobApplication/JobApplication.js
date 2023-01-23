@@ -2,7 +2,7 @@ const db = require('mysql');
 const htmlEncode = require('js-htmlencode');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');
-const parseIntAndDbEscape = require('../Common');
+const { parseIntAndDbEscape, handleNewSkill } = require('../Common');
 
 const JobApplication = class {
   constructor(id) {
@@ -39,18 +39,19 @@ const JobApplication = class {
           experience
         )}, ${db.escape(comment)});`
       );
-      equipment.map(async (equip) => {
+      await equipment.map(async (equip) => {
         await Mysql.query(
           `INSERT INTO job_applications_equipment (job_application, equipment, what) VALUES (${
             result.insertId
           }, ${parseIntAndDbEscape(equip.value)}, ${db.escape(equip.what)});`
         );
       });
-      skills.map(async (skill) => {
+      await skills.map(async (skill) => {
+        const skillId = await handleNewSkill(skill, userId);
         await Mysql.query(
           `INSERT INTO job_applications_skills (job_application, skill) VALUES (${
             result.insertId
-          }, ${parseIntAndDbEscape(skill.value)});`
+          }, ${parseIntAndDbEscape(skillId)});`
         );
       });
       if (portfolio && Array.isArray(portfolio)) {

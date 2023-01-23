@@ -347,6 +347,48 @@ describe('application for job', () => {
     );
   });
 
+  it('creates the new skill', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    const emailSpy = jest.spyOn(Email, 'sendMail');
+    Mysql.query
+      .mockResolvedValueOnce({ insertId: 15 })
+      .mockResolvedValueOnce({ insertId: 12 })
+      .mockResolvedValueOnce([]);
+    const jobApplication = JobApplication.create(
+      1,
+      5,
+      3,
+      'Max Saperstone',
+      'Butts R Us',
+      null,
+      'insta',
+      null,
+      'some experience',
+      [],
+      [{ value: 'new1', label: 'a new skill' }]
+    );
+    await expect(jobApplication.getId()).resolves.toEqual(15);
+    // verify the sql calls
+    expect(sqlSpy).toHaveBeenCalledTimes(4);
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      1,
+      "INSERT INTO job_applications (job_id, user_id, company_id, user_name, company_name, website, insta, fb, experience, comment) VALUES (1, 5, 3, 'Max Saperstone', 'Butts R Us', NULL, 'insta', NULL, 'some experience', NULL);"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      2,
+      "INSERT INTO skills (name, who, date_created) VALUES ('a new skill', 5, CURRENT_TIMESTAMP);"
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      3,
+      'SELECT * FROM jobs WHERE id = 1;'
+    );
+    expect(sqlSpy).toHaveBeenNthCalledWith(
+      4,
+      'INSERT INTO job_applications_skills (job_application, skill) VALUES (15, 12);'
+    );
+    expect(emailSpy).toHaveBeenCalledTimes(0);
+  });
+
   it('retrieves nothing when application is missing', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
     const emailSpy = jest.spyOn(Email, 'sendMail');

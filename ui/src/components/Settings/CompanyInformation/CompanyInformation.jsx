@@ -139,6 +139,7 @@ function CompanyInformation(props) {
           values={company.skills}
           onChange={updateForm}
           options={skills}
+          creatable
         />
       </Row>
       <Submit

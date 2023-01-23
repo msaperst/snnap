@@ -1,7 +1,7 @@
 const db = require('mysql');
 const Mysql = require('../../services/Mysql');
 const User = require('../user/User');
-const parseIntAndDbEscape = require('../Common');
+const { parseIntAndDbEscape } = require('../Common');
 
 const Chat = class {
   constructor(id) {

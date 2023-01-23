@@ -1,23 +1,55 @@
 import { Col, Form } from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import CreatableSelect from 'react-select/creatable';
+import makeAnimated from 'react-select/animated';
+import './SnnapFormMultiSelect.css';
 import './SnnapForm.css';
 import Select from 'react-select';
-import makeAnimated from 'react-select/animated';
-
-import './SnnapFormMultiSelect.css';
 
 const animatedComponents = makeAnimated();
 
 function SnnapFormMultiSelect(props) {
-  const { size, name, onChange, options, values } = props;
-  const [selectedValue, setSelectedValue] = useState([]);
+  const { size, name, onChange, options, values, creatable } = props;
+
+  const [selectedValues, setSelectedValues] = useState([]);
+  const [allOptions, setAllOptions] = useState([]);
+  const [lastSelectedOptions, setLastSelectedOptions] = useState([]);
 
   useEffect(() => {
     // setup our selected values
     if (values) {
-      setSelectedValue(values.map((option) => option.value));
+      setSelectedValues(values.map((option) => option.value));
     }
   }, [values]);
+
+  useEffect(() => {
+    if (options) {
+      const opts = options.map((option) => ({
+        value: option.id,
+        label: option.name,
+      }));
+      setAllOptions(opts);
+    }
+  }, [options]);
+
+  const create = useCallback(
+    (inputValue) => {
+      let maxOptionValue = Math.max(...allOptions.map(({ value }) => value));
+      maxOptionValue = parseInt(maxOptionValue, 10) + 1;
+      setAllOptions([
+        ...allOptions,
+        { value: `new${maxOptionValue}`, label: inputValue },
+      ]);
+      setSelectedValues([...selectedValues, `new${maxOptionValue}`]);
+      if (onChange) {
+        onChange(name, [
+          ...lastSelectedOptions,
+          { value: `new${maxOptionValue}`, label: inputValue },
+        ]);
+      }
+    },
+    [allOptions, lastSelectedOptions, name, onChange, selectedValues]
+  );
 
   // return nothing if we have no options or no name
   if (!name || !options || options.length === 0) {
@@ -25,32 +57,48 @@ function SnnapFormMultiSelect(props) {
   }
 
   const safeName = name.replace(/\W+/g, '');
+
   let change = (e) => {
-    setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
+    setLastSelectedOptions(e);
+    setSelectedValues(e.map((x) => x.value));
   };
   if (onChange) {
     change = (e) => {
-      setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
+      setLastSelectedOptions(e);
+      setSelectedValues(e.map((x) => x.value));
       onChange(name, e);
     };
   }
-  const opts = options.map((option) => ({
-    value: option.id,
-    label: option.name,
-  }));
 
-  const select = (
-    <Select
-      options={opts}
-      components={animatedComponents}
-      placeholder={name}
-      value={opts.filter((obj) => selectedValue.includes(obj.value))}
-      isMulti
-      className="multi-select-form"
-      onChange={change}
-      aria-label={name}
-    />
-  );
+  let select;
+  if (creatable) {
+    select = (
+      <CreatableSelect
+        options={allOptions}
+        components={animatedComponents}
+        placeholder={name}
+        value={allOptions.filter((obj) => selectedValues.includes(obj.value))}
+        isMulti
+        className="multi-select-form"
+        onChange={change}
+        onCreateOption={create}
+        aria-label={name}
+      />
+    );
+  } else {
+    select = (
+      <Select
+        options={allOptions}
+        components={animatedComponents}
+        placeholder={name}
+        value={allOptions.filter((obj) => selectedValues.includes(obj.value))}
+        isMulti
+        className="multi-select-form"
+        onChange={change}
+        aria-label={name}
+      />
+    );
+  }
 
   return (
     <Form.Group as={Col} md={size} controlId={`validation${safeName}`}>

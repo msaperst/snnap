@@ -303,4 +303,52 @@ describe('Company', () => {
       'INSERT INTO company_skills (company, skill) VALUES (2, 4);'
     );
   });
+
+  it('creates the new skill', async () => {
+    const spy = jest.spyOn(Mysql, 'query');
+    Mysql.query
+      .mockResolvedValueOnce([{ id: 2 }])
+      .mockResolvedValue({ insertId: 12 });
+    const company = new Company(2);
+    await company.setCompanyInformation(
+      'name',
+      'site',
+      'insta',
+      'fb',
+      [],
+      [
+        { value: 'new1', label: 'New Thing' },
+        { value: 4, label: 'Flashy' },
+      ]
+    );
+    expect(spy).toHaveBeenCalledTimes(7);
+    expect(spy).toHaveBeenNthCalledWith(
+      1,
+      'SELECT * FROM companies WHERE user = 2;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      2,
+      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb' WHERE user = 2"
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      3,
+      'DELETE FROM company_equipment WHERE company = 2;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      4,
+      'DELETE FROM company_skills WHERE company = 2;'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      5,
+      "INSERT INTO skills (name, who, date_created) VALUES ('New Thing', 2, CURRENT_TIMESTAMP);"
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      6,
+      'INSERT INTO company_skills (company, skill) VALUES (2, 4);'
+    );
+    expect(spy).toHaveBeenNthCalledWith(
+      7,
+      'INSERT INTO company_skills (company, skill) VALUES (2, 12);'
+    );
+  });
 });
