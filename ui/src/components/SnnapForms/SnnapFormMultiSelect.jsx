@@ -1,5 +1,5 @@
 import { Col, Form } from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import makeAnimated from 'react-select/animated';
 import './SnnapFormMultiSelect.css';
@@ -32,6 +32,25 @@ function SnnapFormMultiSelect(props) {
     }
   }, [options]);
 
+  const create = useCallback(
+    (inputValue) => {
+      let maxOptionValue = Math.max(...allOptions.map(({ value }) => value));
+      maxOptionValue = parseInt(maxOptionValue, 10) + 1;
+      setAllOptions([
+        ...allOptions,
+        { value: `new${maxOptionValue}`, label: inputValue },
+      ]);
+      setSelectedValues([...selectedValues, `new${maxOptionValue}`]);
+      if (onChange) {
+        onChange(name, [
+          ...lastSelectedOptions,
+          { value: `new${maxOptionValue}`, label: inputValue },
+        ]);
+      }
+    },
+    [allOptions, lastSelectedOptions, name, onChange, selectedValues]
+  );
+
   // return nothing if we have no options or no name
   if (!name || !options || options.length === 0) {
     return null;
@@ -41,31 +60,15 @@ function SnnapFormMultiSelect(props) {
 
   let change = (e) => {
     setLastSelectedOptions(e);
-    setSelectedValues(Array.isArray(e) ? e.map((x) => x.value) : []);
+    setSelectedValues(e.map((x) => x.value));
   };
   if (onChange) {
     change = (e) => {
       setLastSelectedOptions(e);
-      setSelectedValues(Array.isArray(e) ? e.map((x) => x.value) : []);
+      setSelectedValues(e.map((x) => x.value));
       onChange(name, e);
     };
   }
-
-  const create = (inputValue) => {
-    let maxOptionValue = Math.max(...allOptions.map(({ value }) => value));
-    maxOptionValue = parseInt(maxOptionValue, 10) + 1;
-    setAllOptions([
-      ...allOptions,
-      { value: `new${maxOptionValue}`, label: inputValue },
-    ]);
-    setSelectedValues([...selectedValues, `new${maxOptionValue}`]);
-    if (onChange) {
-      onChange(name, [
-        ...lastSelectedOptions,
-        { value: `new${maxOptionValue}`, label: inputValue },
-      ]);
-    }
-  };
 
   let select;
   if (creatable) {

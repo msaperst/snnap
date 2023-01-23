@@ -92,8 +92,10 @@ describe('snnap form multi select create', () => {
 
   it('adds value when onchange is provided', async () => {
     let x = 0;
-    const updateX = () => {
-      x = 1;
+    let y = 0;
+    const updateX = (name, value) => {
+      x = name;
+      y = value;
     };
     const { container, getByText } = render(
       <SnnapFormMultiSelect
@@ -104,7 +106,8 @@ describe('snnap form multi select create', () => {
     );
     const selectItem = getSelectItem(getByText);
     await selectItem('MyForm', 'Lights');
-    expect(x).toEqual(1);
+    expect(x).toEqual('MyForm');
+    expect(y).toEqual([{ label: 'Lights', value: 2 }]);
     expect(
       container.firstChild.firstChild.lastChild.firstChild.firstChild.children
     ).toHaveLength(1);
@@ -129,8 +132,10 @@ describe('snnap form multi select create', () => {
 
   it('removes value when onchange is provided', async () => {
     let x = 0;
-    const updateX = () => {
-      x = 1;
+    let y = 0;
+    const updateX = (name, value) => {
+      x = name;
+      y = value;
     };
     const { container, getByLabelText } = render(
       <SnnapFormMultiSelect
@@ -149,7 +154,8 @@ describe('snnap form multi select create', () => {
       // eslint-disable-next-line no-promise-executor-return
       await new Promise((r) => setTimeout(r, 500));
     });
-    expect(x).toEqual(1);
+    expect(x).toEqual('MyForm');
+    expect(y).toEqual([]);
     expect(
       container.firstChild.firstChild.lastChild.firstChild.firstChild.children
     ).toHaveLength(0);
@@ -251,17 +257,7 @@ describe('snnap form multi select create', () => {
   });
 
   it('selects a new value when added', async () => {
-    const { container, getByText, getByLabelText } = render(
-      <SnnapFormMultiSelect name="MyForm" options={options} creatable />
-    );
-    await waitFor(() => container.firstChild);
-    await act(async () => {
-      fireEvent.change(getByLabelText('MyForm'), {
-        target: { value: 'new option' },
-      });
-    });
-    await waitFor(() => getByText('Create "new option"'));
-    fireEvent.click(getByText('Create "new option"'));
+    const { container } = await createNew();
     expect(
       container.firstChild.firstChild.lastChild.firstChild.firstChild.children
     ).toHaveLength(1);
@@ -270,18 +266,26 @@ describe('snnap form multi select create', () => {
     ).toHaveTextContent('new option');
   });
 
+  it('selects the new value and adds the change', async () => {
+    let x = 0;
+    let y = 0;
+    const updateX = (name, value) => {
+      x = name;
+      y = value;
+    };
+    const { container } = await createNew(updateX);
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.children
+    ).toHaveLength(1);
+    expect(
+      container.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
+    ).toHaveTextContent('new option');
+    expect(x).toEqual('MyForm');
+    expect(y).toEqual([{ label: 'new option', value: 'new5' }]);
+  });
+
   it('adds the new value when deselected', async () => {
-    const { container, getByText, getByLabelText } = render(
-      <SnnapFormMultiSelect name="MyForm" options={options} creatable />
-    );
-    await waitFor(() => container.firstChild);
-    await act(async () => {
-      fireEvent.change(getByLabelText('MyForm'), {
-        target: { value: 'new option' },
-      });
-    });
-    await waitFor(() => getByText('Create "new option"'));
-    fireEvent.click(getByText('Create "new option"'));
+    const { container, getByText, getByLabelText } = await createNew();
     await act(async () => {
       fireEvent.click(getByLabelText('Remove new option'));
       // eslint-disable-next-line no-promise-executor-return
@@ -311,4 +315,24 @@ describe('snnap form multi select create', () => {
       container.firstChild.firstChild.lastChild.firstChild.children[4]
     ).toHaveTextContent('new option');
   });
+
+  async function createNew(update = null) {
+    const { container, getByText, getByLabelText } = render(
+      <SnnapFormMultiSelect
+        name="MyForm"
+        options={options}
+        onChange={update}
+        creatable
+      />
+    );
+    await waitFor(() => container.firstChild);
+    await act(async () => {
+      fireEvent.change(getByLabelText('MyForm'), {
+        target: { value: 'new option' },
+      });
+    });
+    await waitFor(() => getByText('Create "new option"'));
+    fireEvent.click(getByText('Create "new option"'));
+    return { container, getByText, getByLabelText };
+  }
 });
