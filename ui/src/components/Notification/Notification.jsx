@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Container, Row } from 'react-bootstrap';
+import {
+  Card,
+  Col,
+  Container,
+  OverlayTrigger,
+  Row,
+  Tooltip,
+} from 'react-bootstrap';
 import { EnvelopeExclamationFill } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { userService } from '../../services/user.service';
@@ -67,11 +74,15 @@ function Notification(props) {
                   {isRead ? (
                     ''
                   ) : (
-                    <EnvelopeExclamationFill
-                      color="red"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => markRead()}
-                    />
+                    <OverlayTrigger
+                      overlay={<Tooltip>Mark message as read</Tooltip>}
+                    >
+                      <EnvelopeExclamationFill
+                        color="red"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => markRead()}
+                      />
+                    </OverlayTrigger>
                   )}
                 </Col>
               </Row>

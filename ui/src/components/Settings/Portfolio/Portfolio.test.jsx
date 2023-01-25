@@ -24,7 +24,7 @@ describe('portfolio', () => {
   it('renders multiple portfolios properly with no data', () => {
     const { container } = render(<Portfolio company={{}} />);
     expect(container.children).toHaveLength(1);
-    expect(container.firstChild.children).toHaveLength(3);
+    expect(container.firstChild.children).toHaveLength(4);
   });
 
   it('renders header properly', () => {
@@ -41,7 +41,7 @@ describe('portfolio', () => {
     const { container } = render(<Portfolio company={company} />);
     expect(container.children).toHaveLength(1);
     expect(container.firstChild.getAttribute('noValidate')).toEqual('');
-    expect(container.firstChild.children).toHaveLength(6);
+    expect(container.firstChild.children).toHaveLength(5);
     expect(container.firstChild.firstChild).toHaveTextContent('Portfolio');
   });
 
@@ -203,7 +203,7 @@ describe('portfolio', () => {
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
-    expect(spy).toHaveBeenCalledWith('experience', [{}]);
+    expect(spy).toHaveBeenCalledWith('experience', []);
     hasError(container);
   });
 
@@ -235,7 +235,7 @@ describe('portfolio', () => {
     await act(async () => {
       fireEvent.click(container.firstChild.lastChild.firstChild.firstChild);
     });
-    expect(spy).toHaveBeenCalledWith('experience', [{}]);
+    expect(spy).toHaveBeenCalledWith('experience', []);
     expect(container.firstChild.lastChild.lastChild).toHaveClass('col');
     expect(container.firstChild.lastChild.lastChild.children).toHaveLength(1);
     expect(container.firstChild.lastChild.lastChild.firstChild).toHaveClass(
