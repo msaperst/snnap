@@ -77,7 +77,9 @@ function GDPR(props) {
         <p>
           For more information on how we process your personal data - or to
           update your preferences at any time - please visit our{' '}
-          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link onClick={() => setShowGDPR(false)} to="/privacy-policy">
+            Privacy Policy
+          </Link>
         </p>
         {customize}
       </Modal.Body>
