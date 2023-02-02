@@ -1,4 +1,4 @@
-const db = require('mysql');
+const db = require('mysql2');
 const htmlEncode = require('js-htmlencode');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');

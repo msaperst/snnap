@@ -38,6 +38,7 @@ describe('password reset', () => {
   }, 15000);
 
   it('shows the form when clicked @network @accessibility', async () => {
+    await driver.wait(until.elementIsVisible(forgot));
     expect(await forgot.isDisplayed()).toBeTruthy();
   });
 

@@ -133,7 +133,7 @@ describe('new job', () => {
 
   it('closes modal with successful submission of the form @network @accessibility', async () => {
     const cards = (await driver.findElements(By.className('card'))).length;
-    await enterData(2, 1, 'Fairfax', 'New Deetz', '100', '100', '10/13/2031');
+    await enterData(2, 1, 'Fairfax, ', 'New Deetz', '100', '100', '10/13/2031');
     await driver.wait(
       () =>
         driver

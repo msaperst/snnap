@@ -1,4 +1,4 @@
-const db = require('mysql');
+const db = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Mysql = require('../../services/Mysql');
