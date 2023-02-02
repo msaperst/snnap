@@ -10,7 +10,8 @@ async function sendUnreadNotifications(user, ctx) {
     const chat = new Chat(await user.getId());
     const conversationList = await chat.getConversationList();
     notifications.messages = conversationList.reduce(
-      (total, conversation) => total + conversation.unread,
+      (total, conversation) =>
+        parseInt(total, 10) + parseInt(conversation.unread, 10),
       0
     );
   } catch (e) {

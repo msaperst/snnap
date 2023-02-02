@@ -1,4 +1,4 @@
-const db = require('mysql');
+const db = require('mysql2');
 const Mysql = require('../services/Mysql');
 
 module.exports = {

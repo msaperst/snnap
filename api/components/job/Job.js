@@ -1,4 +1,4 @@
-const db = require('mysql');
+const db = require('mysql2');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');
 const { parseIntAndDbEscape, handleNewSkill } = require('../Common');
