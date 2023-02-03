@@ -74,9 +74,9 @@ function SettingsPage() {
           </Tab>
           <Tab eventKey="company" title="Company Profile">
             <div className="skinny">
-              <CompanyInformation company={company} />
+              <CompanyInformation key={`info${key}`} company={company} />
               <Row className="mb-5" />
-              <Portfolio company={company} />
+              <Portfolio key={`port${key}`} company={company} />
             </div>
           </Tab>
         </Tabs>

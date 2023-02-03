@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Gallery from './Gallery';
 
@@ -19,18 +19,18 @@ describe('portfolio', () => {
 
   it('renders multiple portfolios properly with no data', () => {
     const { container } = render(<Gallery company={{}} />);
-    expect(container.children).toHaveLength(0);
+    expect(container.children).toHaveLength(1);
   });
 
   it('renders multiple portfolios properly', () => {
     const company = { portfolio: [{}, {}] };
     const { container } = render(<Gallery company={company} />);
-    // we should have 3 portfolio items, the first two, and then an empty added one
-    expect(container.children).toHaveLength(3);
+    // we should have 3 portfolio items, the first two with nothing added because the last is empty
+    expect(container.children).toHaveLength(2);
   });
 
   it('has 2 items in the first row', () => {
-    const company = { portfolio: [] };
+    const company = { portfolio: [{ id: 2 }] };
     const { container } = render(<Gallery company={company} />);
     expect(container.firstChild).toHaveClass('mb-3 row');
     expect(container.firstChild.children).toHaveLength(2);
@@ -96,19 +96,26 @@ describe('portfolio', () => {
     ]);
   });
 
-  it('removes a row once the description AND link have been cleared out', () => {
+  it('removes a row once the description AND link have been cleared out', async () => {
     const company = {
       portfolio: [{ description: 'description1', link: 'link1' }],
     };
     const { container } = render(
       <Gallery company={company} getPortfolioItems={updateX} />
     );
+    await waitFor(() => container.firstChild);
 
     expect(container.children).toHaveLength(2);
+    fireEvent.change(container.firstChild.firstChild.firstChild.firstChild, {
+      target: { value: '1' },
+    });
     fireEvent.change(container.firstChild.firstChild.firstChild.firstChild, {
       target: { value: '' },
     });
     expect(container.children).toHaveLength(2);
+    fireEvent.change(container.firstChild.lastChild.firstChild.firstChild, {
+      target: { value: '1' },
+    });
     fireEvent.change(container.firstChild.lastChild.firstChild.firstChild, {
       target: { value: '' },
     });
