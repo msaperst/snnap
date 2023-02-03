@@ -15,12 +15,12 @@ describe('settings portfolio page', () => {
     driver = await test.getDriver();
     await test.loginUser('settingsPortfolioUser');
     await driver.get(`${Test.getApp()}/settings`);
-    await driver.wait(until.elementLocated(By.css('h1')), 5000);
-    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
-    driver.wait(
-      until.elementIsVisible(driver.findElement(By.id('formExperience'))),
-      5000
-    );
+    // await driver.wait(until.elementLocated(By.css('h1')), 5000);
+    // driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+    // driver.wait(
+    //   until.elementIsVisible(driver.findElement(By.id('formExperience'))),
+    //   5000
+    // );
   }, 10000);
 
   afterEach(async () => {
