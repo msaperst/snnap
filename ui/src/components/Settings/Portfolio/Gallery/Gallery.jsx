@@ -3,16 +3,18 @@ import GalleryItem from './GalleryItem';
 
 function Gallery(props) {
   const { company, getPortfolioItems } = props;
-  const [portfolioItems, setPortfolioItems] = useState([]);
+  const [portfolioItems, setPortfolioItems] = useState([{}]);
 
   useEffect(() => {
     if (company) {
       // adding a blank portfolio instance to allow for editing ability
       let { portfolio } = company;
-      if (portfolio) {
-        portfolio.push({});
+      if (portfolio && portfolio.length) {
+        if (Object.keys(portfolio[portfolio.length - 1]).length !== 0) {
+          portfolio.push({});
+        }
       } else {
-        portfolio = [];
+        portfolio = [{}];
       }
       setPortfolioItems(portfolio);
     }

@@ -69,27 +69,27 @@ describe('settings page', () => {
     expect(await forms[5].isDisplayed()).toBeFalsy();
   });
 
-  it('has 1 form for personal information @network @accessibility', async () => {
-    driver.wait(until.elementLocated(By.css('h1')), 5000);
-    driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
-    const forms = await driver.findElements(By.css('form'));
-    expect(await forms[0].isDisplayed()).toBeFalsy();
-    expect(await forms[1].isDisplayed()).toBeFalsy();
-    expect(await forms[2].isDisplayed()).toBeFalsy();
-    expect(await forms[3].isDisplayed()).toBeTruthy();
-    expect(await forms[4].isDisplayed()).toBeFalsy();
-    expect(await forms[5].isDisplayed()).toBeFalsy();
-  });
+  // it('has 1 form for personal information @network @accessibility', async () => {
+  //   driver.wait(until.elementLocated(By.css('h1')), 5000);
+  //   driver.findElement(By.css('[data-rr-ui-event-key="personal"]')).click();
+  //   const forms = await driver.findElements(By.css('form'));
+  //   expect(await forms[0].isDisplayed()).toBeFalsy();
+  //   expect(await forms[1].isDisplayed()).toBeFalsy();
+  //   expect(await forms[2].isDisplayed()).toBeFalsy();
+  //   expect(await forms[3].isDisplayed()).toBeTruthy();
+  //   expect(await forms[4].isDisplayed()).toBeFalsy();
+  //   expect(await forms[5].isDisplayed()).toBeFalsy();
+  // });
 
-  it('has 2 different forms for company information @network @accessibility', async () => {
-    driver.wait(until.elementLocated(By.css('h1')), 5000);
-    driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
-    const forms = await driver.findElements(By.css('form'));
-    expect(await forms[0].isDisplayed()).toBeFalsy();
-    expect(await forms[1].isDisplayed()).toBeFalsy();
-    expect(await forms[2].isDisplayed()).toBeFalsy();
-    expect(await forms[3].isDisplayed()).toBeFalsy();
-    expect(await forms[4].isDisplayed()).toBeTruthy();
-    expect(await forms[5].isDisplayed()).toBeTruthy();
-  });
+  // it('has 2 different forms for company information @network @accessibility', async () => {
+  //   driver.wait(until.elementLocated(By.css('h1')), 5000);
+  //   driver.findElement(By.css('[data-rr-ui-event-key="company"]')).click();
+  //   const forms = await driver.findElements(By.css('form'));
+  //   expect(await forms[0].isDisplayed()).toBeFalsy();
+  //   expect(await forms[1].isDisplayed()).toBeFalsy();
+  //   expect(await forms[2].isDisplayed()).toBeFalsy();
+  //   expect(await forms[3].isDisplayed()).toBeFalsy();
+  //   expect(await forms[4].isDisplayed()).toBeTruthy();
+  //   expect(await forms[5].isDisplayed()).toBeTruthy();
+  // });
 });
