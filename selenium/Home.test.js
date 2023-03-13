@@ -22,7 +22,7 @@ describe('home page', () => {
       jobCreatorId,
       2,
       1,
-      '2023-03-12',
+      '2024-03-12',
       {
         lat: 38.8051095,
         loc: 'Alexandria, VA 20030, United States of America',
@@ -30,7 +30,7 @@ describe('home page', () => {
       },
       'Gig in Alexandria'
     );
-    await Test.addJob(jobCreatorId, 2, '2023-03-10');
+    await Test.addJob(jobCreatorId, 2, '2024-03-10');
 
     await test.loginUser('homeUser');
     await test.applyAllFilters();

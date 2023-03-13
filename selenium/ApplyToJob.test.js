@@ -22,7 +22,7 @@ describe('apply to job', () => {
     // create a job for our test user
     test.addUser('newApplyToJobCreatorUser');
     jobCreatorId = await test.user.getId();
-    jobs.push(await Test.addJob(jobCreatorId, 1, '2023-03-12'));
+    jobs.push(await Test.addJob(jobCreatorId, 1, '2024-03-12'));
     // login as a user
     user = await test.loginUser('newApplyToJobUser');
     await test.applyAllFilters();
@@ -46,8 +46,8 @@ describe('apply to job', () => {
   }, 15000);
 
   it('can be viewed from any job @network @accessibility', async () => {
-    jobs.push(await Test.addJob(jobCreatorId, 2, '2023-03-10'));
-    jobs.push(await Test.addJob(await user.getId(), 4, '2023-03-10'));
+    jobs.push(await Test.addJob(jobCreatorId, 2, '2024-03-10'));
+    jobs.push(await Test.addJob(await user.getId(), 4, '2024-03-10'));
     await driver.navigate().refresh();
     for (const job of jobs) {
       const button = await home.getButton(await job.getId());
@@ -64,7 +64,7 @@ describe('apply to job', () => {
   });
 
   it('has the view applications button when you created the request', async () => {
-    jobs.push(await Test.addJob(await user.getId(), 4, '2023-03-10'));
+    jobs.push(await Test.addJob(await user.getId(), 4, '2024-03-10'));
     await driver.navigate().refresh();
     const button = await home.getButton(await jobs[1].getId());
     expect(await button.isDisplayed()).toBeTruthy();

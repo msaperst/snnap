@@ -163,7 +163,7 @@ describe('notifications', () => {
   });
 
   async function createAppliedToJobNotification() {
-    const job = await Test.addJob(await user.getId(), 1, '2023-03-12');
+    const job = await Test.addJob(await user.getId(), 1, '2024-03-12');
     jobs.push(job);
     applicationsForJobs.push(
       await Test.addJobApplication(
@@ -177,7 +177,7 @@ describe('notifications', () => {
   }
 
   async function createChosenJobApplicationNotification() {
-    const job = await Test.addJob(await otherUser.getId(), 1, '2023-03-12');
+    const job = await Test.addJob(await otherUser.getId(), 1, '2024-03-12');
     jobs.push(job);
     const application = await Test.addJobApplication(
       await job.getId(),

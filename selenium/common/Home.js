@@ -36,7 +36,7 @@ class Home {
 
     const date = await this.driver.findElement(By.id('formDate'));
     expect(await date.getAttribute('disabled')).toBeTruthy();
-    expect(await date.getAttribute('value')).toEqual('Sunday, March 12, 2023');
+    expect(await date.getAttribute('value')).toEqual('Tuesday, March 12, 2024');
 
     const equipment = await this.driver.findElement(
       By.id('formDesiredEquipment')

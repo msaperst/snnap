@@ -26,7 +26,7 @@ describe('apply to job', () => {
     // login as a user
     user = await test.loginUser('chooseJobApplicationUser');
     // generate the required data
-    jobs.push(await Test.addJob(await user.getId(), 1, '2023-03-12'));
+    jobs.push(await Test.addJob(await user.getId(), 1, '2024-03-12'));
     applicationsForJobs.push(
       await Test.addJobApplication(await jobs[0].getId(), jobCreatorId, 0)
     );
