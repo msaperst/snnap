@@ -11,6 +11,7 @@ class JobApplications extends React.Component {
     this.state = {
       currentUser: authenticationService.currentUserValue,
       jobApplications: [],
+      selected: null,
     };
   }
 
@@ -18,10 +19,14 @@ class JobApplications extends React.Component {
     userService.getJobApplications().then((jobApplications) => {
       this.setState({ jobApplications });
     });
+    if (window.location.hash && window.location.hash !== '#') {
+      this.setState({ selected: window.location.hash.substring(1) });
+    }
   }
 
   componentDidUpdate() {
-    if (window.location.hash && window.location.hash !== '#') {
+    const { selected } = this.state;
+    if (selected) {
       const anchor = document.querySelector(
         `div[data-testid="job-application-${window.location.hash.substring(
           1
@@ -34,7 +39,7 @@ class JobApplications extends React.Component {
   }
 
   render() {
-    const { jobApplications, currentUser } = this.state;
+    const { jobApplications, currentUser, selected } = this.state;
     return (
       <Container className="skinny">
         <Row>
@@ -45,6 +50,7 @@ class JobApplications extends React.Component {
         {jobApplications.map((jobApplication) => (
           <Profile
             key={jobApplication.id}
+            highlight={jobApplication.id === parseInt(selected, 10)}
             user={currentUser}
             company={jobApplication}
           />

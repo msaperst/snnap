@@ -15,6 +15,7 @@ class Jobs extends React.Component {
       jobs: [],
       equipment: [],
       skills: [],
+      selected: null,
     };
   }
 
@@ -28,12 +29,16 @@ class Jobs extends React.Component {
     userService.getJobs().then((jobs) => {
       this.setState({ jobs });
     });
+    if (window.location.hash && window.location.hash !== '#') {
+      this.setState({ selected: window.location.hash.substring(1) });
+    }
   }
 
   componentDidUpdate() {
-    if (window.location.hash && window.location.hash !== '#') {
+    const { selected } = this.state;
+    if (selected) {
       const anchor = document.querySelector(
-        `div[data-testid="job-${window.location.hash.substring(1)}"]`
+        `div[data-testid="job-${selected}"]`
       );
       if (anchor) {
         anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -42,7 +47,7 @@ class Jobs extends React.Component {
   }
 
   render() {
-    const { jobs, equipment, skills, currentUser } = this.state;
+    const { jobs, equipment, skills, currentUser, selected } = this.state;
     return (
       <>
         <Row>
@@ -53,6 +58,7 @@ class Jobs extends React.Component {
         {jobs.map((job) => (
           <Job
             key={job.id}
+            highlight={job.id === parseInt(selected, 10)}
             currentUser={currentUser}
             job={job}
             equipment={equipment}
