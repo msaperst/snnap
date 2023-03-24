@@ -30,6 +30,17 @@ class Jobs extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    if (window.location.hash && window.location.hash !== '#') {
+      const anchor = document.querySelector(
+        `div[data-testid="job-${window.location.hash.substring(1)}"]`
+      );
+      if (anchor) {
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+
   render() {
     const { jobs, equipment, skills, currentUser } = this.state;
     return (

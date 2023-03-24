@@ -8,7 +8,7 @@ function ProfileCard(props) {
   const { user, company } = props;
 
   return (
-    <Card>
+    <Card data-testid={`job-application-${company.id}`}>
       <Card.Title>
         <ProfileHeader user={user} company={company} />
       </Card.Title>

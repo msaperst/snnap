@@ -20,6 +20,19 @@ class JobApplications extends React.Component {
     });
   }
 
+  componentDidUpdate() {
+    if (window.location.hash && window.location.hash !== '#') {
+      const anchor = document.querySelector(
+        `div[data-testid="job-application-${window.location.hash.substring(
+          1
+        )}"]`
+      );
+      if (anchor) {
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+
   render() {
     const { jobApplications, currentUser } = this.state;
     return (
