@@ -10,7 +10,7 @@ import { companyService } from '../../services/company.service';
 import './Job.css';
 
 function Job(props) {
-  const { job, equipment, skills, currentUser } = props;
+  const { job, equipment, skills, currentUser, highlight } = props;
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
@@ -71,7 +71,10 @@ function Job(props) {
   }, [applications, currentUser, equipment, job, skills, applied, appliedTrue]);
 
   return (
-    <Card className="job" data-testid={`job-${job.id}`}>
+    <Card
+      className={`job ${highlight ? 'highlight' : ''}`}
+      data-testid={`job-${job.id}`}
+    >
       <Card.Body>
         <Row>
           <Col md={{ span: 2, offset: 0 }} xs={{ span: 6, offset: 3 }}>

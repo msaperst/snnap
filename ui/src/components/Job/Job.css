@@ -4,6 +4,11 @@
   padding: 20px;
 }
 
+.highlight {
+  border-color: #6a3ca5;
+  border-width: thick;
+}
+
 .rating {
   position: absolute;
   top: 0;

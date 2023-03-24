@@ -5,7 +5,7 @@ import ProfileAccordion from './ProfileAccordion';
 import ProfileCard from './ProfileCard';
 
 function Profile(props) {
-  const { type, user, company, onClick, selected } = props;
+  const { type, user, company, onClick, selected, highlight } = props;
 
   const [fullUser, setFullUser] = useState({});
   const [fullCompany, setFullCompany] = useState({});
@@ -34,7 +34,9 @@ function Profile(props) {
       />
     );
   }
-  return <ProfileCard user={fullUser} company={fullCompany} />;
+  return (
+    <ProfileCard highlight={highlight} user={fullUser} company={fullCompany} />
+  );
 }
 
 export default Profile;

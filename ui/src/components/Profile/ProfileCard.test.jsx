@@ -218,11 +218,31 @@ describe('profile card', () => {
     // the rest is verified via PortfolioLink
   });
 
-  async function loadProfileCardWithMock(app) {
+  it('does not highlight the card when not selected', async () => {
+    const app = application;
+    app.equipment = [];
+    app.skills = [];
+    await loadProfileCardWithMock(app);
+    const { container } = profileCard;
+    expect(container.firstChild).not.toHaveClass('highlight');
+  });
+
+  it('highlights the card when selected', async () => {
+    const app = application;
+    app.equipment = [];
+    app.skills = [];
+    await loadProfileCardWithMock(app, true);
+    const { container } = profileCard;
+    expect(container.firstChild).toHaveClass('highlight');
+  });
+
+  async function loadProfileCardWithMock(app, highlight = false) {
     jobService.jobService.getJobApplication.mockResolvedValue(app);
 
     await act(async () => {
-      profileCard = render(<Profile company={application} />);
+      profileCard = render(
+        <Profile highlight={highlight} company={application} />
+      );
       const { container } = profileCard;
       await waitFor(() => container.firstChild);
     });

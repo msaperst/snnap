@@ -253,9 +253,11 @@ describe('job', () => {
     expect(spy).toHaveBeenCalledTimes(2);
   });
 
-  async function loadJob(request, user) {
+  async function loadJob(request, user, highlight = false) {
     await act(async () => {
-      requestForHire = render(<Job job={request} currentUser={user} />);
+      requestForHire = render(
+        <Job job={request} currentUser={user} highlight={highlight} />
+      );
       const { container } = requestForHire;
       await waitFor(() => container.firstChild);
     });
@@ -351,5 +353,17 @@ describe('job', () => {
     expect(
       userCol.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
     ).toHaveTextContent('Chat');
+  });
+
+  it('does not highlight the card when not selected', async () => {
+    await loadJob(job, createUser);
+    const { container } = requestForHire;
+    expect(container.firstChild).not.toHaveClass('highlight');
+  });
+
+  it('highlights the card when selected', async () => {
+    await loadJob(job, createUser, true);
+    const { container } = requestForHire;
+    expect(container.firstChild).toHaveClass('highlight');
   });
 });
