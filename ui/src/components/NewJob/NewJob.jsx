@@ -92,6 +92,7 @@ function NewJob() {
               setShow,
               setValidated
             );
+            commonFormComponents.setEvent('Jobs', 'Created New Job');
           },
           (error) => {
             setStatus(error.toString());
@@ -140,7 +141,7 @@ function NewJob() {
           onClick={() => {
             setValidated(false);
             setShow(true);
-            commonFormComponents.setPageView('new-job');
+            commonFormComponents.setEvent('Jobs', 'Opened Job Creation Modal');
           }}
         >
           Create New Job
@@ -151,7 +152,6 @@ function NewJob() {
         show={show}
         onHide={() => {
           setShow(false);
-          commonFormComponents.setPageView();
         }}
         data-testid="newJobModal"
         aria-label="Create New Job"

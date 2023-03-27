@@ -86,7 +86,7 @@ class ApplyToJob extends React.Component {
               if (this.isMountedVal) {
                 this.setState(state);
               }
-              commonFormComponents.setPageView();
+              commonFormComponents.setEvent('Jobs', 'Applied to Job');
             }, 'Job Filing Submitted');
             setTimeout(applied, 5000);
           },
@@ -131,7 +131,10 @@ class ApplyToJob extends React.Component {
             job={job.id}
             onClick={() => {
               this.setState({ show: true });
-              commonFormComponents.setPageView('apply');
+              commonFormComponents.setEvent(
+                'Jobs',
+                'Opened Job Application Modal'
+              );
             }}
             className="btn-block"
           >
@@ -143,7 +146,6 @@ class ApplyToJob extends React.Component {
           show={show}
           onHide={() => {
             this.setState({ show: false });
-            commonFormComponents.setPageView();
           }}
           data-testid={`applyToJobModal-${job.id}`}
           aria-label={`Apply to ${job.type} Session`}
