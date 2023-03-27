@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { Container, Col, Row } from 'react-bootstrap';
 import { authenticationService } from './services/authentication.service';
 import { commonFormComponents } from './components/CommonFormComponents';
@@ -49,7 +49,7 @@ function App() {
   });
 
   useEffect(() => {
-    commonFormComponents.setPageView();
+    commonFormComponents.setPageView(location.pathname);
   }, [location]);
 
   const logout = () => {
