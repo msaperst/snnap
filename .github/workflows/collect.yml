@@ -11,7 +11,7 @@ on:
       - v*
 
 jobs:
-  deploy:
+  collect:
     name: Collect Ready to Deploy Changes
     runs-on: ubuntu-latest
 
@@ -19,9 +19,9 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Commit Version Bump
+      - name: Bump Version
+        id: version
         run: |
-          CWD=`pwd`
           git config --global user.name "github-actions-bot"
           git config --global user.email "snnap.app@gmail.com"
           VERSION=`npm version patch`
@@ -29,9 +29,15 @@ jobs:
           npm version $VERSION
           cd ../api
           npm version $VERSION
-          git add --all
-          git commit -m "[ci skip]"
-          git push origin release
-          git push origin main
-          git tag $VERSION
-          git push --tags
+          echo ::set-output name=TAG::${VERSION}
+          
+      - name: Push files and tag
+        uses: Amraneze/push-to-protected-branch@v1.5.0
+        with:
+          repository: ${{ github.repository }}
+          create_tag: true
+          branch_name: ${{ github.ref_name }}
+          tag_version: ${{ steps.version.outputs.TAG }}
+          github_token: ${{ secrets.PAT }}
+          commit_message: '[ci skip]'
+          files_to_commit: 'package.json,package-lock.json,ui/package.json,ui/package-lock.json,api/package.json,api/package-lock.json'

@@ -1,0 +1,41 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Version Bump for Release
+
+on:
+  pull_request:
+    branches:
+      - release  #self triggering build disabled by commit comment [ci skip] - see below
+
+jobs:
+  version-bump:
+    name: Minor Version Bump
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Bump Version
+        id: version
+        run: |
+          git config --global user.name "github-actions-bot"
+          git config --global user.email "snnap.app@gmail.com"
+          VERSION=`npm version minor`
+          cd ui
+          npm version $VERSION
+          cd ../api
+          npm version $VERSION
+          echo ::set-output name=TAG::${VERSION}
+          
+      - name: Push files and tag
+        uses: Amraneze/push-to-protected-branch@v1.5.0
+        with:
+          repository: ${{ github.repository }}
+          create_tag: true
+          branch_name: 'main'
+          tag_version: ${{ steps.version.outputs.TAG }}
+          github_token: ${{ secrets.PAT }}
+          commit_message: '[ci skip]'
+          files_to_commit: 'package.json,package-lock.json,ui/package.json,ui/package-lock.json,api/package.json,api/package-lock.json'
