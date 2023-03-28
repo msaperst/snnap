@@ -6,9 +6,7 @@ name: Release
 on:
   push:
     branches:
-      - release  #self triggering build disabled by commit comment [ci skip] - see below
-    tags-ignore:
-      - v*
+      - release
 
 jobs:
   deploy:
@@ -18,21 +16,6 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-
-      - name: Commit Version Bump
-        run: |
-          CWD=`pwd`
-          VERSION=`npm version minor`
-          cd ui
-          npm version $VERSION
-          cd ../api
-          npm version $VERSION
-          git add --all
-          git commit -m "[ci skip]"
-          git push origin release
-          git push origin main
-          git tag $VERSION
-          git push --tags
 
       - name: Setup SSH Key
         run: |

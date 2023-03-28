@@ -4,18 +4,14 @@
 name: Collect
 
 on:
-  push:
+  pull-request:
     branches:
-      - main  #self triggering build disabled by commit comment [ci skip] - see below
-    tags-ignore:
-      - v*
+      - release  #self triggering build disabled by commit comment [ci skip] - see below
 
 jobs:
-  deploy:
-    name: Collect Ready to Deploy Changes
+  version-bump:
+    name: Minor Version Bump
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ github.token }}
 
     steps:
       - name: Checkout 🛎️
@@ -26,7 +22,7 @@ jobs:
         run: |
           git config --global user.name "github-actions-bot"
           git config --global user.email "snnap.app@gmail.com"
-          VERSION=`npm version patch`
+          VERSION=`npm version minor`
           cd ui
           npm version $VERSION
           cd ../api
