@@ -4,7 +4,7 @@
 name: Version Bump for Release
 
 on:
-  pull-request:
+  pull_request:
     branches:
       - release  #self triggering build disabled by commit comment [ci skip] - see below
 
