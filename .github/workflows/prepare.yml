@@ -31,7 +31,6 @@ jobs:
           npm version $VERSION
           git add --all
           git commit -m "[ci skip]"
-          git push origin release
           git push origin main
           git tag $VERSION
           git push --tags
