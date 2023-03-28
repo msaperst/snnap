@@ -22,6 +22,8 @@ jobs:
       - name: Commit Version Bump
         run: |
           CWD=`pwd`
+          git config --global user.name "github-actions-bot"
+          git config --global user.email "snnap.app@gmail.com"
           VERSION=`npm version patch`
           cd ui
           npm version $VERSION
