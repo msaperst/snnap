@@ -1,0 +1,35 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Collect
+
+on:
+  push:
+    branches:
+      - main  #self triggering build disabled by commit comment [ci skip] - see below
+    tags-ignore:
+      - v*
+
+jobs:
+  deploy:
+    name: Collect Ready to Deploy Changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Commit Version Bump
+        run: |
+          CWD=`pwd`
+          VERSION=`npm version patch`
+          cd ui
+          npm version $VERSION
+          cd ../server
+          npm version $VERSION
+          git add --all
+          git commit -m "[ci skip]"
+          git push origin release
+          git push origin main
+          git tag $VERSION
+          git push --tags
