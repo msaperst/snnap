@@ -27,7 +27,7 @@ jobs:
           VERSION=`npm version patch`
           cd ui
           npm version $VERSION
-          cd ../server
+          cd ../api
           npm version $VERSION
           git add --all
           git commit -m "[ci skip]"
