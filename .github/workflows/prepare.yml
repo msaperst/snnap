@@ -41,5 +41,5 @@ jobs:
           branch_name: ${{ github.ref_name }}
           tag_version: ${{ steps.version.outputs.TAG }}
           github_token: ${{ secrets.PAT }}
-          commit_message: 'ci: build version v${{ steps.version.outputs.TAG }}'
+          commit_message: '[ci skip]'
           files_to_commit: 'package.json,package-lock.json,ui/package.json,ui/package-lock.json,api/package.json,api/package-lock.json'
