@@ -34,7 +34,7 @@ jobs:
         with:
           repository: ${{ github.repository }}
           create_tag: true
-          branch_name: ${{ github.ref_name }}
+          branch_name: 'main'
           tag_version: ${{ steps.version.outputs.TAG }}
           github_token: ${{ secrets.PAT }}
           commit_message: '[ci skip]'
