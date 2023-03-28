@@ -31,6 +31,7 @@ jobs:
           npm version $VERSION
           git add --all
           git commit -m "[ci skip]"
+          gh pr review --approve
           git push origin main
           git tag $VERSION
           git push --tags
