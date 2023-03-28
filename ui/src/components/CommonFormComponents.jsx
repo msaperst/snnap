@@ -61,14 +61,14 @@ function setSuccess(
 function setPageView(page) {
   const cookies = JSON.parse(localStorage.getItem('cookies'));
   if (!cookies || cookies.analytics) {
-    let title = page.replace('/', ' ');
+    let title = page.replaceAll('/', ' ');
     title = title.substring(1);
     if (title === '') {
       title = 'Homepage';
     } else {
       const words = title.split(' ');
       for (let i = 0; i < words.length; i++) {
-        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+        words[i] = words[i][0].toUpperCase() + words[i].substring(1);
       }
       title = words.join(' ');
     }
