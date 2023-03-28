@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const https = require('https');
 const fs = require('fs');
+const application = require('./routes/application.js');
 const job = require('./routes/job.js');
 const authentication = require('./routes/authentication.js');
 const user = require('./routes/user.js');
@@ -30,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
 
+app.use('/api/app', application);
 app.use('/api/auth', authentication);
 app.use('/api/user', user);
 app.use('/api/company', company);
