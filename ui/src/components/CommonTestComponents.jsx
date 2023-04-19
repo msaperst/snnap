@@ -118,9 +118,9 @@ export async function noModal(modal) {
 }
 
 export const selectFairfax = (getByText) => async (input) => {
-  userEvent.type(input, 'Fairfax,{arrowdown}{enter}');
+  userEvent.type(input, 'Fairfax, VA{arrowdown}{enter}');
   // eslint-disable-next-line no-promise-executor-return
   await new Promise((r) => setTimeout(r, 1000));
-  await waitFor(() => getByText('VA 20030, United States of America'));
-  userEvent.click(getByText('VA 20030, United States of America'));
+  await waitFor(() => getByText('VA, United States of America'));
+  userEvent.click(getByText('VA, United States of America'));
 };
