@@ -367,7 +367,7 @@ describe('register', () => {
       'Saperstone',
       {
         lat: 38.8462236,
-        loc: 'Fairfax, VA 20030, United States of America',
+        loc: 'Fairfax, VA, United States of America',
         lon: -77.3063733,
       },
       'email@example.org',
