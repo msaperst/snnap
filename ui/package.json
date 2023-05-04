@@ -72,13 +72,13 @@
     "rxjs": "^7.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
+    "@babel/core": "^7.21.5",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@testing-library/dom": "^9.2.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
-    "eslint": "8.38.0",
+    "eslint": "8.39.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
@@ -87,11 +87,11 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "jest-html-reporter": "^3.7.1",
+    "jest-html-reporter": "^3.8.0",
     "jest-junit": "^16.0.0",
     "jest-websocket-mock": "^2.4.0",
     "owasp-dependency-check": "^0.0.21",
-    "prettier": "^2.8.7"
+    "prettier": "^2.8.8"
   },
   "overrides": {
     "nth-check": "2.1.1",
