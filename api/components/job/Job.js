@@ -1,6 +1,6 @@
 const db = require('mysql2');
 const Mysql = require('../../services/Mysql');
-const Email = require('../../services/Email');
+const Notification = require('../notification/Notification');
 const { parseIntAndDbEscape, handleNewSkill } = require('../Common');
 
 const Job = class {
@@ -47,9 +47,13 @@ const Job = class {
           }, ${parseIntAndDbEscape(skillId)});`
         );
       });
+      newJob.user = parseIntAndDbEscape(user);
       newJob.id = result.insertId;
-      newJob.type = type;
+      newJob.type = parseIntAndDbEscape(type);
       newJob.location = location;
+      // set the notification
+      const notification = new Notification(newJob);
+      notification.jobCreated(); // do this async - don't wait
     })();
     return newJob;
   }
@@ -139,53 +143,22 @@ const Job = class {
   }
 
   async selectApplication(jobApplication) {
+    const jobApplicationId = parseIntAndDbEscape(jobApplication);
     await this.instancePromise;
     await Mysql.query(
-      `UPDATE jobs SET jobs.application_selected = ${parseIntAndDbEscape(
-        jobApplication
-      )}, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = ${
-        this.id
-      };`
+      `UPDATE jobs SET jobs.application_selected = ${jobApplicationId}, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = ${this.id};`
     );
-    // set the notification
     const jobApp = (
       await Mysql.query(
-        `SELECT * FROM job_applications WHERE id = ${parseIntAndDbEscape(
-          jobApplication
-        )};`
+        `SELECT * FROM job_applications WHERE id = ${jobApplicationId};`
       )
     )[0];
-    await Mysql.query(
-      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${parseIntAndDbEscape(
-        jobApp.user_id
-      )}, 'selected', ${this.id}, ${parseIntAndDbEscape(jobApplication)});`
-    );
     const jobInfo = await this.getInfo();
-    if ((await Job.getUserSettings(jobInfo.user)).email_notifications) {
-      // send out the email
-      const jobUser = await Mysql.query(
-        `SELECT * FROM users WHERE id = ${jobInfo.user};`
-      );
-      const applicationUser = await Mysql.query(
-        `SELECT * FROM users WHERE id = ${jobApp.user_id};`
-      );
-      Email.sendMail(
-        applicationUser[0].email,
-        'SNNAP: Job Application Selected',
-        `${jobUser[0].first_name} ${
-          jobUser[0].last_name
-        } selected your job application\nhttps://snnap.app/job-applications#${parseIntAndDbEscape(
-          jobApplication
-        )}`,
-        `<a href='https://snnap.app/profile/${jobUser[0].username}'>${
-          jobUser[0].first_name
-        } ${
-          jobUser[0].last_name
-        }</a> selected your <a href='https://snnap.app/job-applications#${parseIntAndDbEscape(
-          jobApplication
-        )}'>job application</a>`
-      );
-    }
+    const sendEmail = (await Job.getUserSettings(jobInfo.user))
+      .email_notifications;
+    // set the notification
+    const notification = new Notification(this, sendEmail);
+    notification.applicationSelected(jobApplicationId); // do this async - don't wait
     // create an entry for the rating of the job
     await Mysql.query(
       `INSERT INTO ratings (job, job_date, ratee, rater) VALUES (${

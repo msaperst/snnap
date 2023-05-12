@@ -3,8 +3,8 @@ const Job = require('./Job');
 jest.mock('../../services/Mysql');
 const Mysql = require('../../services/Mysql');
 
-jest.mock('../../services/Email');
-const Email = require('../../services/Email');
+jest.mock('../notification/Notification');
+const Notification = require('../notification/Notification');
 
 describe('job', () => {
   const item1 = {
@@ -46,7 +46,7 @@ describe('job', () => {
 
   it('sets the job with basic values on creation', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
+    // const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValue({ insertId: 15 });
     const job = Job.create(
       1,
@@ -69,12 +69,14 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(1);
+    const mockNotificationInstance = Notification.mock.instances[0];
+    const mockJobCreated = mockNotificationInstance.jobCreated;
+    expect(mockJobCreated).toHaveBeenCalledWith();
   });
 
   it('sets the job with max duration on creation', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query.mockResolvedValue({ insertId: 15 });
     const job = Job.create(
       1,
@@ -97,12 +99,14 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(1);
+    const mockNotificationInstance = Notification.mock.instances[0];
+    const mockJobCreated = mockNotificationInstance.jobCreated;
+    expect(mockJobCreated).toHaveBeenCalledWith();
   });
 
   it('sets the job with skills on creation', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query.mockResolvedValue({ insertId: 15 });
     const job = Job.create(
       1,
@@ -137,12 +141,14 @@ describe('job', () => {
       3,
       'INSERT INTO job_skills (job, skill) VALUES (15, 3);'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(1);
+    const mockNotificationInstance = Notification.mock.instances[0];
+    const mockJobCreated = mockNotificationInstance.jobCreated;
+    expect(mockJobCreated).toHaveBeenCalledWith();
   });
 
   it('creates the new skill', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query
       .mockResolvedValueOnce({ insertId: 15 })
       .mockResolvedValue({ insertId: 12 });
@@ -176,12 +182,15 @@ describe('job', () => {
       3,
       'INSERT INTO job_skills (job, skill) VALUES (15, 12);'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(1);
+    const mockNotificationInstance = Notification.mock.instances[0];
+    const mockJobCreated = mockNotificationInstance.jobCreated;
+    expect(mockJobCreated).toHaveBeenCalledWith();
   });
 
   it('retrieves nothing when request is missing', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
+    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValueOnce([]);
     const job = new Job(5);
     await expect(job.getInfo()).resolves.toBeUndefined();
@@ -190,12 +199,12 @@ describe('job', () => {
       1,
       'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(notificationSpy).toHaveBeenCalledTimes(0);
   });
 
   it('retrieves all of the info for the request', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
+    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query
       .mockResolvedValueOnce([item1])
       .mockResolvedValueOnce([{ value: 1, name: 'Camera' }])
@@ -225,12 +234,12 @@ describe('job', () => {
       2,
       'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 5;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(notificationSpy).toHaveBeenCalledTimes(0);
   });
 
   it('gets all of our jobs', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
+    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValue([item1, item2]);
     await expect(Job.getJobs()).resolves.toEqual([item1, item2]);
 
@@ -239,12 +248,12 @@ describe('job', () => {
       1,
       'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time >= CURDATE() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(notificationSpy).toHaveBeenCalledTimes(0);
   });
 
   it("gets all of a user's jobs", async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
+    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValue([item1, item2]);
     await expect(Job.getUserJobs(1)).resolves.toEqual([item1, item2]);
 
@@ -253,27 +262,20 @@ describe('job', () => {
       1,
       'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.user = 1 ORDER BY jobs.date_time;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(notificationSpy).toHaveBeenCalledTimes(0);
   });
 
   it('adds a selected application', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query
+      .mockResolvedValueOnce([]) // update the job
+      .mockResolvedValueOnce([{ user_id: 5 }]) // get the job app
+      .mockResolvedValueOnce([{ user: 6, date_time: 'time' }]) // get the job info
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([{ user_id: 5 }])
-      .mockResolvedValueOnce()
-      .mockResolvedValueOnce([{ user: 6, date_time: 'time' }])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([{ email_notifications: 1 }])
-      .mockResolvedValueOnce([
-        { first_name: 'bob', last_name: 'smith', username: 'bsmith' },
-      ])
-      .mockResolvedValueOnce([{ email: 'email@address.com' }]);
-
+      .mockResolvedValueOnce([{ email_notifications: 1 }]); // get Email notifications
     const job = new Job(4);
     await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(10);
+    expect(sqlSpy).toHaveBeenCalledTimes(7);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       'UPDATE jobs SET jobs.application_selected = 3, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = 4;'
@@ -284,65 +286,33 @@ describe('job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      "INSERT INTO notifications (to_user, what, job, job_application) VALUES (5, 'selected', 4, 3);"
-    );
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      4,
       'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 4;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      5,
+      4,
       'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 4;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      6,
+      5,
       'SELECT * FROM settings WHERE user = 6;'
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      7,
-      'SELECT * FROM users WHERE id = 6;'
-    );
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      8,
-      'SELECT * FROM users WHERE id = 5;'
-    );
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      9,
+      6,
       "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 5, 6);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      10,
+      7,
       "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 6, 5);"
     );
-    expect(emailSpy).toHaveBeenCalledTimes(1);
-    expect(emailSpy).toHaveBeenCalledWith(
-      'email@address.com',
-      'SNNAP: Job Application Selected',
-      'bob smith selected your job application\nhttps://snnap.app/job-applications#3',
-      "<a href='https://snnap.app/profile/bsmith'>bob smith</a> selected your <a href='https://snnap.app/job-applications#3'>job application</a>"
-    );
-  });
-
-  it('does not send email if notifications not set', async () => {
-    const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
-    Mysql.query
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([{ user_id: 5 }])
-      .mockResolvedValueOnce()
-      .mockResolvedValueOnce([{ user: 6, date_time: '2022-11-15 00:00:00' }])
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([{ email_notifications: 0 }]);
-
-    const job = new Job(4);
-    await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(8);
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(1);
+    const mockNotificationInstance = Notification.mock.instances[0];
+    const mockJobCreated = mockNotificationInstance.applicationSelected;
+    expect(mockJobCreated).toHaveBeenCalledWith(3);
   });
 
   it('properly pulls and sorts the equipment', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
+    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValueOnce([
       { id: 1, name: 'Camera' },
       { id: 2, name: 'Flash' },
@@ -357,12 +327,11 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM equipment ORDER BY name;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
+    expect(notificationSpy).toHaveBeenCalledTimes(0);
   });
 
   it('properly pulls and sorts the skills', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query.mockResolvedValueOnce([
       { id: 1, name: 'Camera' },
       { id: 2, name: 'Flash' },
@@ -377,12 +346,10 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM skills WHERE who IS NULL OR who = 5 ORDER BY name;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 
   it('properly pulls and sorts the job type', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query.mockResolvedValueOnce([
       { id: 2, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
       { id: 3, type: 'Commercial Event', plural: 'Commercial Events' },
@@ -403,12 +370,10 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM job_types ORDER BY type;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 
   it('properly pulls and sorts the job subtype', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const emailSpy = jest.spyOn(Email, 'sendMail');
     Mysql.query.mockResolvedValueOnce([
       { id: 2, type: "B'nai Mitzvah", plural: "B'nai Mitzvahs" },
       { id: 3, type: 'Commercial Event', plural: 'Commercial Events' },
@@ -429,6 +394,5 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM job_subtypes ORDER BY type;'
     );
-    expect(emailSpy).toHaveBeenCalledTimes(0);
   });
 });

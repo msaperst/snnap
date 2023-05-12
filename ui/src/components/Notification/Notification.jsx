@@ -20,39 +20,53 @@ function Notification(props) {
 
   useEffect(() => {
     jobService.getJob(notification.job).then((job) => {
-      jobService
-        .getJobApplication(notification.job_application)
-        .then((jobApplication) => {
-          if (notification.what === 'selected') {
-            userService.get(job.user).then((user) => {
-              setMessage(
-                <>
-                  <Link to={`/profile/${user.username}`}>
-                    {user.first_name} {user.last_name}
-                  </Link>{' '}
-                  selected your{' '}
-                  <Link
-                    to={`/job-applications#${notification.job_application}`}
-                  >
-                    job application
-                  </Link>
-                </>
-              );
-            });
-          } else {
-            userService.get(jobApplication.user_id).then((user) => {
-              setMessage(
-                <>
-                  <Link to={`/profile/${user.username}`}>
-                    {jobApplication.user_name}
-                  </Link>{' '}
-                  applied to your{' '}
-                  <Link to={`/jobs#${notification.job}`}>job</Link>
-                </>
-              );
-            });
-          }
+      if (notification.job_application) {
+        jobService
+          .getJobApplication(notification.job_application)
+          .then((jobApplication) => {
+            if (notification.what === 'selected') {
+              userService.get(job.user).then((user) => {
+                setMessage(
+                  <>
+                    <Link to={`/profile/${user.username}`}>
+                      {user.first_name} {user.last_name}
+                    </Link>{' '}
+                    selected your{' '}
+                    <Link
+                      to={`/job-applications#${notification.job_application}`}
+                    >
+                      job application
+                    </Link>
+                  </>
+                );
+              });
+            } else {
+              userService.get(jobApplication.user_id).then((user) => {
+                setMessage(
+                  <>
+                    <Link to={`/profile/${user.username}`}>
+                      {jobApplication.user_name}
+                    </Link>{' '}
+                    applied to your{' '}
+                    <Link to={`/jobs#${notification.job}`}>job</Link>
+                  </>
+                );
+              });
+            }
+          });
+      } else {
+        userService.get(job.user).then((user) => {
+          setMessage(
+            <>
+              <Link to={`/profile/${user.username}`}>
+                {user.first_name} {user.last_name}
+              </Link>{' '}
+              created a <Link to={`/#${notification.job}`}>job</Link> in your
+              area
+            </>
+          );
         });
+      }
     });
   }, [notification]);
 
