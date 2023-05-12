@@ -190,7 +190,6 @@ describe('job', () => {
 
   it('retrieves nothing when request is missing', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValueOnce([]);
     const job = new Job(5);
     await expect(job.getInfo()).resolves.toBeUndefined();
@@ -199,12 +198,11 @@ describe('job', () => {
       1,
       'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;'
     );
-    expect(notificationSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 
   it('retrieves all of the info for the request', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query
       .mockResolvedValueOnce([item1])
       .mockResolvedValueOnce([{ value: 1, name: 'Camera' }])
@@ -234,12 +232,11 @@ describe('job', () => {
       2,
       'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 5;'
     );
-    expect(notificationSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 
   it('gets all of our jobs', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValue([item1, item2]);
     await expect(Job.getJobs()).resolves.toEqual([item1, item2]);
 
@@ -248,12 +245,11 @@ describe('job', () => {
       1,
       'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time >= CURDATE() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;'
     );
-    expect(notificationSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 
   it("gets all of a user's jobs", async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValue([item1, item2]);
     await expect(Job.getUserJobs(1)).resolves.toEqual([item1, item2]);
 
@@ -262,7 +258,7 @@ describe('job', () => {
       1,
       'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.user = 1 ORDER BY jobs.date_time;'
     );
-    expect(notificationSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 
   it('adds a selected application', async () => {
@@ -271,11 +267,10 @@ describe('job', () => {
       .mockResolvedValueOnce([]) // update the job
       .mockResolvedValueOnce([{ user_id: 5 }]) // get the job app
       .mockResolvedValueOnce([{ user: 6, date_time: 'time' }]) // get the job info
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([{ email_notifications: 1 }]); // get Email notifications
+      .mockResolvedValueOnce([]);
     const job = new Job(4);
     await job.selectApplication(3);
-    expect(sqlSpy).toHaveBeenCalledTimes(7);
+    expect(sqlSpy).toHaveBeenCalledTimes(6);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
       'UPDATE jobs SET jobs.application_selected = 3, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = 4;'
@@ -294,14 +289,10 @@ describe('job', () => {
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,
-      'SELECT * FROM settings WHERE user = 6;'
-    );
-    expect(sqlSpy).toHaveBeenNthCalledWith(
-      6,
       "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 5, 6);"
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
-      7,
+      6,
       "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 6, 5);"
     );
     expect(Notification).toHaveBeenCalledTimes(1);
@@ -312,7 +303,6 @@ describe('job', () => {
 
   it('properly pulls and sorts the equipment', async () => {
     const sqlSpy = jest.spyOn(Mysql, 'query');
-    const notificationSpy = jest.spyOn(new Notification(), 'jobCreated');
     Mysql.query.mockResolvedValueOnce([
       { id: 1, name: 'Camera' },
       { id: 2, name: 'Flash' },
@@ -327,7 +317,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM equipment ORDER BY name;'
     );
-    expect(notificationSpy).toHaveBeenCalledTimes(0);
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 
   it('properly pulls and sorts the skills', async () => {
@@ -346,6 +336,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM skills WHERE who IS NULL OR who = 5 ORDER BY name;'
     );
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 
   it('properly pulls and sorts the job type', async () => {
@@ -370,6 +361,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM job_types ORDER BY type;'
     );
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 
   it('properly pulls and sorts the job subtype', async () => {
@@ -394,5 +386,20 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledWith(
       'SELECT * FROM job_subtypes ORDER BY type;'
     );
+    expect(Notification).toHaveBeenCalledTimes(0);
+  });
+
+  it('returns the correct user information', async () => {
+    const sqlSpy = jest.spyOn(Mysql, 'query');
+    Mysql.query.mockResolvedValueOnce([{ user: 2, email_notifications: 1 }]);
+    expect(await Job.getUserSettings(2)).toEqual({
+      user: 2,
+      email_notifications: 1,
+    });
+    expect(sqlSpy).toHaveBeenCalledTimes(1);
+    expect(sqlSpy).toHaveBeenCalledWith(
+      'SELECT * FROM settings WHERE user = 2;'
+    );
+    expect(Notification).toHaveBeenCalledTimes(0);
   });
 });

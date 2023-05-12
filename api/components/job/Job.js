@@ -26,28 +26,27 @@ const Job = class {
     const newJob = new Job();
     newJob.instancePromise = (async () => {
       const dateTime = `${date} 00:00:00`;
+      const userId = parseIntAndDbEscape(user);
       const result = await Mysql.query(
-        `INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (${parseIntAndDbEscape(
-          user
-        )}, ${parseIntAndDbEscape(type)}, ${parseIntAndDbEscape(
-          subtype
-        )}, ${db.escape(details)}, ${parseFloat(pay)}, ${parseIntAndDbEscape(
-          duration
-        )}, ${
+        `INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (${userId}, ${parseIntAndDbEscape(
+          type
+        )}, ${parseIntAndDbEscape(subtype)}, ${db.escape(
+          details
+        )}, ${parseFloat(pay)}, ${parseIntAndDbEscape(duration)}, ${
           durationMax ? parseIntAndDbEscape(durationMax) : null
         }, ${db.escape(dateTime)}, ${db.escape(equipment)}, ${db.escape(
           location.loc
         )}, ${parseFloat(location.lat)},${parseFloat(location.lon)});`
       );
       await skills.map(async (skill) => {
-        const skillId = await handleNewSkill(skill, user);
+        const skillId = await handleNewSkill(skill, userId);
         await Mysql.query(
           `INSERT INTO job_skills (job, skill) VALUES (${
             result.insertId
           }, ${parseIntAndDbEscape(skillId)});`
         );
       });
-      newJob.user = parseIntAndDbEscape(user);
+      newJob.user = userId;
       newJob.id = result.insertId;
       newJob.type = parseIntAndDbEscape(type);
       newJob.location = location;
@@ -154,10 +153,8 @@ const Job = class {
       )
     )[0];
     const jobInfo = await this.getInfo();
-    const sendEmail = (await Job.getUserSettings(jobInfo.user))
-      .email_notifications;
     // set the notification
-    const notification = new Notification(this, sendEmail);
+    const notification = new Notification(this);
     notification.applicationSelected(jobApplicationId); // do this async - don't wait
     // create an entry for the rating of the job
     await Mysql.query(

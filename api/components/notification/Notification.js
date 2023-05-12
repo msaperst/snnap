@@ -1,42 +1,11 @@
+const htmlEncode = require('js-htmlencode');
 const Mysql = require('../../services/Mysql');
 const Email = require('../../services/Email');
 const { parseIntAndDbEscape } = require('../Common');
 
 const Notification = class {
-  constructor(job, sendEmail) {
+  constructor(job) {
     this.job = job;
-    this.sendEmail = sendEmail;
-  }
-
-  async applicationSelected(jobApplicationId) {
-    const jobApp = (
-      await Mysql.query(
-        `SELECT * FROM job_applications WHERE id = ${jobApplicationId};`
-      )
-    )[0];
-    // set the notification in the application
-    await Mysql.query(
-      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${parseIntAndDbEscape(
-        jobApp.user_id
-      )}, 'selected', ${this.job.id}, ${jobApplicationId});`
-    );
-    const jobInfo = await this.job.getInfo();
-    // send an email about the application getting selected
-    if (this.sendEmail) {
-      // send out the email
-      const jobUser = await Mysql.query(
-        `SELECT * FROM users WHERE id = ${jobInfo.user};`
-      );
-      const applicationUser = await Mysql.query(
-        `SELECT * FROM users WHERE id = ${jobApp.user_id};`
-      );
-      Email.sendMail(
-        applicationUser[0].email,
-        'SNNAP: Job Application Selected',
-        `${jobUser[0].first_name} ${jobUser[0].last_name} selected your job application\nhttps://snnap.app/job-applications#${jobApplicationId}`,
-        `<a href='https://snnap.app/profile/${jobUser[0].username}'>${jobUser[0].first_name} ${jobUser[0].last_name}</a> selected your <a href='https://snnap.app/job-applications#${jobApplicationId}'>job application</a>`
-      );
-    }
   }
 
   async jobCreated() {
@@ -68,6 +37,63 @@ const Notification = class {
           );
         }
       }
+    }
+  }
+
+  async applicationSubmitted(jobApplicationId, userName) {
+    await Mysql.query(
+      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${this.job.user}, 'applied', ${this.job.id}, ${jobApplicationId});`
+    );
+    // send out the email
+    const user = await Mysql.query(
+      `SELECT * FROM users JOIN settings WHERE users.id = ${this.job.user};`
+    );
+    if (user && user.length && user[0].email_notifications) {
+      Email.sendMail(
+        user[0].email,
+        'SNNAP: New Job Application',
+        `${userName} applied to your job\nhttps://snnap.app/jobs#${this.job.id}`,
+        `<a href='https://snnap.app/profile/${user[0].username}'>${htmlEncode(
+          userName
+        )}</a> applied to your <a href='https://snnap.app/jobs#${
+          this.job.id
+        }'>job</a>`
+      );
+    }
+  }
+
+  async applicationSelected(jobApplicationId) {
+    const jobApp = (
+      await Mysql.query(
+        `SELECT * FROM job_applications WHERE id = ${jobApplicationId};`
+      )
+    )[0];
+    // set the notification in the application
+    await Mysql.query(
+      `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${parseIntAndDbEscape(
+        jobApp.user_id
+      )}, 'selected', ${this.job.id}, ${jobApplicationId});`
+    );
+    const jobInfo = await this.job.getInfo();
+    const applicationUser = await Mysql.query(
+      `SELECT * FROM users JOIN settings WHERE id = ${jobApp.user_id};`
+    );
+    // send an email about the application getting selected
+    if (
+      applicationUser &&
+      applicationUser.length &&
+      applicationUser[0].email_notifications
+    ) {
+      // send out the email
+      const jobUser = await Mysql.query(
+        `SELECT * FROM users WHERE id = ${jobInfo.user};`
+      );
+      Email.sendMail(
+        applicationUser[0].email,
+        'SNNAP: Job Application Selected',
+        `${jobUser[0].first_name} ${jobUser[0].last_name} selected your job application\nhttps://snnap.app/job-applications#${jobApplicationId}`,
+        `<a href='https://snnap.app/profile/${jobUser[0].username}'>${jobUser[0].first_name} ${jobUser[0].last_name}</a> selected your <a href='https://snnap.app/job-applications#${jobApplicationId}'>job application</a>`
+      );
     }
   }
 
