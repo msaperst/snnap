@@ -236,13 +236,11 @@ describe('profile card', () => {
     expect(container.firstChild).toHaveClass('highlight');
   });
 
-  async function loadProfileCardWithMock(app, highlight = false) {
+  async function loadProfileCardWithMock(app, active = false) {
     jobService.jobService.getJobApplication.mockResolvedValue(app);
 
     await act(async () => {
-      profileCard = render(
-        <Profile highlight={highlight} company={application} />
-      );
+      profileCard = render(<Profile active={active} company={application} />);
       const { container } = profileCard;
       await waitFor(() => container.firstChild);
     });

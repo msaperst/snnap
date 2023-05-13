@@ -13,7 +13,7 @@ jest.mock(
   '../Job/Job',
   () =>
     function () {
-      return <div>job card</div>;
+      return <div data-testid="job-1">job card</div>;
     }
 );
 
@@ -594,6 +594,41 @@ describe('filter', () => {
     localStorage.setItem('cookies', JSON.stringify(cookies));
     await clickTwoButtons();
     expect(localStorage.getItem('filters')).toBeNull();
+  });
+
+  it('does not scroll to the missing element', async () => {
+    localStorage.setItem('filters', JSON.stringify(allFilters));
+    await act(async () => {
+      filter = render(
+        <Filter
+          currentUser={{ token: 1234, lat: '39.8051095', lon: '-77.0470229' }}
+          selected={5}
+        />
+      );
+      const { container } = filter;
+      await waitFor(() => container.firstChild);
+    });
+    await server.connected;
+    server.send(JSON.stringify(jobs));
+    expect(await expectOneMatch()).toBeTruthy();
+  });
+
+  it('scrolls to the element', async () => {
+    window.HTMLElement.prototype.scrollIntoView = function () {};
+    localStorage.setItem('filters', JSON.stringify(allFilters));
+    await act(async () => {
+      filter = render(
+        <Filter
+          currentUser={{ token: 1234, lat: '39.8051095', lon: '-77.0470229' }}
+          selected={1}
+        />
+      );
+      const { container } = filter;
+      await waitFor(() => container.firstChild);
+    });
+    await server.connected;
+    server.send(JSON.stringify(jobs));
+    expect(await expectOneMatch()).toBeTruthy();
   });
 
   async function clickTwoButtons() {
