@@ -18,10 +18,10 @@ class ApplyToJob extends React.Component {
     super(props);
     this.isMountedVal = false;
 
-    const { job } = this.props;
+    const { job, show } = this.props;
     this.state = {
       job,
-      show: false,
+      show,
       status: null,
       update: null,
       validated: false,
