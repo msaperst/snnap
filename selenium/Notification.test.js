@@ -48,6 +48,10 @@ describe('notifications', () => {
     expect(await notification.isDisplayed()).toBeTruthy();
   });
 
+  it('creating a job creates a notification @network @accessibility', async () => {
+    // TODO
+  });
+
   it('new notification shows unread icon', async () => {
     const notification = await createAppliedToJobNotification();
     expect(
@@ -87,7 +91,7 @@ describe('notifications', () => {
     );
   });
 
-  it('navigates to the job when clicking on the job @network @accessibility', async () => {
+  it('navigates to the job when clicking on the job for applied to job @network @accessibility', async () => {
     await createAppliedToJobNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('job')),
@@ -97,9 +101,10 @@ describe('notifications', () => {
     expect(await driver.getCurrentUrl()).toEqual(
       `${Test.getApp()}/jobs#${await jobs[0].getId()}`
     );
+    // TODO - ensure job is popped up
   });
 
-  it('navigates to the job application when clicking on the application @network @accessibility', async () => {
+  it('navigates to the job application when clicking on the application for selected job @network @accessibility', async () => {
     await createChosenJobApplicationNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('job application')),
@@ -109,6 +114,11 @@ describe('notifications', () => {
     expect(await driver.getCurrentUrl()).toEqual(
       `${Test.getApp()}/job-applications#${await applicationsForJobs[0].getId()}`
     );
+    // TODO - ensure job is popped up
+  });
+
+  it('navigates to the job when clicking on the job for new job creation @network @accessibility', async () => {
+    // TODO
   });
 
   it('shows an icon in the menu when there is a new notification', async () => {
