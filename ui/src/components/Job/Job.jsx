@@ -10,7 +10,7 @@ import { companyService } from '../../services/company.service';
 import './Job.css';
 
 function Job(props) {
-  const { job, equipment, skills, currentUser, highlight } = props;
+  const { job, equipment, skills, currentUser, active } = props;
   const navigate = useNavigate();
 
   const [user, setUser] = useState({});
@@ -50,7 +50,7 @@ function Job(props) {
   useEffect(() => {
     // determine which button we want (if mine, show applications; if applied for, disabled; else, apply for)
     if (job.user === currentUser.id) {
-      setButton(<CompareJobApplications job={job} />);
+      setButton(<CompareJobApplications job={job} show={active} />);
     } else if (applications.some((e) => e.user_id === currentUser.id)) {
       setButton(
         <Button job={job.id} disabled className="btn-block">
@@ -60,6 +60,7 @@ function Job(props) {
     } else {
       setButton(
         <ApplyToJob
+          show={active}
           job={job}
           user={currentUser}
           equipment={equipment}
@@ -68,11 +69,20 @@ function Job(props) {
         />
       );
     }
-  }, [applications, currentUser, equipment, job, skills, applied, appliedTrue]);
+  }, [
+    applications,
+    currentUser,
+    equipment,
+    job,
+    skills,
+    applied,
+    appliedTrue,
+    active,
+  ]);
 
   return (
     <Card
-      className={`job ${highlight ? 'highlight' : ''}`}
+      className={`job ${active ? 'highlight' : ''}`}
       data-testid={`job-${job.id}`}
     >
       <Card.Body>

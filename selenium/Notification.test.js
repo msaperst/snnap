@@ -48,6 +48,11 @@ describe('notifications', () => {
     expect(await notification.isDisplayed()).toBeTruthy();
   });
 
+  it('creating a job creates a notification @network @accessibility', async () => {
+    const notification = await createCreatedJobNotification();
+    expect(await notification.isDisplayed()).toBeTruthy();
+  });
+
   it('new notification shows unread icon', async () => {
     const notification = await createAppliedToJobNotification();
     expect(
@@ -87,27 +92,68 @@ describe('notifications', () => {
     );
   });
 
-  it('navigates to the job when clicking on the job @network @accessibility', async () => {
+  it('navigates to the job when clicking on the job for applied to job @network @accessibility', async () => {
     await createAppliedToJobNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('job')),
       5000
     );
     await link.click();
+    const jobId = await jobs[0].getId();
     expect(await driver.getCurrentUrl()).toEqual(
-      `${Test.getApp()}/jobs#${await jobs[0].getId()}`
+      `${Test.getApp()}/jobs#${jobId}`
+    );
+    // ensure job is popped up
+    const card = await driver.wait(
+      until.elementLocated(By.css(`*[data-testid='job-${jobId}']`)),
+      5000
+    );
+    expect(await card.getAttribute('class')).toContain('highlight');
+    await driver.wait(
+      until.elementLocated(
+        By.css(`*[data-testid='compareJobApplicationsModal-${jobId}']`)
+      ),
+      5000
     );
   });
 
-  it('navigates to the job application when clicking on the application @network @accessibility', async () => {
+  it('navigates to the job application when clicking on the application for selected job @network @accessibility', async () => {
     await createChosenJobApplicationNotification();
     const link = await driver.wait(
       until.elementLocated(By.linkText('job application')),
       5000
     );
     await link.click();
+    const jobId = await applicationsForJobs[0].getId();
     expect(await driver.getCurrentUrl()).toEqual(
-      `${Test.getApp()}/job-applications#${await applicationsForJobs[0].getId()}`
+      `${Test.getApp()}/job-applications#${jobId}`
+    );
+    // ensure job is popped up
+    const card = await driver.wait(
+      until.elementLocated(By.css(`*[data-testid='job-application-${jobId}']`)),
+      5000
+    );
+    expect(await card.getAttribute('class')).toContain('highlight');
+  });
+
+  it('navigates to the job when clicking on the job for new job creation @network @accessibility', async () => {
+    await createCreatedJobNotification();
+    const link = await driver.wait(
+      until.elementLocated(By.linkText('job')),
+      5000
+    );
+    await link.click();
+    const jobId = await jobs[0].getId();
+    expect(await driver.getCurrentUrl()).toEqual(`${Test.getApp()}/#${jobId}`);
+    // ensure job is popped up
+    const card = await driver.wait(
+      until.elementLocated(By.css(`*[data-testid='job-${jobId}']`)),
+      5000
+    );
+    expect(await card.getAttribute('class')).toContain('highlight');
+    await driver.wait(
+      until.elementLocated(By.css(`*[data-testid='applyToJobModal-${jobId}']`)),
+      5000
     );
   });
 
@@ -189,6 +235,13 @@ describe('notifications', () => {
       await job.getId(),
       await application.getId()
     );
+    await driver.get(`${Test.getApp()}/notifications`);
+    return driver.wait(until.elementLocated(By.css('div.card')), 5000);
+  }
+
+  async function createCreatedJobNotification() {
+    const job = await Test.addJob(await otherUser.getId(), 1, '2024-03-12');
+    jobs.push(job);
     await driver.get(`${Test.getApp()}/notifications`);
     return driver.wait(until.elementLocated(By.css('div.card')), 5000);
   }

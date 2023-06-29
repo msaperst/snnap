@@ -253,10 +253,10 @@ describe('job', () => {
     expect(spy).toHaveBeenCalledTimes(2);
   });
 
-  async function loadJob(request, user, highlight = false) {
+  async function loadJob(request, user, active = false) {
     await act(async () => {
       requestForHire = render(
-        <Job job={request} currentUser={user} highlight={highlight} />
+        <Job job={request} currentUser={user} active={active} />
       );
       const { container } = requestForHire;
       await waitFor(() => container.firstChild);

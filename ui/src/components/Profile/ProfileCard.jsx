@@ -5,11 +5,11 @@ import ProfileBody from './ProfileBody';
 import './Profile.css';
 
 function ProfileCard(props) {
-  const { user, company, highlight } = props;
+  const { user, company, active } = props;
 
   return (
     <Card
-      className={`job-application ${highlight ? 'highlight' : ''}`}
+      className={`job-application ${active ? 'highlight' : ''}`}
       data-testid={`job-application-${company.id}`}
     >
       <Card.Title>

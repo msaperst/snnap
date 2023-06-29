@@ -1,8 +1,7 @@
 const db = require('mysql2');
-const htmlEncode = require('js-htmlencode');
 const Mysql = require('../../services/Mysql');
-const Email = require('../../services/Email');
 const { parseIntAndDbEscape, handleNewSkill } = require('../Common');
+const Notification = require('../notification/Notification');
 
 const JobApplication = class {
   constructor(id) {
@@ -74,34 +73,8 @@ const JobApplication = class {
         `SELECT * FROM jobs WHERE id = ${parseIntAndDbEscape(jobId)};`
       );
       if (job && job.length) {
-        await Mysql.query(
-          `INSERT INTO notifications (to_user, what, job, job_application) VALUES (${
-            job[0].user
-          }, 'applied', ${parseIntAndDbEscape(jobId)}, ${result.insertId});`
-        );
-        // send out the email
-        const user = await Mysql.query(
-          `SELECT * FROM users JOIN settings WHERE users.id = ${job[0].user};`
-        );
-        if (user && user.length && user[0].email_notifications) {
-          const userInfo = await Mysql.query(
-            `SELECT * FROM users WHERE id = ${parseIntAndDbEscape(userId)};`
-          );
-          Email.sendMail(
-            user[0].email,
-            'SNNAP: New Job Application',
-            `${userName} applied to your job\nhttps://snnap.app/jobs#${parseIntAndDbEscape(
-              jobId
-            )}`,
-            `<a href='https://snnap.app/profile/${
-              userInfo[0].username
-            }'>${htmlEncode(
-              userName
-            )}</a> applied to your <a href='https://snnap.app/jobs#${parseIntAndDbEscape(
-              jobId
-            )}'>job</a>`
-          );
-        }
+        const notification = new Notification(job[0]);
+        notification.applicationSubmitted(newJobApplication.id, userName); // do this async - don't wait
       }
     })();
     return newJobApplication;

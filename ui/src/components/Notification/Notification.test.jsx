@@ -123,6 +123,29 @@ describe('notification', () => {
     );
   });
 
+  it('displays a job created message', async () => {
+    let notification;
+    await act(async () => {
+      notification = render(
+        <Notification
+          notification={{
+            job: 1,
+            what: 'created',
+          }}
+        />
+      );
+      const { container } = notification;
+      await waitFor(() => container.firstChild);
+    });
+    const { container } = notification;
+    const message =
+      container.firstChild.firstChild.firstChild.firstChild.firstChild
+        .firstChild;
+    expect(message.firstChild.textContent).toEqual(
+      'Max Saperstone created a job in your area'
+    );
+  });
+
   it('displays an application submitted message', async () => {
     let notification;
     await act(async () => {
