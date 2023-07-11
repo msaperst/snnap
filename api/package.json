@@ -55,7 +55,7 @@
     "express-rate-limit": "^6.7.0",
     "express-validator": "^7.0.1",
     "js-htmlencode": "^0.3.0",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^9.0.1",
     "mysql2": "3.4.3",
     "nodemailer": "^6.9.3",
     "nodemon": "^2.0.22",
