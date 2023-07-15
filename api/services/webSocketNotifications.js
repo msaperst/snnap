@@ -12,7 +12,7 @@ async function sendUnreadNotifications(user, ctx) {
     notifications.messages = conversationList.reduce(
       (total, conversation) =>
         parseInt(total, 10) + parseInt(conversation.unread, 10),
-      0
+      0,
     );
   } catch (e) {
     // console.log('unable to send notification')

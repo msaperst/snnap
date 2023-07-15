@@ -26,7 +26,7 @@ class Test {
   }
 
   async getDriver(url = '') {
-    const options = new Options().headless();
+    const options = new Options(); // .headless();
     options.addArguments('--ignore-certificate-errors');
     const driver = await new Builder()
       .forBrowser('chrome')

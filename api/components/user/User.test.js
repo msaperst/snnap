@@ -18,7 +18,7 @@ describe('User', () => {
   const token = jwt.sign(
     { id: 123, username: 'bob' },
     'some-super-secret-jwt-token',
-    {}
+    {},
   );
   let hash;
   let mysqlSpy;
@@ -49,12 +49,12 @@ describe('User', () => {
     Mysql.query.mockResolvedValue([]);
 
     await expect(
-      User.login('Bob123@#$', 'password').getUsername()
+      User.login('Bob123@#$', 'password').getUsername(),
     ).rejects.toEqual(new Error('Username or password is incorrect!'));
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE username = 'Bob123';"
+      "SELECT * FROM users WHERE username = 'Bob123';",
     );
   });
 
@@ -62,12 +62,12 @@ describe('User', () => {
     Mysql.query.mockResolvedValue([{ username: 'Bob123' }]);
 
     await expect(
-      User.login('Bob123', 'password').getUsername()
+      User.login('Bob123', 'password').getUsername(),
     ).rejects.toEqual(new Error('Username or password is incorrect!'));
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE username = 'Bob123';"
+      "SELECT * FROM users WHERE username = 'Bob123';",
     );
   });
 
@@ -75,12 +75,12 @@ describe('User', () => {
     Mysql.query.mockResolvedValue([{ username: 'Bob', password: 'password' }]);
 
     await expect(User.login('Bob', 'password').getUsername()).rejects.toEqual(
-      new Error('Username or password is incorrect!')
+      new Error('Username or password is incorrect!'),
     );
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE username = 'Bob';"
+      "SELECT * FROM users WHERE username = 'Bob';",
     );
   });
 
@@ -121,19 +121,19 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(4);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE username = 'Bob';"
+      "SELECT * FROM users WHERE username = 'Bob';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'UPDATE users SET last_login = now() WHERE id = 1;'
+      'UPDATE users SET last_login = now() WHERE id = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      'SELECT * FROM users WHERE id = 1;'
+      'SELECT * FROM users WHERE id = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;',
     );
   });
 
@@ -174,19 +174,19 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(4);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE username = 'Bob';"
+      "SELECT * FROM users WHERE username = 'Bob';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'UPDATE users SET last_login = now() WHERE id = 1;'
+      'UPDATE users SET last_login = now() WHERE id = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      'SELECT * FROM users WHERE id = 1;'
+      'SELECT * FROM users WHERE id = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;',
     );
   });
 
@@ -227,19 +227,19 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(4);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE username = 'Bob';"
+      "SELECT * FROM users WHERE username = 'Bob';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'UPDATE users SET last_login = now() WHERE id = 1;'
+      'UPDATE users SET last_login = now() WHERE id = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      'SELECT * FROM users WHERE id = 1;'
+      'SELECT * FROM users WHERE id = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;',
     );
   });
 
@@ -251,17 +251,17 @@ describe('User', () => {
         'Bob',
         'password',
         'Robert',
-        'bobert@gmail.com'
-      ).getUsername()
+        'bobert@gmail.com',
+      ).getUsername(),
     ).rejects.toEqual(
       new Error(
-        'This email is already in our system. Try resetting your password.'
-      )
+        'This email is already in our system. Try resetting your password.',
+      ),
     );
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@gmail.com');"
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@gmail.com');",
     );
   });
 
@@ -275,17 +275,17 @@ describe('User', () => {
         {},
         'bobert@gmail.com',
         'Robert',
-        ''
-      ).getUsername()
+        '',
+      ).getUsername(),
     ).rejects.toEqual(new Error('Sorry, that username is already in use.'));
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@gmail.com');"
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@gmail.com');",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT * FROM users WHERE LOWER(username) = LOWER('Robert');"
+      "SELECT * FROM users WHERE LOWER(username) = LOWER('Robert');",
     );
   });
 
@@ -304,7 +304,7 @@ describe('User', () => {
       location,
       `bobert@example.org`,
       'Bobert',
-      'password'
+      'password',
     );
     await expect(user.getToken()).resolves.toEqual(undefined);
     await expect(user.getId()).resolves.toEqual(15);
@@ -324,29 +324,29 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(6);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@example.org');"
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('bobert@example.org');",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT * FROM users WHERE LOWER(username) = LOWER('Bobert');"
+      "SELECT * FROM users WHERE LOWER(username) = LOWER('Bobert');",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
       expect.stringMatching(
-        /^INSERT INTO users \(first_name, last_name, email, username, password, loc, lat, lon\) VALUES \('Bob', 'Robert', 'bobert@example.org', 'Bobert', '.*', 'Fairfax, VA 20030, United States of America', 5, -71.2345\);/
-      )
+        /^INSERT INTO users \(first_name, last_name, email, username, password, loc, lat, lon\) VALUES \('Bob', 'Robert', 'bobert@example.org', 'Bobert', '.*', 'Fairfax, VA 20030, United States of America', 5, -71.2345\);/,
+      ),
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       4,
-      'INSERT INTO settings (user) VALUE (15);'
+      'INSERT INTO settings (user) VALUE (15);',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       5,
-      'INSERT INTO companies (user) VALUE (15);'
+      'INSERT INTO companies (user) VALUE (15);',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       6,
-      'SELECT * FROM ratings WHERE ratee = 15 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 15 AND rating IS NOT NULL;',
     );
   });
 
@@ -419,18 +419,18 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;',
     );
   });
 
   it('recognizes an invalid token and rejects with an error', async () => {
     const token = jwt.sign({ id: 123 }, 'some-secret');
     await expect(User.isAuth(`Bearer ${token}`)).rejects.toEqual(
-      new JsonWebTokenError('invalid signature')
+      new JsonWebTokenError('invalid signature'),
     );
   });
 
@@ -449,7 +449,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
   });
 
@@ -470,11 +470,11 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE users SET avatar = '123' WHERE id = 1"
+      "UPDATE users SET avatar = '123' WHERE id = 1",
     );
   });
 
@@ -482,16 +482,16 @@ describe('User', () => {
     Mysql.query.mockResolvedValue([{}]);
     const user = await User.auth(token);
     await expect(
-      user.setAccountInformation('msaperst@gmail.com', '1234567890')
+      user.setAccountInformation('msaperst@gmail.com', '1234567890'),
     ).rejects.toEqual(new Error('This email is already in our system.'));
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT * FROM users WHERE LOWER(email) = LOWER('msaperst@gmail.com') AND id != undefined;"
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('msaperst@gmail.com') AND id != undefined;",
     );
   });
 
@@ -511,20 +511,20 @@ describe('User', () => {
       .mockResolvedValue([]);
     const user = await User.auth(token);
     expect(
-      await user.setAccountInformation('msaperst@gmail.com', '1234567890')
+      await user.setAccountInformation('msaperst@gmail.com', '1234567890'),
     ).toBeUndefined();
     expect(mysqlSpy).toHaveBeenCalledTimes(3);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT * FROM users WHERE LOWER(email) = LOWER('msaperst@gmail.com') AND id != 1;"
+      "SELECT * FROM users WHERE LOWER(email) = LOWER('msaperst@gmail.com') AND id != 1;",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      "UPDATE users SET email  = 'msaperst@gmail.com' WHERE id = 1"
+      "UPDATE users SET email  = 'msaperst@gmail.com' WHERE id = 1",
     );
   });
 
@@ -549,17 +549,17 @@ describe('User', () => {
         'Saperstone',
         'Fairfax',
         'VA',
-        '22030'
-      )
+        '22030',
+      ),
     ).toBeUndefined();
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE users SET first_name = 'Max', last_name = 'Saperstone', loc = NULL, lat = NaN, lon = NaN WHERE id = 1"
+      "UPDATE users SET first_name = 'Max', last_name = 'Saperstone', loc = NULL, lat = NaN, lon = NaN WHERE id = 1",
     );
   });
 
@@ -580,16 +580,16 @@ describe('User', () => {
     const user = await User.auth(token);
     Mysql.query.mockResolvedValue([{ username: 'password' }]);
     await expect(user.updatePassword('Bob', 'password')).rejects.toEqual(
-      new Error("Current password doesn't match existing password.")
+      new Error("Current password doesn't match existing password."),
     );
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT password FROM users WHERE id = 1;'
+      'SELECT password FROM users WHERE id = 1;',
     );
   });
 
@@ -610,16 +610,16 @@ describe('User', () => {
     const user = await User.auth(token);
     Mysql.query.mockResolvedValue([{ password: 'password' }]);
     await expect(user.updatePassword('Bob', 'password')).rejects.toEqual(
-      new Error("Current password doesn't match existing password.")
+      new Error("Current password doesn't match existing password."),
     );
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT password FROM users WHERE id = 1;'
+      'SELECT password FROM users WHERE id = 1;',
     );
   });
 
@@ -644,15 +644,15 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(3);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT password FROM users WHERE id = 1;'
+      'SELECT password FROM users WHERE id = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      expect.stringMatching(/UPDATE users SET password = '.*' WHERE id = 1/)
+      expect.stringMatching(/UPDATE users SET password = '.*' WHERE id = 1/),
     );
   });
 
@@ -670,7 +670,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM notifications WHERE to_user = 1 ORDER BY timestamp desc;'
+      'SELECT * FROM notifications WHERE to_user = 1 ORDER BY timestamp desc;',
     );
   });
 
@@ -682,11 +682,11 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(3);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;'
+      'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;'
+      'UPDATE settings SET email_notifications = true, push_notifications = false WHERE user = 1;',
     );
   });
 
@@ -697,7 +697,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'UPDATE notifications SET reviewed = true WHERE id = 5 AND to_user = 1;'
+      'UPDATE notifications SET reviewed = true WHERE id = 5 AND to_user = 1;',
     );
   });
 
@@ -718,7 +718,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM settings WHERE user = 1;'
+      'SELECT * FROM settings WHERE user = 1;',
     );
   });
 
@@ -729,7 +729,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
   });
 
@@ -751,11 +751,11 @@ describe('User', () => {
     // issue #574 addresses this issue with username/id overlap
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 1 OR username = '1';"
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 1 OR username = '1';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;',
     );
   });
 
@@ -777,11 +777,11 @@ describe('User', () => {
     // issue #574 addresses this issue with username/id overlap
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max';"
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;',
     );
   });
 
@@ -803,11 +803,11 @@ describe('User', () => {
     // issue #574 addresses this issue with username/id overlap
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';"
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 1 AND rating IS NOT NULL;',
     );
   });
 
@@ -818,7 +818,7 @@ describe('User', () => {
     // issue #574 addresses this issue with username/id overlap
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';"
+      "SELECT id, username, first_name, last_name, avatar FROM users WHERE id = 'NaN' OR username = 'max1';",
     );
   });
 
@@ -828,7 +828,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT id, email FROM users WHERE email = 'someemail@email.email';"
+      "SELECT id, email FROM users WHERE email = 'someemail@email.email';",
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -839,7 +839,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT id, email FROM users WHERE email = 'someemail@email.email';"
+      "SELECT id, email FROM users WHERE email = 'someemail@email.email';",
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -853,13 +853,13 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT id, email FROM users WHERE email = 'someemail@email.email';"
+      "SELECT id, email FROM users WHERE email = 'someemail@email.email';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
       expect.stringMatching(
-        /UPDATE users SET password_reset_code = '[a-f0-9]{6}', password_reset_count = 0 WHERE id = 4;/
-      )
+        /UPDATE users SET password_reset_code = '[a-f0-9]{6}', password_reset_count = 0 WHERE id = 4;/,
+      ),
     );
     expect(emailSpy).toHaveBeenCalledTimes(1);
     expect(emailSpy).toHaveBeenNthCalledWith(
@@ -867,71 +867,71 @@ describe('User', () => {
       'someemail@email.email',
       'SNNAP: Password Reset',
       expect.stringMatching(
-        /We just received a password reset request from you.\nEnter the below code into the form.\n[a-f0-9]{6}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
+        /We just received a password reset request from you.\nEnter the below code into the form.\n[a-f0-9]{6}\nThis code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./,
       ),
       expect.stringMatching(
-        /We just received a password reset request from you.<br\/>Enter the below code into the form.<br\/><b>[a-f0-9]{6}<\/b><br\/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./
-      )
+        /We just received a password reset request from you.<br\/>Enter the below code into the form.<br\/><b>[a-f0-9]{6}<\/b><br\/>This code is only valid for 10 minutes, and will reset after 3 invalid reset attempts./,
+      ),
     );
     jest.runOnlyPendingTimers();
     expect(mysqlSpy).toHaveBeenCalledTimes(3);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
-      'UPDATE users SET password_reset_code = NULL WHERE id = 4;'
+      'UPDATE users SET password_reset_code = NULL WHERE id = 4;',
     );
   });
 
   it('does not set reset if nothing is not found', async () => {
     Mysql.query.mockResolvedValue();
     await expect(
-      User.reset('someemail@email.email', '123456', 'password')
+      User.reset('someemail@email.email', '123456', 'password'),
     ).rejects.toEqual(new Error('Supplied code does not match!'));
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';"
+      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;"
+      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;",
     );
   });
 
   it('does not set reset if no user is found - bad code or high count', async () => {
     Mysql.query.mockResolvedValue([]);
     await expect(
-      User.reset('someemail@email.email', '123456', 'password')
+      User.reset('someemail@email.email', '123456', 'password'),
     ).rejects.toEqual(new Error('Supplied code does not match!'));
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';"
+      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;"
+      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;",
     );
   });
 
   it('resets password when correct information provided', async () => {
     Mysql.query.mockResolvedValue([{ id: 4, username: 'someuser' }]);
     expect(
-      await User.reset('someemail@email.email', '123456', 'password')
+      await User.reset('someemail@email.email', '123456', 'password'),
     ).toEqual('someuser');
     expect(mysqlSpy).toHaveBeenCalledTimes(3);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';"
+      "UPDATE users SET password_reset_count = password_reset_count+1 WHERE email = 'someemail@email.email';",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;"
+      "SELECT id, username FROM users WHERE email = 'someemail@email.email' AND password_reset_code = '123456' AND password_reset_count < 4;",
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       3,
       expect.stringMatching(
-        /UPDATE users SET password = '.*', password_reset_code = NULL WHERE id = 4;/
-      )
+        /UPDATE users SET password = '.*', password_reset_code = NULL WHERE id = 4;/,
+      ),
     );
   });
 
@@ -942,7 +942,7 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
   });
 
@@ -960,11 +960,11 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = 123 AND job_date < CURRENT_DATE AND date_rated IS NULL;'
+      'SELECT id, ratee as userId, job as jobId FROM ratings WHERE rater = 123 AND job_date < CURRENT_DATE AND date_rated IS NULL;',
     );
   });
 
@@ -975,11 +975,11 @@ describe('User', () => {
     expect(mysqlSpy).toHaveBeenCalledTimes(2);
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM users WHERE id = 123;'
+      'SELECT * FROM users WHERE id = 123;',
     );
     expect(mysqlSpy).toHaveBeenNthCalledWith(
       2,
-      'UPDATE ratings SET rating = true, date_rated = CURRENT_TIMESTAMP WHERE id = 12 AND rater = 123;'
+      'UPDATE ratings SET rating = true, date_rated = CURRENT_TIMESTAMP WHERE id = 12 AND rater = 123;',
     );
   });
 
@@ -997,7 +997,7 @@ describe('User', () => {
     expect(await User.getRating(2)).toBeNull();
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;',
     );
   });
 
@@ -1011,7 +1011,7 @@ describe('User', () => {
     expect(await User.getRating(2)).toBeNull();
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;',
     );
   });
 
@@ -1026,7 +1026,7 @@ describe('User', () => {
     expect(await User.getRating(2)).toBeFalsy();
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;',
     );
   });
 
@@ -1041,7 +1041,7 @@ describe('User', () => {
     expect(await User.getRating(2)).toBeTruthy();
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;',
     );
   });
 
@@ -1061,7 +1061,7 @@ describe('User', () => {
     expect(await User.getRating(2)).toBeTruthy();
     expect(mysqlSpy).toHaveBeenCalledTimes(1);
     expect(mysqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;'
+      'SELECT * FROM ratings WHERE ratee = 2 AND rating IS NOT NULL;',
     );
   });
 });

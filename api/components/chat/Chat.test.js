@@ -38,8 +38,8 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,
       expect.stringMatching(
-        /^INSERT INTO conversations \(sender, recipient, sentAt, message, reviewed\) VALUES \(1, 2, '2022-11-25 \d{2}:19:43.788', 'hello', false\);$/
-      )
+        /^INSERT INTO conversations \(sender, recipient, sentAt, message, reviewed\) VALUES \(1, 2, '2022-11-25 \d{2}:19:43.788', 'hello', false\);$/,
+      ),
     );
   });
 
@@ -61,11 +61,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'UPDATE conversations SET reviewed = true WHERE id = 1 AND recipient = 1 AND reviewed = false;'
+      'UPDATE conversations SET reviewed = true WHERE id = 1 AND recipient = 1 AND reviewed = false;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'UPDATE conversations SET reviewed = true WHERE id = 2 AND recipient = 1 AND reviewed = false;'
+      'UPDATE conversations SET reviewed = true WHERE id = 2 AND recipient = 1 AND reviewed = false;',
     );
   });
 
@@ -82,11 +82,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      'UPDATE conversations SET reviewed = true WHERE sender = 2 AND recipient = 1 AND reviewed = false;'
+      'UPDATE conversations SET reviewed = true WHERE sender = 2 AND recipient = 1 AND reviewed = false;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'UPDATE conversations SET reviewed = true WHERE sender = 1 AND recipient = 2 AND reviewed = false;'
+      'UPDATE conversations SET reviewed = true WHERE sender = 1 AND recipient = 2 AND reviewed = false;',
     );
   });
 
@@ -96,11 +96,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;"
+      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
+      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;',
     );
   });
 
@@ -116,11 +116,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;"
+      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
+      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;',
     );
   });
 
@@ -147,11 +147,11 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;"
+      "SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 GROUP BY sender;",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;'
+      'SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1;',
     );
   });
 
@@ -203,15 +203,15 @@ describe('chat', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      "SELECT conversations.id, sentAt, reviewed, message AS body, users.username AS 'from', 'msaperst' AS 'to' FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 AND users.username = 'grob';"
+      "SELECT conversations.id, sentAt, reviewed, message AS body, users.username AS 'from', 'msaperst' AS 'to' FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = 1 AND users.username = 'grob';",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      "SELECT conversations.id, sentAt, reviewed, message AS body, users.username AS 'to', 'msaperst' AS 'from' FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1 AND users.username = 'grob';"
+      "SELECT conversations.id, sentAt, reviewed, message AS body, users.username AS 'to', 'msaperst' AS 'from' FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = 1 AND users.username = 'grob';",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'UPDATE conversations SET reviewed = true WHERE id = 5 AND recipient = 1 AND reviewed = false;'
+      'UPDATE conversations SET reviewed = true WHERE id = 5 AND recipient = 1 AND reviewed = false;',
     );
   });
 });

@@ -29,19 +29,19 @@ describe('notification', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(4);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT id, lat, lon, email, email_notifications from users JOIN settings ON users.id = settings.user WHERE id != 2;'
+      'SELECT id, lat, lon, email, email_notifications from users JOIN settings ON users.id = settings.user WHERE id != 2;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 1;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 1;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 1;'
+      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 1;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT * FROM users WHERE id = 7;'
+      'SELECT * FROM users WHERE id = 7;',
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -87,7 +87,7 @@ describe('notification', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(5);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,
-      "INSERT INTO notifications (to_user, what, job) VALUES (3, 'created', 1);"
+      "INSERT INTO notifications (to_user, what, job) VALUES (3, 'created', 1);",
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -144,14 +144,14 @@ describe('notification', () => {
       'email.3@example.org',
       'SNNAP: Job In Your Area Created',
       'Max Saperstone created a job in your area\nhttps://snnap.app/#1',
-      "<a href='https://snnap.app/profile/max'>Max Saperstone</a> created a <a href='https://snnap.app/#1'>job</a> in your area"
+      "<a href='https://snnap.app/profile/max'>Max Saperstone</a> created a <a href='https://snnap.app/#1'>job</a> in your area",
     );
     expect(emailSpy).toHaveBeenNthCalledWith(
       2,
       'email.5@example.org',
       'SNNAP: Job In Your Area Created',
       'Max Saperstone created a job in your area\nhttps://snnap.app/#1',
-      "<a href='https://snnap.app/profile/max'>Max Saperstone</a> created a <a href='https://snnap.app/#1'>job</a> in your area"
+      "<a href='https://snnap.app/profile/max'>Max Saperstone</a> created a <a href='https://snnap.app/#1'>job</a> in your area",
     );
   });
 
@@ -165,16 +165,16 @@ describe('notification', () => {
     job.user = 2;
     const notification = new Notification(job);
     expect(
-      await notification.applicationSubmitted(2, 'MaxMax')
+      await notification.applicationSubmitted(2, 'MaxMax'),
     ).toBeUndefined();
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO notifications (to_user, what, job, job_application) VALUES (2, 'applied', 1, 2);"
+      "INSERT INTO notifications (to_user, what, job, job_application) VALUES (2, 'applied', 1, 2);",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM users JOIN settings WHERE users.id = 2;'
+      'SELECT * FROM users JOIN settings WHERE users.id = 2;',
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -189,7 +189,7 @@ describe('notification', () => {
     job.user = 2;
     const notification = new Notification(job);
     expect(
-      await notification.applicationSubmitted(2, 'MaxMax')
+      await notification.applicationSubmitted(2, 'MaxMax'),
     ).toBeUndefined();
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(emailSpy).toHaveBeenCalledTimes(0);
@@ -207,7 +207,7 @@ describe('notification', () => {
     job.user = 2;
     const notification = new Notification(job);
     expect(
-      await notification.applicationSubmitted(2, 'MaxMax')
+      await notification.applicationSubmitted(2, 'MaxMax'),
     ).toBeUndefined();
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(emailSpy).toHaveBeenCalledTimes(0);
@@ -229,7 +229,7 @@ describe('notification', () => {
     job.user = 2;
     const notification = new Notification(job);
     expect(
-      await notification.applicationSubmitted(2, 'MaxMax')
+      await notification.applicationSubmitted(2, 'MaxMax'),
     ).toBeUndefined();
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(emailSpy).toHaveBeenCalledTimes(1);
@@ -237,7 +237,7 @@ describe('notification', () => {
       'maxmax@address.com',
       'SNNAP: New Job Application',
       'MaxMax applied to your job\nhttps://snnap.app/jobs#1',
-      "<a href='https://snnap.app/profile/maxmax'>MaxMax</a> applied to your <a href='https://snnap.app/jobs#1'>job</a>"
+      "<a href='https://snnap.app/profile/maxmax'>MaxMax</a> applied to your <a href='https://snnap.app/jobs#1'>job</a>",
     );
   });
 
@@ -257,23 +257,23 @@ describe('notification', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(5);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM job_applications WHERE id = 2;'
+      'SELECT * FROM job_applications WHERE id = 2;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      "INSERT INTO notifications (to_user, what, job, job_application) VALUES (6, 'selected', 1, 2);"
+      "INSERT INTO notifications (to_user, what, job, job_application) VALUES (6, 'selected', 1, 2);",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 1;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 1;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 1;'
+      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 1;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,
-      'SELECT * FROM users JOIN settings WHERE id = 6;'
+      'SELECT * FROM users JOIN settings WHERE id = 6;',
     );
     expect(emailSpy).toHaveBeenCalledTimes(0);
   });
@@ -346,14 +346,14 @@ describe('notification', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(6);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       6,
-      'SELECT * FROM users WHERE id = 18;'
+      'SELECT * FROM users WHERE id = 18;',
     );
     expect(emailSpy).toHaveBeenCalledTimes(1);
     expect(emailSpy).toHaveBeenCalledWith(
       'maxmax@address.com',
       'SNNAP: Job Application Selected',
       'Max Saperstone selected your job application\nhttps://snnap.app/job-applications#2',
-      "<a href='https://snnap.app/profile/max'>Max Saperstone</a> selected your <a href='https://snnap.app/job-applications#2'>job application</a>"
+      "<a href='https://snnap.app/profile/max'>Max Saperstone</a> selected your <a href='https://snnap.app/job-applications#2'>job application</a>",
     );
   });
 
