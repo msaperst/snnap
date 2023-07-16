@@ -15,11 +15,11 @@ const signupValidation = [
     .normalizeEmail({ gmail_remove_dots: true }),
   check(
     'username',
-    'Username can only contain alpha numeric characters and underscores.'
+    'Username can only contain alpha numeric characters and underscores.',
   ).matches(/^\w+$/),
   check(
     'username',
-    'Username must contain at least one alphabetical character.'
+    'Username must contain at least one alphabetical character.',
   ).matches(/[a-zA-Z]+/),
   check('password', 'Password must be 6 or more characters.').isLength({
     min: 6,
@@ -37,7 +37,7 @@ router.post('/register', signupValidation, async (req, res) => {
     req.body.location,
     req.body.email,
     req.body.username,
-    req.body.password
+    req.body.password,
   );
   try {
     await user.getToken();
@@ -73,7 +73,7 @@ router.post('/login', loginValidation, async (req, res) => {
   const user = User.login(
     req.body.username,
     req.body.password,
-    req.body.rememberMe
+    req.body.rememberMe,
   );
   try {
     const userInfo = await user.getInfo();
@@ -135,7 +135,7 @@ router.post('/reset', resetValidation, async (req, res) => {
     const username = await User.reset(
       req.body.email,
       req.body.code,
-      req.body.password
+      req.body.password,
     );
     return res.status(200).send({
       username,

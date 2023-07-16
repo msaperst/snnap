@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { handleResponse } from '../helpers/handle-response';
 
 const currentUserSubject = new BehaviorSubject(
-  JSON.parse(localStorage.getItem('currentUser'))
+  JSON.parse(localStorage.getItem('currentUser')),
 );
 
 export const authenticationService = {

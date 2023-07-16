@@ -45,7 +45,7 @@ router.post('/new-job', newJobValidation, async (req, res) => {
       req.body.durationMax,
       req.body.date,
       req.body.equipment,
-      skills
+      skills,
     );
     return res.status(200).send();
   } catch (error) {
@@ -86,7 +86,7 @@ router.post('/apply-to-job', applyToJobValidation, async (req, res) => {
       equipment,
       skills,
       req.body.comment,
-      req.body.portfolio
+      req.body.portfolio,
     );
     return res.status(200).send();
   } catch (error) {
@@ -120,7 +120,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 router.get('/job-application/:id', async (req, res) => {
@@ -147,19 +147,19 @@ router.get('/job-applications/:id', async (req, res) => {
 // information about our system
 router.get('/types', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () =>
-    res.send(await Job.getJobTypes())
+    res.send(await Job.getJobTypes()),
   );
 });
 
 router.get('/subtypes', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () =>
-    res.send(await Job.getJobSubtypes())
+    res.send(await Job.getJobSubtypes()),
   );
 });
 
 router.get('/equipment', async (req, res) => {
   await Common.basicAuthExecuteAndReturn(req, res, async () =>
-    res.send(await Job.getEquipment())
+    res.send(await Job.getEquipment()),
   );
 });
 

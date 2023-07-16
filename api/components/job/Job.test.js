@@ -59,7 +59,7 @@ describe('job', () => {
       null,
       '2022-02-16',
       '',
-      []
+      [],
     );
     await expect(job.getId()).resolves.toEqual(15);
     await expect(job.getType()).resolves.toEqual(5);
@@ -67,7 +67,7 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 2, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);",
     );
     expect(Notification).toHaveBeenCalledTimes(1);
     const mockNotificationInstance = Notification.mock.instances[0];
@@ -89,7 +89,7 @@ describe('job', () => {
       10,
       '2022-02-16',
       '',
-      []
+      [],
     );
     await expect(job.getId()).resolves.toEqual(15);
     await expect(job.getType()).resolves.toEqual(5);
@@ -97,7 +97,7 @@ describe('job', () => {
     // verify the sql calls
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 3, 'Deetz', 100, 5, 10, '2022-02-16 00:00:00', '', 'Fairfax, VA 20030, United States of America', 5,-71.2345);",
     );
     expect(Notification).toHaveBeenCalledTimes(1);
     const mockNotificationInstance = Notification.mock.instances[0];
@@ -122,7 +122,7 @@ describe('job', () => {
       [
         { value: 2, label: 'Posing' },
         { value: 3, label: 'Styling' },
-      ]
+      ],
     );
     await expect(job.getId()).resolves.toEqual(15);
     await expect(job.getType()).resolves.toEqual(5);
@@ -131,15 +131,15 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(3);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA 20030, United States of America', 5,-71.2345);",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'INSERT INTO job_skills (job, skill) VALUES (15, 2);'
+      'INSERT INTO job_skills (job, skill) VALUES (15, 2);',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      'INSERT INTO job_skills (job, skill) VALUES (15, 3);'
+      'INSERT INTO job_skills (job, skill) VALUES (15, 3);',
     );
     expect(Notification).toHaveBeenCalledTimes(1);
     const mockNotificationInstance = Notification.mock.instances[0];
@@ -163,7 +163,7 @@ describe('job', () => {
       null,
       '2022-02-16',
       'some equipment',
-      [{ value: 'new1', label: 'Positioning' }]
+      [{ value: 'new1', label: 'Positioning' }],
     );
     await expect(job.getId()).resolves.toEqual(15);
     await expect(job.getType()).resolves.toEqual(5);
@@ -172,15 +172,15 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(3);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA 20030, United States of America', 5,-71.2345);"
+      "INSERT INTO jobs (user, type, subtype, details, pay, duration, durationMax, date_time, equipment, loc, lat, lon) VALUES (1, 5, 1, 'Deetz', 100, 5, null, '2022-02-16 00:00:00', 'some equipment', 'Fairfax, VA 20030, United States of America', 5,-71.2345);",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      "INSERT INTO skills (name, who, date_created) VALUES ('Positioning', 1, CURRENT_TIMESTAMP);"
+      "INSERT INTO skills (name, who, date_created) VALUES ('Positioning', 1, CURRENT_TIMESTAMP);",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      'INSERT INTO job_skills (job, skill) VALUES (15, 12);'
+      'INSERT INTO job_skills (job, skill) VALUES (15, 12);',
     );
     expect(Notification).toHaveBeenCalledTimes(1);
     const mockNotificationInstance = Notification.mock.instances[0];
@@ -196,7 +196,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -226,11 +226,11 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(2);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 5;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 5;'
+      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 5;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -243,7 +243,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time >= CURDATE() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.date_time >= CURDATE() AND jobs.application_selected IS NULL ORDER BY jobs.date_time;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -256,7 +256,7 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.user = 1 ORDER BY jobs.date_time;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.user = 1 ORDER BY jobs.date_time;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -273,27 +273,27 @@ describe('job', () => {
     expect(sqlSpy).toHaveBeenCalledTimes(6);
     expect(sqlSpy).toHaveBeenNthCalledWith(
       1,
-      'UPDATE jobs SET jobs.application_selected = 3, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = 4;'
+      'UPDATE jobs SET jobs.application_selected = 3, jobs.date_application_selected = CURRENT_TIMESTAMP WHERE jobs.id = 4;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM job_applications WHERE id = 3;'
+      'SELECT * FROM job_applications WHERE id = 3;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       3,
-      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 4;'
+      'SELECT jobs.*, jobs.type as typeId, jobs.subtype as subtypeId, job_types.type as type, job_subtypes.type as subtype FROM jobs INNER JOIN job_types ON jobs.type = job_types.id INNER JOIN job_subtypes ON jobs.subtype = job_subtypes.id WHERE jobs.id = 4;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       4,
-      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 4;'
+      'SELECT skills.id as value, skills.name FROM job_skills INNER JOIN skills ON skills.id = job_skills.skill WHERE job = 4;',
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       5,
-      "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 5, 6);"
+      "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 5, 6);",
     );
     expect(sqlSpy).toHaveBeenNthCalledWith(
       6,
-      "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 6, 5);"
+      "INSERT INTO ratings (job, job_date, ratee, rater) VALUES (4, 'time', 6, 5);",
     );
     expect(Notification).toHaveBeenCalledTimes(1);
     const mockNotificationInstance = Notification.mock.instances[0];
@@ -315,7 +315,7 @@ describe('job', () => {
     ]);
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM equipment ORDER BY name;'
+      'SELECT * FROM equipment ORDER BY name;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -334,7 +334,7 @@ describe('job', () => {
     ]);
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM skills WHERE who IS NULL OR who = 5 ORDER BY name;'
+      'SELECT * FROM skills WHERE who IS NULL OR who = 5 ORDER BY name;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -359,7 +359,7 @@ describe('job', () => {
     ]);
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM job_types ORDER BY type;'
+      'SELECT * FROM job_types ORDER BY type;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -384,7 +384,7 @@ describe('job', () => {
     ]);
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM job_subtypes ORDER BY type;'
+      'SELECT * FROM job_subtypes ORDER BY type;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });
@@ -398,7 +398,7 @@ describe('job', () => {
     });
     expect(sqlSpy).toHaveBeenCalledTimes(1);
     expect(sqlSpy).toHaveBeenCalledWith(
-      'SELECT * FROM settings WHERE user = 2;'
+      'SELECT * FROM settings WHERE user = 2;',
     );
     expect(Notification).toHaveBeenCalledTimes(0);
   });

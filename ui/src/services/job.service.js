@@ -45,7 +45,7 @@ function newJob(
   date,
   time,
   equipment,
-  skills
+  skills,
 ) {
   const headers = authHeader();
   headers['Content-Type'] = 'application/json';
@@ -73,7 +73,7 @@ function newJob(
 function getJob(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/jobs/job/${parseInt(id, 10)}`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -81,7 +81,7 @@ function getJobApplication(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(
     `/api/jobs/job-application/${parseInt(id, 10)}`,
-    requestOptions
+    requestOptions,
   ).then(handleResponse);
 }
 
@@ -89,7 +89,7 @@ function getJobApplications(id) {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(
     `/api/jobs/job-applications/${parseInt(id, 10)}`,
-    requestOptions
+    requestOptions,
   ).then(handleResponse);
 }
 
@@ -106,7 +106,7 @@ function applyToJob(
   equipment,
   skills,
   comment,
-  portfolio
+  portfolio,
 ) {
   const headers = authHeader();
   headers['Content-Type'] = 'application/json';
@@ -146,6 +146,6 @@ function chooseJobApplication(job, jobApplication) {
   };
 
   return fetch(`/api/jobs/select-job-application`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }

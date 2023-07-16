@@ -27,23 +27,23 @@ describe('Company', () => {
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 1;'
+      'SELECT * FROM companies WHERE user = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM companies WHERE user = 1;'
+      'SELECT * FROM companies WHERE user = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'SELECT * FROM portfolio WHERE company = 1;'
+      'SELECT * FROM portfolio WHERE company = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;'
+      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      'SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = 1;'
+      'SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = 1;',
     );
   });
 
@@ -74,23 +74,23 @@ describe('Company', () => {
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 1;'
+      'SELECT * FROM companies WHERE user = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      'SELECT * FROM companies WHERE user = 1;'
+      'SELECT * FROM companies WHERE user = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'SELECT * FROM portfolio WHERE company = 1;'
+      'SELECT * FROM portfolio WHERE company = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;'
+      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 1;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      'SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = 1;'
+      'SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = 1;',
     );
   });
 
@@ -114,27 +114,27 @@ describe('Company', () => {
     expect(spy).toHaveBeenCalledTimes(6);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 5;'
+      'SELECT * FROM companies WHERE user = 5;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      'INSERT INTO companies (user) VALUE (5);'
+      'INSERT INTO companies (user) VALUE (5);',
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'SELECT * FROM companies WHERE user = 5;'
+      'SELECT * FROM companies WHERE user = 5;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'SELECT * FROM portfolio WHERE company = 2;'
+      'SELECT * FROM portfolio WHERE company = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 2;'
+      'SELECT equipment.id as value, equipment.name, company_equipment.what FROM company_equipment INNER JOIN equipment ON equipment.id = company_equipment.equipment WHERE company = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       6,
-      'SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = 2;'
+      'SELECT skills.id as value, skills.name FROM company_skills INNER JOIN skills ON skills.id = company_skills.skill WHERE company = 2;',
     );
   });
 
@@ -151,15 +151,15 @@ describe('Company', () => {
     expect(spy).toHaveBeenCalledTimes(3);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 2;'
+      'SELECT * FROM companies WHERE user = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE companies SET experience = 'experience' WHERE user = 2"
+      "UPDATE companies SET experience = 'experience' WHERE user = 2",
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'DELETE FROM portfolio WHERE company = 3;'
+      'DELETE FROM portfolio WHERE company = 3;',
     );
   });
 
@@ -176,15 +176,15 @@ describe('Company', () => {
     expect(spy).toHaveBeenCalledTimes(3);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 2;'
+      'SELECT * FROM companies WHERE user = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE companies SET experience = 'experience' WHERE user = 2"
+      "UPDATE companies SET experience = 'experience' WHERE user = 2",
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'DELETE FROM portfolio WHERE company = 3;'
+      'DELETE FROM portfolio WHERE company = 3;',
     );
   });
 
@@ -207,23 +207,23 @@ describe('Company', () => {
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 2;'
+      'SELECT * FROM companies WHERE user = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE companies SET experience = 'experience' WHERE user = 2"
+      "UPDATE companies SET experience = 'experience' WHERE user = 2",
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'DELETE FROM portfolio WHERE company = 3;'
+      'DELETE FROM portfolio WHERE company = 3;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      "INSERT INTO portfolio (company, link, description) VALUES (3, 'link1', 'description1');"
+      "INSERT INTO portfolio (company, link, description) VALUES (3, 'link1', 'description1');",
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      "INSERT INTO portfolio (company, link, description) VALUES (3, 'link2', 'description2');"
+      "INSERT INTO portfolio (company, link, description) VALUES (3, 'link2', 'description2');",
     );
   });
 
@@ -237,28 +237,28 @@ describe('Company', () => {
       'insta',
       'fb',
       [{ value: 1, label: 'Flash', what: 'flash machine' }],
-      []
+      [],
     );
     expect(spy).toHaveBeenCalledTimes(5);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 2;'
+      'SELECT * FROM companies WHERE user = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb' WHERE user = 2"
+      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb' WHERE user = 2",
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'DELETE FROM company_equipment WHERE company = 2;'
+      'DELETE FROM company_equipment WHERE company = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      "INSERT INTO company_equipment (company, equipment, what) VALUES (2, 1, 'flash machine');"
+      "INSERT INTO company_equipment (company, equipment, what) VALUES (2, 1, 'flash machine');",
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      'DELETE FROM company_skills WHERE company = 2;'
+      'DELETE FROM company_skills WHERE company = 2;',
     );
   });
 
@@ -275,32 +275,32 @@ describe('Company', () => {
       [
         { value: 1, label: 'Flash' },
         { value: 4, label: 'Flashy' },
-      ]
+      ],
     );
     expect(spy).toHaveBeenCalledTimes(6);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 2;'
+      'SELECT * FROM companies WHERE user = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb' WHERE user = 2"
+      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb' WHERE user = 2",
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'DELETE FROM company_equipment WHERE company = 2;'
+      'DELETE FROM company_equipment WHERE company = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'DELETE FROM company_skills WHERE company = 2;'
+      'DELETE FROM company_skills WHERE company = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      'INSERT INTO company_skills (company, skill) VALUES (2, 1);'
+      'INSERT INTO company_skills (company, skill) VALUES (2, 1);',
     );
     expect(spy).toHaveBeenNthCalledWith(
       6,
-      'INSERT INTO company_skills (company, skill) VALUES (2, 4);'
+      'INSERT INTO company_skills (company, skill) VALUES (2, 4);',
     );
   });
 
@@ -319,36 +319,36 @@ describe('Company', () => {
       [
         { value: 'new1', label: 'New Thing' },
         { value: 4, label: 'Flashy' },
-      ]
+      ],
     );
     expect(spy).toHaveBeenCalledTimes(7);
     expect(spy).toHaveBeenNthCalledWith(
       1,
-      'SELECT * FROM companies WHERE user = 2;'
+      'SELECT * FROM companies WHERE user = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       2,
-      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb' WHERE user = 2"
+      "UPDATE companies SET name = 'name', website = 'site', insta = 'insta', fb = 'fb' WHERE user = 2",
     );
     expect(spy).toHaveBeenNthCalledWith(
       3,
-      'DELETE FROM company_equipment WHERE company = 2;'
+      'DELETE FROM company_equipment WHERE company = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       4,
-      'DELETE FROM company_skills WHERE company = 2;'
+      'DELETE FROM company_skills WHERE company = 2;',
     );
     expect(spy).toHaveBeenNthCalledWith(
       5,
-      "INSERT INTO skills (name, who, date_created) VALUES ('New Thing', 2, CURRENT_TIMESTAMP);"
+      "INSERT INTO skills (name, who, date_created) VALUES ('New Thing', 2, CURRENT_TIMESTAMP);",
     );
     expect(spy).toHaveBeenNthCalledWith(
       6,
-      'INSERT INTO company_skills (company, skill) VALUES (2, 4);'
+      'INSERT INTO company_skills (company, skill) VALUES (2, 4);',
     );
     expect(spy).toHaveBeenNthCalledWith(
       7,
-      'INSERT INTO company_skills (company, skill) VALUES (2, 12);'
+      'INSERT INTO company_skills (company, skill) VALUES (2, 12);',
     );
   });
 });

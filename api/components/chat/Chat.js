@@ -13,10 +13,10 @@ const Chat = class {
     const recipientId = (await User.getBasicUserInfo(message.to)).id;
     await Mysql.query(
       `INSERT INTO conversations (sender, recipient, sentAt, message, reviewed) VALUES (${parseIntAndDbEscape(
-        senderId
+        senderId,
       )}, ${parseIntAndDbEscape(recipientId)}, ${db.escape(
-        new Date(message.sentAt)
-      )}, ${db.escape(message.body)}, ${Boolean(message.reviewed)});`
+        new Date(message.sentAt),
+      )}, ${db.escape(message.body)}, ${Boolean(message.reviewed)});`,
     );
   }
 
@@ -27,8 +27,8 @@ const Chat = class {
     messages.forEach((message) => {
       Mysql.query(
         `UPDATE conversations SET reviewed = true WHERE id = ${parseIntAndDbEscape(
-          message
-        )} AND recipient = ${this.id} AND reviewed = false;`
+          message,
+        )} AND recipient = ${this.id} AND reviewed = false;`,
       );
     });
   }
@@ -39,19 +39,19 @@ const Chat = class {
       return;
     }
     await Mysql.query(
-      `UPDATE conversations SET reviewed = true WHERE sender = ${userInfo.id} AND recipient = ${this.id} AND reviewed = false;`
+      `UPDATE conversations SET reviewed = true WHERE sender = ${userInfo.id} AND recipient = ${this.id} AND reviewed = false;`,
     );
     await Mysql.query(
-      `UPDATE conversations SET reviewed = true WHERE sender = ${this.id} AND recipient = ${userInfo.id} AND reviewed = false;`
+      `UPDATE conversations SET reviewed = true WHERE sender = ${this.id} AND recipient = ${userInfo.id} AND reviewed = false;`,
     );
   }
 
   async getConversationList() {
     const sent = await Mysql.query(
-      `SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${this.id} GROUP BY sender;`
+      `SELECT DISTINCT sender AS user, users.username, SUM(IF(reviewed = '0', 1, 0)) AS unread FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${this.id} GROUP BY sender;`,
     );
     const received = await Mysql.query(
-      `SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${this.id};`
+      `SELECT DISTINCT recipient AS user, users.username, 0 AS unread FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${this.id};`,
     );
     const allConversations = [...sent, ...received];
     const uniqueConversations = [];
@@ -75,21 +75,21 @@ const Chat = class {
     }
     const sent = await Mysql.query(
       `SELECT conversations.id, sentAt, reviewed, message AS body, users.username AS 'from', ${db.escape(
-        userInfo.username
+        userInfo.username,
       )} AS 'to' FROM conversations INNER JOIN users ON conversations.sender = users.id WHERE recipient = ${
         this.id
-      } AND users.username = ${db.escape(user)};`
+      } AND users.username = ${db.escape(user)};`,
     );
     const received = await Mysql.query(
       `SELECT conversations.id, sentAt, reviewed, message AS body, users.username AS 'to', ${db.escape(
-        userInfo.username
+        userInfo.username,
       )} AS 'from' FROM conversations INNER JOIN users ON conversations.recipient = users.id WHERE sender = ${
         this.id
-      } AND users.username = ${db.escape(user)};`
+      } AND users.username = ${db.escape(user)};`,
     );
     let allMessages = [...sent, ...received];
     allMessages = allMessages.sort(
-      (a, b) => new Date(a.sentAt) - new Date(b.sentAt)
+      (a, b) => new Date(a.sentAt) - new Date(b.sentAt),
     );
     const unread = allMessages.filter((message) => !message.reviewed);
     this.markMessagesRead(unread.map((message) => message.id));
