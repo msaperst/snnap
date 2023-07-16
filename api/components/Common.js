@@ -19,8 +19,8 @@ async function handleNewSkill(skill, userId) {
   if (skill.value.toString().indexOf('new') === 0) {
     const result = await Mysql.query(
       `INSERT INTO skills (name, who, date_created) VALUES (${db.escape(
-        skill.label
-      )}, ${parseIntAndDbEscape(userId)}, CURRENT_TIMESTAMP);`
+        skill.label,
+      )}, ${parseIntAndDbEscape(userId)}, CURRENT_TIMESTAMP);`,
     );
     return result.insertId;
   }

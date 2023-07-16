@@ -5,9 +5,12 @@ async function sendJobsToRate(user, ctx) {
 
 function getNeededRatings(ctx, user) {
   sendJobsToRate(user, ctx);
-  return setInterval(async () => {
-    await sendJobsToRate(user, ctx);
-  }, 6 * 60 * 60 * 1000); // every six hours
+  return setInterval(
+    async () => {
+      await sendJobsToRate(user, ctx);
+    },
+    6 * 60 * 60 * 1000,
+  ); // every six hours
 }
 
 module.exports = { getNeededRatings };

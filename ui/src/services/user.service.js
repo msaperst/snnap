@@ -38,7 +38,7 @@ function getJobs() {
 function getJobApplications() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/user/job-applications`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -57,7 +57,7 @@ function markNotificationRead(notification) {
   };
 
   return fetch(`/api/user/mark-notification-read`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -71,7 +71,7 @@ function updateAccountInformation(email) {
   };
 
   return fetch(`/api/user/update-account-information`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -85,7 +85,7 @@ function updatePersonalInformation(firstName, lastName, location) {
   };
 
   return fetch(`/api/user/update-personal-information`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -110,7 +110,7 @@ async function updatePassword(currentPassword, newPassword) {
   };
 
   return fetch(`/api/user/update-password`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -124,7 +124,7 @@ async function updateNotificationSettings(email, push) {
   };
 
   return fetch(`/api/user/update-notification-settings`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 

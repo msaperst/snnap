@@ -71,7 +71,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 const updateCompanyInformationValidation = [
@@ -99,7 +99,7 @@ router.post(
         req.body.insta,
         req.body.fb,
         equipment,
-        skills
+        skills,
       );
       return res.status(200).send();
     } catch (error) {
@@ -107,7 +107,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 module.exports = router;

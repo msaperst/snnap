@@ -75,7 +75,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 const setAvatarValidation = [
@@ -121,7 +121,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 const updatePersonalInformationValidation = [
@@ -143,7 +143,7 @@ router.post(
       await user.setPersonalInformation(
         req.body.firstName,
         req.body.lastName,
-        req.body.location
+        req.body.location,
       );
       return res.status(200).send();
     } catch (error) {
@@ -151,7 +151,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 const updatePasswordValidation = [
@@ -206,7 +206,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 const rateValidation = [

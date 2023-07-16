@@ -41,7 +41,7 @@ router.post(
         msg: error.message,
       });
     }
-  }
+  },
 );
 
 module.exports = router;
