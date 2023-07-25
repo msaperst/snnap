@@ -57,7 +57,7 @@
     "js-htmlencode": "^0.3.0",
     "jsonwebtoken": "^9.0.1",
     "mysql2": "3.5.2",
-    "nodemailer": "^6.9.3",
+    "nodemailer": "^6.9.4",
     "nodemon": "^3.0.1",
     "ws": "8.13.0"
   },
