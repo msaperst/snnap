@@ -37,7 +37,7 @@
   "dependencies": {
     "axe-core": "^4.7.2",
     "bcryptjs": "^2.4.3",
-    "chromedriver": "^114.0.2",
+    "chromedriver": "^115.0.0",
     "jest-html-reporters": "^3.1.4",
     "selenium-webdriver": "^4.10.0"
   },
