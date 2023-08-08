@@ -76,6 +76,6 @@
     "jest-html-reporter": "^3.10.1",
     "jest-junit": "^16.0.0",
     "owasp-dependency-check": "^0.0.21",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.1"
   }
 }
