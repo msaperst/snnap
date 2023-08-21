@@ -55,22 +55,22 @@ jobs:
 
       - name: Copy to Production
         run: |
-          docker save snnap_ui | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          docker save snnap_api | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          docker save snnap_mysql | gzip | ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
-          scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }}:${{ secrets.PRODUCTION_PATH }}
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^    build:/d" docker-compose.yml'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      context:/d" docker-compose.yml'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      dockerfile:/d" docker-compose.yml'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      args:/d" docker-compose.yml'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/REACT_APP/d" docker-compose.yml'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "s/container_name/image/g" docker-compose.yml'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/\${MYSQL_PORT}$/d" docker-compose.yml'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^    expose:/d" docker-compose.yml'
+          docker save snnap_ui | gzip | ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_api | gzip | ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          docker save snnap_mysql | gzip | ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'gunzip | docker load'
+          scp -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }}:${{ secrets.PRODUCTION_PATH }}
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^    build:/d" docker-compose.yml'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      context:/d" docker-compose.yml'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      dockerfile:/d" docker-compose.yml'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^      args:/d" docker-compose.yml'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/REACT_APP/d" docker-compose.yml'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "s/container_name/image/g" docker-compose.yml'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/\${MYSQL_PORT}$/d" docker-compose.yml'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; sed -i "/^    expose:/d" docker-compose.yml'
 
       - name: Launch Snnap
         run: |
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'docker exec snnap_mysql_1 ./setup-database.sh'
-          ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml stop'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'cd ${{ secrets.PRODUCTION_PATH }}; docker-compose -f docker-compose.yml up -d'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'docker exec snnap_mysql_1 ./setup-database.sh'
+          ssh -p ${{ secrets.PRODUCTION_PORT }} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${{ secrets.PRODUCTION_USERNAME }}@${{ secrets.PRODUCTION }} 'docker system prune -a -f'
