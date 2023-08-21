@@ -50,7 +50,7 @@ class JobApplications extends React.Component {
         {jobApplications.map((jobApplication) => (
           <Profile
             key={jobApplication.id}
-            highlight={jobApplication.id === parseInt(selected, 10)}
+            active={jobApplication.id === parseInt(selected, 10)}
             user={currentUser}
             company={jobApplication}
           />

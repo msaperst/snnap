@@ -24,18 +24,24 @@ function JobDetail(props) {
         <SnnapFormInput
           size={8}
           name="City"
-          value={job.loc.replace(', United States of America', '')}
+          value={
+            job.loc ? job.loc.replace(', United States of America', '') : ' '
+          }
           disabled
         />
         <SnnapFormInput
           size={4}
           name="Date"
-          value={new Intl.DateTimeFormat('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: '2-digit',
-          }).format(new Date(job.date_time))}
+          value={
+            job.date_time
+              ? new Intl.DateTimeFormat('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: '2-digit',
+                }).format(new Date(job.date_time))
+              : ' '
+          }
           disabled
         />
       </Row>

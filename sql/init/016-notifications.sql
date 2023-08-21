@@ -15,3 +15,5 @@ CREATE TABLE IF NOT EXISTS notifications
 
 ALTER TABLE notifications RENAME COLUMN hire_request TO job;
 ALTER TABLE notifications RENAME COLUMN hire_request_application TO job_application;
+ALTER TABLE notifications CHANGE `what` `what` ENUM
+    ('created', 'applied', 'selected');

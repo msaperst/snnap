@@ -12,12 +12,12 @@ class CompareJobApplications extends React.Component {
     super(props);
     this.isMountedVal = false;
 
-    const { job } = this.props;
+    const { job, show } = this.props;
     this.state = {
       job,
       jobApplications: [],
       jobApplication: null,
-      show: false,
+      show,
       status: null,
       update: null,
       validated: false,

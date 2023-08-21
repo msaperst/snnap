@@ -58,7 +58,7 @@ class Jobs extends React.Component {
         {jobs.map((job) => (
           <Job
             key={job.id}
-            highlight={job.id === parseInt(selected, 10)}
+            active={job.id === parseInt(selected, 10)}
             currentUser={currentUser}
             job={job}
             equipment={equipment}

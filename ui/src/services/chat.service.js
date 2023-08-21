@@ -10,14 +10,14 @@ export const chatService = {
 function getConversationList() {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch('/api/chat/conversation-list', requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
 function getConversationWith(user) {
   const requestOptions = { method: 'GET', headers: authHeader() };
   return fetch(`/api/chat/conversation-with/${user}`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -31,6 +31,6 @@ function markMessagesRead(user) {
   };
 
   return fetch(`/api/chat/mark-messages-read`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }

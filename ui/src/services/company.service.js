@@ -26,7 +26,7 @@ function updatePortfolio(experience, portfolioItems) {
   };
 
   return fetch(`/api/company/update-portfolio`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }
 
@@ -40,6 +40,6 @@ function updateCompanyInformation(name, website, insta, fb, equipment, skills) {
   };
 
   return fetch(`/api/company/update-company-information`, requestOptions).then(
-    handleResponse
+    handleResponse,
   );
 }

@@ -14,7 +14,7 @@ function Filter(props) {
   const distances = [5, 25, 100, 250];
   const locations = ['my home', 'my location', 'custom'];
 
-  const { currentUser, filter } = props;
+  const { currentUser, filter, selected } = props;
   const { latitude, longitude } = usePosition();
 
   const [allJobs, setAllJobs] = useState([]);
@@ -151,6 +151,17 @@ function Filter(props) {
       parent.style.color = 'black';
     }
   }, [showOwnLocation]);
+
+  useEffect(() => {
+    if (selected) {
+      const anchor = document.querySelector(
+        `div[data-testid="job-${selected}"]`
+      );
+      if (anchor) {
+        anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
 
   const selectFilterLocation = (value) => {
     // determine which location to use
@@ -328,6 +339,7 @@ function Filter(props) {
       {filteredJobs.map((job) => (
         <Job
           key={job.id}
+          active={job.id === parseInt(selected, 10)}
           currentUser={currentUser}
           job={job}
           equipment={equipment}
