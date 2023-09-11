@@ -1,6 +1,6 @@
 {
   "name": "Snnap",
-  "version": "1.8.7",
+  "version": "1.8.8",
   "jest": {
     "reporters": [
       "default",
@@ -35,7 +35,7 @@
     ]
   },
   "dependencies": {
-    "axe-core": "^4.7.2",
+    "axe-core": "^4.8.1",
     "bcryptjs": "^2.4.3",
     "chromedriver": "^116.0.0",
     "jest-html-reporters": "^3.1.4",
