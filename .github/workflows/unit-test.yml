@@ -41,7 +41,7 @@ jobs:
 
       - name: Upload Coverage 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api-coverage
           path: api/coverage/lcov.info
@@ -84,7 +84,7 @@ jobs:
 
       - name: Upload Coverage 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ui-coverage
           path: ui/coverage/lcov.info

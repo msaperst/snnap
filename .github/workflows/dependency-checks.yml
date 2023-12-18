@@ -36,7 +36,7 @@ jobs:
 
       - name: Publish Result 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OWASP Dependency Check API Results
           path: api/dependency-check-reports
@@ -70,7 +70,7 @@ jobs:
 
       - name: Publish Result 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OWASP Dependency Check UI Results
           path: ui/dependency-check-reports
