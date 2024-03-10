@@ -21,7 +21,7 @@ function SnnapFormDuration(props) {
       required
       type="number"
       step={0.25}
-      min={0.25}
+      min={0}
       aria-describedby={`inputGroup${safeName}`}
       aria-label={`${name} Min`}
       onChange={change}
