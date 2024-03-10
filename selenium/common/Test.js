@@ -26,7 +26,8 @@ class Test {
   }
 
   async getDriver(url = '') {
-    const options = new Options().headless();
+    const options = new Options();
+    options.addArguments('--headless=new');
     options.addArguments('--ignore-certificate-errors');
     const driver = await new Builder()
       .forBrowser('chrome')
@@ -60,7 +61,7 @@ class Test {
     if (process.env.ACCESSIBILITY) {
       await this.driver.executeScript(axe.source.toString());
       result = await this.driver.executeAsyncScript(
-        'var callback = arguments[arguments.length - 1];axe.run().then(results => callback(results))'
+        'var callback = arguments[arguments.length - 1];axe.run().then(results => callback(results))',
       );
       await addMsg({
         message:
@@ -72,7 +73,7 @@ class Test {
       if (result.violations.length) {
         await addMsg({
           message: `Violations:${result.violations.map(
-            (violation) => `\n${violation.description}: ${violation.help}`
+            (violation) => `\n${violation.description}: ${violation.help}`,
           )}`,
         });
         await addMsg({
@@ -91,7 +92,7 @@ class Test {
       await addMsg({ message: JSON.stringify(result) });
       if (result.violations.length) {
         throw new Error(
-          result.violations.map((violation) => `${violation.help}\n`)
+          result.violations.map((violation) => `${violation.help}\n`),
         );
       }
     }
@@ -108,7 +109,7 @@ class Test {
       },
       `${username}@example.org`,
       username,
-      'password'
+      'password',
     );
   }
 
@@ -133,20 +134,20 @@ class Test {
         JSON.stringify({
           jobTypes: [1, 2, 3, 4, 5, 6],
           jobSubtypes: [1, 2, 3, 4, 5, 6],
-        })
+        }),
       );
     });
   }
 
   static async removeUserById(id) {
     const companies = await Mysql.query(
-      `SELECT * FROM companies WHERE user = ${id} OR user = 0;`
+      `SELECT * FROM companies WHERE user = ${id} OR user = 0;`,
     );
     const applications = await Mysql.query(
-      `SELECT * FROM job_applications WHERE user_id = ${id} OR user_id = 0;`
+      `SELECT * FROM job_applications WHERE user_id = ${id} OR user_id = 0;`,
     );
     const jobs = await Mysql.query(
-      `SELECT * FROM jobs WHERE user = ${id} OR user = 0;`
+      `SELECT * FROM jobs WHERE user = ${id} OR user = 0;`,
     );
     // delete our user
     await Mysql.query(`DELETE FROM users WHERE id = ${id} OR id = 0;`);
@@ -155,26 +156,26 @@ class Test {
     for (const company of companies) {
       await Mysql.query(`DELETE FROM companies WHERE id = ${company.id}`);
       await Mysql.query(
-        `DELETE FROM company_equipment WHERE company = ${company.id}`
+        `DELETE FROM company_equipment WHERE company = ${company.id}`,
       );
       await Mysql.query(
-        `DELETE FROM company_skills WHERE company = ${company.id}`
+        `DELETE FROM company_skills WHERE company = ${company.id}`,
       );
       await Mysql.query(`DELETE FROM portfolio WHERE company = ${company.id}`);
     }
     // delete our user's application(s)
     for (const application of applications) {
       await Mysql.query(
-        `DELETE FROM job_applications WHERE id = ${application.id}`
+        `DELETE FROM job_applications WHERE id = ${application.id}`,
       );
       await Mysql.query(
-        `DELETE FROM job_applications_equipment WHERE job_application = ${application.id}`
+        `DELETE FROM job_applications_equipment WHERE job_application = ${application.id}`,
       );
       await Mysql.query(
-        `DELETE FROM job_applications_skills WHERE job_application = ${application.id}`
+        `DELETE FROM job_applications_skills WHERE job_application = ${application.id}`,
       );
       await Mysql.query(
-        `DELETE FROM job_applications_portfolios WHERE job_application = ${application.id}`
+        `DELETE FROM job_applications_portfolios WHERE job_application = ${application.id}`,
       );
     }
     // delete our user's job(s)
@@ -201,7 +202,7 @@ class Test {
     experience,
     equipment,
     skills,
-    portfolio
+    portfolio,
   ) {
     const company = new Company(user);
     await company.setPortfolio(experience, portfolio);
@@ -211,7 +212,7 @@ class Test {
       instagram,
       facebook,
       equipment,
-      skills
+      skills,
     );
     return company.getInfo();
   }
@@ -228,7 +229,7 @@ class Test {
       null,
       date,
       '',
-      []
+      [],
     );
   }
 
@@ -243,7 +244,7 @@ class Test {
         lon: -77.303452,
         loc: 'Chantilly, VA, United States of America',
       },
-      'Some details'
+      'Some details',
     );
   }
 
@@ -261,7 +262,7 @@ class Test {
       [],
       [],
       '',
-      []
+      [],
     );
   }
 
@@ -286,7 +287,7 @@ class Test {
         { link: 'link1.com', description: 'description 1' },
         { link: 'link2.com', description: 'description 2' },
         { link: 'link3.com', description: 'description 3' },
-      ]
+      ],
     );
   }
 
@@ -306,12 +307,12 @@ class Test {
         `INSERT INTO ratings (job, job_date, rater, ratee, rating, date_rated)
          VALUES (${
            info.id
-         }, '${date}', ${await this.user.getId()}, ${ratee}, ${rating}, CURRENT_TIMESTAMP);`
+         }, '${date}', ${await this.user.getId()}, ${ratee}, ${rating}, CURRENT_TIMESTAMP);`,
       );
     } else {
       await Mysql.query(
         `INSERT INTO ratings (job, job_date, rater, ratee)
-         VALUES (${info.id}, '${date}', ${await this.user.getId()}, ${ratee});`
+         VALUES (${info.id}, '${date}', ${await this.user.getId()}, ${ratee});`,
       );
     }
   }
@@ -321,7 +322,7 @@ class Test {
     await driver.wait(
       () =>
         driver.findElements(locator).then((elements) => elements.length === 0),
-      wait
+      wait,
     );
   }
 
@@ -332,9 +333,9 @@ class Test {
         driver
           .findElement(locator)
           .then(
-            async (element) => (await element.getAttribute('value')) !== ''
+            async (element) => (await element.getAttribute('value')) !== '',
           ),
-      5000
+      5000,
     );
   }
 }
