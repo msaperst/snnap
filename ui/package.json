@@ -36,7 +36,6 @@
   "scripts": {
     "start": "react-scripts start",
     "lint": "eslint ./src/ -f @microsoft/eslint-formatter-sarif -o ui-results.sarif",
-    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap-ui' -f ALL --failOnCVSS 8",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
     "test:ci": "react-scripts test --silent --coverage --watchAll=false",
@@ -90,7 +89,6 @@
     "jest-html-reporter": "^3.10.1",
     "jest-junit": "^16.0.0",
     "jest-websocket-mock": "^2.4.1",
-    "owasp-dependency-check": "^0.0.21",
     "prettier": "^3.0.2"
   },
   "overrides": {

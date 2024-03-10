@@ -10,7 +10,7 @@ export const hr = {
   details: "Max's 40th Birthday, woot!!!",
   pay: 0.5,
   duration: 8,
-  date_time: '2023-10-13T04:00:00.000Z',
+  date_time: '2024-10-13T04:00:00.000Z',
   user: 1,
   durationMax: null,
   typeId: 2,
@@ -70,16 +70,16 @@ async function hasAnAlert(modal, type, message) {
   expect(saveRow.lastChild).toHaveClass('col');
   expect(saveRow.lastChild.children).toHaveLength(1);
   expect(saveRow.lastChild.firstChild).toHaveClass(
-    `fade alert alert-${type} alert-dismissible show`
+    `fade alert alert-${type} alert-dismissible show`,
   );
   expect(saveRow.lastChild.firstChild.getAttribute('role')).toEqual('alert');
   expect(saveRow.lastChild.firstChild).toHaveTextContent(message);
   expect(saveRow.lastChild.firstChild.children).toHaveLength(1);
   expect(
-    saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label')
+    saveRow.lastChild.firstChild.firstChild.getAttribute('aria-label'),
   ).toEqual('Close alert');
   expect(saveRow.lastChild.firstChild.firstChild.getAttribute('type')).toEqual(
-    'button'
+    'button',
   );
   expect(saveRow.lastChild.firstChild.firstChild).toHaveClass('btn-close');
 }
