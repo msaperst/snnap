@@ -44,7 +44,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "lint": "eslint ./components ./services ./routes server.js -f @microsoft/eslint-formatter-sarif -o api-results.sarif",
-    "test": "jest --coverage",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
