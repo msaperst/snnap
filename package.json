@@ -1,6 +1,6 @@
 {
   "name": "Snnap",
-  "version": "1.8.17",
+  "version": "1.8.18",
   "jest": {
     "reporters": [
       "default",
