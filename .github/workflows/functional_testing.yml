@@ -74,7 +74,7 @@ jobs:
 
       - name: Archive Test Results 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Functional Test Results
           path: 'Selenium Test Results'
@@ -145,7 +145,7 @@ jobs:
 
       - name: Archive Test Results 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Accessibility Test Results
           path: 'Selenium Test Results'
