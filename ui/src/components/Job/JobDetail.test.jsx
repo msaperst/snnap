@@ -20,7 +20,7 @@ describe('job detail info', () => {
       details: "Max's 40th Birthday, woot!!!",
       pay: 0.5,
       duration: 8,
-      date_time: '2023-10-13T04:00:00.000Z',
+      date_time: '2024-10-13T04:00:00.000Z',
       user: 1,
       durationMax: 9,
       typeId: 2,
@@ -62,14 +62,14 @@ describe('job detail info', () => {
       6,
       'formJobType',
       'Job Type',
-      'Event'
+      'Event',
     );
     checkInput(
       container.children[1].children[1],
       6,
       'formLookingFor',
       'Looking For',
-      'Assistant'
+      'Assistant',
     );
   });
 
@@ -82,14 +82,14 @@ describe('job detail info', () => {
       8,
       'formCity',
       'City',
-      'Fairfax, VA 20030'
+      'Fairfax, VA 20030',
     );
     checkInput(
       container.children[2].children[1],
       4,
       'formDate',
       'Date',
-      'Friday, October 13, 2023'
+      'Sunday, October 13, 2024',
     );
   });
 
@@ -102,14 +102,14 @@ describe('job detail info', () => {
       6,
       'formDesiredEquipment',
       'Desired Equipment',
-      'Camera'
+      'Camera',
     );
     checkInput(
       container.children[3].children[1],
       6,
       'formSkillsRequired',
       'Skills Required',
-      'Posing, Something'
+      'Posing, Something',
     );
   });
 
@@ -122,14 +122,14 @@ describe('job detail info', () => {
       6,
       'formDesiredEquipment',
       'Desired Equipment',
-      ' '
+      ' ',
     );
     checkInput(
       container.children[3].children[1],
       6,
       'formSkillsRequired',
       'Skills Required',
-      ' '
+      ' ',
     );
   });
 
@@ -155,14 +155,14 @@ describe('job detail info', () => {
       6,
       'formDuration',
       'Duration',
-      '8 hours'
+      '8 hours',
     );
     checkInput(
       container.children[5].children[1],
       6,
       'formPay',
       'Pay',
-      '$0.5 per hour'
+      '$0.5 per hour',
     );
   });
 
@@ -176,7 +176,7 @@ describe('job detail info', () => {
       6,
       'formDuration',
       'Duration',
-      '8 to 9 hours'
+      '8 to 9 hours',
     );
   });
 });

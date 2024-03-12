@@ -1,6 +1,6 @@
 {
   "name": "Snnap",
-  "version": "1.8.15",
+  "version": "1.8.22",
   "jest": {
     "reporters": [
       "default",
@@ -35,18 +35,18 @@
     ]
   },
   "dependencies": {
-    "axe-core": "^4.8.1",
+    "axe-core": "^4.8.4",
     "bcryptjs": "^2.4.3",
-    "chromedriver": "^116.0.0",
+    "chromedriver": "^122.0.4",
     "jest-html-reporters": "^3.1.4",
-    "selenium-webdriver": "^4.12.0"
+    "selenium-webdriver": "^4.18.1"
   },
   "devDependencies": {
-    "eslint": "8.48.0",
+    "eslint": "8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-jest": "^27.4.0",
+    "eslint-plugin-jest": "^27.9.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.1",

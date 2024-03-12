@@ -29,7 +29,7 @@ describe('conversation', () => {
         to: 'user',
         from: 'max',
         reviewed: true,
-        sentAt: '2023-10-13T04:00:00.000Z',
+        sentAt: '2024-10-13T04:00:00.000Z',
         body: 'hi',
       },
       {
@@ -37,7 +37,7 @@ describe('conversation', () => {
         to: 'user',
         from: 'max',
         reviewed: true,
-        sentAt: '2023-10-13T04:00:01.000Z',
+        sentAt: '2024-10-13T04:00:01.000Z',
         body: 'you there?',
       },
       {
@@ -45,7 +45,7 @@ describe('conversation', () => {
         to: 'max',
         from: 'user',
         reviewed: false,
-        sentAt: '2023-10-13T04:01:00.000Z',
+        sentAt: '2024-10-13T04:01:00.000Z',
         body: "yeah, what's up?",
       },
     ]);
@@ -57,7 +57,7 @@ describe('conversation', () => {
       to: 'max',
       from: 'user',
       reviewed: false,
-      sentAt: '2023-10-13T04:01:00.000Z',
+      sentAt: '2024-10-13T04:01:00.000Z',
       body: 'you still there?',
     };
   });
@@ -87,7 +87,7 @@ describe('conversation', () => {
     await loadConversation();
     const { container } = conversation;
     expect(container.children[1].getAttribute('id')).toEqual(
-      'chat-view-container'
+      'chat-view-container',
     );
     // there is one more than the messages, to assist with scrolling
     expect(container.children[1].children).toHaveLength(4);
@@ -223,7 +223,7 @@ describe('conversation', () => {
       fireEvent.click(getByRole('button'));
     });
     await expect(server).toReceiveMessage(
-      '{"to":"max","from":"user","body":"message"}'
+      '{"to":"max","from":"user","body":"message"}',
     );
     expect(input.getAttribute('value')).toEqual('');
   });

@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "1.8.15",
+  "version": "1.8.22",
   "description": "Snnap back-end server",
   "keywords": [],
   "author": "Max Saperstone",
@@ -44,38 +44,36 @@
   "scripts": {
     "start": "nodemon server.js",
     "lint": "eslint ./components ./services ./routes server.js -f @microsoft/eslint-formatter-sarif -o api-results.sarif",
-    "test": "jest --coverage",
-    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap-api' -f ALL --failOnCVSS 8"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "express-rate-limit": "^7.0.1",
+    "express-rate-limit": "^7.2.0",
     "express-validator": "^7.0.1",
     "js-htmlencode": "^0.3.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "3.6.1",
-    "nodemailer": "^6.9.5",
+    "mysql2": "3.9.2",
+    "nodemailer": "^6.9.9",
     "nodemon": "^3.0.1",
     "ws": "8.14.2"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
-    "eslint": "8.49.0",
+    "eslint": "8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-jest": "^27.9.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "jest": "^29.6.2",
+    "jest": "^29.7.0",
     "jest-html-reporter": "^3.10.1",
     "jest-junit": "^16.0.0",
-    "owasp-dependency-check": "^0.0.21",
     "prettier": "^3.0.3"
   }
 }
