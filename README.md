@@ -7,12 +7,12 @@ A few tools are needed to be installed for basic development:
 * NPM
 
 The webserver (and websockets) run using signed certs on the back end, for a secure connection.
-On a development machine, this means you'll need to create self signed certs, which is easiest
+On a development machine, this means you'll need to create self-signed certs, which is easiest
 using `openssl`. The cert should be named `cert.pem` and the key should be named `key-rsa.pem`.
 These should be generated and stored in the `api/certs` directory.
 
 Additionally, because websockets connect directly, you might need to tell your browser to accept
-self signed certs by enabling this on localhost:
+self-signed certs by enabling this on localhost:
 
 [chrome://flags/#allow-insecure-localhost](chrome://flags/#allow-insecure-localhost)
 
@@ -71,7 +71,7 @@ npm install
 npm run test
 ```
 Coverage goals are set to 95%, so even if all tests pass, the execution might fail 
-if desired coverage isn't acheived. With that, not all directories are required for
+if desired coverage isn't achieved. With that, not all directories are required for
 coverage; checkout `package.json` in each directory to determine what files need
 coverage.
 

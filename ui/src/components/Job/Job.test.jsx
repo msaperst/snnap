@@ -19,7 +19,7 @@ jest.mock(
           Submit For Job
         </div>
       );
-    }
+    },
 );
 
 jest.mock('../../services/user.service');
@@ -143,44 +143,44 @@ describe('job', () => {
     expect(infoCell.firstChild.firstChild).toHaveClass('col-md-4 col-6');
     expect(infoCell.firstChild.firstChild.children).toHaveLength(2);
     expect(infoCell.firstChild.firstChild.firstChild).toHaveClass(
-      'card-title h5'
+      'card-title h5',
     );
     expect(infoCell.firstChild.firstChild.firstChild).toHaveTextContent(
-      'Max Saperstone'
+      'Max Saperstone',
     );
     expect(infoCell.firstChild.firstChild.lastChild).toHaveClass(
-      'card-subtitle h6'
+      'card-subtitle h6',
     );
     expect(infoCell.firstChild.firstChild.lastChild).toHaveTextContent(
-      "Max's Company"
+      "Max's Company",
     );
 
     expect(infoCell.firstChild.children[1]).toHaveClass('col-md-4 col-6');
     expect(infoCell.firstChild.children[1].children).toHaveLength(2);
     expect(infoCell.firstChild.children[1].firstChild).toHaveClass(
-      'card-title h5'
+      'card-title h5',
     );
     expect(infoCell.firstChild.children[1].firstChild).toHaveTextContent(
-      "B'nai Mitzvah"
+      "B'nai Mitzvah",
     );
     expect(infoCell.firstChild.children[1].lastChild).toHaveClass(
-      'card-subtitle h6'
+      'card-subtitle h6',
     );
     expect(infoCell.firstChild.children[1].lastChild).toHaveTextContent(
-      'Assistant'
+      'Assistant',
     );
 
     expect(infoCell.firstChild.lastChild).toHaveClass('col-md-4');
     expect(infoCell.firstChild.lastChild.children).toHaveLength(2);
     expect(infoCell.firstChild.lastChild.firstChild).toHaveClass('card-text');
     expect(infoCell.firstChild.lastChild.firstChild).toHaveTextContent(
-      'Fairfax, VA'
+      'Fairfax, VA',
     );
     expect(infoCell.firstChild.lastChild.lastChild).toHaveClass(
-      'font-italic card-text'
+      'font-italic card-text',
     );
     expect(infoCell.firstChild.lastChild.lastChild).toHaveTextContent(
-      `03/04/2022 for ${duration}`
+      `03/04/2022 for ${duration}`,
     );
 
     expect(infoCell.lastChild).toHaveClass('mt-2 row');
@@ -189,7 +189,7 @@ describe('job', () => {
     expect(infoCell.lastChild.firstChild.children).toHaveLength(1);
     expect(infoCell.lastChild.firstChild.firstChild).toHaveClass('card-text');
     expect(infoCell.lastChild.firstChild.firstChild).toHaveTextContent(
-      'Some details'
+      'Some details',
     );
 
     expect(buttonCell).toHaveClass('col-md-3');
@@ -215,7 +215,7 @@ describe('job', () => {
       { user_id: 5 },
     ]);
     jobService.jobService.getJob.mockResolvedValue({
-      date_time: '2023-10-13 00:00:00',
+      date_time: '2024-10-13 00:00:00',
       location: 'paris',
     });
     await loadJob(job, otherUser);
@@ -228,7 +228,7 @@ describe('job', () => {
   it('displays the range detail', async () => {
     jobService.jobService.getJobApplications.mockResolvedValue([]);
     jobService.jobService.getJob.mockResolvedValue({
-      date_time: '2023-10-13 00:00:00',
+      date_time: '2024-10-13 00:00:00',
       location: 'paris',
     });
     await loadJob(jobDuration, otherUser);
@@ -241,7 +241,7 @@ describe('job', () => {
     const spy = jest.spyOn(jobService.jobService, 'getJobApplications');
     jobService.jobService.getJobApplications.mockResolvedValue([]);
     jobService.jobService.getJob.mockResolvedValue({
-      date_time: '2023-10-13 00:00:00',
+      date_time: '2024-10-13 00:00:00',
       loc: 'paris',
     });
     await loadJob(jobDuration, otherUser);
@@ -256,7 +256,7 @@ describe('job', () => {
   async function loadJob(request, user, active = false) {
     await act(async () => {
       requestForHire = render(
-        <Job job={request} currentUser={user} active={active} />
+        <Job job={request} currentUser={user} active={active} />,
       );
       const { container } = requestForHire;
       await waitFor(() => container.firstChild);
@@ -294,10 +294,10 @@ describe('job', () => {
     const userCol = container.firstChild.firstChild.firstChild;
     expect(userCol.firstChild.firstChild.children[1].children).toHaveLength(1);
     expect(
-      userCol.firstChild.firstChild.children[1].firstChild.children
+      userCol.firstChild.firstChild.children[1].firstChild.children,
     ).toHaveLength(2);
     expect(
-      userCol.firstChild.firstChild.children[1].firstChild.firstChild
+      userCol.firstChild.firstChild.children[1].firstChild.firstChild,
     ).toHaveTextContent('Thumbs Up');
   });
 
@@ -313,10 +313,10 @@ describe('job', () => {
     const userCol = container.firstChild.firstChild.firstChild;
     expect(userCol.firstChild.firstChild.children[1].children).toHaveLength(1);
     expect(
-      userCol.firstChild.firstChild.children[1].firstChild.children
+      userCol.firstChild.firstChild.children[1].firstChild.children,
     ).toHaveLength(2);
     expect(
-      userCol.firstChild.firstChild.children[1].firstChild.firstChild
+      userCol.firstChild.firstChild.children[1].firstChild.firstChild,
     ).toHaveTextContent('Thumbs Down');
   });
 
@@ -339,19 +339,19 @@ describe('job', () => {
     const userCol = container.firstChild.firstChild.firstChild;
     expect(userCol.firstChild.firstChild.lastChild.children).toHaveLength(1);
     expect(
-      userCol.firstChild.firstChild.lastChild.firstChild.getAttribute('href')
+      userCol.firstChild.firstChild.lastChild.firstChild.getAttribute('href'),
     ).toEqual('/chat');
     expect(
-      userCol.firstChild.firstChild.lastChild.firstChild.getAttribute('to')
+      userCol.firstChild.firstChild.lastChild.firstChild.getAttribute('to'),
     ).toEqual('/chat');
     expect(
-      userCol.firstChild.firstChild.lastChild.firstChild.children
+      userCol.firstChild.firstChild.lastChild.firstChild.children,
     ).toHaveLength(1);
     expect(
-      userCol.firstChild.firstChild.lastChild.firstChild.firstChild.children
+      userCol.firstChild.firstChild.lastChild.firstChild.firstChild.children,
     ).toHaveLength(2);
     expect(
-      userCol.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild
+      userCol.firstChild.firstChild.lastChild.firstChild.firstChild.firstChild,
     ).toHaveTextContent('Chat');
   });
 

@@ -24,7 +24,7 @@ describe('message', () => {
       to: 'user',
       from: 'otherUser',
       reviewed: true,
-      sentAt: '2023-10-13T04:00:00.000Z',
+      sentAt: '2024-10-13T04:00:00.000Z',
       body: 'some message',
     };
   });
@@ -35,7 +35,7 @@ describe('message', () => {
     expect(container.children).toHaveLength(1);
     expect(container.firstChild).toHaveClass('bubble-message');
     expect(container.firstChild.getAttribute('data-is')).toEqual(
-      expect.stringMatching(/^otherUser - \d+:00 AM$/)
+      expect.stringMatching(/^otherUser - \d+:00 AM$/),
     );
     expect(container.firstChild.children).toHaveLength(1);
     expect(container.firstChild.firstChild).toHaveTextContent('some message');

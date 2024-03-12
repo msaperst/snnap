@@ -34,7 +34,7 @@ jobs:
 
       - name: Upload Anchore Scan SARIF Report 📊
         if: always()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ steps.scan-api.outputs.sarif }}
           category: api
@@ -63,7 +63,7 @@ jobs:
 
       - name: Upload Anchore Scan SARIF Report 📊
         if: always()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ steps.scan-ui.outputs.sarif }}
           category: ui
@@ -92,7 +92,7 @@ jobs:
 
       - name: Upload Anchore Scan SARIF Report 📊
         if: always()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ steps.scan-sql.outputs.sarif }}
           category: sql

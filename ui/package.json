@@ -1,6 +1,6 @@
 {
   "name": "ui",
-  "version": "1.8.15",
+  "version": "1.8.22",
   "description": "Snnap react front-end",
   "keywords": [],
   "author": "Max Saperstone",
@@ -36,7 +36,6 @@
   "scripts": {
     "start": "react-scripts start",
     "lint": "eslint ./src/ -f @microsoft/eslint-formatter-sarif -o ui-results.sarif",
-    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap-ui' -f ALL --failOnCVSS 8",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
     "test:ci": "react-scripts test --silent --coverage --watchAll=false",
@@ -89,9 +88,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest-html-reporter": "^3.10.1",
     "jest-junit": "^16.0.0",
-    "jest-websocket-mock": "^2.4.1",
-    "owasp-dependency-check": "^0.0.21",
-    "prettier": "^3.0.2"
+    "jest-websocket-mock": "^2.5.0",
+    "prettier": "^3.2.5"
   },
   "overrides": {
     "nth-check": "2.1.1",

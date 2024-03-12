@@ -13,7 +13,7 @@ describe('job', () => {
     details: "Max's 40th Birthday, woot!!!",
     pay: 0.5,
     duration: 8,
-    date_time: '2023-10-13 00:00:00',
+    date_time: '2024-10-13 00:00:00',
     user: 1,
     durationMax: null,
     typeId: 2,
@@ -209,7 +209,7 @@ describe('job', () => {
       .mockResolvedValue([]);
     const job = new Job(5);
     await expect(job.getInfo()).resolves.toEqual({
-      date_time: '2023-10-13 00:00:00',
+      date_time: '2024-10-13 00:00:00',
       details: "Max's 40th Birthday, woot!!!",
       duration: 8,
       durationMax: null,
