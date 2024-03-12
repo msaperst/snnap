@@ -1,6 +1,6 @@
 {
   "name": "ui",
-  "version": "1.8.20",
+  "version": "1.8.14",
   "description": "Snnap react front-end",
   "keywords": [],
   "author": "Max Saperstone",
@@ -36,6 +36,7 @@
   "scripts": {
     "start": "react-scripts start",
     "lint": "eslint ./src/ -f @microsoft/eslint-formatter-sarif -o ui-results.sarif",
+    "owasp": "owasp-dependency-check --scan package-lock.json --project 'snnap-ui' -f ALL --failOnCVSS 8",
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
     "test:ci": "react-scripts test --silent --coverage --watchAll=false",
@@ -71,12 +72,12 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
+    "@babel/core": "^7.22.20",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
-    "@testing-library/dom": "^9.3.4",
+    "@testing-library/dom": "^9.3.0",
     "@testing-library/jest-dom": "^6.1.3",
     "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^14.5.2",
+    "@testing-library/user-event": "^13.5.0",
     "eslint": "8.49.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
@@ -88,7 +89,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest-html-reporter": "^3.10.1",
     "jest-junit": "^16.0.0",
-    "jest-websocket-mock": "^2.4.1",
+    "jest-websocket-mock": "^2.5.0",
+    "owasp-dependency-check": "^0.0.21",
     "prettier": "^3.0.2"
   },
   "overrides": {
