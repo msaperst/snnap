@@ -55,7 +55,7 @@ jobs:
       - name: Setup Node ☕
         uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Install 🔧
         run: | 
@@ -74,7 +74,7 @@ jobs:
 
       - name: Archive Test Results 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Functional Test Results
           path: 'Selenium Test Results'
@@ -126,7 +126,7 @@ jobs:
       - name: Setup Node ☕
         uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Install 🔧
         run: |
@@ -145,7 +145,7 @@ jobs:
 
       - name: Archive Test Results 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Accessibility Test Results
           path: 'Selenium Test Results'

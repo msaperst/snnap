@@ -53,7 +53,7 @@ jobs:
         run: docker-compose -f docker-compose.yml up -d --build
 
       - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.9.0
+        uses: zaproxy/action-baseline@v0.11.0
         with:
           target: 'http://localhost:70'
           allow_issue_writing: false

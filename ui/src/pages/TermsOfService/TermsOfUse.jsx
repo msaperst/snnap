@@ -130,13 +130,6 @@ function TermsOfUse() {
             for whatever purpose.
           </p>
           <p>
-            You grant to SNNAP a worldwide, irrevocable, non-exclusive,
-            royalty-free license to use, reproduce, adapt, publish, translate
-            and distribute your user content in any existing or future media.
-            You also grant to SNNAP the right to sub-license these rights, and
-            the right to bring an action for infringement of these rights.
-          </p>
-          <p>
             Your user content must not be illegal or unlawful, must not infringe
             any third party&apos;s legal rights, and must not be capable of
             giving rise to legal action whether against you or SNNAP or a third
