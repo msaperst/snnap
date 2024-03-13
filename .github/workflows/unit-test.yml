@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node ☕
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 16.x
 
@@ -31,7 +31,7 @@ jobs:
 
       - name: Upload Lint Sarif 📊
         if: always()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: api/api-results.sarif
           category: api
@@ -41,7 +41,7 @@ jobs:
 
       - name: Upload Coverage 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api-coverage
           path: api/coverage/lcov.info
@@ -52,7 +52,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup env file ⚙
         run: |
@@ -62,7 +62,7 @@ jobs:
           echo "REACT_APP_WS_PORT=3001" >> ui/.env
 
       - name: Setup Node ☕
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 16.x
 
@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload Lint Sarif 📊
         if: always()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ui/ui-results.sarif
           category: ui
@@ -84,7 +84,7 @@ jobs:
 
       - name: Upload Coverage 📊
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ui-coverage
           path: ui/coverage/lcov.info
@@ -96,16 +96,16 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get API Coverage
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: api-coverage
           path: api/
 
       - name: Get UI Coverage
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ui-coverage
           path: ui/
