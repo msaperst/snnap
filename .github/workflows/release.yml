@@ -51,7 +51,7 @@ jobs:
           echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
 
       - name: Build Dockerfile 🐋
-        run: docker-compose -f docker-compose.yml build
+        run: docker compose -f docker-compose.yml build
 
       - name: Copy to Production
         run: |
